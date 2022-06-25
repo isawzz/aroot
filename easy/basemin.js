@@ -44,12 +44,12 @@ const DIBOA = {
 		link: "../rechnung/boaa.html", img: 'skype.png', align: 'right', pop: false,
 		contacts: {
 			'Julia Oasis': { date: 'Wed', msg: 'Wow', color: BLUEGREEN },
-			'+14258991960': { date: 'Thu', msg: 'Missed Call', color: ORANGE },
+			'+14778991960': { date: 'Thu', msg: 'Missed Call', color: ORANGE },
 		}
 	},
 	bw_info: {
-		boa: { userid: 'gleeb69@outlook.com', pwd: rPassword(20) },
-		authy: { userid: 'gleeb69@outlook.com', pwd: rPassword(20) },
+		boa: { userid: 'gleem@gmail.com', pwd: rPassword(20) },
+		authy: { userid: 'gleem@gmail.com', pwd: rPassword(20) },
 
 	}
 };
@@ -378,6 +378,11 @@ function mDroppable(item, handler) {
 	let d = iDiv(item);
 	d.ondragover = allowDrop;
 	d.ondrop = handler;
+}
+function mFlexEvenly(d) {
+	let styles = { display: 'flex' };
+	styles['justify-content'] = 'space-evenly';
+	mStyle(d, styles);
 }
 function mFlexWrap(d) { mFlex(d, 'w'); }
 function mFlexColumn(d, or = 'h') {
