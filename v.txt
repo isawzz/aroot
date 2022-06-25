@@ -6887,8 +6887,61 @@ __________ fr 24.6.22 =>100 ewew 0=fa,1ok,2+lu,3*co,-1~pa,-2-qu,-3!
 501: *10:46 AM 6/24/2022-10:48 AM 6/24/2022
 502: *5:43 AM 6/25/2022-5:43 AM 6/25/2022 U5h
 __________ sa 25.6.22 =>100 ewew 0=fa,1ok,2+lu,3*co,-1~pa,-2-qu,-3!
-550: *5:43 AM 6/25/2022-
-- how to erase github history for a repos?
+550: *5:43 AM 6/25/2022-5:44 AM 6/25/2022
+551: *5:45 AM 6/25/2022-5:55 AM 6/25/2022
+555: *5:56 AM 6/25/2022-5:56 AM 6/25/2022
+556: *5:57 AM 6/25/2022-6:21 AM 6/25/2022
+566: *6:21 AM 6/25/2022-6:22 AM 6/25/2022
+567: *6:22 AM 6/25/2022-6:29 AM 6/25/2022
+568: *6:29 AM 6/25/2022-6:29 AM 6/25/2022
+569: *6:29 AM 6/25/2022-6:36 AM 6/25/2022
+571: *6:36 AM 6/25/2022-6:38 AM 6/25/2022
+572: *6:38 AM 6/25/2022-6:45 AM 6/25/2022
+573: *6:45 AM 6/25/2022-6:54 AM 6/25/2022
+577: *6:55 AM 6/25/2022-7:27 AM 6/25/2022
+590: *7:27 AM 6/25/2022-7:30 AM 6/25/2022
+591: *7:30 AM 6/25/2022-8:18 AM 6/25/2022
+615: *8:18 AM 6/25/2022-
+- was hab ich aufgerufen?
+- hline in between! <hr> besser ist border-bottom
+- bei logins muss das sub ein link sein!
+- discover icon
+- becu icon
+das div selbst
+bw clone
+- was will ich als erstes?
+- fake bw data machen!
+
+- koennte das ganze alte zeug auf die kleine festplatte geben!
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 challenge 1: log in to bank of america!
 
