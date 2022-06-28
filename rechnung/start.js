@@ -2,19 +2,20 @@ var FirstLoad = true;
 onload = start;
 
 function start() {
-	//test4_boa_main(); return; //test5_bw_skin(); return;//test4_boa_main(); return; //test3_boa_havecode(); return;
-
+	//test6_generate_statement(); return;//test4_boa_main(); return; //test5_bw_skin(); return;//test4_boa_main(); return; //test3_boa_havecode(); return;
 	mAppear('dScreen', 100);
 	if (FirstLoad) { FirstLoad = false; initialize_state(); } //show_master_password(); }
 	get_toolbar();
-
+	//#region test
+	//show_eval_message(false);
+	//start_challenge2();
 	//onclick_location('skype');	S.skype_contact = DIBOA.skype.contacts[DIBOA.skype.contacts.length - 1];	show_skype_contact(DIBOA.skype.divRight)
 	//S.bw_state = 'loggedin'; bw_widget_popup();
 	// onclick_popup('bw');
 	//onclick_location('boa');
 	//onclick_bigredloginbutton();
 	//fillout_boa_login();
-	//boamain_start();
+	//#endregion
 }
 function initialize_state() {
 	//var S = { location: null, boa_state: null, bw_state: null, master_password: 'Ab33', score: 0, };
@@ -33,9 +34,23 @@ function initialize_state() {
 
 function start_challenge1() {
 	DA.challenge = 1;
+	DA.name = 'Login';
+	scrollToTop();
 	onclick_location('boa');
 }
-
+function start_challenge2() {
+	DA.challenge = 2;
+	DA.name = 'Bill Pay';
+	scrollToTop();
+	boamain_start();
+	show_bill_button();
+}
+function start_challenge3() {
+	DA.challenge = 3;
+	DA.name = 'Full Bill Pay';
+	scrollToTop();
+	onclick_location('boa');
+}
 
 function add_verify_content(dParent) {
 	let d1 = mDiv(dParent);
@@ -144,9 +159,26 @@ function add_havecode_content(dParent) {
 	mStyle(bSubmit, bStyle);
 	mStyle(bCancel, bStyle); mStyle(bCancel, { fg: 'grey', border: 'grey' })
 	mClass(bSubmit, 'btn-bofa-blue');
-	S.boa_state = 'auth';
-	//bSubmit.onclick=_onclick_boa_submit_code;
 	bCancel.onclick = onclick_boa_cancel;
+}
+function add_make_payments_button(ev) {
+	let id = evToClosestId(ev);
+	let inp = mBy(id);
+
+	if (isdef(DA.prevHidden)) { mClear(DA.prevHidden); }
+	let dHidden = inp.parentNode.parentNode.parentNode.parentNode.parentNode.lastChild;
+	mClear(dHidden);
+	let d1 = mCard(dHidden, { w: '90%', padding: 10, box: true });
+	let el = mDiv(d1, { cursor: 'pointer' }, null, `<span class="btn-bofa btn-bofa-blue btn-bofa-blue-lock">Make Payments</span>`);
+	el.onclick = () => make_payments_challenge_eval(inp);
+
+	//mAppend(dHidden,mBy('dummy'))
+	//console.log('parent', parent);
+
+	//window.scrollTo(window.screenY,0);
+	//el.scrollIntoView();
+	DA.prevHidden = dHidden;
+
 }
 function bw_login_popup() {
 	let html = `
@@ -180,87 +212,6 @@ function boa_start() {
 
 	S.boa_loggedin = false;
 }
-function boamain_start() {
-	//console.log('haaaaaaaaaaaaaaaaa');
-	S.boa_state = 'authorized';
-
-	//hier start timer that will reset boa_state to null
-	TO.boa = setTimeout(() => {
-		S.boa_state = null;
-		let msg = DA.challenge == 1?'CONGRATULATIONS!!!! YOU SUCCEEDED IN LOGGING IN TO BOA':'Session timed out!';
-		alert(msg);
-		boa_start();
-	}, 3000);
-
-	show_correct_location('boa');  //das ist um alle anderen screens zu loeschen!
-	let d = mBy('dBoa'); mClear(d);
-
-	let d0 = mDiv(d);
-	let d1 = mDiv(d0, { align: 'center' });
-	mAppend(d1, createImage('boamain_header.png', { h: 111 }));
-
-	let d2 = mDiv(d);
-	let d3 = mDiv(d2, { display: 'flex', 'justify-content': 'center' });
-
-	let [wtotal, wleft, wright] = [972, 972 - 298, 292];
-	d = mDiv(d3, { w: wtotal, hmin: 500 });
-	let dl = mDiv(d, { float: 'left', w: wleft, hmin: 400 });
-	let dr = mDiv(d, { float: 'right', hmin: 400, w: wright });
-
-	mDiv(dr, { h: 100 });
-	mAppend(dr, createImage('boamain_rechts.png', { w: 292 }));
-
-	mAppend(dl, createImage('boamain_left_top.jpg', { matop: 50, maleft: -20 }));
-	//mDiv(dl, { family:'connectionsregular,Verdana,Geneva,Arial,Helvetica,sans-serif', fz: 18, weight: 500, 'line-height':70, fg:'#524940' }, null, 'Payment Center');
-
-	mDiv(dl, { bg: '#857363', fg: 'white', fz: 15 }, null, '&nbsp;&nbsp;<i class="fa fa-caret-down"></i>&nbsp;&nbsp;Default Group<div style="float:right;">Sort&nbsp;&nbsp;</div>');
-
-	let boadata = get_fake_boa_data();
-	let color_alt = '#F9F7F4';
-	let i = 0;
-	for (const k in boadata) {
-		let o = boadata[k];
-		//console.log('o', o);
-		let logo = valf(o.logo, 'defaultacct.jpg');
-		let path = `${logo}`;
-		let [sz, bg] = [25, i % 2 ? 'white' : color_alt];
-
-		let dall = mDiv(dl, { bg: bg, fg: '#FCFCFC', 'border-bottom': '1px dotted silver' });
-		let da = mDiv(dall);
-		mFlexLR(da);
-
-		let img = createImage(path, { h: sz, margin: 10 });
-
-		let da1 = mDiv(da);
-		mAppend(da1, img);
-		let dtext = mDiv(da1, { display: 'inline-block', fg: '#FCFCFC', fz: 14 });
-		mAppend(dtext, mCreateFrom(`<a>${k}</a>`));
-		let dsub = mDiv(dtext, { fg: 'dimgray', fz: 12 }, null, o.sub);
-
-		let da2 = mDiv(da); mFlex(da2);
-		let da21 = mDiv(da2, { w: 100, hmargin: 20, mabottom: 20 });
-		let padinput = 7;
-		mDiv(da21, { fg: 'black', fz: 12, weight: 'bold' }, null, 'Amount');
-		mDiv(da21, { w: 100 }, null, `<input style="color:dimgray;font-size:14px;border:1px dotted silver;padding:${padinput}px;width:85px" id="inpAuthocode" name="authocode" value="$" type="text" />`);
-
-		let da22 = mDiv(da2, { maright: 10 });
-		mDiv(da22, { fg: 'black', fz: 12, weight: 'bold' }, null, 'Deliver By');
-		mDiv(da22, {}, null, `<input style="color:dimgray;font-size:12px;border:1px dotted silver;padding:${padinput}px" id="inpAuthocode" name="authocode" value="" type="date" />`);
-
-		// mDiv(dall,{fz:12,fg:'blue',maleft:400,mabottom:25},null,'hallo');
-		let dabot = mDiv(dall);
-		mFlexLR(dabot);
-		let lastpayment = isdef(o['Last Payment']) ? `Last Payment: ${o['Last Payment']}` : ' ';
-		mDiv(dabot, { fz: 12, fg: '#303030', maleft: 10, mabottom: 25 }, null, `${lastpayment}`);
-		mDiv(dabot, { fz: 12, fg: 'blue', maright: 90, mabottom: 25 }, null, `<a>Activity</a>&nbsp;&nbsp;&nbsp;<a>Reminders</a>&nbsp;&nbsp;&nbsp;<a>AutoPay</a>`);
-		//let dadummy = mDiv(dall, {margin:500 },null,`<a>Activity</a><a>Reminders</a><a>AutoPay</a>`); //;'border-bottom':'1px solid black'});
-
-		i++;
-	}
-
-	//mDiv(dl, { hmin: 400, bg: 'orange' });
-
-}
 function boa_save() { localStorage.setItem('boa', JSON.stringify(S)); }
 function boalogin_start() {
 	let d = mBy('dBoa');
@@ -274,6 +225,72 @@ function boalogin_start() {
 	elem.onfocus = () => { bw_symbol_pulse(); S.current_input = get_boa_userid_input(); S.current_label = 'userid'; };
 	let elem2 = get_boa_pwd_input(); //console.log('elem', elem);
 	elem2.onfocus = () => { bw_symbol_pulse(); S.current_input = get_boa_pwd_input(); S.current_label = 'pwd'; };
+}
+function boamain_start() {
+	//console.log('haaaaaaaaaaaaaaaaa');
+	S.boa_state = 'authorized';
+
+	//hier start timer that will reset boa_state to null
+	if (DA.challenge == 1) {
+		TO.boa = setTimeout(() => {
+			S.boa_state = null;
+			let msg = DA.challenge == 1 ? 'CONGRATULATIONS!!!! YOU SUCCEEDED IN LOGGING IN TO BOA' : 'Session timed out!';
+			show_eval_message(true);
+		}, 3000);
+	} else if (DA.challenge == 3) show_bill_button(); 
+	show_correct_location('boa');  //das ist um alle anderen screens zu loeschen!
+	let dParent = mBy('dBoa'); mClear(dParent);
+	let d0 = mDiv(dParent, { align: 'center' }, 'dBoaMain'); mCenterFlex(d0);
+	let [wtotal, wleft, wright] = [972, 972 - 298, 292];
+	let d = mDiv(d0, { w: wtotal, hmin: 500 }); mAppend(d, createImage('boamain_header.png', { h: 111 }));
+	let dl = mDiv(d, { float: 'left', w: wleft, hmin: 400 });
+	let dr = mDiv(d, { float: 'right', hmin: 400, w: wright });
+	mDiv(dr, { h: 100 });
+	mAppend(dr, createImage('boamain_rechts.png', { w: 292 }));
+	mAppend(dl, createImage('boamain_left_top.jpg', { matop: 50, maleft: -20 }));
+	mDiv(dl, { bg: '#857363', fg: 'white', fz: 15 }, null, '&nbsp;&nbsp;<i class="fa fa-caret-down"></i>&nbsp;&nbsp;Default Group<div style="float:right;">Sort&nbsp;&nbsp;</div>');
+	let boadata = get_fake_boa_data_list();
+	let color_alt = '#F9F7F4';
+	let i = 0;
+	for (const o of boadata) {
+		let k = o.key;
+		o.index = i;
+		let logo = valf(o.logo, 'defaultacct.jpg');
+		let path = `${logo}`;
+		let [sz, bg] = [25, i % 2 ? 'white' : color_alt];
+
+		let dall = mDiv(dl, { bg: bg, fg: '#FCFCFC', 'border-bottom': '1px dotted silver' }, `dAccount${i}`);
+		let da = mDiv(dall);
+		mFlexLR(da);
+
+		let img = createImage(path, { h: sz, margin: 10 });
+
+		let da1 = mDiv(da);
+		mAppend(da1, img);
+		let dtext = mDiv(da1, { align: 'left', display: 'inline-block', fg: '#FCFCFC', fz: 14 });
+		mAppend(dtext, mCreateFrom(`<a>${k}</a>`));
+		let dsub = mDiv(dtext, { fg: 'dimgray', fz: 12 }, null, o.sub);
+
+		let da2 = mDiv(da); mFlex(da2);
+		let da21 = mDiv(da2, { w: 100, hmargin: 20, mabottom: 20 });
+		let padinput = 7;
+		mDiv(da21, { fg: 'black', fz: 12, weight: 'bold' }, null, 'Amount');
+		mDiv(da21, { w: 100 }, null, `<input onfocus="add_make_payments_button(event)" style="color:dimgray;font-size:14px;border:1px dotted silver;padding:${padinput}px;width:85px" id="inp${i}" name="authocode" value="$" type="text" />`);
+
+		let da22 = mDiv(da2, { maright: 10 });
+		mDiv(da22, { fg: 'black', fz: 12, weight: 'bold' }, null, 'Deliver By');
+		mDiv(da22, {}, null, `<input style="color:dimgray;font-size:12px;border:1px dotted silver;padding:${padinput}px" id="inpAuthocode" name="authocode" value="" type="date" />`);
+
+		let dabot = mDiv(dall);
+		mFlexLR(dabot);
+		let lastpayment = isdef(o['Last Payment']) ? `Last Payment: ${o['Last Payment']}` : ' ';
+		mDiv(dabot, { fz: 12, fg: '#303030', maleft: 10, mabottom: 25 }, null, `${lastpayment}`);
+		mDiv(dabot, { fz: 12, fg: 'blue', maright: 90, mabottom: 25 }, null, `<a>Activity</a>&nbsp;&nbsp;&nbsp;<a>Reminders</a>&nbsp;&nbsp;&nbsp;<a>AutoPay</a>`);
+
+		mDiv(dall);
+
+		i++;
+	}
 }
 function boaverify_start() {
 	let d = mBy('dBoa');
@@ -297,12 +314,12 @@ function boahavecode_start() {
 
 }
 function bw_symbol_pulse() { let elem = mBy('tbbw'); if (nundef(elem)) return; else { mPulse1(elem); } } //console.log('elem', elem); } }
-function bw_list_entry(d,key,loginOrCard='login'){
-	let logins = loginOrCard == 'login'?get_fake_bw_logins():get_fake_bw_cards();
-	let login=logins[key];
+function bw_list_entry(d, key, loginOrCard = 'login') {
+	let logins = loginOrCard == 'login' ? get_fake_bw_logins() : get_fake_bw_cards();
+	let login = logins[key];
 
-	let d4 = mDiv(d, { bg: 'white', fg: 'black','border-bottom': '1px dotted #ddd'  });
-	let d5 = mDiv(d4, { display: 'flex'});
+	let d4 = mDiv(d, { bg: 'white', fg: 'black', 'border-bottom': '1px dotted #ddd' });
+	let d5 = mDiv(d4, { display: 'flex' });
 
 	let dimg = mDiv(d5, { bg: 'white', fg: 'black' }, null, `<img src='../rechnung/images/${login.logo}' height=14 style="margin:8px">`);
 	let dtext = mDiv(d5, { cursor: 'pointer' }, null, `<div>${key}</div><div style="font-size:12px;color:gray">${login.sub}</div>`);
@@ -323,11 +340,49 @@ function bw_list_entry(d,key,loginOrCard='login'){
 		let img = mDiv(d6, { paright: 16 }, null, `<img src='${path}' height=${sz} style="margin:${ma}">`);
 		if (k != 'bwcross') {
 			mStyle(img, { cursor: 'pointer' });
-			img.onclick = () => onclick_bw_symbol(prefix, o.postfix);
+			img.onclick = () => onclick_bw_symbol(key, o.postfix);
 		}
 	}
 	mFlexSpacebetween(d4);
 	return d4;
+}
+function bw_widget_popup(key = 'boa') {
+	let dpop = mBy('dPopup');
+	show(dpop); mClear(dpop)
+	mStyle(dpop, { top: 50, right: 10, border: 'silver' });
+	let prefix = key;
+	let douter = mDiv(dpop, { wmin: 200, bg: 'white', fg: 'black', border: '1px single #ccc' }, 'dBw');
+
+	//das wird dann ersetzt wenn search enable!!!
+	let d2 = mDiv(douter, { padding: 0, h: 30 }, null, `<img width='100%' src='../rechnung/images/bwsearch.jpg'>`);
+	//let d2 = mDiv(d, { bg: 'dodgerblue', fg: 'white' }, null, 'your bitwarden vault');
+
+	let d = mDiv(douter, { padding: 0, hmax: 600, 'overflow-y': 'auto' });
+	let dtb = mDiv(douter, { padding: 8 }); mFlexEvenly(dtb);
+	let dibuttons = { tab: { top: 2, left: 0 }, vault: { top: 1, left: 3 }, send: { top: 2, left: 3 }, generator: { top: 2, left: 1 }, settings: { top: 4, left: 2 } };
+	for (const bname in dibuttons) {
+		let path = `../rechnung/images/bw${bname}.jpg`;
+		let db = mDiv(dtb, { w: 60 }); mCenterFlex(db);
+		let img = mDiv(db, { h: 36, w: 36, bg: 'white', position: 'relative' }, null, `<img style="position:absolute;top:${dibuttons[bname].top}px;left:${dibuttons[bname].left}px" src='${path}'>`);
+		mLinebreak(db);
+		let txt = mDiv(db, { fz: 12 }, null, capitalize(bname));
+	}
+
+	let d3 = mDiv(d, { bg: '#eee', fg: 'dimgray', padding: 8, matop: 8 }, null, 'LOGINS');
+	bw_list_entry(d, key);
+
+	let d7 = mDiv(d, { bg: '#eee', fg: 'dimgray', padding: 7 }, null, 'CARDS');
+
+	//DAS ERSETZEN:
+	//let d8 = mDiv(d, { fg: 'white' }, null, `<img width='100%' src='../rechnung/images/rest_bw.jpg'>`);
+	let data = get_fake_bw_cards();
+	let color_alt = '#F9F7F4';
+	let i = 0;
+	for (const k in data) {
+		let dentry = bw_list_entry(d, k, 'cards');
+	}
+
+
 }
 function close_popup() {
 	//console.log('screen click');
@@ -360,136 +415,127 @@ function enterOnlineIDFormSubmit() {
 	onclick_submit_boa_login();
 
 }
-function bw_widget_popup(key='boa'){
-	let dpop = mBy('dPopup');
-	show(dpop); mClear(dpop)
-	mStyle(dpop, { top: 50, right: 10, border:'silver' }); 
-	let prefix = key;
-	let douter = mDiv(dpop, { wmin: 200, bg: 'white', fg: 'black', border: '1px single #ccc'  }, 'dBw');
-
-	//das wird dann ersetzt wenn search enable!!!
-	let d2 = mDiv(douter, { padding: 0, h: 30 }, null, `<img width='100%' src='../rechnung/images/bwsearch.jpg'>`);
-	//let d2 = mDiv(d, { bg: 'dodgerblue', fg: 'white' }, null, 'your bitwarden vault');
-
-	let d = mDiv(douter, { padding: 0, hmax: 600, 'overflow-y':'auto' });
-	let dtb = mDiv(douter,{padding:8}); mFlexEvenly(dtb);
-	let dibuttons = {tab:{top:2,left:0},vault:{top:1,left:3},send:{top:2,left:3},generator:{top:2,left:1},settings:{top:4,left:2}};
-	for(const bname in dibuttons){
-		let path = `../rechnung/images/bw${bname}.jpg`;
-		let db=mDiv(dtb,{w:60});mCenterFlex(db);
-		let img = mDiv(db, {h:36,w:36,bg:'white',position:'relative'}, null, `<img style="position:absolute;top:${dibuttons[bname].top}px;left:${dibuttons[bname].left}px" src='${path}'>`);
-		mLinebreak(db);
-		let txt = mDiv(db,{fz:12},null,capitalize(bname));
-	}
-
-	let d3 = mDiv(d, { bg: '#eee', fg: 'dimgray', padding: 8, matop: 8 }, null, 'LOGINS');
-	bw_list_entry(d,key);
-
-	let d7 = mDiv(d, { bg: '#eee', fg: 'dimgray', padding: 7 }, null, 'CARDS');
-	
-	//DAS ERSETZEN:
-	//let d8 = mDiv(d, { fg: 'white' }, null, `<img width='100%' src='../rechnung/images/rest_bw.jpg'>`);
-	let data = get_fake_bw_cards();
-	let color_alt = '#F9F7F4';
-	let i = 0;
-	for (const k in data) {
-		let dentry = bw_list_entry(d,k,'cards');
-	}
-
-
+function fillout_boa_login() {
+	let data = DIBOA.bw_info.boa;
+	let elem_userid = get_boa_userid_input();
+	let elem_pwd = get_boa_pwd_input();
+	elem_userid.value = data.userid;
+	elem_pwd.value = data.pwd;
 }
-function get_fake_boa_data() {
-	const accts = {
-		'AAA-MBNA 5464 3332 3333 5555': { sub: '*5555', logo: 'boa.png' },
-		'AMERICAN EXPRESS': { sub: '*4554', logo: 'amex.png' },
-		'AT&T Mobility': { sub: '*1331', logo: 'att.png' },
-		'AT&T Mobility{AT&T WA}': { sub: '*7575', logo: 'att.png' },
-		'AT&T Mobility': { sub: '*8585', logo: 'att.png' },
-		'Bank Of Amerika Credit Card': { sub: '*1212', logo: 'boa.png' },
-		'Bank Of Amerika Credit Card': { sub: '*0898', logo: 'boa.png' },
-		'Bank Of Amerika Mail-in1': { sub: '*6565', logo: 'boa.png' },
-		'Bel-Red Oral': { sub: '*2432' },
-		'Bellevue Kendo Club': { sub: '*hallo' },
-		'CapitalOne': { sub: '*1324', logo: 'capitalOne.png' },
-		'CapitalOneVenture': { sub: '*6456', logo: 'capitalOne.png' },
-		'CapitalOneVentureF': { sub: '*9789', logo: 'capitalOne.png' },
-		'Chase': { sub: '*3131', logo: 'chase.png' },
-		'Chase Amazon': { sub: '*0898', 'Last Payment': '5-25 $1150.41', logo: 'chase.png' },
-		'Chase Card': { sub: '*1432', logo: 'chase.png' },
-		'CHASE MANHATTAN BANK-MC': { sub: '*0797', logo: 'chase.png' },
-		'Chase Sapphire': { sub: '*5132', logo: 'chase.png' },
-		'Chase Sapphire': { sub: '*8679', logo: 'chase.png' },
-		'City Cards': { sub: '*3124', logo: 'citi.png' },
-		'City Cards Divident': { sub: '*9678', logo: 'citi.png' },
-		'CITY CARDS Points': { sub: '*7678', logo: 'citi.png' },
-		'Citi Costco': { sub: '*8768', 'Last Payment': '6-17 $506.14', logo: 'citi.png' },
-		'Citi Costco': { sub: '*0890', 'Last Payment': '6-6 $228.92', logo: 'citi.png' },
-		'CITI DIVIDENT Platinum': { sub: '*3454', logo: 'citi.png' },
-		'CITIBANK VISA NV': { sub: '*7566', logo: 'citi.png' },
-		'City of Remadina': { sub: '*-887', 'Last Payment': '5-17 $214.94' },
-		'City of Remadina': { sub: '*-998' },
-		'Comcast': { sub: '*7676', logo: 'comcast.png' },
-		'Comcast Perrigo': { sub: '*1324', 'Last Payment': '6-21 $89.44', logo: 'comcast.png' },
-		'ComCast WA': { sub: '*6456', logo: 'comcast.png' },
-		'DISCOVER CARD SERVICES': { sub: '*8678' },
-		'Dr. Ellie Tabaraie': { sub: '*hallo' },
-		'Fastenerz.com': { sub: '*000' },
-		'Fibonacci': { sub: '*6666' },
-		'Fleet Credit Card Service': { sub: '*8798' },
-		'FLEET CREDIT CARD0MC/VS (32)': { sub: '*8799' },
-		'Frontier': { sub: '*05-5' },
-		'Frontier2': { sub: '*5366' },
-		'GoodToGo': { sub: '*7767' },
-		'Hardford Mutual Funds Inc.': { sub: '*8878' },
-		'King County Treasury': { sub: '*0-02' },
-		'King County Treasury': { sub: '*0-03' },
-		'LabCorp': { sub: '*8899' },
-		'Landover Mortgage': { sub: '*hallo' },
-		'Lauren Magada': { sub: 'Lauren boa' },
-		'Lederman&Pulman': { sub: '*9988' },
-		'Liberty Mutual Group': { sub: '*-660' },
-		'Liberty Mutual Group': { sub: '*-768' },
-		'Liberty Mutual Group': { sub: '*-760' },
-		"Macy's Star Rewards": { sub: '*23-0', logo: 'macys.png' },
-		'MBNA': { sub: '*3444' },
-		'MBNA 6455 6677 7924 5555': { sub: '*5555' },
-		'Oachita': { sub: '*6556' },
-		'Omina Condominium CA': { sub: '*889' },
-		'Omina Condominium CA': { sub: '*A889', 'Last Payment': '5-31 $581.54' },
-		'Orthodontics Roos': { sub: '*1111' },
-		'Overcast Law Office, PS': { sub: '*4423' },
-		'Overlake Medical Center': { sub: '*hallo' },
-		'Pediatric Associates Inc': { sub: '*8383' },
-		'Perrigo Heights HOA': { sub: '*t#98' },
-		'Premier Periodontics': { sub: '*9494' },
-		'PreventionMD': { sub: '*9566' },
-		'Prime Trust LLC': { sub: '*8788' },
-		'ProSport': { sub: '*1233' },
-		'PSE - Puget Sound Energy': { sub: '*3444', 'Last Payment': '5-25 $70.59' },
-		'Puget Sound Energy': { sub: '*66-9' },
-		'Real Property Management Eclipse': { sub: '*asss' },
-		'Remadina Ridge Family Dentistry': { sub: '*6656' },
-		'Sewage Capacity Charge': { sub: '*7575' },
-		'Silkroad': { sub: '*788-1' },
-		'Suhrco': { sub: '*899' },
-		'Target': { sub: '*9789' },
-		'Target National Bank': { sub: '*1432' },
-		'Univerity Of WA Medical Center': { sub: '*1543' },
-		'US Bank Credit Card FlexPerks': { sub: '*0789', 'Last Payment': '5-20 $11.13' },
-		'USBank': { sub: '*7567' },
-		'USBank-CashPlus': { sub: '*3123' },
-		'USBank-FlexPerks': { sub: '*1321' },
-		'Verizon': { sub: '*7567' },
-		'Waste Management': { sub: '*87-1' },
-		'Waste Management': { sub: '*23-9' },
-		'Wells Fargo Home Mortgage': { sub: '*1333', 'Last Payment': '6-10 $1625.06', logo: 'wellsfargo.png' },
-		'Wells Fargo Home Mortgage': { sub: '*2444', logo: 'wellsfargo.png' },
-		'Williams-Sonoma': { sub: '*9888' },
-		'WINDERMERE PROPERTY MGMT/EASTSID': { sub: '*8766' },
-		'Windermere Real Estate/East': { sub: '*ntal' },
+function generate_statement(dParent, boacc, brand) {
+
+	let brand_colors = {
+		usbank: 'navy', prime: 'skyblue', citibank: 'silver', wellsfargo: RED, BofA_rgb: 'navy', chase_bank: BLUE,
+		comcast: 'orange', oasis: GREEN, PSE: 'gold', redmond: 'grey'
 	};
-	return accts;
+
+	let date = new Date();
+
+	let acc = { index: boacc.index, creditline: rNumber(0, 10) * 100, holder: 'Gunter Yang Lee', num: 242948572348, due: rDate(addWeekToDate(date, 4), addWeekToDate(date, 2)) }
+	let nums = { prevbalance: rNumber(0, 100), payments: rNumber(100, 1000) + rNumber(0, 100) / 100, fees: rNumber(0, 100) };
+	nums.balance = nums.prevbalance + nums.payments + nums.fees;
+	acc.cashadvance = acc.creditline / 4;
+
+	//acc.num should be a 12 digit number where the last 4 digits correspond to boacc.sub.substring(1)
+	acc.num = acc.num.toString();
+	acc.num = acc.num.substring(0, acc.num.length - 4) + boacc.sub.substring(1);
+	acc.num = parseInt(acc.num);
+
+
+	let [color, fromdate, todate] = [valf(brand_colors[brand], 'random'), addWeekToDate(date, -5), addWeekToDate(date, -1)];
+
+	//#region header
+	let d;
+	if (nundef(dParent)) {
+		let dpop = mBy('dPopup'); show(dpop); mClear(dpop); mStyle(dpop, { top: 50, right: 10 });
+		d = mDiv(dpop, { padding: 10, border: '1px solid #ddd', bg: 'white', fg: 'black' });
+	} else {
+		mStyle(dParent, { 'justify-content': 'start' });
+		d = mDiv(dParent);
+	}
+	mStyle(d, { bg: 'white', position: 'fixed', top: 50, right: 0, padding: 10 });
+
+	let d1 = mDiv(d, { bg: color, h: 5, w: '100%' }); //horizontal line
+	let dheader = mDiv(d, { fz: 12 }); //header part
+	let [dl, dr] = mColFlex(dheader, [1, 3]); //, [BLUE, GREEN]);
+	//mDiv(dl1, { weight: 'bold' }, null, `- your partner in business -`);
+	let logo = createImage(`${brand}.png`, { hmax: 90, wmax: 300 });
+
+	let dl1 = mDiv(dl, { hmax: 90, wmax: 400 }); mAppend(dl1, logo); //, null, img_html(`${brand}.png`));
+	let dr1 = mDiv(dr, { align: 'right', paright: 10 });
+	mDiv(dr1, {}, null, `Account Holder: ${acc.holder}`);
+	mDiv(dr1, {}, null, `Account Number: ${acc.num}`);
+	mDiv(dr1, {}, null, `Statement Period: ${date2locale(fromdate)} - ${date2locale(todate)}`);
+	mDiv(dr1, {}, null, `Due Date: ${date2locale(acc.due)}`);
+	mDiv(d, {}, null, '<br>');
+	//#endregion
+	let dmain = mDiv(d, { wmax: 600 }); //main part
+	let [dlm, drm] = mColFlex(dmain, [1, 1.25]); //, [BLUE, GREEN]);
+	let dlm1 = mDiv(dlm, { hmargin: 10, }, null, `ACCOUNT SUMMARY`);
+	let dsum = mDiv(dlm, { hmargin: 10, rounding: 12, padding: 10, border: '1px solid #ccc', bg: 'white', fg: 'black' });
+	mDivLR(dsum, { w: '100%' }, null, [`Previous Balance:`, `${format_currency(nums.prevbalance)}`]);
+	mDivLR(dsum, { w: '100%' }, null, [`Payments and Credits:`, `${format_currency(nums.payments)}`]);
+	mDivLR(dsum, { w: '100%' }, null, [`Purchases:`, `${format_currency(nums.payments)}`]);
+	mDivLR(dsum, { w: '100%' }, null, [`Balance Transfers:`, `${format_currency(0)}`]);
+	mDivLR(dsum, { w: '100%' }, null, [`Cash Advances:`, `${format_currency(0)}`]);
+	mDivLR(dsum, { w: '100%' }, null, [`Fees Charged:`, `${format_currency(nums.fees)}`]);
+	mDivLR(dsum, { w: '100%' }, null, [`Interest Charged:`, `${format_currency(0)}`]);
+	mDivLR(dsum, { w: '100%' }, null, [`New Balance:`, `${format_currency(nums.balance)}`]);
+	mDiv(dsum, { fz: 9, align: 'center' }, null, 'see interest charge calculation section following the Transactions section for detailed APR information');
+	mLine(dsum, { fz: 10, align: 'center' });
+	mDivLR(dsum, { w: '100%' }, null, [`Credit Line:`, `${format_currency(acc.creditline)}`]);
+	mDivLR(dsum, { w: '100%' }, null, [`Credit Line Available:`, `${format_currency(acc.creditline)}`]);
+	mDivLR(dsum, { w: '100%' }, null, [`Cash Advance Credit Line:`, `${format_currency(acc.cashadvance)}`]);
+	mDivLR(dsum, { w: '100%' }, null, [`Cash Advance Credit Line Available:`, `${format_currency(acc.cashadvance)}`]);
+	mDiv(dsum, {}, null, 'You may be able to avoid interest on purchases. See reverse for details');
+
+	// mDiv(dsum,{},null,`Account Number: ${acc.num}`);
+	// mDiv(dsum,{},null,`Statement Period: ${date2locale(fromdate)} - ${date2locale(todate)}`);
+	// mDiv(dsum,{},null,`Due Date: ${date2locale(acc.due)}`);
+
+	let drm1 = mDiv(drm, { hmargin: 10, }, null, `PAYMENT INFORMATION`);
+	let dpay = mDiv(drm, { hmargin: 10, rounding: 12, padding: 10, border: '1px solid #ccc', bg: 'white', fg: 'black' });
+	mDivLR(dpay, { w: '100%', weight: 'bold' }, null, [`New Balance:`, `${format_currency(nums.balance)}`]);
+	mLine(dpay, { fz: 10, align: 'center' });
+	mDivLR(dpay, { w: '100%' }, null, [`Minimum Payment Due:`, `${format_currency(nums.balance / 10)}`]);
+	mDivLR(dpay, { w: '100%', weight: 'bold' }, null, [`Payment Due Date:`, `${date2locale(acc.due)}`]);
+	mDiv(dpay, { fz: 9, matop: 10 }, null, '<b>Late Payment Warning:</b> If we do not receive your minimum payment by the date listed above, you may have to pay a fee of up to $10.00.');
+
+	let drm2 = mDiv(drm, { matop: 10, hmargin: 10, }, null, `REWARDS`);
+	let drewards = mDiv(drm, { hmargin: 10, rounding: 12, padding: 10, border: '1px solid #ccc', bg: 'white', fg: 'black' });
+	mDivLR(drewards, { w: '100%', weight: 'bold' }, null, [`Cashback Bonus*:`, `Anniversary Month`]);
+	mDivLR(drewards, { w: '100%' }, null, [`Opening Balance:`, `${format_currency(0)}`]);
+	mDivLR(drewards, { w: '100%' }, null, [`New Cashback Bonus this Period:`, `${format_currency(4.98)}`]);
+	mDivLR(drewards, { w: '100%' }, null, [`Redeemed this Period:`, `${format_currency(0)}`]);
+	mLine(drewards, { fz: 10, align: 'center' });
+	mDivLR(drewards, { w: '100%', weight: 'bold' }, null, [`Cashback Bonus Balance:`, `${format_currency(4.98)}`]);
+	mDiv(drewards, { fz: 10 }, null, `<b>to learn more log in to www.${brand}.com</b>`);
+
+	mDiv(d, { matop: 25, maleft: 6 }, null, img_html('statement2.jpg'));
+	mDiv(d, {}, null, '<br>');
+	let dbla1 = mDiv(d, { hmargin: 10, rounding: 12, padding: 10, border: '1px solid #ccc', bg: 'white', fg: 'black' });
+	mAppend(dbla1, createImage('statement1.jpg', {}));
+	mAppend(d, createImage('statementfooter.jpg', {}));
+
+
+	return { div: d, nums: nums, acc: acc, topay: nums.balance, brand: brand, boacc: boacc };
+
 }
+function generate_skype_contacts(n) {
+	let date = new Date();
+	let res = [{ num: `+${rNumber(11111, 99999)}`, date: date, color: rChoose([ORANGE, PURPLE, 'deepskyblue', 'hotpink']), msg: `<#>'BofA': DO NOT share this S...` }];
+	for (let i = 1; i < n; i++) {
+		date = rDate(date, new Date(2022, 1, 1));
+		let istext = coin();
+		let [num, msg] = istext ? [`+${rNumber(11111, 99999)}`, `<#>${rChoose(['BofA', 'Prudential'])}: DO NOT share this S...`]
+			: [`+1425${rNumber(1111111, 9999999)}`, `Missed Call`];
+		let c = { num: num, date: date, color: rChoose([ORANGE, PURPLE, 'deepskyblue', 'hotpink']), msg: msg };
+		res.push(c);
+	}
+	return res;
+}
+function get_fake_boa_data() { if (nundef(DA.boadata)) DA.boadata = DIBOA.boa_data; return DA.boadata; }
+function get_fake_boa_data_list() { if (nundef(DA.boadata)) DA.boadata = dict2list(DIBOA.boa_data, 'key'); return DA.boadata; }
 function get_fake_bw_cards() {
 	const cards = {
 		'amazon': { sub: '*5555', logo: 'visa.png' },
@@ -510,14 +556,14 @@ function get_fake_bw_cards() {
 
 	return cards;
 }
-function get_fake_bw_logins(){
+function get_fake_bw_logins() {
 	const logins = {
-		'bw': { link:'', sub: 'gilee144', p: '', acc: '*5555', logo: 'bw.png' },
-		'boa': { link:'', sub: 'gilee144', p: 'boa.png' , acc: '*5555', logo: 'boa.png' },
-		'authy': { link:'', sub: 'agfil22', p: 'authy.png' , acc: '*5555', logo: 'authy.png' },
-		'authenticator': { link:'', sub: 'amf234', p: '' , acc: '*5555', logo: 'authenticator.png' },
-		'skype': { link:'', sub: 'agile34', p: '' , acc: '*5555', logo: 'skype.png' },
-		'onedrive': { link:'', sub: 'agand23', p: '' , acc: '*5555', logo: 'onedrive.png' },
+		'bw': { link: '', sub: 'gilee144', p: '', acc: '*5555', logo: 'bw.png' },
+		'boa': { link: '', sub: 'gilee144', p: 'boa.png', acc: '*5555', logo: 'boa.png' },
+		'authy': { link: '', sub: 'agfil22', p: 'authy.png', acc: '*5555', logo: 'authy.png' },
+		'authenticator': { link: '', sub: 'amf234', p: '', acc: '*5555', logo: 'authenticator.png' },
+		'skype': { link: '', sub: 'agile34', p: '', acc: '*5555', logo: 'skype.png' },
+		'onedrive': { link: '', sub: 'agand23', p: '', acc: '*5555', logo: 'onedrive.png' },
 	}
 	return logins;
 }
@@ -989,219 +1035,22 @@ function get_boa_start_content() {
 	let img = `<img src='../rechnung/images/boa_start_pic.JPG' width='100%'>`;
 	return mCreateFrom(img);
 }
-function get_toolbar(list) {
-	//console.log('hallo')
-	if (nundef(list)) list = ['home', 'boa', 'bw', 'authenticator', 'authy', 'onedrive', 'skype'];
-	let d = mBy('dTop');
-	// mDiv(d,{},'tbBoa',`<a href="../rechnung/boaa.html"><img id="bwlogo" src="../rechnung/boa/boa.png" height="30"/></a>`);
-	mFlex(d);
-	mStyle(d, { 'justify-content': 'space-between', padding: 10 });
-	let dleft = mDiv(d, { display: 'flex', gap: 10 }, 'dTopLeft'); let dright = mDiv(d, { display: 'flex', gap: 10 }, 'dTopRight');
-	for (const k of list) {
-		let o = DIBOA[k];
-		if (nundef(o)) { console.log('missing toolbar item: ' + k); continue; }
-		let d1 = o.align == 'left' ? dleft : dright;
-		let dsym = mDiv(d1, {}, `tb${k}`, `<a href="javascript:${o.pop ? 'onclick_popup' : 'onclick_location'}('${k}')"><img src="../rechnung/images/${o.img}" height="30"/></a>`);
-		if (k == 'bw') {
-			mStyle(dsym, { position: 'relative' });
-			let elem = mCreateFrom(`<i class="fa fa-car"></i>`);
-			mAppend(dsym, elem);
-			let offset = 6;
-			mStyle(elem, { fg: 'transparent', fz: 10, position: 'absolute', bottom: offset - 1, right: offset + 1 });
-			//console.log('is_bw',is_bw())
-			if (!is_bw()) toggle_bw_symbol(dsym);
-		}
-	}
-}
-function is_bw() {
-	//find out bitwarden state
-	let bw_state = S.bw_state; //localStorage.getItem('bw_state');
-	//console.log('bw_state', bw_state);
-	return bw_state == 'loggedin'; // isdef(bw_state);
-}
-function keyhandler(ev) {
-	//console.log('ev',ev.keyCode,ev.shiftKey,ev.ctrlKey,ev.altKey);
-	if (ev.key == 'Enter') { } //console.log('KEY:ENTER!');}
-	else if (ev.key == 'Escape') { close_popup(); } //console.log('KEY:ESCAPE!');}
-}
-function onclick_bw_symbol(app, key) {
-	if (nundef(key)) key = S.current_label;
-	let s = lookup(DIBOA, ['bw_info', app, key]);
-	console.log('app', app, 'key', key, 's', s, '\nS', S);
-	if (s && isdef(S.current_input)) {
-		//hier brauch ich jetzt das field in dem ich war bevor bw opened!
-		S.current_input.value = s;
-	} else {
-		console.log('no bw_info for', app, key);
-	}
-}
-function onclick_boa_sendcode() {
-	//extract data from code form above
-	let list1 = get_checked_radios(mBy('dPhoneContact'));
-	let list2 = get_checked_radios(mBy('dTextOrPhone'))
-	console.log(list1, list2);
-	let success_phone = list1.length == 1 && list1[0] == 'text_3';
-	let success_textOrPhone = list2.length == 1 && list2[0] == 'text_1';
+function get_make_payments_button() {
+	let html = `
+		<a
+			href="javascript:void(0);"
+			onclick="make_payments();"
+			class="btn-bofa btn-bofa-blue btn-bofa-small behbio btn-bofa-noRight"
+			name="make-payments-submit"
+			>
+			<span class="btn-bofa  btn-bofa-blue-lock">Make Payments</span>
+		</a>
 
-	let TESTSKIP = false;
-	console.log('TESTSKIP', TESTSKIP);
-	if (!TESTSKIP) {
-		if (!success_phone) { alert("Please select the phone number ending in '0297'!"); return; }
-		if (!success_textOrPhone) { alert("Please select the option 'Text message'!"); return; }
-	}
-
-	//SUCCESS! now open next form!
-	boahavecode_start();
-
-}
-function onclick_boa_cancel() { onclick_location('home'); }
-function onclick_bigredloginbutton() { boalogin_start(); }
-function onclick_submit_boa_login() {
-	let userid = get_boa_userid_input().value;
-	let pwd = get_boa_pwd_input().value;
-	let TESTSUCCESS = false; //true;
-	if (TESTSUCCESS || userid == DIBOA.bw_info.boa.userid && pwd == DIBOA.bw_info.boa.pwd) {
-		console.log('SUCCESS!!!!!!! onclick_submit_boa_login', userid, pwd);
-
-		//open next form
-		boaverify_start();
-
-	} else {
-		console.log('FAIL!!!!!!! onclick_submit_boa_login', userid, pwd);
-	}
-}
-function show_correct_location(k) {
-	hide('dPopup');
-	for (const k1 in DIBOA) { hide(`d${capitalize(k1)}`); }
-	S.location = k; // muss ich nicht saven
-	show(`d${capitalize(k)}`);
-}
-function onclick_location(k) {
-	//console.log('_onclick_location', k);
-	show_correct_location(k);
-	if (k == 'boa') {
-		if (S.boa_state == 'authorized') boamain_start();
-		else if (S.boa_state == 'authorization_pending') boahavecode_start();
-		else { S.boa_state = 'start'; boa_start(); }
-	} else if (k == 'skype') {
-		skype_start();
-	}
-}
-function onclick_userid() {
-	let userid = mBy("enterID-input");
-	let pwd = mBy('tlpvt-passcode-input');
-	console.log('userid', userid.value, 'pwd', pwd.value);
-}
-function onclick_popup(k) {
-
-	let o = DIBOA[k];
-	if (nundef(o)) { console.log('missing popup item: ' + k); return; }
-	if (k == 'bw') {
-		if (!is_bw()) {
-			assertion(S.bw_state != 'loggedin', "bw_state is not set!!!!", S.bw_state);
-			bw_login_popup();
-		} else {
-			bw_widget_popup();
-		}
-	} else { console.log('onclick_popup', k); }
-}
-function onclick_boa_submit_code() {
-	//extract data from code form above
-	let list1 = get_input_value('inpAuthocode');
-	//console.log('code', list1, S.boa_authorization_code);
-
-	let success_code = list1 == S.boa_authorization_code;
-
-	if (!success_code) { alert("The code you entered was not correct! " + S.boa_authorization_code); return; }
-
-	//SUCCESS! now open next form!
-	//console.log('Finally, open account list!!!!!');
-	boamain_start();
-
-}
-function show_master_password() {
-	let score = localStorage.getItem('score');
-	show_special_message('the bitwarden master password is ' + S.master_password, false, 5000, 2000, { bg: 'dodgerblue', classname: '', top: 400 });
-}
-function set_new_password() {
-	let len = Math.min(20, S.master_password.length + 1);
-	let pnew = rPassword(len);
-	console.log('new password: ', pnew);
-	S.master_password = pnew;
-	S.score = 0;
-	boa_save();
-}
-function set_boa_score(inc) { S.score += inc; if (S.score < 0) S.score = 0; boa_save(); }
-function toggle_bw_symbol(d) {
-	if (nundef(d)) d = document.getElementById('tbbw');
-	d = d.getElementsByTagName('i')[0];
-	console.log('d', d);
-	if (isdef(d)) {
-		if (d.classList.contains('fa-car')) {
-			d.classList.remove('fa-car');
-			d.classList.add('fa-star');
-			mStyle(d, { fg: 'silver' });
-		} else {
-			d.classList.remove('fa-star');
-			d.classList.add('fa-car');
-			mStyle(d, { fg: 'transparent' });
-		}
-	}
-}
-
-//#region ui helpers
-function get_input_value(id) {
-	let inp = mBy(id);
-	let val = inp.value;
-	return val;
-}
-function createImage(filename, styles) {
-	let img = mCreateFrom(`<img src='../rechnung/images/${filename}'>`);
-	if (isdef(styles.w)) { img.setAttribute('width', styles.w); }
-	if (isdef(styles.h)) { img.setAttribute('height', styles.h); }
-	mStyle(img, styles);
-	return img;
-}
-function img_html(filename, fulldim = 'height') {
-	return `<img ${fulldim}='100%' src='../rechnung/images/${filename}'>`;
-}
-
-//TO SORT!!!
-function generate_random_date(before, after) {
-	let after_date = new Date(after);
-	let before_date = new Date(before);
-	let random_date = new Date(Math.random() * (before_date.getTime() - after_date.getTime()) + after_date.getTime());
-	return random_date;
-}
-function format_date(date) {
-	let d = new Date(date);
-	let month = '' + (d.getMonth() + 1);
-	let day = '' + d.getDate();
-	let year = d.getFullYear();
-	if (month.length < 2) month = '0' + month;
-	if (day.length < 2) day = '0' + day;
-	return [month, day, year].join('/');
-}
-function get_weekday(date) {
-	let d = new Date(date);
-	return d.getDay();
+	`;
 }
 function get_skype_expanded_message(msg) {
 	if (msg[0] == 'M') { return msg; }
 	return msg.slice(0, msg.length - 4) + `ign In code. We will NEVER call you or text you for it. Code ${rNumber(111111, 999999)}. Reply HELP if you didn't request it. `;
-}
-function generate_skype_contacts(n) {
-	let date = new Date();
-	let res = [{ num: `+${rNumber(11111, 99999)}`, date: date, color: rChoose([ORANGE, PURPLE, 'deepskyblue', 'hotpink']), msg: `<#>'BofA': DO NOT share this S...` }];
-	for (let i = 1; i < n; i++) {
-		date = generate_random_date(date, new Date(2022, 1, 1));
-		let istext = coin();
-		let [num, msg] = istext ? [`+${rNumber(11111, 99999)}`, `<#>${rChoose(['BofA', 'Prudential'])}: DO NOT share this S...`]
-			: [`+1425${rNumber(1111111, 9999999)}`, `Missed Call`];
-		let c = { num: num, date: date, color: rChoose([ORANGE, PURPLE, 'deepskyblue', 'hotpink']), msg: msg };
-		res.push(c);
-	}
-	return res;
 }
 function get_skype_phone_icon(color) {
 	let html = `
@@ -1258,58 +1107,212 @@ function get_skype_phone_icon(color) {
 	`;
 	return mCreateFrom(html);
 }
-function fillout_boa_login() {
-	let data = DIBOA.bw_info.boa;
-	let elem_userid = get_boa_userid_input();
-	let elem_pwd = get_boa_pwd_input();
-	elem_userid.value = data.userid;
-	elem_pwd.value = data.pwd;
+function get_toolbar(list) {
+	//console.log('hallo')
+	if (nundef(list)) list = ['home', 'boa', 'bw', 'authenticator', 'authy', 'onedrive', 'skype'];
+	let d = mBy('dTop');
+	// mDiv(d,{},'tbBoa',`<a href="../rechnung/boaa.html"><img id="bwlogo" src="../rechnung/boa/boa.png" height="30"/></a>`);
+	mFlex(d);
+	mStyle(d, { 'justify-content': 'space-between', padding: 10 });
+	let dleft = mDiv(d, { display: 'flex', gap: 10 }, 'dTopLeft'); let dright = mDiv(d, { display: 'flex', gap: 10 }, 'dTopRight');
+	for (const k of list) {
+		let o = DIBOA[k];
+		if (nundef(o)) { console.log('missing toolbar item: ' + k); continue; }
+		let d1 = o.align == 'left' ? dleft : dright;
+		let dsym = mDiv(d1, {}, `tb${k}`, `<a href="javascript:${o.pop ? 'onclick_popup' : 'onclick_location'}('${k}')"><img src="../rechnung/images/${o.img}" height="30"/></a>`);
+		if (k == 'bw') {
+			mStyle(dsym, { position: 'relative' });
+			let elem = mCreateFrom(`<i class="fa fa-car"></i>`);
+			mAppend(dsym, elem);
+			let offset = 6;
+			mStyle(elem, { fg: 'transparent', fz: 10, position: 'absolute', bottom: offset - 1, right: offset + 1 });
+			//console.log('is_bw',is_bw())
+			if (!is_bw()) toggle_bw_symbol(dsym);
+		}
+	}
 }
-function generate_bill() {
-	let key = 'flexperks';
-
-	const Bills = {
-		flexperks: { w: 898, h: 924, filename: 'ex_flexperks.PNG', x: 0, y: 0 },
-	};
-
-	let bill = Bills[key];
-
-	onclick_location('dBill');
-
-
+function is_bw() {
+	//find out bitwarden state
+	let bw_state = S.bw_state; //localStorage.getItem('bw_state');
+	//console.log('bw_state', bw_state);
+	return bw_state == 'loggedin'; // isdef(bw_state);
 }
-function skype_start() {
+function keyhandler(ev) {
+	//console.log('ev',ev.keyCode,ev.shiftKey,ev.ctrlKey,ev.altKey);
+	if (ev.key == 'Enter') { } //console.log('KEY:ENTER!');}
+	else if (ev.key == 'Escape') { close_popup(); } //console.log('KEY:ESCAPE!');}
+}
+function make_payments_challenge_eval(inp) {
+	let val = inp.value;
+	//console.log('mit was muss ich das jetzt vergleichen',val);
 
-	let d = mBy('dSkype'); mClear(d); mStyle(document.body, { h: 'calc( 100vh - 56px )', 'overflow-y': 'hidden' });
+	let solution = { amount: DA.bill.nums.balance, index: DA.bill.acc.index };
+	let answer = { amount: Number(val.substring(1).trim()), index: Number(inp.id.substring(3)) };
 
-	let d0 = mDiv(d);
-	let [dl, dr] = mColFlex(d, [1, 3]); //, [BLUE, GREEN]);
-	mStyle(dl, { border: '1px dotted silver' }); mStyle(dr, { border: '1px dotted silver' });
 
-	mDiv(dl, {}, null, img_html('skypeTopLeft.jpg'));
-	let d1 = mDiv(dl);
-	DIBOA.skype.divRight = dr;
-	DIBOA.skype.divLeft = dl;
+	//console.log('solution',solution,'answer',answer);
+	let correct = solution.amount.toFixed(2) == answer.amount.toFixed(2) && solution.index == answer.index;
+	//if (correct) { console.log('CORRECT!!!!!!!!!'); } else { console.log('WRONG!!!!!!!!!', 'solution', solution, 'answer', answer); }
+	show_eval_message(correct);
+}
+function onclick_bill() {
+	//console.log('clicked bill');
+	let dParent = mBy('dBoaMain');
+	if (dParent.children.length > 1) dParent.lastChild.remove();
 
-	let contacts = DIBOA.skype.contacts = generate_skype_contacts(25); console.log(contacts)
-	for (const o of contacts) {
-		let dc = mDiv(d1, { rounding: 12, hpadding: 6, vpadding: 6, margin: 4, gap: 12, overflow: 'hidden' }, null, null, 'skypecontact');
-		mFlex(dc);
-		o.div = dc;
-		dc.onclick = () => { S.skype_contact = toggleSelection(o, S.skype_contact, 'skypecontact_active'); show_skype_contact(dr) };
+	//let accs = get_fake_boa_data();	let acclist = dict2list(accs).filter(x => isdef(x['Last Payment']));
+	let acclist = get_fake_boa_data_list().filter(x => isdef(x['Last Payment']));
+	//console.log('accs', acclist);
+	let boacc = rChoose(acclist);
 
-		let [sz] = [40];
+	let item = generate_statement(dParent, boacc, boacc.brand);
+	DA.bill = item;
+	lookupAddIfToList(DA, ['challengedata'], item);
+	//console.log('item', item, DA);
+	//item.boacc.sub
+}
+function onclick_bw_symbol(app, key) {
+	if (nundef(key)) key = S.current_label;
+	let s = lookup(DIBOA, ['bw_info', app, key]);
+	//console.log('app', app, 'key', key, 's', s, '\nS', S);
+	if (s && isdef(S.current_input)) {
+		//hier brauch ich jetzt das field in dem ich war bevor bw opened!
+		S.current_input.value = s;
+	} else {
+		console.log('no bw_info for', app, key);
+	}
+}
+function onclick_boa_sendcode() {
+	//extract data from code form above
+	let list1 = get_checked_radios(mBy('dPhoneContact'));
+	let list2 = get_checked_radios(mBy('dTextOrPhone'))
+	console.log(list1, list2);
+	let success_phone = list1.length == 1 && list1[0] == 'text_3';
+	let success_textOrPhone = list2.length == 1 && list2[0] == 'text_1';
 
-		let dimg = get_skype_phone_icon(o.color); //mDiv(dc,{w:sz,h:sz,margin:10},null,);
-		mAppend(dc, dimg);
-
-		let dmiddle = mDiv(dc, { flex: 8 });
-		let dnum = mDiv(dmiddle, { fz: 14, fg: 'black' }, null, `<div>${o.num}</div>`);
-		let dmsg = mDiv(dmiddle, { fz: 11, fg: 'grey' }, null, `<div>${o.msg}</div>`);
-
-		let ddate = mDiv(dc, { flex: 1, fz: 11, fg: 'grey' }, null, `<div>${format_date(o.date)}</div>`);
+	let TESTSKIP = false;
+	console.log('TESTSKIP', TESTSKIP);
+	if (!TESTSKIP) {
+		if (!success_phone) { alert("Please select the phone number ending in '0297'!"); return; }
+		if (!success_textOrPhone) { alert("Please select the option 'Text message'!"); return; }
 	}
 
+	//SUCCESS! now open next form!
+	boahavecode_start();
+
+}
+function onclick_boa_cancel() { onclick_location('home'); }
+function onclick_bigredloginbutton() { boalogin_start(); }
+function onclick_submit_boa_login() {
+	let userid = get_boa_userid_input().value;
+	let pwd = get_boa_pwd_input().value;
+	let TESTSUCCESS = false; //true;
+	if (TESTSUCCESS || userid == DIBOA.bw_info.boa.userid && pwd == DIBOA.bw_info.boa.pwd) {
+		//console.log('SUCCESS!!!!!!! onclick_submit_boa_login', userid, pwd);
+
+		//open next form
+		boaverify_start();
+
+	} else {
+		console.log('FAIL!!!!!!! onclick_submit_boa_login', userid, pwd);
+	}
+}
+function onclick_home() {
+	onclick_location('home');
+}
+function onclick_location(k) {
+	//console.log('_onclick_location', k);
+	show_correct_location(k);
+	if (k == 'boa') {
+		console.log('boa_state', S.boa_state);
+		if (S.boa_state == 'authorized') { boamain_start(); }
+		else if (S.boa_state == 'authorization_pending') boahavecode_start();
+		else { S.boa_state = 'start'; boa_start(); }
+	} else if (k == 'skype') {
+		skype_start();
+	} else if (k == 'home') {
+		let b = mBy('tbbill'); if (isdef(b)) b.remove();
+		scrollToTop();
+		S.boa_state = null;
+		let dband = mBy('dBandMessage');
+		if (isdef(dband)) mStyle(dband, { display: 'none', h: 0, hmin: 0 });
+	}
+}
+function onclick_userid() {
+	let userid = mBy("enterID-input");
+	let pwd = mBy('tlpvt-passcode-input');
+	console.log('userid', userid.value, 'pwd', pwd.value);
+}
+function onclick_popup(k) {
+
+	let o = DIBOA[k];
+	if (nundef(o)) { console.log('missing popup item: ' + k); return; }
+	if (k == 'bw') {
+		if (!is_bw()) {
+			assertion(S.bw_state != 'loggedin', "bw_state is not set!!!!", S.bw_state);
+			bw_login_popup();
+		} else {
+			bw_widget_popup();
+		}
+	} else { console.log('onclick_popup', k); }
+}
+function onclick_boa_submit_code() {
+	//extract data from code form above
+	let list1 = get_input_value('inpAuthocode');
+	//console.log('code', list1, S.boa_authorization_code);
+
+	let success_code = list1 == S.boa_authorization_code;
+
+	if (!success_code) {
+		show_eval_message(false);
+		//alert("The code you entered was not correct! " + S.boa_authorization_code); 
+		return;
+	}
+
+	//SUCCESS! now open next form!
+	//console.log('Finally, open account list!!!!!');
+	boamain_start();
+
+}
+function scrollToTop() {
+	document.body.scrollTop = 0; // For Safari
+	document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+}
+function show_bill_button() {
+	if (isdef(mBy('tbbill'))) return;
+	let tb = mBy('dTopRight');
+	let b = mDiv(tb, {}, `tbbill`, `<a href="javascript:onclick_bill()"><img src="../rechnung/images/bill.png" height="30"/></a>`);
+	mInsert(tb, b);
+}
+function show_master_password() {
+	let score = localStorage.getItem('score');
+	show_special_message('the bitwarden master password is ' + S.master_password, false, 5000, 2000, { bg: 'dodgerblue', classname: '', top: 400 });
+}
+function show_eval_message(correct) {
+	let msg = correct ? `Congratulations!!! You passed the ${DA.name} challenge!` : 'Wrong solution - Try Again!';
+	//show_special_message(msg, false, 5000, 2000, { bg: 'dodgerblue', position:'sticky', classname: 'special_message' },onclick_home);
+	let d = valf(mBy('dBandMessage'), mDiv(document.body, {}, 'dBandMessage'));
+	//console.log('dParent',dParent)
+	show(d);
+	clearElement(d);
+
+	//addKeys({ position: 'fixed', top: 200, classname: 'slow_gradient_blink', vpadding: 10, align: 'center', position: 'absolute', fg: 'white', fz: 24, w: '100vw' }, styles);
+	//if (!isEmpty(styles.classname)) { mClass(dParent, styles.classname); }
+	//delete styles.classname;
+	//mStyle(dParent, styles);
+	d.innerHTML = msg; //'blablablablabllllllllllllllllllllllllllllllaaaaaaaaaaaaaaaaaaaaaaa'; //msg;
+	mStyle(d, { position: 'fixed', top: 127, left: 0, bg: 'red', fg: 'white', w: '100%', h: 40, hmin: 40, hmax: 40, fz: 24, align: 'center', vpadding: 10, classname: 'slow_gradient_blink' });
+	//mClass(d,'slow_gradient_blink')
+	let [ms, delay, callback] = [5000, 0, correct ? onclick_home : null];
+	if (delay > 0) TO.special = setTimeout(() => { mFadeClear(d, ms, callback); }, delay);
+	else mFadeClear(d, ms, callback);
+
+}
+function show_correct_location(k) {
+	hide('dPopup');
+	for (const k1 in DIBOA) { hide(`d${capitalize(k1)}`); }
+	S.location = k; // muss ich nicht saven
+	show(`d${capitalize(k)}`);
 }
 function show_one_skype_message(dParent, o) {
 	let d = mDiv(dParent, { rounding: 12, hpadding: 6, vpadding: 6, margin: 4, gap: 12 }); mFlex(d);
@@ -1347,74 +1350,15 @@ function show_skype_contact(dParent) {
 
 	console.log('auth code is', S.boa_authorization_code);
 }
-function restrest() {
-	let d1 = mDiv(d0, { align: 'center' });
-	mAppend(d1, createImage('boamain_header.png', { h: 111 }));
-
-	let d2 = mDiv(d);
-	let d3 = mDiv(d2, { display: 'flex', 'justify-content': 'center' });
-
-	let [wtotal, wleft, wright] = [972, 972 - 298, 292];
-	d = mDiv(d3, { w: wtotal, hmin: 500 });
-	let dl = mDiv(d, { float: 'left', w: wleft, hmin: 400 });
-	let dr = mDiv(d, { float: 'right', hmin: 400, w: wright });
-
-	mDiv(dr, { h: 100 });
-	mAppend(dr, createImage('boamain_rechts.png', { w: 292 }));
-
-	mAppend(dl, createImage('boamain_left_top.jpg', { matop: 50, maleft: -20 }));
-	//mDiv(dl, { family:'connectionsregular,Verdana,Geneva,Arial,Helvetica,sans-serif', fz: 18, weight: 500, 'line-height':70, fg:'#524940' }, null, 'Payment Center');
-
-	mDiv(dl, { bg: '#857363', fg: 'white', fz: 15 }, null, '&nbsp;&nbsp;<i class="fa fa-caret-down"></i>&nbsp;&nbsp;Default Group<div style="float:right;">Sort&nbsp;&nbsp;</div>');
-
-	let boadata = get_fake_boa_data();
-	let color_alt = '#F9F7F4';
-	let i = 0;
-	for (const k in boadata) {
-		let o = boadata[k];
-		//console.log('o', o);
-		let logo = valf(o.logo, 'defaultacct.jpg');
-		let path = `${logo}`;
-		let [sz, bg] = [25, i % 2 ? 'white' : color_alt];
-
-		let dall = mDiv(dl, { bg: bg, fg: '#FCFCFC', 'border-bottom': '1px dotted silver' });
-		let da = mDiv(dall);
-		mFlexLR(da);
-
-		let img = createImage(path, { h: sz, margin: 10 });
-
-		let da1 = mDiv(da);
-		mAppend(da1, img);
-		let dtext = mDiv(da1, { display: 'inline-block', fg: '#FCFCFC', fz: 14 });
-		mAppend(dtext, mCreateFrom(`<a>${k}</a>`));
-		let dsub = mDiv(dtext, { fg: 'dimgray', fz: 12 }, null, o.sub);
-
-		let da2 = mDiv(da); mFlex(da2);
-		let da21 = mDiv(da2, { w: 100, hmargin: 20, mabottom: 20 });
-		let padinput = 7;
-		mDiv(da21, { fg: 'black', fz: 12, weight: 'bold' }, null, 'Amount');
-		mDiv(da21, { w: 100 }, null, `<input style="color:dimgray;font-size:14px;border:1px dotted silver;padding:${padinput}px;width:85px" id="inpAuthocode" name="authocode" value="$" type="text" />`);
-
-		let da22 = mDiv(da2, { maright: 10 });
-		mDiv(da22, { fg: 'black', fz: 12, weight: 'bold' }, null, 'Deliver By');
-		mDiv(da22, {}, null, `<input style="color:dimgray;font-size:12px;border:1px dotted silver;padding:${padinput}px" id="inpAuthocode" name="authocode" value="" type="date" />`);
-
-		// mDiv(dall,{fz:12,fg:'blue',maleft:400,mabottom:25},null,'hallo');
-		let dabot = mDiv(dall);
-		mFlexLR(dabot);
-		let lastpayment = isdef(o['Last Payment']) ? `Last Payment: ${o['Last Payment']}` : ' ';
-		mDiv(dabot, { fz: 12, fg: '#303030', maleft: 10, mabottom: 25 }, null, `${lastpayment}`);
-		mDiv(dabot, { fz: 12, fg: 'blue', maright: 90, mabottom: 25 }, null, `<a>Activity</a>&nbsp;&nbsp;&nbsp;<a>Reminders</a>&nbsp;&nbsp;&nbsp;<a>AutoPay</a>`);
-		//let dadummy = mDiv(dall, {margin:500 },null,`<a>Activity</a><a>Reminders</a><a>AutoPay</a>`); //;'border-bottom':'1px solid black'});
-
-		i++;
-	}
-
-
-
-	//mDiv(dl, { hmin: 400, bg: 'orange' });
-
+function set_new_password() {
+	let len = Math.min(20, S.master_password.length + 1);
+	let pnew = rPassword(len);
+	console.log('new password: ', pnew);
+	S.master_password = pnew;
+	S.score = 0;
+	boa_save();
 }
+function set_boa_score(inc) { S.score += inc; if (S.score < 0) S.score = 0; boa_save(); }
 function skype_go_button() {
 	let html = `
 		<button
@@ -1479,6 +1423,73 @@ function skype_go_button() {
 	`;
 
 	return mCreateFrom(html);
+}
+function skype_start() {
+
+	let d = mBy('dSkype'); mClear(d); //mStyle(document.body, { h: 'calc( 100vh - 56px )'});
+	mStyle(d, { h: 'calc( 100vh - 56px )', 'overflow-y': 'hidden' });
+
+	let d0 = mDiv(d);
+	let [dl, dr] = mColFlex(d, [1, 3]); //, [BLUE, GREEN]);
+	mStyle(dl, { border: '1px dotted silver' }); mStyle(dr, { border: '1px dotted silver' });
+
+	mDiv(dl, {}, null, img_html('skypeTopLeft.jpg'));
+	let d1 = mDiv(dl);
+	DIBOA.skype.divRight = dr;
+	DIBOA.skype.divLeft = dl;
+
+	let contacts = DIBOA.skype.contacts = generate_skype_contacts(25); console.log(contacts)
+	for (const o of contacts) {
+		let dc = mDiv(d1, { rounding: 12, hpadding: 6, vpadding: 6, margin: 4, gap: 12, overflow: 'hidden' }, null, null, 'skypecontact');
+		mFlex(dc);
+		o.div = dc;
+		dc.onclick = () => { S.skype_contact = toggleSelection(o, S.skype_contact, 'skypecontact_active'); show_skype_contact(dr) };
+
+		let [sz] = [40];
+
+		let dimg = get_skype_phone_icon(o.color); //mDiv(dc,{w:sz,h:sz,margin:10},null,);
+		mAppend(dc, dimg);
+
+		let dmiddle = mDiv(dc, { flex: 8 });
+		let dnum = mDiv(dmiddle, { fz: 14, fg: 'black' }, null, `<div>${o.num}</div>`);
+		let dmsg = mDiv(dmiddle, { fz: 11, fg: 'grey' }, null, `<div>${o.msg}</div>`);
+
+		let ddate = mDiv(dc, { flex: 1, fz: 11, fg: 'grey' }, null, `<div>${format_date(o.date)}</div>`);
+	}
+
+}
+function toggle_bw_symbol(d) {
+	if (nundef(d)) d = document.getElementById('tbbw');
+	d = d.getElementsByTagName('i')[0];
+	console.log('d', d);
+	if (isdef(d)) {
+		if (d.classList.contains('fa-car')) {
+			d.classList.remove('fa-car');
+			d.classList.add('fa-star');
+			mStyle(d, { fg: 'silver' });
+		} else {
+			d.classList.remove('fa-star');
+			d.classList.add('fa-car');
+			mStyle(d, { fg: 'transparent' });
+		}
+	}
+}
+
+//#region ui helpers
+function get_input_value(id) {
+	let inp = mBy(id);
+	let val = inp.value;
+	return val;
+}
+function createImage(filename, styles) {
+	let img = mCreateFrom(`<img src='../rechnung/images/${filename}'>`);
+	if (isdef(styles.w)) { img.setAttribute('width', styles.w); }
+	if (isdef(styles.h)) { img.setAttribute('height', styles.h); }
+	mStyle(img, styles);
+	return img;
+}
+function img_html(filename, fulldim = 'height') {
+	return `<img ${fulldim}='100%' src='../rechnung/images/${filename}'>`;
 }
 
 //#region boa tests
@@ -1545,14 +1556,19 @@ function test4_boa_main() {
 	S.boa_authorization_code = '123456';
 	boamain_start();
 }
-function test5_bw_skin(){
+function test5_bw_skin() {
 	mAppear('dScreen', 100);
 	if (FirstLoad) { FirstLoad = false; initialize_state(); } //show_master_password(); }
 	get_toolbar();
 	bw_widget_popup('skype');
 
 }
-
+function test6_generate_statement() {
+	mAppear('dScreen', 100);
+	if (FirstLoad) { FirstLoad = false; initialize_state(); } //show_master_password(); }
+	get_toolbar();
+	generate_statement();
+}
 
 
 

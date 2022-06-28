@@ -51,6 +51,96 @@ const DIBOA = {
 		boa: { userid: 'gleem@gmail.com', pwd: rPassword(20) },
 		authy: { userid: 'gleem@gmail.com', pwd: rPassword(20) },
 
+	},
+	boa_data: {
+		'AAA-MBNA 5464 3332 3333 5555': { sub: '*5555', logo: 'boa.png' },
+		'AMERICAN EXPRESS': { sub: '*4554', logo: 'amex.png' },
+		'AT&T Mobility': { sub: '*1331', logo: 'att.png' },
+		'AT&T Mobility{AT&T WA}': { sub: '*7575', logo: 'att.png' },
+		'AT&T Mobility': { sub: '*8585', logo: 'att.png' },
+		'Bank Of Amerika Credit Card': { sub: '*1212', logo: 'boa.png', 'Last Payment': '5-25 $1150.41', brand: 'BofA_rgb' },
+		'Bank Of Amerika': { sub: '*0898', logo: 'boa.png' },
+		'Bank Of Amerika Mail-in1': { sub: '*6565', logo: 'boa.png' },
+		'Bel-Red Oral': { sub: '*2432' },
+		'Bellevue Kendo Club': { sub: '*hallo' },
+		'CapitalOne': { sub: '*1324', logo: 'capitalOne.png' },
+		'CapitalOneVenture': { sub: '*6456', logo: 'capitalOne.png' },
+		'CapitalOneVentureF': { sub: '*9789', logo: 'capitalOne.png' },
+		'Chase': { sub: '*3131', logo: 'chase.png' },
+		'Chase Amazon': { sub: '*0898', 'Last Payment': '5-25 $1150.41', logo: 'chase.png', brand: 'prime' },
+		'Chase Card': { sub: '*1432', logo: 'chase.png' },
+		'CHASE MANHATTAN BANK-MC': { sub: '*0797', 'Last Payment': '5-25 $110.99', logo: 'chase.png', brand: 'chase_bank' },
+		'Chase Sapphire': { sub: '*5132', logo: 'chase.png' },
+		'Chase Sapphire': { sub: '*8679', logo: 'chase.png' },
+		'City Cards': { sub: '*3124', logo: 'citi.png' },
+		'City Cards Divident': { sub: '*9678', logo: 'citi.png' },
+		'CITY CARDS Points': { sub: '*7678', logo: 'citi.png' },
+		'Citi Costco': { sub: '*8768', 'Last Payment': '6-17 $506.14', logo: 'citi.png', brand: 'citibank' },
+		'Citi Costco gu': { sub: '*0890', 'Last Payment': '6-6 $228.92', logo: 'citi.png', brand: 'citibank' },
+		'CITI DIVIDENT Platinum': { sub: '*3454', logo: 'citi.png' },
+		'CITIBANK VISA NV': { sub: '*7566', logo: 'citi.png' },
+		'City of Redmond': { sub: '*4998' },
+		'City of Redmond WA': { sub: '*2887', 'Last Payment': '5-17 $214.94', brand: 'redmond' },
+		'Comcast': { sub: '*7676', logo: 'comcast.png' },
+		'Comcast Perrigo': { sub: '*1324', 'Last Payment': '6-21 $89.44', logo: 'comcast.png', brand: 'comcast' },
+		'ComCast WA': { sub: '*6456', logo: 'comcast.png' },
+		'DISCOVER CARD SERVICES': { sub: '*8678' },
+		'Dr. Ellie Tabaraie': { sub: '*hallo' },
+		'Fastenerz.com': { sub: '*000' },
+		'Fibonacci': { sub: '*6666' },
+		'Fleet Credit Card Service': { sub: '*8798' },
+		'FLEET CREDIT CARD0MC/VS (32)': { sub: '*8799' },
+		'Frontier': { sub: '*05-5' },
+		'Frontier2': { sub: '*5366' },
+		'GoodToGo': { sub: '*7767' },
+		'Hardford Mutual Funds Inc.': { sub: '*8878' },
+		'King County Treasury': { sub: '*0-02' },
+		'King County Treasury': { sub: '*0-03' },
+		'LabCorp': { sub: '*8899' },
+		'Landover Mortgage': { sub: '*hallo' },
+		'Lauren Magada': { sub: 'Lauren boa' },
+		'Lederman&Pulman': { sub: '*9988' },
+		'Liberty Mutual Group': { sub: '*-660' },
+		'Liberty Mutual Group': { sub: '*-768' },
+		'Liberty Mutual Group': { sub: '*-760' },
+		"Macy's Star Rewards": { sub: '*23-0', logo: 'macys.png' },
+		'MBNA': { sub: '*3444' },
+		'MBNA 6455 6677 7924 5555': { sub: '*5555' },
+		'Oachita': { sub: '*6556' },
+		'Oasis Condominium CA': { sub: '*889' },
+		'Oasis Condominium CA': { sub: '*1889', 'Last Payment': '5-31 $581.54', brand: 'oasis' },
+		'Orthodontics Roos': { sub: '*1111' },
+		'Overcast Law Office, PS': { sub: '*4423' },
+		'Overlake Medical Center': { sub: '*hallo' },
+		'Pediatric Associates Inc': { sub: '*8383' },
+		'Perrigo Heights HOA': { sub: '*t#98' },
+		'Premier Periodontics': { sub: '*9494' },
+		'PreventionMD': { sub: '*9566' },
+		'Prime Trust LLC': { sub: '*8788' },
+		'ProSport': { sub: '*1233' },
+		'PSE - Puget Sound Energy': { sub: '*3444', 'Last Payment': '5-25 $70.59', brand: 'PSE' },
+		'Puget Sound Energy': { sub: '*66-9' },
+		'Real Property Management Eclipse': { sub: '*asss' },
+		'Remadina Ridge Family Dentistry': { sub: '*6656' },
+		'Sewage Capacity Charge': { sub: '*7575' },
+		'Silkroad': { sub: '*788-1' },
+		'Suhrco': { sub: '*899' },
+		'Target': { sub: '*9789' },
+		'Target National Bank': { sub: '*1432' },
+		'Univerity Of WA Medical Center': { sub: '*1543' },
+		'US Bank Credit Card FlexPerks': { sub: '*0789', 'Last Payment': '5-20 $11.13', brand: 'usbank' },
+		'USBank': { sub: '*7567' },
+		'USBank-CashPlus': { sub: '*3123' },
+		'USBank-FlexPerks': { sub: '*1321' },
+		'Verizon': { sub: '*7567' },
+		'Waste Management': { sub: '*87-1' },
+		'Waste Management': { sub: '*23-9' },
+		'Wells Fargo Home Mortgage': { sub: '*1333', 'Last Payment': '6-10 $1625.06', logo: 'wellsfargo.png', brand: 'wellsfargo' },
+		'Wells Fargo Mortgage': { sub: '*2444', logo: 'wellsfargo.png' },
+		'Williams-Sonoma': { sub: '*9888' },
+		'WINDERMERE PROPERTY MGMT/EASTSID': { sub: '*8766' },
+		'Windermere Real Estate/East': { sub: '*ntal' },
+
 	}
 };
 
@@ -345,15 +435,9 @@ function mDiv(dParent, styles, id, inner, classes, sizing) {
 
 	return d;
 }
-function mLink(dParent, styles, id, inner, classes, sizing) {
-	let d = mCreate('a');
-	if (dParent) mAppend(dParent, d);
-	if (isdef(styles)) mStyle(d, styles);
-	if (isdef(classes)) mClass(d, classes);
-	if (isdef(id)) d.id = id;
-	if (isdef(inner)) d.innerHTML = inner;
-	if (isdef(sizing)) { setRect(d, sizing); }
-
+function mDivLR(dParent, styles, id, innerlist, classes) {
+	let d = mDiv(dParent, styles, id, `<div>${innerlist[0]}</div><div>${innerlist[1]}</div>`, classes);
+	mStyle(d, { display: 'flex', 'justify-content': 'space-between', 'align-items': 'center' });
 	return d;
 }
 function mDiv100(dParent, styles, id, sizing = true) { let d = mDiv(dParent, styles, id); mSize(d, 100, 100, '%', sizing); return d; }
@@ -467,6 +551,18 @@ function mItem(id, diDOM, di = {}, addSizing = false) {
 		if (isdef(diDOM) && item.sizing == 'sizeToContent') iMeasure(item, item.sizingOptions);
 	}
 	return item;
+}
+function mLine(dParent, styles) { return mDiv(dParent, styles, null, '<hr>'); }
+function mLink(dParent, styles, id, inner, classes, sizing) {
+	let d = mCreate('a');
+	if (dParent) mAppend(dParent, d);
+	if (isdef(styles)) mStyle(d, styles);
+	if (isdef(classes)) mClass(d, classes);
+	if (isdef(id)) d.id = id;
+	if (isdef(inner)) d.innerHTML = inner;
+	if (isdef(sizing)) { setRect(d, sizing); }
+
+	return d;
 }
 function mLinebreakFlex(dParent, gap) {
 	dParent = toElem(dParent);
@@ -2868,6 +2964,33 @@ function pSBC(p, c0, c1, l) {
 
 //#endregion
 
+//#region date
+function addMonthToDate(date, months) {
+	let d = new Date(date);
+	d.setMonth(d.getMonth() + months);
+	return d;
+}
+function addWeekToDate(date, weeks) {
+	let d = new Date(date);
+	d.setDate(d.getDate() + (weeks * 7));
+	return d;
+}
+function date2locale(date) { return date.toLocaleDateString(); }
+function format_date(date) {
+	let d = new Date(date);
+	let month = '' + (d.getMonth() + 1);
+	let day = '' + d.getDate();
+	let year = d.getFullYear();
+	if (month.length < 2) month = '0' + month;
+	if (day.length < 2) day = '0' + day;
+	return [month, day, year].join('/');
+}
+function get_weekday(date) {
+	let d = new Date(date);
+	return d.getDay();
+}
+//#endregion
+
 //#region fleetingMessage
 var TOFleetingMessage, dFleetingMessage, Animation1;
 function clearFleetingMessage() {
@@ -3159,6 +3282,12 @@ function rColor(brightness) {
 		s += rChoose(['f', 'c', '9', '6', '3', '0']);
 	}
 	return s;
+}
+function rDate(before, after) {
+	let after_date = new Date(after);
+	let before_date = new Date(before);
+	let random_date = new Date(Math.random() * (before_date.getTime() - after_date.getTime()) + after_date.getTime());
+	return random_date;
 }
 function rDigits(n) { return rChoose(toLetters('0123456789'), n); }
 function randomColor() { return rColor(); }
@@ -3536,16 +3665,6 @@ function findDescendantOfType(type, parent) {
 	}
 	return null;
 }
-function lastDescendantOfType(type, parent) {
-	if (getTypeOf(parent) == type) return parent;
-	let children = arrChildren(parent);
-	if (isEmpty(children)) return null;
-	for (const ch of children.reverse()) {
-		let res = lastDescendantOfType(type, ch);
-		if (res) return res;
-	}
-	return null;
-}
 function findChildrenOfType(type, parentElem) {
 	let children = arrChildren(parentElem);
 	let res = [];
@@ -3555,6 +3674,10 @@ function findChildrenOfType(type, parentElem) {
 	return res;
 }
 function findKeys(s) { return SymKeys.filter(x => contains(x, s) || contains(Syms[x].E) || contains(Syms[x].D), s); }
+function format_currency(num) {
+	//num should be presented with 2 decimals and a $ sign in front
+	return '$' + num.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
 function get_checked_radios(rg) {
 	let inputs = rg.getElementsByTagName('INPUT');
 	let list = [];
@@ -3687,6 +3810,16 @@ function isWhiteSpaceString(s) { return isEmptyOrWhiteSpace(s); }
 function isOverflown(element) {
 	return element.scrollHeight > element.clientHeight || element.scrollWidth > element.clientWidth;
 }
+function lastDescendantOfType(type, parent) {
+	if (getTypeOf(parent) == type) return parent;
+	let children = arrChildren(parent);
+	if (isEmpty(children)) return null;
+	for (const ch of children.reverse()) {
+		let res = lastDescendantOfType(type, ch);
+		if (res) return res;
+	}
+	return null;
+}
 async function load_assets_fetch(basepath, baseminpath) {
 	let path = basepath + 'assets/';
 	Config = await route_path_yaml_dict(baseminpath + 'config.yaml');
@@ -3803,19 +3936,19 @@ function hide(elem) {
 		elem.style.display = 'none';
 	}
 }
-function show_special_message(msg, stay = false, ms = 3000, delay = 0, styles = {}) { //divTestStyles={}) {
-	let dParent = mBy('divTest');
-	if (nundef(dParent)) dParent = mDiv(document.body, {}, 'divTest');
+function show_special_message(msg, stay = false, ms = 3000, delay = 0, styles = {}, callback = null) { //divTestStyles={}) {
+	let dParent = mBy('dBandMessage');
+	if (nundef(dParent)) dParent = mDiv(document.body, {}, 'dBandMessage');
 	//console.log('dParent',dParent)
 	show(dParent);
 	clearElement(dParent);
-	addKeys({ position: 'absolute', top: 200, classname: 'slow_gradient_blink', vpadding: 10, align: 'center', position: 'absolute', fg: 'white', fz: 24, w: '100vw' }, styles);
+	addKeys({ position: 'fixed', top: 200, classname: 'slow_gradient_blink', vpadding: 10, align: 'center', position: 'absolute', fg: 'white', fz: 24, w: '100vw' }, styles);
 	if (!isEmpty(styles.classname)) { mClass(dParent, styles.classname); }
 	delete styles.classname;
 	mStyle(dParent, styles);
 	dParent.innerHTML = msg;
-	if (delay > 0) TO.special = setTimeout(() => { mFadeClear(dParent, ms); }, delay);
-	else mFadeClear(dParent, ms);
+	if (delay > 0) TO.special = setTimeout(() => { mFadeClear(dParent, ms, callback); }, delay);
+	else mFadeClear(dParent, ms, callback);
 }
 function selectText(el) {
 	var sel, range;
@@ -3864,8 +3997,8 @@ function toggleSelection(pic, selected, clSelected = 'framedPicture', clUnselect
 	pic.isSelected = !pic.isSelected;
 	if (pic.isSelected) {
 		if (isdef(clUnselected)) mClassRemove(ui, clUnselected);
-		mClass(ui, clSelected); 
-	}else {
+		mClass(ui, clSelected);
+	} else {
 		mClassRemove(ui, clSelected);
 		if (isdef(clUnselected)) mClass(ui, clUnselected);
 	}
@@ -3879,15 +4012,15 @@ function toggleSelection(pic, selected, clSelected = 'framedPicture', clUnselect
 			} else {
 				console.assert(selected.includes(pic), 'PIC NOT IN PICLIST BUT HAS BEEN SELECTED!!!!!!!!!!!!')
 				removeInPlace(selected, pic);
-				
+
 			}
-		}else{
+		} else {
 			mClassRemove(iDiv(selected), clSelected);
 			if (isdef(clUnselected)) mClass(iDiv(selected), clUnselected);
 			selected.isSelected = false;
 		}
 	}
-	return pic.isSelected?pic:null;
+	return pic.isSelected ? pic : null;
 }
 function toggleSelectionOfPicture(pic, selectedPics, className = 'framedPicture') {
 	//	console.log(pic)
@@ -3904,6 +4037,13 @@ function toggleSelectionOfPicture(pic, selectedPics, className = 'framedPicture'
 			console.assert(selectedPics.includes(pic), 'PIC NOT IN PICLIST BUT HAS BEEN SELECTED!!!!!!!!!!!!')
 			removeInPlace(selectedPics, pic);
 		}
+	}
+}
+function unfocusOnEnter(ev) {
+	if (ev.key === 'Enter') {
+		ev.preventDefault();
+		//console.log('ENTER!', G.settings.rows)
+		mBy('dummy').focus();
 	}
 }
 function valf(val, def) { return isdef(val) ? val : def; }

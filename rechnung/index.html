@@ -19,33 +19,49 @@
 		<script src="../rechnung/baustelle2.js"></script>
 		<script src="../rechnung/start.js"></script>
 	</head>
-	<body style="margin: 0;min-height:110vh">
+	<body style="margin: 0; min-height: 110vh">
 		<div id="dTop"></div>
-		<div id="dScreen" style="opacity: 0;">
+		<div id="dScreen" style="opacity: 0">
 			<div id="dHome" style="font-size: 14px; padding: 10px">
-				<h2>how to pay a bill</h2>
-				<p>1. click BOA icon.</p>
-				<p>2. click: Log in to Online Banking</p>
-				<p>3. enter userid: click on User ID input</p>
-				<div style="padding: 0px 25px">
-					<p>3.1 click on BITWARDEN icon (normally, you would use the one in chrome toolbar, but for now, use the one on this page in top right corner)</p>
-					<p>3.2 if bitwarden icon has a little star in the bottom right corner, you need to enter master password first!</p>
-					<p>3.3 if bitwarden has a login for this site, it will show as first entry: clicking on the corresponding bitwarden entry will directly copy the data into the focused input element!</p>
+				<h2>how to log in to bank of america</h2>
+				<div id="dHowToLogin">
+					<p>1. click BOA icon.</p>
+					<p>2. click: Log in to Online Banking</p>
+					<p>3. enter userid: click on User ID input</p>
+					<div style="padding: 0px 25px">
+						<p>3.1 click on BITWARDEN icon (normally, you would use the one in chrome toolbar, but for now, use the one on this page in top right corner)</p>
+						<p>3.2 if bitwarden icon has a little star in the bottom right corner, you need to enter master password first!</p>
+						<p>
+							3.3 if bitwarden has a login for this site, it will show as first entry: clicking on the corresponding bitwarden entry will directly copy the data
+							into the focused input element!
+						</p>
+					</div>
+					<p>4. enter password: repeat step 3 for Password input</p>
+					<p>5. click Lo In button</p>
+					<p>
+						6. if everything worked so far, you should now be on the 'Request Authorization Code' page. if not, restart process by clicking boa icon on top of
+						page!
+					</p>
+					<p></p>
+					<p>7. select the option for afgafam skype phone number (206) 809 0297</p>
+					<p>8. keep default selection for Text message</p>
+					<p>9. click SEND CODE</p>
+					<p></p>
+					<p>10. goto agfafam web skype (use top right toolbar on page)</p>
+					<p>11. retrieve the most recent code sent by Bank of America</p>
+					<p>12. switch back to bank of america (top icon), enter code, and SUBMIT</p>
+					<p>13. if the code was correct, you will be taken to BOA main page!!! CONGRATULATIONS!!!!</p>
+					<a href="javascript:start_challenge1()">Start Login Challenge!</a>
 				</div>
-				<p>4. enter password: repeat step 3 for Password input</p>
-				<p>5. click Lo In button</p>
-				<p>6. if everything worked so far, you should now be on the 'Request Authorization Code' page. if not, restart process by clicking boa icon on top of page!</p>
-				<p></p>
-				<p>7. select the option for afgafam skype phone number (206) 809 0297</p>
-				<p>8. keep default selection for Text message</p>
-				<p>9. click SEND CODE</p>
-				<p></p>
-				<p>10. goto agfafam web skype (use top right toolbar on page)</p>
-				<p>11. retrieve the most recent code sent by Bank of America</p>
-				<p>12. switch back to bank of america (top icon), enter code, and SUBMIT</p>
-				<p>13. if the code was correct, you will be taken to BOA main page!!! CONGRATULATIONS!!!!</p>
-				
-				<a href="javascript:start_challenge1()">Start Challenge!</a>
+				<h2>how to pay a bill (short)</h2>
+				<div id="dHowToPay">
+					<p>1. log in to BOA - this is done for you!</p>
+					<p>2. click on bill icon to generate a monthly statement</p>
+					<p>3. search for appropriate account in account list</p>
+					<p>4. enter amount, and press Make Payment button</p>
+					<a href="javascript:start_challenge2()">Start Bill Pay Challenge!</a><br>
+					<a href="javascript:start_challenge3()">Start Full Bill Pay Challenge!</a>
+				</div>
 			</div>
 			<div id="dBoa"></div>
 			<div id="dAuthenticator"></div>
@@ -54,7 +70,9 @@
 			<div id="dSkype"></div>
 			<div id="dBill"></div>
 		</div>
-		<div id="divTest" styles="background:skyblue;min-height:100vh"></div>
 		<div id="dPopup" style="position: absolute; display: none"></div>
+		<button id="dummy" class="dummy">dummy</button>
+		<div id="dBandMessage" style="position:fixed;background:skyblue;min-height:100vh;display:none"></div>
+
 	</body>
 </html>
