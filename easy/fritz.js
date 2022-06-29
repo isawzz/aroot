@@ -191,7 +191,7 @@ function fritz_activate_ui() {
 
 	});
 
-	UI.timer = select_timer(fen.players[uplayer].time_left + Z.options.seconds_per_move*1000, end_of_turn_fritz);
+	UI.timer = select_timer(fen.players[uplayer].time_left + Z.options.seconds_per_move * 1000, end_of_turn_fritz);
 
 	ensure_buttons_visible_ferro();
 

@@ -266,7 +266,9 @@ function stopgame() {
 	DA.noshow = 0;
 	//console.log('STOPGAME',getFunctionsNameThatCalledThisFunction());
 	clear_timeouts();
-	hide('bRestartMove')
+	hide('bRestartMove');
+	hide('dHostButtons');
+
 	pollStop();
 	//clear_table();
 	Z = null;

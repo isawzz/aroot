@@ -7064,7 +7064,18 @@ ok - stats besser darstellen: wenn einer rausgeflogen, soll durchstreichen irgen
 140: *7:39 AM 6/29/2022-7:46 AM 6/29/2022
 145: *7:46 AM 6/29/2022-7:49 AM 6/29/2022
 146: *7:49 AM 6/29/2022-7:54 AM 6/29/2022
-147: *7:54 AM 6/29/2022-
+147: *7:54 AM 6/29/2022-7:57 AM 6/29/2022
+148: *7:57 AM 6/29/2022-7:58 AM 6/29/2022
+149: *7:58 AM 6/29/2022-8:05 AM 6/29/2022
+150: *8:05 AM 6/29/2022-8:10 AM 6/29/2022
+152: *8:11 AM 6/29/2022-8:32 AM 6/29/2022
+155: *8:32 AM 6/29/2022-8:32 AM 6/29/2022
+156: *8:32 AM 6/29/2022-
+- fix bug!
+- ok, so dieser fehler wird gemacht!!!
+- check ob ich in fritz wirklich verify dass alle suits verschieden sind in group!!!
+- goto index.html
+- onclick user
 - skip und spotit start soll nur zu advanced users gehen
 - wieso hat nasi SKIP und spotit start aber nicht ACK???
 

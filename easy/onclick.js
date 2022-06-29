@@ -166,6 +166,7 @@ function onclick_table(tablename) {
 	phpPost({ friendly: tablename }, 'table');
 }
 function onclick_user(uname) {
+	//console.log('onclick_user',uname);
 	U = firstCond(Serverdata.users, x => x.name == uname);
 	localStorage.setItem('uname', U.name);
 	let elem = firstCond(arrChildren('dUsers'), x => x.getAttribute('username') == uname);
