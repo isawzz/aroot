@@ -300,20 +300,14 @@ function restart_selection_process() {
 function select_timer(ms, callback) {
 	let d = mBy('dSelections0');
 	let dtimer = mDiv(d, { w: 80, maleft: 10, fg: 'red', weight: 'bold' }, 'dTimer');
-	//start_simple_timer(dtimer, 1000, null, ms, callback);
-	start_user_timer(dtimer, 1000, null, ms, callback);
+
+	//start_user_timer(dtimer, 1000, null, ms, callback); //(dtimer, msInterval, onTick, msTotal, onElapsed)
+	if (isdef(DA.timer)) { DA.timer.clear(); DA.timer = null; }
+	let timer = DA.timer = new SimpleTimer(dtimer, 1000, null, ms, callback);
+	timer.start();
 	return dtimer;
 }
-function start_user_timer(dtimer, msInterval, onTick, msTotal, onElapsed) {
-	let [fen, uplayer] = [Z.fen, Z.uplayer];
-	msTotal = fen.players[uplayer].time_left;
-	//console.log('msTotal', msTotal);
-	if (isdef(DA.timer)) { DA.timer.clear(); DA.timer = null; }
-	let timer = DA.timer = new SimpleTimer(dtimer, msInterval, onTick, msTotal, onElapsed);
-	timer.start();
-}
-function check_user_time_left() { if (isdef(DA.timer)) { return DA.timer.msLeft; }  else { return 0; } }
-function stop_user_timer() {
+function stop_timer() {
 	if (isdef(DA.timer)) {
 		let res = DA.timer.clear();
 		DA.timer = null;

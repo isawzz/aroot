@@ -1169,7 +1169,7 @@ function mFadeRemove(d, ms = 800, callback = null) { mAnimateTo(d, 'opacity', 0,
 function mFadeClear(d, ms = 800, callback = null) { mAnimateTo(d, 'opacity', 0, () => { mClear(d); if (callback) callback(); }, ms); }
 function mFadeClearShow(d, ms = 800, callback = null) { mAnimate(d, 'opacity', [1, 0], () => { mClear(d); if (callback) callback(); }, ms); }
 function mFall(d, ms = 800) { toElem(d).animate([{ opacity: 0, transform: 'translateY(-50px)' }, { opacity: 1, transform: 'translateY(0px)' },], { fill: 'both', duration: ms, easing: 'ease' }); }
-function mPulse(d, ms, callback = null) { mClass(d, 'onPulse'); setTimeout(() => { mClassRemove(d, 'onPulse'); if (callback) callback(); }, ms); }
+function mPulse(d, ms, callback = null) { mClass(d, 'onPulse'); TO[getUID()]=setTimeout(() => { mClassRemove(d, 'onPulse'); if (callback) callback(); }, ms); }
 function mPulse1(d, callback) { mPulse(d, 1000); }
 function mPulse2(d, callback) { mPulse(d, 2000); }
 function mPulse3(d, callback) { mPulse(d, 3000); }
@@ -1529,6 +1529,7 @@ function arrRemove(arr, listweg) {
 	arrReplace(arr, listweg, []);
 }
 function arrRemoveLast(arr) { arr.length -= 1; }
+function arrRepeat(n,el){	let res = [];	for (let i = 0; i < n; i++) res.push(el);	return res;}
 function arrReplace(arr, listweg, listdazu) {
 	//ACHTUNG!!!! geht nur wenn array elements unique sind! removes FIRST OCCURRENCE of el in arr!!!!!!!!!!!!!
 	arrExtend(arr, listdazu);
@@ -3690,6 +3691,14 @@ function get_checked_radios(rg) {
 	}
 	//console.log('list',list)
 	return list;
+}
+function get_mouse_pos(ev) { 
+	let x = ev.pageX - document.body.scrollLeft; // - ev.target.offsetY;
+	let y = ev.pageY - document.body.scrollTop; // - ev.target.offsetY;
+	console.log('y calc:',y,'y returned:',ev.clientY);
+	// return ({ x: ev.clientX, y: ev.clientY }); 
+	return ({ x: x, y: y }); 
+
 }
 function getTypeOf(param) {
 	//console.log('>>>>>getTypeOf',param)

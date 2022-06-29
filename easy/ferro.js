@@ -481,6 +481,7 @@ function end_of_round_ferro() {
 function ensure_buttons_visible_ferro() {
 	if (isdef(mBy('dbPlayer'))) return;
 	let [plorder, stage, A, fen, uplayer, pl] = [Z.plorder, Z.stage, Z.A, Z.fen, Z.uplayer, Z.fen.players[Z.uplayer]];
+	if (fen.players[uplayer].hand.length <= 1) return; // only display for hand size > 1
 	let d = iDiv(UI.players[uplayer]);
 	mStyle(d, { position: 'relative' })
 	//console.log('d', d);

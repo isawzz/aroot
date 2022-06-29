@@ -1,13 +1,3 @@
-function assertion(cond) {
-	if (!cond) {
-		let args = [...arguments];
-		//console.log('args',args)
-		for (const a of args) {
-			console.log('\n', a);
-		}
-		throw new Error('TERMINATING!!!')
-	}
-}
 function activate_ui() {
 
 	if (uiActivated) return;
@@ -368,18 +358,6 @@ function show_settings(dParent) {
 	d.onmouseleave = hide_options_popup;
 }
 function status_message_new(msg, dParent, styles = {}) {
-}
-
-function show_special_message(msg,stay=false) {
-	let dParent = mBy('divTest'); 
-	//console.log('dParent',dParent)
-	show(dParent); 
-	clearElement(dParent);
-	mStyle(dParent, { position: 'absolute', top: 200, bg: 'green', wmin: '100vw'}); 
-	let d = mDiv(dParent, { margin: 0 });
-	let styles = { classname: 'slow_gradient_blink', vpadding: 10, align: 'center', position: 'absolute', fg: 'white', fz: 24, w: '100vw' };
-	let dContent = mDiv(d, styles, null, msg);
-	mFadeClear(dParent, 3000 );
 }
 function show_stage() {
 	if (isdef(Z.fen.progress)) {

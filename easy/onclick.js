@@ -75,7 +75,7 @@ function onclick_reload() {
 		// bei einem timed game mit schachuhr, muss ich die zeit abziehen!!!
 		if (Z.game == 'fritz' && nundef(Z.fen.winners)) {
 			console.log(Z);
-			Z.fen.players[Z.uplayer].time_left = stop_user_timer();
+			Z.fen.players[Z.uplayer].time_left = stop_timer();
 			turn_send_move_update();
 
 		} else {

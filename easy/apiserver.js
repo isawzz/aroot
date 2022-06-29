@@ -166,10 +166,16 @@ function update_current_table() {
 	//role refers to what role logged in user has in the presented table
 	Z.role = !plorder.includes(uname) ? 'spectator' : turn.includes(uname) ? 'active' : 'inactive';
 
+	if (Z.game == 'fritz' && Z.role == 'spectator' && isdef(Z.fen.roundorder) && Z.fen.roundorder.includes(uname)){
+		Z.role = 'inactive';
+	} 
+
 	let upl = Z.role == 'active' ? uname : turn[0];
 
-	//console.log('turn', turn, 'upl', upl, 'plorder', plorder, 'uname', uname, 'role', Z.role);
 	if (mode == 'hotseat' && turn.length > 1) { let next = get_next_human_player(Z.prev.uplayer); if (next) upl = next; }
+
+	//console.log('turn', turn, 'upl', upl, 'plorder', plorder, 'uname', uname, 'role', Z.role);
+
 	// if (mode == 'hotseat'){ // && fen.players[upl].playmode!='bot') {
 	// 	if (isdef(Z.prev.turn) && sameList(turn, Z.prev.turn) && turn.length > 1) {
 	// 		if (nundef(fen.ihotseat)) fen.ihotseat = 0;

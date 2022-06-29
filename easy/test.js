@@ -8,12 +8,41 @@ function start_tests() {
 	//ltest44_ferro_7R(); //ltest37_ferro_4_players(); //ltest35_ferro_sequence_anlegen(); //ltest31_ferro_rollback();
 	//test_ferro_is_set(); //
 	//ltest43_fritz_discard_pile();
+	//ltest52_aristo_church_empty(); //ltest23_aristo_building_downgrade(); //ltest50_aristo_church();
 	//#endregion
-	ltest52_aristo_church_empty(); //ltest23_aristo_building_downgrade(); //ltest50_aristo_church();
+	ltest45_fritz(); //ltest54_fritz_outoftime();
 }
 
 
 //#region live server tests
+function make_both_run_out_of_time(o) {
+	let [fen, uplayer] = [o.fen, o.fen.turn[0]];
+	for (const plname in fen.players) {
+		let pl = fen.players[plname];
+		pl.time_left = 100;
+	}
+}
+function ltest54_fritz_outoftime() {
+	DA.magnify_on_select = true;
+	TESTING = true; DA.testing = true; DA.test = {
+		mods: [make_both_run_out_of_time], iter: 0, maxiter: 200, running: false, step: true, suiteRunning: false, number: 0, list: [0]
+	};
+	DA.test.end = () => { };
+	DA.auto_moves = [];
+	startgame('fritz', [{ name: U.name, playmode: 'human' }, { name: 'amanda', playmode: 'human' }], { mode: 'hotseat' });
+
+}
+
+function ltest53_fritz_endround() {
+	DA.magnify_on_select = true;
+	TESTING = true; DA.testing = true; DA.test = {
+		mods: [o => { let pl = o.fen.players[o.fen.turn[0]].hand = ['4Hn']; }], iter: 0, maxiter: 200, running: false, step: true, suiteRunning: false, number: 0, list: [0]
+	};
+	DA.test.end = () => { };
+	DA.auto_moves = [];
+	startgame('fritz', [{ name: U.name, playmode: 'human' }, { name: 'amanda', playmode: 'human' }], { mode: 'hotseat' });
+
+}
 function ltest52_aristo_church_empty() {
 	TESTING = true; DA.testing = true; DA.test = {
 		mods: [give_players_empty_stalls], iter: 0, maxiter: 200, running: false, step: true, suiteRunning: false, number: 0, list: [0]
@@ -26,7 +55,7 @@ function ltest52_aristo_church_empty() {
 }
 function ltest51_aristo_church_downgrade() {
 	TESTING = true; DA.testing = true; DA.test = {
-		mods: [give_players_stalls,prep_for_church_downgrade], iter: 0, maxiter: 200, running: false, step: true, suiteRunning: false, number: 0, list: [0]
+		mods: [give_players_stalls, prep_for_church_downgrade], iter: 0, maxiter: 200, running: false, step: true, suiteRunning: false, number: 0, list: [0]
 	};
 	DA.test.end = () => { }; //console.log('discard:',Z.fen.deck_discard);}
 	DA.auto_moves = [];//[['random']];
@@ -43,24 +72,6 @@ function ltest50_aristo_church() {
 	let playernames = [U.name, 'felix']; //, 'gul', 'amanda', 'lauren'];
 
 	startgame('aristo', playernames.map(x => ({ name: x, playmode: 'human' })), { mode: 'hotseat' });
-}
-function make_church(o) {
-	let [fen, uplayer] = [o.fen, o.fen.turn[0]];
-	fen.stage = 1004;
-	fen.market = ['JHn', 'QSn'];
-}
-function set_player_tides(o) {
-	let [fen, uplayer] = [o.fen, o.fen.turn[0]];
-	for (const plname of fen.plorder) {
-		let pl = fen.players[plname];
-		let hkey = pl.hand[0];
-		pl.tides = { keys: [hkey], val: ari_get_card(hkey).val };
-		console.log('player', plname, 'tides', pl.tides);
-	}
-	let sorted = sortByDescending(fen.plorder, x => fen.players[x].tides.val);
-	fen.church_order = jsCopy(fen.plorder);
-	//fen.selection_order = sorted;
-	fen.stage = 18;
 }
 function ltest49_aristo_church() {
 	TESTING = true; DA.testing = true; DA.test = {
@@ -1036,6 +1047,11 @@ function give_players_stalls(o) {
 		pl.stall_value = calc_stall_value(fen, plname);
 	}
 }
+function make_church(o) {
+	let [fen, uplayer] = [o.fen, o.fen.turn[0]];
+	fen.stage = 1004;
+	fen.market = ['JHn', 'QSn'];
+}
 function prep_for_church_downgrade(o) {
 	let [fen, uplayer] = [o.fen, o.fen.turn[0]];
 	fen.stage = 1004;
@@ -1051,6 +1067,19 @@ function prep_for_church_downgrade(o) {
 		}
 	}
 
+}
+function set_player_tides(o) {
+	let [fen, uplayer] = [o.fen, o.fen.turn[0]];
+	for (const plname of fen.plorder) {
+		let pl = fen.players[plname];
+		let hkey = pl.hand[0];
+		pl.tides = { keys: [hkey], val: ari_get_card(hkey).val };
+		console.log('player', plname, 'tides', pl.tides);
+	}
+	let sorted = sortByDescending(fen.plorder, x => fen.players[x].tides.val);
+	fen.church_order = jsCopy(fen.plorder);
+	//fen.selection_order = sorted;
+	fen.stage = 18;
 }
 
 

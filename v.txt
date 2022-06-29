@@ -6988,10 +6988,138 @@ ok 3- test
 945: *3:34 PM 6/27/2022-3:35 PM 6/27/2022
 946: *3:36 PM 6/27/2022-3:46 PM 6/27/2022
 950: *3:46 PM 6/27/2022-6:50 PM 6/27/2022 U3h
-980: *6:50 PM 6/27/2022-
-- scrollToTop am anfang von challenge
-- challenge name
+980: *6:50 PM 6/27/2022-7:51 PM 6/27/2022
+ok - scrollToTop am anfang von challenge
+ok - challenge name
+__________ di 28.6.22 =>100 ewew 0=fa,1ok,2+lu,3*co,-1~pa,-2-qu,-3!
+1: *7:51 PM 6/27/2022-3:40 AM 6/28/2022
+2: *3:40 AM 6/28/2022-3:43 AM 6/28/2022
+3: *3:43 AM 6/28/2022-3:50 AM 6/28/2022
+5: *3:50 AM 6/28/2022-3:52 AM 6/28/2022
+6: *3:52 AM 6/28/2022-4:09 AM 6/28/2022
+10: *4:09 AM 6/28/2022-4:10 AM 6/28/2022
+11: *4:10 AM 6/28/2022-4:15 AM 6/28/2022
+ok - player's own loose cards should be presented smapper and NOT be draggable!!!
+ok - also: they should disappear once a loose card has been joined to group!
+ok - why?!?!?!?
+ok - RIESEN BUG!!!! untouchables are NOT copied to drag area!!!
+ok - if dd zone empty, write dd cards here to form groups
+ok ok ok - open test
+ok - look at jokers option!
+ok - zuerst noch jokers option und overlapping option in alhonneur ok (fritz
+12: *4:15 AM 6/28/2022-4:29 AM 6/28/2022
+20: *4:29 AM 6/28/2022-4:30 AM 6/28/2022
+21: *4:31 AM 6/28/2022-4:33 AM 6/28/2022
+22: *4:33 AM 6/28/2022-4:53 AM 6/28/2022
+30: *4:53 AM 6/28/2022-5:05 AM 6/28/2022
+35: *5:05 AM 6/28/2022-5:08 AM 6/28/2022
+36: *5:08 AM 6/28/2022-5:08 AM 6/28/2022
+ok - bug fritz 412
+ok - brauch einen end of round test fuer dBandMessage!!!
+ok - discard button shows in wrong place when scrolled down!!!
+ok - fen.roundorder = jsCopy(fen.plorder)
+ok now remove player from fen.plorder
+ok in end of round reset fen.plorder
+ok - wie genau laeuft es ab wenn ein player runs out of time?
+ok - weenn ein player removed und nur 1 player remains, that player must become player! 
+ok - when no player remains, abrechnen und gameover!!!
+ok - this game can be played in solitaire mode!
+37: *5:09 AM 6/28/2022-5:24 AM 6/28/2022
+40: *5:24 AM 6/28/2022-5:37 AM 6/28/2022
+41: *5:38 AM 6/28/2022-5:39 AM 6/28/2022
+42: *5:39 AM 6/28/2022-5:39 AM 6/28/2022
+43: *5:40 AM 6/28/2022-5:51 AM 6/28/2022
+44: *5:51 AM 6/28/2022-6:15 AM 6/28/2022
+45: *6:15 AM 6/28/2022-6:17 AM 6/28/2022
+46: *6:17 AM 6/28/2022-6:28 AM 6/28/2022
+47: *10:22 AM 6/28/2022-5:15 PM 6/28/2022 U4h
+87: *5:15 PM 6/28/2022-5:42 PM 6/28/2022
+88: *5:42 PM 6/28/2022-6:32 PM 6/28/2022
+90: *6:32 PM 6/28/2022-6:46 PM 6/28/2022
+__________ mi 29.6.22 =>100 ewew 0=fa,1ok,2+lu,3*co,-1~pa,-2-qu,-3!
+91: *5:42 AM 6/29/2022-5:43 AM 6/29/2022
+92: *5:43 AM 6/29/2022-5:50 AM 6/29/2022
+95: *5:51 AM 6/29/2022-5:57 AM 6/29/2022
+97: *5:57 AM 6/29/2022-6:16 AM 6/29/2022
+ok - eliminate user timer!!!
+107: *6:16 AM 6/29/2022-6:22 AM 6/29/2022
+ok - make sure end_of_round does not send!!!
+110: *6:22 AM 6/29/2022-6:38 AM 6/29/2022
+ok - weiter bei end_of_round mess!!!
+ok - eliminate cycles => convert cycles to rounds! gleich am anfang
+115: *6:38 AM 6/29/2022-6:52 AM 6/29/2022
+120: *6:52 AM 6/29/2022-6:59 AM 6/29/2022
+ok - time inc!
+ok - how can I test running out of time? was passiert derzeit?
+ok - hotseat mode: if uname is host, should be able to play!
+ok - hotseat geht nicht mehr weil mimi rausgeflogen ist!
+ok - brauch einen timeout test!
+ok ?WIESO???
+ok - run out of time: round geht nicht weiter!!!
+ok - hand sorting buttons nur wenn hand.length > 1
+ok - history fehlt bei time up!
+123: *6:59 AM 6/29/2022-7:17 AM 6/29/2022
+130: *7:17 AM 6/29/2022-
+- stats besser darstellen: wenn einer rausgeflogen, soll durchstreichen irgendwie, aber trotzdem stats anzeigen!
 
+- implement chains! (just verify, no reordering!)
+
+
+
+
+
+
+
+
+
+sanity sustainability:
+1. become a robot
+2. let everything go
+3. 3,2,1,go regel!
+
+plan fuer morgen:
+1. 10h F AGu, skype, kochen, maedi unten ordnung
+2. 12h pause + E + anschliessend schlafen?
+3. ab 1h: library + 1 buch 31000042108814 Choice reads 2021 OCT
+4. nap time
+5. ca 5h noch eine runde gehen oder was
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+aristo rumors!
 
 
 
@@ -8156,7 +8284,6 @@ log_object
 - mach einen minimalen xbutton ins eck von panel
 
 
-patrick wood
 
 
 
@@ -8187,276 +8314,4 @@ patrick wood
 
 
 
-
-
-AAA-MBNA 4264 2962 8817 2098
-*2098
-
-AMERICAN EXPRESS 
-*1003
-
-AT&T Mobility 
-*1581
-
-AT&T Mobility{AT&T WA}
-*0597
-
-AT&T Mobility 
-*1581
-
-Bank Of Amerika Credit CardOpens a dialog
-*1569
-
-Bank Of Amerika Credit CardOpens a dialog
-*0386
-
-Bank Of Amerika Mail-in1
-*0487
-
-Bel-Red Oral
-*6011
-
-Bellevue Kendo Club
-*Leeb
-
-CapitalOne
-*3033
-
-CapitalOneVenture
-*6901
-
-CapitalOneVentureF
-*2925
-
-Chase
-*3576
-
-Chase Amazon
-*8182
-Last Payment 5-25 $1150.41
-
-Chase Card
-*9654
-
-CHASE MANHATTAN BANK-MC
-CHASE
-*9654
-
-Chase Sapphire
-*7887
-
-Chase Sapphire
-*8000
-
-City Cards
-*1398
-
-City Cards Divident
-*4838
-
-CITY CARDS Points
-*1398
-
-Citi Costco
-*0587
-Last Payment 6-17 $506.14
-
-Citi Costco
-*6060
-Last Payment 6-6 $228.92
-
-CITI DIVIDENT Platinum
-*4838
-
-CITIBANK VISA NV
-*0144
-
-City of Redmond
-*-000
-Last Payment 5-17 $214.94
-
-City of Redmond
-*-001
-
-Comcast
-*2891
-
-Comcast Perrigo
-*2891
-Last Payment 6-21 $89.44
-
-ComCast WA
-*3789
-
-DISCOVER CARD SERVICES
-*8521
-
-Dr. Ellie Tabaraie
-*Leeb
-
-Fastenerz.com
-*000
-
-Fidelity
-*9454
-
-Fleet Credit Card Service
-*6743
-
-FLEET CREDIT CARD0MC/VS (32)
-*6743
-
-Frontier
-*09-5
-
-Frontier2
-*9165
-
-GoodToGo
-*2205
-
-Hardford Mutual Funds Inc.
-*8975
-
-King County Treasurey
-*0-02
-
-King County Treasurey
-*0-03
-
-LabCorp
-*2414
-
-Landover Mortgage
-*Leeb
-
-Lauren Martini
-Lauren boa
-
-Lederman&Lederman
-*9191
-
-Liberty Mutual Group
-*-400
-
-Liberty Mutual Group
-*-408
-
-Liberty Mutual Group
-*-440
-
-Macy's Star Rewards
-*23-0
-
-MBNA
-*7537
-
-MBNA 5490 3529 7924 0117
-*0117
-
-Oachita
-*9442
-
-Oasis Condominium CA
-*405
-
-Oasis Condominium CA
-*A405
-Last Payment 5-31 $581.54
-
-Orthodontics Roos
-*0238
-
-Overcast Law Office, PS
-*2253
-
-Overlake Medical Center
-*Leeb
-
-Pediatric Associates Inc
-*2522
-
-Perrigo Heights HOA
-*t#21
-
-Premier Periodontics
-*7271
-
-PreventionMD
-*4117
-
-Prime Trust LLC
-*2308
-
-ProSport
-*3094
-
-PSE - Puget Sound Energy
-*5072
-Last Payment 5-25 $70.59
-
-Puget Sound Energy
-*06-9
-
-Real Property Management Eclipse
-*asis
-
-Redmond Ridge Family Dentistry
-*0017
-
-Sewage Capacity Charge
-*8567
-
-Silkroad
-*26-1
-
-Suhrco
-*405
-
-Target
-*8387
-
-Target National Bank
-*8387
-
-Univerity Of WA Medical Center
-*7358
-
-US Bank Credit Card FlexPerks
-*3312
-Last Payment 5-20 $11.13
-
-USBank
-*3850
-
-USBank-CashPlus
-*4780
-
-USBank-FlexPerks
-*6488
-
-Verizon
-*8859
-
-Waste Management
-*79-1
-
-Waste Management
-*79-9
-
-Wells Fargo Home Mortgage
-*7334
-Last Payment 6-10 $1625.06
-
-Wells Fargo Home Mortgage
-*9446
-
-Williams-Sonoma
-*2459
-
-WINDERMERE PROPERTY MGMT/EASTSID
-*2306
-
-Windermere Real Estate/East
-*ntal
 
