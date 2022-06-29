@@ -123,7 +123,7 @@ function bluff_change_to_turn_round() {
 function bluff_ack_uplayer() {
 	let [A, fen, stage, uplayer] = [Z.A, Z.fen, Z.stage, Z.uplayer];
 	fen.players[uplayer].ack = true;
-	DA.ack[plname] = true;
+	//DA.ack[uplayer] = true;
 	ack_player(uplayer);
 }
 
