@@ -7070,7 +7070,20 @@ ok - stats besser darstellen: wenn einer rausgeflogen, soll durchstreichen irgen
 150: *8:05 AM 6/29/2022-8:10 AM 6/29/2022
 152: *8:11 AM 6/29/2022-8:32 AM 6/29/2022
 155: *8:32 AM 6/29/2022-8:32 AM 6/29/2022
-156: *8:32 AM 6/29/2022-
+156: *8:32 AM 6/29/2022-6:19 AM 6/30/2022 U5h
+__________ mi 29.6.22 =>100 ewew 0=fa,1ok,2+lu,3*co,-1~pa,-2-qu,-3!
+200: *6:19 AM 6/30/2022-6:22 AM 6/30/2022
+201: *6:23 AM 6/30/2022-6:23 AM 6/30/2022
+202: *6:23 AM 6/30/2022-6:24 AM 6/30/2022
+203: *6:24 AM 6/30/2022-6:25 AM 6/30/2022
+204: *6:25 AM 6/30/2022-6:26 AM 6/30/2022
+205: *6:26 AM 6/30/2022-
+- close aroot
+- override
+- back to TESTING
+- test
+- prep baustelle2
+
 - fix bug!
 - ok, so dieser fehler wird gemacht!!!
 - check ob ich in fritz wirklich verify dass alle suits verschieden sind in group!!!
