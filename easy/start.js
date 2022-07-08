@@ -200,6 +200,15 @@ function ai_move(ms = 100) {
 		selitems = ai_pick_legal_exchange();
 	} else if (A.command == 'upgrade') {
 		selitems = [rChoose(A.items)];
+	} else if (A.command == 'rumor') {
+		selitems = [];
+		let buildings = A.items.filter(x => x.path.includes('building'));
+		let rumors = A.items.filter(x => !x.path.includes('building'));
+		selitems = [rChoose(buildings),rChoose(rumors)];
+	} else if (ARI.stage[Z.stage] == 'rumors_weitergeben') {
+		let players = A.items.filter(x => Z.plorder.includes(x.key))
+		let rumors = A.items.filter(x => !Z.plorder.includes(x.key))
+		selitems = [rChoose(players),rChoose(rumors)];
 	} else if (ARI.stage[Z.stage] == 'journey') {
 		//console.log('bot should be picking a correct journey!!!! wie geht das?');
 		selitems = []; // always pass!

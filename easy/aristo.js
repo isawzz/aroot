@@ -2635,12 +2635,13 @@ function process_rumor() {
 	//assert that exactly 2 items are selected one of which is a building and one a rumor card
 	let items = A.selected.map(x => A.items[x]);
 	let building = firstCond(items, x => x.path.includes('building'));
-	let fenbuilding = lookup(fen, building.path.split('.'));
 	let rumor = firstCond(items, x => !x.path.includes('building'));
 	if (nundef(building) || nundef(rumor)) {
 		select_error('you must select exactly one building and one rumor card!');
 		return;
 	}
+
+	let fenbuilding = lookup(fen, building.path.split('.'));
 
 	//console.log('building', building, 'rumor', rumor, '\nfenbuilding', fenbuilding);
 	//the buildings gets rumor added

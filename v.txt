@@ -7610,7 +7610,26 @@ ok - bug aristo: inspect erlaubt obwohl es garkein building gibt!!!
 376: *6:31 AM 7/8/2022-6:33 AM 7/8/2022
 377: *6:34 AM 7/8/2022-6:34 AM 7/8/2022
 378: *6:34 AM 7/8/2022-6:40 AM 7/8/2022
-379: *6:40 AM 7/8/2022-
+379: *6:40 AM 7/8/2022-6:44 AM 7/8/2022
+380: *6:44 AM 7/8/2022-6:47 AM 7/8/2022
+381: *6:47 AM 7/8/2022-6:52 AM 7/8/2022
+382: *6:52 AM 7/8/2022-7:06 AM 7/8/2022
+383: *7:06 AM 7/8/2022-7:07 AM 7/8/2022
+384: *7:07 AM 7/8/2022-7:10 AM 7/8/2022
+385: *7:10 AM 7/8/2022-7:15 AM 7/8/2022
+386: *7:15 AM 7/8/2022-7:16 AM 7/8/2022
+387: *7:16 AM 7/8/2022-7:22 AM 7/8/2022
+388: *7:22 AM 7/8/2022-
+- wie heisst die action
+- dasselbe bei rumor setup: 1 player and 1 rumor
+- ai move: rumor: make sure ai selects 1 building and 1 rumor!!!
+=>upload!
+- aristo 26: bug
+- upload
+- bug: wenn bei church nicht genug cards habe zum tiden!
+aristo 988
+- test fuer alle actions
+- bleibt stecken bei ai is moving!!!
 - test at localhost!
 - localhost!
 - config!
