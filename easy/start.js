@@ -257,6 +257,7 @@ function sendmove(plname, friendly, fen, action, expected, phase, round, step, s
 	let o = { uname: plname, friendly: friendly, fen: fen, action: action, expected: expected, phase: phase, round: round, step: step, stage: stage, notes: notes, scoring: scoring };
 	//console.log('sendmove: turn',fen.turn)
 
+	//console.log(`sendmove: simulated: ${DA.simulate}`);
 	if (DA.simulate) phpPostSimulate(o, 'move'); else phpPost(o, 'move');
 }
 function STOPP() { stopgame(); clear_screen(); assertion(Z == null, "ZZZZZZZZZZ NOT NULL") }

@@ -31,7 +31,7 @@ const YELLOW = '#ffe119';
 const YELLOW2 = '#fff620'; //?pink???
 const YELLOW3 = '#ffed01';
 //#endregion
-//#region card globals
+//#region game globals
 const DIBOA = {
 	home: { link: "../rechnung/index.html", img: 'home.png', align: 'left', pop: false },
 	bill: { link: "../rechnung/index.html", img: 'bill.png', align: 'left', pop: false },
@@ -214,9 +214,24 @@ const ARI = {
 		20: 'payment action',
 		21: 'church_minplayer_tide_add',
 		22: 'church_minplayer_tide_downgrade',
+		23: 'comm_weitergeben',
+		24: 'rumors_weitergeben',
+		25: 'rumor',
+		26: 'blackmail',
+		blackmail: 26,
+		27: 'inspect',
+		rumor: 25,
+		28: 'buy rumor',
+		'buy rumor': 28,
+		29: 'rumor discard',
 
 		30: 'pick luxury or journey cards',
 		31: 'add new journey',
+		32: 'rumor_both',
+		33: 'blackmail_owner',
+		34: 'accept_blackmail',
+		35: 'blackmail_complete',
+		36: 'reject_blackmail',
 
 		40: 'trade',
 		41: 'build',
@@ -458,11 +473,20 @@ function mDraggable(item) {
 	d.draggable = true;
 	d.ondragstart = drag;
 }
-function mDroppable(item, handler) {
+function mDroppable(item, handler, dragoverhandler) {
 	let d = iDiv(item);
-	d.ondragover = allowDrop;
+	//console.log('item', item);
+	d.ondragover = isdef(dragoverhandler) ? dragoverhandler : allowDrop;
+	//if (isdef(dragEnterHandler)) d.ondragenter = dragEnterHandler;
 	d.ondrop = handler;
 }
+// function mDroppableGroup(item,handler,dragoverhandler) {
+// 	let d = iDiv(item);
+// 	console.log('item', item, 'group',group);
+// 	d.ondragover = isdef(dragoverhandler)?()=>dragoverhandler(item):allowDrop;
+// 	//if (isdef(dragEnterHandler)) d.ondragenter = dragEnterHandler;
+// 	d.ondrop = handler;
+// }
 function mFlexEvenly(d) {
 	let styles = { display: 'flex' };
 	styles['justify-content'] = 'space-evenly';
@@ -538,7 +562,10 @@ function mInput(dParent, styles, id, placeholder, classtr = 'input', tabindex = 
 function mInsertAt(dParent, el, index = 0) { mInsert(dParent, el, index); }
 function mInsertFirst(dParent, el) { mInsert(dParent, el, 0); }
 function mInsert(dParent, el, index = 0) { dParent.insertBefore(el, dParent.childNodes[index]); }
-function mInsertAfter(dParent, el, index = 0) { dParent.insertAfter(el, dParent.childNodes[index]); }
+function mInsertAfter(dParent, el, index = 0) {
+	if (dParent.childNodes.length == index) mAppend(dParent, el);
+	else mInsert(dParent, el, index + 1);
+}
 function mItem(id, diDOM, di = {}, addSizing = false) {
 	let item = di;
 	id = isdef(id) ? id : isdef(diDOM) && isdef(diDOM.div) && !isEmpty(diDOM.div.id) ? diDOM.div.id : getUID();
@@ -585,9 +612,9 @@ function mLinebreak(dParent, gap) {
 function mMagnifyOnHoverControlPopup(elem) {
 	elem.onmouseenter = ev => {
 		if (ev.ctrlKey) {
-			console.log('hallo!!!!');
+			//console.log('hallo!!!!');
 			let r = getRect(elem, document.body);
-			console.log('r', r);
+			//console.log('r', r);
 
 			let popup = mDiv(document.body, { rounding: 4, position: 'absolute', top: r.y, left: r.x }, 'popup');
 			let clone = elem.cloneNode(true);
@@ -770,6 +797,72 @@ function gSizeToContent(svg) {
 	// Update the width and height using the size of the contents
 	svg.setAttribute("width", bbox.x + bbox.width + bbox.x);
 	svg.setAttribute("height", bbox.y + bbox.height + bbox.y);
+}
+function mStamp(d1, text, color, sz) {
+	mStyle(d1, { position: 'relative' });
+	let r = getRect(d1);
+	let [w, h] = [r.w, r.h];
+	color = ['green','red','blue'].includes(color)?color:'black';
+	sz = valf(sz, r.h / 7);
+	console.log('r', r, 'sz', sz);
+	let [padding, border, rounding, angle] = [sz / 10, sz / 6, sz / 8, rNumber(-25, 25)];
+	let d2 =mDiv(d1, {
+		//opacity: 0.9,
+		fg: color,
+		position: 'absolute', top: 25, left: 5,
+		transform: `rotate(${angle}deg)`,
+		fz: sz,
+		hpadding: 2,
+		vpadding: 0,
+		rounding: rounding,
+		//the following wenn ich den black ops one font verwende! mit black
+		// border:`${border}px solid grey`, // black
+		// '-webkit-mask-size': `${w}px ${h}px`,
+		// '-webkit-mask-position': `50% 50%`,
+		// '-webkit-mask-image': 'url("../base/assets/images/textures/grunge.png")',
+		weight: 400, // 900
+		display: 'inline-block',
+		'text-transform': 'uppercase',
+		family: 'fredericka', // "Fredericka the Great", //"black ops one",  // Courier
+		'mix-blend-mode': 'multiply',
+
+	}, null, text);
+	mClass(d2,`${color}stamp`);
+
+}
+function mStamp(d1, text, color, sz) {
+	mStyle(d1, { position: 'relative' });
+	let r = getRect(d1);
+	let [w, h] = [r.w, r.h];
+	color = valf(color,'black'); // ['green','red','blue'].includes(color)?color:'black';
+	sz = valf(sz, r.h / 7);
+	//console.log('r', r, 'sz', sz);
+	let [padding, border, rounding, angle] = [sz / 10, sz / 6, sz / 8, rChoose([-16, -14,-10,10,14])];
+	let d2 =mDiv(d1, {
+		//opacity: 0.9,
+		fg: color,
+		position: 'absolute', top: 25, left: 5,
+		transform: `rotate(${angle}deg)`,
+		fz: sz,
+		hpadding: 2,
+		vpadding: 0,
+		rounding: rounding,
+
+		//the following wenn ich den black ops one font verwende! mit black
+		border:`${border}px solid ${colorTrans(color,.8)}`, // black
+		'-webkit-mask-size': `${w}px ${h}px`,
+		'-webkit-mask-position': `50% 50%`,
+		'-webkit-mask-image': 'url("../base/assets/images/textures/grunge.png")',
+
+		weight: 400, // 800
+		display: 'inline-block',
+		'text-transform': 'uppercase',
+		family: 'blackops', // courier blackops fredericka
+		'mix-blend-mode': 'multiply',
+
+	}, null, text);
+	//mClass(d2,`${color}stamp`);
+
 }
 
 function mSuit(key, d, styles, pos, classes) {
@@ -1169,7 +1262,7 @@ function mFadeRemove(d, ms = 800, callback = null) { mAnimateTo(d, 'opacity', 0,
 function mFadeClear(d, ms = 800, callback = null) { mAnimateTo(d, 'opacity', 0, () => { mClear(d); if (callback) callback(); }, ms); }
 function mFadeClearShow(d, ms = 800, callback = null) { mAnimate(d, 'opacity', [1, 0], () => { mClear(d); if (callback) callback(); }, ms); }
 function mFall(d, ms = 800) { toElem(d).animate([{ opacity: 0, transform: 'translateY(-50px)' }, { opacity: 1, transform: 'translateY(0px)' },], { fill: 'both', duration: ms, easing: 'ease' }); }
-function mPulse(d, ms, callback = null) { mClass(d, 'onPulse'); TO[getUID()]=setTimeout(() => { mClassRemove(d, 'onPulse'); if (callback) callback(); }, ms); }
+function mPulse(d, ms, callback = null) { mClass(d, 'onPulse'); TO[getUID()] = setTimeout(() => { mClassRemove(d, 'onPulse'); if (callback) callback(); }, ms); }
 function mPulse1(d, callback) { mPulse(d, 1000); }
 function mPulse2(d, callback) { mPulse(d, 2000); }
 function mPulse3(d, callback) { mPulse(d, 3000); }
@@ -1468,6 +1561,7 @@ function bottom_elem_from_to_top(arr1, arr2) { arr2.unshift(arr1.pop()); }
 function elem_from_to(el, arr1, arr2) { removeInPlace(arr1, el); arr2.push(el); }
 function elem_from_to_top(el, arr1, arr2) { removeInPlace(arr1, el); arr2.unshift(el); }
 function arrFromTo(arr, iFrom, iTo) { return takeFromTo(arr, iFrom, iTo); }
+function arrFunc(n, func) { let res = []; for (let i = 0; i < n; i++) res.push(func()); return res; }
 function arrIndices(arr, func) {
 	let indices = [];
 	for (let i = 0; i < arr.length; i++) { if (func(arr[i])) indices.push(i); }
@@ -1529,7 +1623,7 @@ function arrRemove(arr, listweg) {
 	arrReplace(arr, listweg, []);
 }
 function arrRemoveLast(arr) { arr.length -= 1; }
-function arrRepeat(n,el){	let res = [];	for (let i = 0; i < n; i++) res.push(el);	return res;}
+function arrRepeat(n, el) { let res = []; for (let i = 0; i < n; i++) res.push(el); return res; }
 function arrReplace(arr, listweg, listdazu) {
 	//ACHTUNG!!!! geht nur wenn array elements unique sind! removes FIRST OCCURRENCE of el in arr!!!!!!!!!!!!!
 	arrExtend(arr, listdazu);
@@ -1580,6 +1674,23 @@ function arrTake(arr, n, from = 0) {
 		let keys = Object.keys(arr);
 		return keys.slice(from, from + n).map(x => (arr[x]));
 	} else return arr.slice(from, from + n);
+
+}
+function arrTakeLast(arr, n, from = 0) {
+	let res = [];
+	if (isDict(arr)) {
+		let keys = Object.keys(arr);
+		let ilast = keys.length - 1; for (let i = ilast - from; i >= 0 && i > ilast - from - n; i--) { res.unshift(arr[keys[i]]); }
+	} else {
+		//ex arr=[1,2,3,4,5]; n=3; from=1; ilast=4; len = 5
+		//soll [2,3,4], ist: i=3,i=2,i=1
+		//ex arr=[0,1,2,3,4]; n=2; from=0; ilast=4; len = 5
+		//soll i=4, >5-0-2-1=2
+		// let len = arr.length;
+		// for (let i = len - 1 - from; i > len - 1 - from - n; i--) { res.unshift(arr[i]); }
+		let ilast = arr.length - 1; for (let i = ilast - from; i >= 0 && i > ilast - from - n; i--) { res.unshift(arr[i]); }
+	}
+	return res;
 
 }
 function arrWithout(arr, b) { return arrMinus(arr, b); }
@@ -3230,6 +3341,9 @@ function choose(arr, n, excepti) { return rChoose(arr, n, null, excepti); }
 function chooseRandom(arr) { return rChoose(arr); }
 function coin(percent = 50) { let r = Math.random(); r *= 100; return r < percent; }
 function rAlphanums(n) { return rChoose(toLetters('0123456789abcdefghijklmnopq'), n); }
+function rCard(postfix = 'n', ranks = 'A23456789TJQK', suits = 'HSDC') { return rChoose(ranks) + rChoose(suits) + postfix; }
+function rRank(ranks = 'A23456789TJQK') { return rChoose(ranks); }
+function rSuit(suit = 'HSDC') { return rChoose(suit); }
 function rCoin(percent = 50) {
 	let r = Math.random();
 	//r ist jetzt zahl zwischen 0 und 1
@@ -3237,7 +3351,7 @@ function rCoin(percent = 50) {
 	return r < percent;
 }
 function rChoose(arr, n = 1, func = null, exceptIndices = null) {
-	//this does NOT work with an array of objects that contain DOM objects!!! =>use rChooseX instead
+	//this does NOT work with an array of objects that contain DOM objects!!! =>use rChoose below instead
 	let arr1 = jsCopy(arr);
 	if (isdef(exceptIndices)) {
 		for (const i of exceptIndices) removeInPlace(arr1, arr[i]);
@@ -3253,6 +3367,7 @@ function rChoose(arr, n = 1, func = null, exceptIndices = null) {
 
 }
 function rChoose(arr, n = 1, func = null, exceptIndices = null) {
+	//geht auch mit arr is string!
 	let indices = arrRange(0, arr.length - 1);
 	if (isdef(exceptIndices)) {
 		for (const i of exceptIndices) removeInPlace(indices, i);
@@ -3692,12 +3807,12 @@ function get_checked_radios(rg) {
 	//console.log('list',list)
 	return list;
 }
-function get_mouse_pos(ev) { 
+function get_mouse_pos(ev) {
 	let x = ev.pageX - document.body.scrollLeft; // - ev.target.offsetY;
 	let y = ev.pageY - document.body.scrollTop; // - ev.target.offsetY;
-	console.log('y calc:',y,'y returned:',ev.clientY);
+	//console.log('y calc:',y,'y returned:',ev.clientY);
 	// return ({ x: ev.clientX, y: ev.clientY }); 
-	return ({ x: x, y: y }); 
+	return ({ x: x, y: y });
 
 }
 function getTypeOf(param) {

@@ -23,8 +23,8 @@ games:
     color: indigo
     game_type: turn
     options:
+      #mode: 'solo,hotseat,multi'
       mode: 'solo,hotseat,multi'
-      # mode: 'solo,multi,hotseat'
       church: 'no,yes'
       journey: 'no,yes'
       commission: 'no,yes'
@@ -49,7 +49,6 @@ games:
     friendly: "A L'Honneur!"
     logo: fencing #weary face
     color: midnightblue
-    game_type: race
     options:
       #mode: 'solo,multi,hotseat'
       mode: 'solo,hotseat,multi'
@@ -57,11 +56,11 @@ games:
       cycles: '3,2,1'
       #jokers: '0,2,3,1'
       #per_move: '60,50,40'
-      seconds_per_game: '60,180,120'
-      seconds_per_move: '3,4,5'
+      seconds_per_game: '600,300,60,180,120'
+      seconds_per_move: '10,3,4,5'
       #timing: 'game,adaptive,move'
       jokers: '3,2,1,0'
-      overlapping: 'no,yes'
+      overlapping: 'yes,no'
       jokers_per_group: '3,2,1'
   ferro:
     friendly: Ferrocarril

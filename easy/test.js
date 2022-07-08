@@ -1,3 +1,4 @@
+
 function start_tests() {
 	//#region old tests
 	//dTable = mBy('dTable'); mCenterFlex(dTable); mStyle(dTable, { hmin: 500 }); mClass(dTable, 'wood')
@@ -9,18 +10,147 @@ function start_tests() {
 	//test_ferro_is_set(); //
 	//ltest43_fritz_discard_pile();
 	//ltest52_aristo_church_empty(); //ltest23_aristo_building_downgrade(); //ltest50_aristo_church();
+	//ltest55_fritz_set_with_same_suits(); //ltest54_fritz_outoftime();
+	//ltest56_algo_overlapping_sets(); //
+	//ltest55_fritz_set_with_same_suits();
+	//console.log('arrFunc',arrFunc(4,rCard));	console.log('rCard',rCard('r'));
+	//ltest59_arrTakeLast();
+	//ltest65_stamp(); //ltest58_aristo_building_rumor_harvest();
+	//ltest69_ferro_is_group(); //
 	//#endregion
-	ltest45_fritz(); //ltest54_fritz_outoftime();
+
+	ltest57_aristo();
+
 }
 
-
 //#region live server tests
-function make_both_run_out_of_time(o) {
-	let [fen, uplayer] = [o.fen, o.fen.turn[0]];
-	for (const plname in fen.players) {
-		let pl = fen.players[plname];
-		pl.time_left = 100;
-	}
+function ltest69_ferro_is_group(){
+	let j=['*Hn','8Dn','8Hn'];
+	let x = is_group(j);
+	console.log('is_group',x);
+	j=['8Hn','*Dn','8Hn'];
+	x = is_group(j);
+	console.log('is_group',x);
+}
+function ltest68_aristo_blackmail_owner_defend() {
+	TESTING = true; DA.testing = true; DA.test = { mods: [set_blackmail_owner_stage_defend], iter: 0, maxiter: 200, running: false, step: true, suiteRunning: false, number: 0, list: [0] };
+	DA.test.end = () => { }; //console.log('discard:',Z.fen.deck_discard);}
+	DA.auto_moves = [];//[['random']];
+	startgame('aristo', [{ name: U.name, playmode: 'human' }, { name: 'amanda', playmode: 'human' }], { mode: 'hotseat' });
+}
+function ltest67_aristo_blackmail_owner() {
+	TESTING = true; DA.testing = true; DA.test = { mods: [set_blackmail_owner_stage], iter: 0, maxiter: 200, running: false, step: true, suiteRunning: false, number: 0, list: [0] };
+	DA.test.end = () => { }; //console.log('discard:',Z.fen.deck_discard);}
+	DA.auto_moves = [];//[['random']];
+	startgame('aristo', [{ name: U.name, playmode: 'human' }, { name: 'amanda', playmode: 'human' }], { mode: 'hotseat' });
+}
+function ltest66_stamp_style() {
+	dTable = mBy('dTable'); mClass('dTexture', 'wood'); mCenterFlex(dTable);
+	//let d=mDiv(dTable,{},null,'HALLO');
+	let hand = ['2Hn', '3Hn', '4Hn', '5Hn', '6Hn', '7Hn', '8Hn', '9Hn', 'THn', 'JHn', 'QHn', 'KHn', 'AHn'];
+	let ui = ui_type_hand(hand, dTable);
+	mStamp(ui.container, 'blackmail');
+}
+function ltest65_stamp() {
+	TESTING = true; DA.testing = true; DA.test = { mods: [], iter: 0, maxiter: 200, running: false, step: true, suiteRunning: false, number: 0, list: [0] };
+	DA.test.end = () => { }; //console.log('discard:',Z.fen.deck_discard);}
+	DA.auto_moves = [];//[['random']];
+	startgame('aristo', [{ name: U.name, playmode: 'human' }, { name: 'amanda', playmode: 'human' }], { mode: 'hotseat' });
+}
+function ltest64_aristo_blackmailed_building() {
+	TESTING = true; DA.testing = true; DA.test = { mods: [give_other_blackmailed_building], iter: 0, maxiter: 200, running: false, step: true, suiteRunning: false, number: 0, list: [0] };
+	DA.test.end = () => { }; //console.log('discard:',Z.fen.deck_discard);}
+	DA.auto_moves = [];//[['random']];
+	startgame('aristo', [{ name: U.name, playmode: 'human' }, { name: 'amanda', playmode: 'human' }], { mode: 'hotseat' });
+}
+function ltest63_aristo_blackmail() {
+	TESTING = true; DA.testing = true; DA.test = { mods: [give_other_various_buildings, set_queen_phase], iter: 0, maxiter: 200, running: false, step: true, suiteRunning: false, number: 0, list: [0] };
+	DA.test.end = () => { }; //console.log('discard:',Z.fen.deck_discard);}
+	DA.auto_moves = [];//[['random']];
+	startgame('aristo', [{ name: U.name, playmode: 'human' }, { name: 'amanda', playmode: 'human' }], { mode: 'hotseat' });
+}
+function ltest62_aristo_inspect_closed_schwein() {
+	TESTING = true; DA.testing = true; DA.test = { mods: [x => give_players_schwein(x, false), add_rumors_to_buildings], iter: 0, maxiter: 200, running: false, step: true, suiteRunning: false, number: 0, list: [0] };
+	DA.test.end = () => { }; //console.log('discard:',Z.fen.deck_discard);}
+	DA.auto_moves = [];//[['random']];
+	startgame('aristo', [{ name: U.name, playmode: 'human' }, { name: 'amanda', playmode: 'human' }], { mode: 'hotseat' });
+}
+function ltest61_aristo_inspect_correct() {
+	TESTING = true; DA.testing = true; DA.test = { mods: [give_players_buildings, add_rumors_to_buildings], iter: 0, maxiter: 200, running: false, step: true, suiteRunning: false, number: 0, list: [0] };
+	DA.test.end = () => { }; //console.log('discard:',Z.fen.deck_discard);}
+	DA.auto_moves = [];//[['random']];
+	startgame('aristo', [{ name: U.name, playmode: 'human' }, { name: 'amanda', playmode: 'human' }], { mode: 'hotseat' });
+}
+function ltest60_aristo_inspect_schwein() {
+	TESTING = true; DA.testing = true; DA.test = { mods: [give_players_schwein, add_rumors_to_buildings], iter: 0, maxiter: 200, running: false, step: true, suiteRunning: false, number: 0, list: [0] };
+	DA.test.end = () => { }; //console.log('discard:',Z.fen.deck_discard);}
+	DA.auto_moves = [];//[['random']];
+	startgame('aristo', [{ name: U.name, playmode: 'human' }, { name: 'amanda', playmode: 'human' }], { mode: 'hotseat' });
+}
+function ltest59_arrTakeLast() {
+	let x = arrTakeLast([0, 1, 2, 3, 4, 5], 3, 2); console.log('x', x);
+	x = arrTakeLast({ blue: 1, red: 2, green: 3 }, 2, 2); console.log('x', x);
+	x = arrTakeLast([0, 1, 2, 3, 4, 5], 10, 0); console.log('x', x);
+}
+function ltest58_aristo_building_rumor_harvest() {
+	TESTING = true; DA.testing = true; DA.test = { mods: [give_players_buildings_plus, add_rumors_to_buildings, give_player_queen], iter: 0, maxiter: 200, running: false, step: true, suiteRunning: false, number: 0, list: [0] };
+	DA.test.end = () => { }; //console.log('discard:',Z.fen.deck_discard);}
+	DA.auto_moves = [];//[['random']];
+	startgame('aristo', [{ name: U.name, playmode: 'human' }, { name: 'amanda', playmode: 'human' }], { mode: 'hotseat' });
+}
+function ltest57_aristo() {
+	TESTING = true; DA.testing = true; DA.test = { mods: [], iter: 0, maxiter: 200, running: false, step: true, suiteRunning: false, number: 0, list: [0] };
+	DA.test.end = () => { }; //console.log('discard:',Z.fen.deck_discard);}
+	DA.auto_moves = [];//[['random']];
+	let playernames = [U.name, 'felix'];
+
+	startgame('aristo', playernames.map(x => ({ name: x, playmode: 'human' })), { mode: 'hotseat' });
+}
+function ltest56_algo_overlapping_sets() {
+	// let cards = ['2Hn','3Hn','4Hn','5Hn','6Hn','7Hn','7Cn','7Dn','7Hn'].map(x=>({key:x,suit:x[0],rank:x[1]}));
+	let cards = ['2Hn', '3Hn', '4Hn', '5Hn', '6Hn', '7Hn', '7Cn', '7Dn', '7Hn'].map(x => fritz_get_card(x));
+	let res = is_overlapping_set(cards, 1, 3, false); //ok
+	console.log('res:', res);
+
+	res = is_overlapping_set(['2Hn', '3Hn', '4Hn', '3Hn', '2Hn'].map(x => fritz_get_card(x)), 1, 3, false); //ok
+	console.log('res:', res);
+
+	res = is_overlapping_set(['2Hn', '3Hn', '4Hn', '3Hn'].map(x => fritz_get_card(x)), 1, 3, false); //false ok
+	console.log('res:', res);
+
+	res = is_overlapping_set(['2Hn', '3Hn', '3Hn', '3Cn'].map(x => fritz_get_card(x)), 1, 3, false); //false ok
+	console.log('res:', res);
+
+	res = is_overlapping_set(['2Hn', '3Hn', '4Hn', '5Hn', '5Cn', '5Dn', '5Cn', '5Hn'].map(x => fritz_get_card(x)), 1, 3, false); //ok
+	console.log('res:', res);
+
+	res = is_overlapping_set(['2Hn', '3Hn', '4Hn', '5Hn', '5Cn', '5Cn', '5Cn', '5Hn', '6Hn', '7Hn'].map(x => fritz_get_card(x)), 1, 3, false); //false ok
+	console.log('res:', res);
+
+	res = is_overlapping_set(['2Hn', '*Hn', '2Cn', '3Hn', '4Cn'].map(x => fritz_get_card(x)), 1, 3, false);
+	console.log('res:', res);
+
+	res = is_overlapping_set(['2Hn', '*Hn', '2Cn', '3Cn', '4Cn'].map(x => fritz_get_card(x)), 1, 3, false);
+	console.log('res:', res);
+
+	res = is_overlapping_set(['4Hn', '3Hn', '2Hn', '2Cn', '2Sn', '3Sn', '4Sn'].map(x => fritz_get_card(x)), 1, 3, false); //ok
+	console.log('res:', res);
+
+	res = is_overlapping_set(['4Hn', '3Hn'].map(x => fritz_get_card(x)), 1, 3, false); //ok FEHLER!!!
+	console.log('res:', res);
+
+	res = is_overlapping_set(['4Hn'].map(x => fritz_get_card(x)), 1, 3, false); //ok FEHLER!!!
+	console.log('res:', res);
+}
+function ltest55_fritz_set_with_same_suits() {
+	DA.magnify_on_select = true;
+	TESTING = true; DA.testing = true; DA.test = {
+		mods: [give_player_hand_groups], iter: 0, maxiter: 200, running: false, step: true, suiteRunning: false, number: 0, list: [0]
+	};
+	DA.test.end = () => { };
+	DA.auto_moves = [];
+	startgame('fritz', [{ name: U.name, playmode: 'human' }, { name: 'amanda', playmode: 'human' }], { mode: 'hotseat' });
+
 }
 function ltest54_fritz_outoftime() {
 	DA.magnify_on_select = true;
@@ -32,7 +162,6 @@ function ltest54_fritz_outoftime() {
 	startgame('fritz', [{ name: U.name, playmode: 'human' }, { name: 'amanda', playmode: 'human' }], { mode: 'hotseat' });
 
 }
-
 function ltest53_fritz_endround() {
 	DA.magnify_on_select = true;
 	TESTING = true; DA.testing = true; DA.test = {
@@ -919,11 +1048,49 @@ function ensure_stallSelected(fen) { if (nundef(fen.stallSelected)) fen.stallSel
 //#endregion
 
 //#region mods
-function make_deck_discard(o) {
-	let fen = o.fen;
-	let uplayer = o.uplayer;
-	fen.deck_discard = ['2Sn', '3Sn', '4Sn', '5Sn', '6Sn', '7Sn', '8Sn', '9Sn', 'TSn'];
-	fen.journeys = [['2Dn', '3Dn', '4Dn'], ['5Sn', '6Sn', '7Sn']];
+function add_rumors_to_buildings(o) {
+	//console.log('deck', jsCopy(otree.deck));
+	fen = o.fen;
+	for (const plname of fen.plorder) {
+		let buildings = fen.players[plname].buildings;
+		for (const type in buildings) {
+			for (const b of buildings[type]) {
+				if (type == 'farm') b.h = rCard('n');
+				b.rumors = arrFunc(2, () => rCard('r'));
+			}
+		}
+	}
+}
+function each_hand_of_one(o) {
+	let [fen, uplayer] = [o.fen, o.fen.turn[0]];
+	for (const plname of fen.plorder) {
+		let pl = fen.players[plname];
+		pl.hand = [rChoose(['4Hn', '5Hn', 'QHn', 'KHn', 'AHn'])];
+		pl.goals['33'] = true; pl.roundgoal = '33';
+		pl.journeys.push(['4Hn', '4Sn', '*Hn'], ['5Hn', '5Sn', '*Hn'], ['QHn', 'QSn', '*Hn']);
+	}
+	fen.players[uplayer].hand = ['4Cn'];
+}
+function get_building_with_rumor(fen, plname) {
+	let buildings = fen.players[plname].buildings;
+	for (const type in buildings) {
+		let i = 0;
+		for (const b of buildings[type]) {
+			if (isdef(b.rumors)) {
+				b.type = type;
+				b.path = `players.${plname}.buildings.${type}.${i}`;
+				return b;
+			}
+			i++;
+		}
+	}
+	return null;
+}
+function give_player_hand_groups(o) {
+	let [fen, uplayer] = [o.fen, o.fen.turn[0]];
+	let pl = fen.players[uplayer];
+	pl.hand = ['2Hn', '2Hn', '2Sn', '2Cn', '3Sn', '3Hn', '4Hn', '4Sn', '*Hn'];
+
 }
 function give_player_only_one_card(o) {
 	let [fen, uplayer] = [o.fen, o.fen.turn[0]];
@@ -951,16 +1118,6 @@ function give_player_hand_group(o) {
 	pl.hand = ['2Hn', '2Sn', '2Hn', '3Hn', '3Sn', '3Hn', '4Hn', '4Sn', '*Hn'];
 
 }
-function each_hand_of_one(o) {
-	let [fen, uplayer] = [o.fen, o.fen.turn[0]];
-	for (const plname of fen.plorder) {
-		let pl = fen.players[plname];
-		pl.hand = [rChoose(['4Hn', '5Hn', 'QHn', 'KHn', 'AHn'])];
-		pl.goals['33'] = true; pl.roundgoal = '33';
-		pl.journeys.push(['4Hn', '4Sn', '*Hn'], ['5Hn', '5Sn', '*Hn'], ['QHn', 'QSn', '*Hn']);
-	}
-	fen.players[uplayer].hand = ['4Cn'];
-}
 function give_player_jolly(o) {
 	let [fen, uplayer] = [o.fen, o.fen.turn[0]];
 	let pl = fen.players[uplayer];
@@ -975,14 +1132,6 @@ function give_each_jolly_group(o) {
 
 	}
 	fen.players[uplayer].hand.push('4Cn');
-}
-function small_hands(o) {
-	let [fen, uplayer] = [o.fen, o.fen.turn[0]];
-	for (const plname of fen.plorder) {
-		let pl = fen.players[plname];
-		pl.hand.sort();
-		pl.hand = arrTake(pl.hand, 7); //journeys.push(['4Hn', '4Sn', '*Hn']);
-	}
 }
 function give_player_sequence(o) {
 	let [fen, uplayer] = [o.fen, o.fen.turn[0]];
@@ -1013,9 +1162,43 @@ function give_other_jolly_sequence(o) {
 	pl.goals['7R'] = true; pl.roundgoal = '7R';
 	fen.players[uplayer].hand.push('2Hn', '5Hn', 'JHn', 'QHn');
 }
+function give_other_blackmailed_building(o) {
+	let [fen, uplayer] = [o.fen, o.fen.turn[0]];
+	let b1 = stage_building(fen, 1, 'farm'); b1.rumors = ['KHr'];
+	b1.isblackmailed = true;
+	set_queen_phase(o);
+}
+function give_player_various_buildings(o) {
+	let plname = o.fen.turn[0];
+	return give_various_buildings_to(o, plname);
+}
+function give_other_various_buildings(o) {
+	let [fen, uplayer] = [o.fen, o.fen.turn[0]];
+	let other = firstCond(o.fen.plorder, (p) => p != uplayer);
+	return give_various_buildings_to(o, other);
+}
+function give_various_buildings_to(o, plname) {
+	let [fen, uplayer] = [o.fen, o.fen.turn[0]];
+	let i = fen.plorder.indexOf(plname);
+	//console.log('other is',plname,'index',i,'plorder',fen.plorder);
+	let b1 = stage_building(fen, i, 'farm'); b1.rumors = ['KHr'];
+	let b2 = stage_building(fen, i, 'farm');
+	let lead = b2.lead; //console.log('lead', lead);
+	b2.rumors = ['4Cr', `${lead[0]}Cr`];
+
+	let b3 = stage_building(fen, i, 'farm');
+	return plname;
+}
 function give_players_buildings(o) {
 	let [fen, uplayer] = [o.fen, o.fen.turn[0]];
 	stage_correct_buildings(fen, { mimi: { estate: 1 }, amanda: { chateau: 1 } });
+	fen.stage = 5;
+	fen.phase = 'king';
+}
+function give_players_schwein(o, isOpen = true) {
+	let [fen, uplayer] = [o.fen, o.fen.turn[0]];
+	let b = stage_building(fen, 1, 'farm');
+	if (isOpen) b.schwein = b.list[2];
 	fen.stage = 5;
 	fen.phase = 'king';
 }
@@ -1047,10 +1230,37 @@ function give_players_stalls(o) {
 		pl.stall_value = calc_stall_value(fen, plname);
 	}
 }
+function give_player_queen(o) {
+	let [fen, uplayer] = [o.fen, o.fen.turn[0]];
+	fen.players[uplayer].hand.push('QHn');
+}
+function give_players_buildings_plus(o) {
+	let [fen, uplayer] = [o.fen, o.fen.turn[0]];
+	let di = {};
+	for (const plname of fen.plorder) { di[plname] = { estate: 1, farm: 1, chateau: 1 }; }
+	stage_correct_buildings(fen, di);
+	ari_add_harvest_cards(fen);
+
+	fen.stage = o.stage = 5;
+	fen.phase = 'king';
+}
+function make_both_run_out_of_time(o) {
+	let [fen, uplayer] = [o.fen, o.fen.turn[0]];
+	for (const plname in fen.players) {
+		let pl = fen.players[plname];
+		pl.time_left = 100;
+	}
+}
 function make_church(o) {
 	let [fen, uplayer] = [o.fen, o.fen.turn[0]];
 	fen.stage = 1004;
 	fen.market = ['JHn', 'QSn'];
+}
+function make_deck_discard(o) {
+	let fen = o.fen;
+	let uplayer = o.uplayer;
+	fen.deck_discard = ['2Sn', '3Sn', '4Sn', '5Sn', '6Sn', '7Sn', '8Sn', '9Sn', 'TSn'];
+	fen.journeys = [['2Dn', '3Dn', '4Dn'], ['5Sn', '6Sn', '7Sn']];
 }
 function prep_for_church_downgrade(o) {
 	let [fen, uplayer] = [o.fen, o.fen.turn[0]];
@@ -1068,6 +1278,38 @@ function prep_for_church_downgrade(o) {
 	}
 
 }
+function set_blackmail_owner_stage_defend(o) {
+	set_blackmail_owner_stage(o);
+	console.log('==>blackmailed is',o.fen.turn[0])
+	let fen = o.fen;
+	let uplayer = fen.turn[0];
+	console.log('==>blackmailed is',uplayer)
+	let building = path2fen(fen, fen.blackmail.building_path);
+	let lead = building.lead;
+	fen.players[uplayer].rumors.push(`${lead[0]}Cr`);
+
+	let plname = fen.blackmail.blackmailed;
+	let rumors = fen.players[plname].rumors;
+	console.log('lead', lead, 'blackmailed rumors', rumors);
+}
+function set_blackmail_owner_stage(o) {
+	set_queen_phase(o); //hier wird manchmal trn geaendert!!!
+	let fen = o.fen;
+	//console.log(fen)
+	let uplayer = fen.turn[0];
+	console.log('blackmailed is',uplayer)
+	give_various_buildings_to(o, uplayer);
+	let other = firstCond(fen.plorder, (p) => p != uplayer);
+
+	//console.log('uplayer',uplayer,'other',other,'fen',fen.players[uplayer].buildings);
+	let building = get_building_with_rumor(o.fen, uplayer);
+	//console.log('building',building);
+	let payment = { o: null, a: 'coin', key: 'coin', friendly: 'coin', path: null };
+	fen.blackmail = { blackmailer: other, blackmailed: uplayer, payment: payment, building_path: building.path };
+	building.isblackmailed = true;
+	// console.log('blackmail',fen.blackmail);
+	fen.stage = o.stage = 33;
+}
 function set_player_tides(o) {
 	let [fen, uplayer] = [o.fen, o.fen.turn[0]];
 	for (const plname of fen.plorder) {
@@ -1080,6 +1322,25 @@ function set_player_tides(o) {
 	fen.church_order = jsCopy(fen.plorder);
 	//fen.selection_order = sorted;
 	fen.stage = 18;
+}
+function set_queen_phase(o) {
+	//console.log('deck', jsCopy(otree.deck));
+	fen = o.fen;
+	fen.phase = o.phase = 'queen';
+	arisim_stage_3(fen);
+	arisim_stage_4_all(fen,3,false);
+	ensure_actions(fen);
+	o.stage = fen.stage;
+	//[o.stage, fen.turn] = [fen.stage, o.turn];
+	//fen.stage = o.stage = 5;
+}
+function small_hands(o) {
+	let [fen, uplayer] = [o.fen, o.fen.turn[0]];
+	for (const plname of fen.plorder) {
+		let pl = fen.players[plname];
+		pl.hand.sort();
+		pl.hand = arrTake(pl.hand, 7); //journeys.push(['4Hn', '4Sn', '*Hn']);
+	}
 }
 
 

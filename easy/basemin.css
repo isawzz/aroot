@@ -610,3 +610,28 @@ fieldset .disabled {
 	/* filter: invert();  */
 	filter: brightness(0.75);
 }
+
+.greenstamp{
+	color: #0A9928;
+}
+.redstamp{
+	color: crimson;
+}
+.bluestamp{
+	color: navy;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

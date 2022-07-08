@@ -7077,12 +7077,865 @@ __________ mi 29.6.22 =>100 ewew 0=fa,1ok,2+lu,3*co,-1~pa,-2-qu,-3!
 202: *6:23 AM 6/30/2022-6:24 AM 6/30/2022
 203: *6:24 AM 6/30/2022-6:25 AM 6/30/2022
 204: *6:25 AM 6/30/2022-6:26 AM 6/30/2022
-205: *6:26 AM 6/30/2022-
-- close aroot
-- override
-- back to TESTING
+205: *6:26 AM 6/30/2022-6:28 AM 6/30/2022
+206: *6:28 AM 6/30/2022-6:32 AM 6/30/2022
+207: *6:32 AM 6/30/2022-6:33 AM 6/30/2022
+208: *6:34 AM 6/30/2022-6:36 AM 6/30/2022
+209: *6:36 AM 6/30/2022-6:37 AM 6/30/2022
+210: *6:37 AM 6/30/2022-6:38 AM 6/30/2022
+ok - return to aroot!
+ok - find all
+ok ok ok - goto ferro_is_set in baustelle
+ok - ddfield hmin 162
+ok - rem cons
+ok - golive
+ok - mach einen test
+ok - close aroot
+ok - override
+ok - back to TESTING
+ok - test
+ok - prep baustelle2
+211: *6:38 AM 6/30/2022-6:48 AM 6/30/2022
+215: *6:48 AM 6/30/2022-6:49 AM 6/30/2022
+216: *6:49 AM 6/30/2022-7:12 AM 6/30/2022
+226: *7:13 AM 6/30/2022-7:29 AM 6/30/2022
+ok - test algo
+ok - overlapping sets algo
+233: *7:29 AM 6/30/2022-7:30 AM 6/30/2022
+234: *7:31 AM 6/30/2022-7:43 AM 6/30/2022
+240: *7:44 AM 6/30/2022-8:51 AM 6/30/2022
+270: *8:51 AM 6/30/2022-10:26 AM 6/30/2022 U100
+370: *3:27 PM 6/30/2022-3:31 PM 6/30/2022
+371: *3:31 PM 6/30/2022-3:34 PM 6/30/2022
+372: *3:35 PM 6/30/2022-3:41 PM 6/30/2022
+373: *3:41 PM 6/30/2022-3:43 PM 6/30/2022
+374: *3:43 PM 6/30/2022-4:14 PM 6/30/2022
+375: *4:14 PM 6/30/2022-4:48 PM 6/30/2022
+ok - ausserdem: er akzeptiert nicht: 4322234 => check that!!!
+376: *4:48 PM 6/30/2022-4:56 PM 6/30/2022
+380: *4:56 PM 6/30/2022-5:01 PM 6/30/2022 U50
+__________ mi 29.6.22 =>100 ewew 0=fa,1ok,2+lu,3*co,-1~pa,-2-qu,-3!
+432: *5:01 PM 6/30/2022-5:42 AM 7/1/2022
+433: *5:42 AM 7/1/2022-5:45 AM 7/1/2022
+ok - jedes group object soll ein splay haben!
+ok - baue die overlapping option ein!
+435: *5:44 AM 7/1/2022-5:58 AM 7/1/2022
+440: *5:58 AM 7/1/2022-6:25 AM 7/1/2022
+450: *6:25 AM 7/1/2022-6:30 AM 7/1/2022
+452: *6:30 AM 7/1/2022-6:33 AM 7/1/2022
+453: *6:33 AM 7/1/2022-6:38 AM 7/1/2022
+455: *6:39 AM 7/1/2022-6:41 AM 7/1/2022
+456: *6:41 AM 7/1/2022-6:44 AM 7/1/2022
+ok - test ob er 1 ser group als legal sieht!!!
+457: *6:44 AM 7/1/2022-6:45 AM 7/1/2022
+458: *6:45 AM 7/1/2022-6:52 AM 7/1/2022
+460: *6:52 AM 7/1/2022-6:54 AM 7/1/2022
+461: *6:54 AM 7/1/2022-7:03 AM 7/1/2022
+465: *7:03 AM 7/1/2022-7:03 AM 7/1/2022
+ok - telecave test
+ok - upload
+ok - sieht nicht schlecht aus!
+ok - test!
+ok - wenn gameover ist soll round counter NICHT mehr increased ok werden!!!
+ok - test ob er die loose cards in score einbezieht!!!
+ok - test nochmal
+ok - check ob er die schon alten loosecards noch added oder nicht!!!
+ok - time erhoehen!!!
+ok - riesen bugs mit wann man fertig ist!!!
+ok - ab sofort history aufschreiben!!! bevor eine new round startet!!!
+ok - jetzt passt es zwar aber besser waers wenn ich die position der ok card (at moment of drop) mit der position der targetcard vergleiche
+466: *7:03 AM 7/1/2022-7:04 AM 7/1/2022
+467: *7:04 AM 7/1/2022-7:17 AM 7/1/2022
+470: *7:17 AM 7/1/2022-7:25 AM 7/1/2022
+__________ sa 2.7.22 =>100 ewew 0=fa,1ok,2+lu,3*co,-1~pa,-2-qu,-3!
+600: *6:51 AM 7/2/2022-6:56 AM 7/2/2022
+601: *6:56 AM 7/2/2022-7:45 AM 7/2/2022
+602: *7:46 AM 7/2/2022-7:46 AM 7/2/2022
+603: *7:46 AM 7/2/2022-7:51 AM 7/2/2022
+604: *7:51 AM 7/2/2022-7:51 AM 7/2/2022
+605: *7:51 AM 7/2/2022-7:55 AM 7/2/2022
+606: *7:55 AM 7/2/2022-7:56 AM 7/2/2022
+607: *7:56 AM 7/2/2022-7:58 AM 7/2/2022
+608: *7:58 AM 7/2/2022-7:59 AM 7/2/2022
+609: *7:59 AM 7/2/2022-8:00 AM 7/2/2022
+610: *8:00 AM 7/2/2022-8:02 AM 7/2/2022
+611: *8:02 AM 7/2/2022-8:02 AM 7/2/2022
+612: *8:02 AM 7/2/2022-8:03 AM 7/2/2022
+613: *8:03 AM 7/2/2022-8:04 AM 7/2/2022
+614: *8:04 AM 7/2/2022-8:05 AM 7/2/2022
+615: *8:05 AM 7/2/2022-8:09 AM 7/2/2022
+616: *8:09 AM 7/2/2022-8:11 AM 7/2/2022
+617: *8:11 AM 7/2/2022-8:15 AM 7/2/2022
+stages:
+// 23: 'comm_weitergeben',
+// 24: 'rumors_weitergeben',
+fen.comm_setup_num
+fen.comm_setup_di = {plname:keys,...
+618: *8:15 AM 7/2/2022-8:18 AM 7/2/2022
+619: *8:18 AM 7/2/2022-8:19 AM 7/2/2022
+620: *8:19 AM 7/2/2022-8:21 AM 7/2/2022
+621: *8:21 AM 7/2/2022-8:25 AM 7/2/2022
+622: *8:25 AM 7/2/2022-8:27 AM 7/2/2022
+623: *8:27 AM 7/2/2022-8:29 AM 7/2/2022
+624: *8:29 AM 7/2/2022-8:29 AM 7/2/2022
+625: *8:29 AM 7/2/2022-8:32 AM 7/2/2022
+626: *8:32 AM 7/2/2022-8:40 AM 7/2/2022
+627: *8:40 AM 7/2/2022-8:40 AM 7/2/2022
+628: *8:40 AM 7/2/2022-8:41 AM 7/2/2022
+629: *8:41 AM 7/2/2022-8:43 AM 7/2/2022
+630: *8:43 AM 7/2/2022-8:45 AM 7/2/2022
+631: *8:45 AM 7/2/2022-8:46 AM 7/2/2022
+632: *8:46 AM 7/2/2022-8:49 AM 7/2/2022
+633: *8:49 AM 7/2/2022-8:51 AM 7/2/2022
+634: *8:51 AM 7/2/2022-8:52 AM 7/2/2022
+635: *8:52 AM 7/2/2022-8:54 AM 7/2/2022
+636: *8:54 AM 7/2/2022-8:55 AM 7/2/2022
+637: *8:55 AM 7/2/2022-8:56 AM 7/2/2022
+638: *8:56 AM 7/2/2022-8:56 AM 7/2/2022
+639: *8:56 AM 7/2/2022-9:00 AM 7/2/2022
+640: *9:00 AM 7/2/2022-9:03 AM 7/2/2022
+641: *9:04 AM 7/2/2022-9:04 AM 7/2/2022
+642: *9:05 AM 7/2/2022-9:06 AM 7/2/2022
+643: *9:06 AM 7/2/2022-9:08 AM 7/2/2022
+644: *9:08 AM 7/2/2022-9:09 AM 7/2/2022
+645: *9:09 AM 7/2/2022-9:11 AM 7/2/2022
+646: *9:11 AM 7/2/2022-9:12 AM 7/2/2022
+647: *9:12 AM 7/2/2022-10:31 AM 7/2/2022 U1h
+648: *10:31 AM 7/2/2022-8:18 PM 7/2/2022
+__________ so 3.7.22 =>100 ewew 0=fa,1ok,2+lu,3*co,-1~pa,-2-qu,-3!
+700: *8:41 PM 7/2/2022-5:48 AM 7/3/2022
+701: *5:48 AM 7/3/2022-5:52 AM 7/3/2022
+702: *5:52 AM 7/3/2022-5:52 AM 7/3/2022
+703: *5:52 AM 7/3/2022-5:57 AM 7/3/2022
+704: *5:57 AM 7/3/2022-6:03 AM 7/3/2022
+705: *6:05 AM 7/3/2022-6:08 AM 7/3/2022
+706: *6:08 AM 7/3/2022-6:13 AM 7/3/2022
+707: *6:13 AM 7/3/2022-6:15 AM 7/3/2022
+708: *6:15 AM 7/3/2022-6:16 AM 7/3/2022
+ok - warum seh ich rumor von felix nicht?
+ok - wieso geht es nicht?
+709: *6:16 AM 7/3/2022-6:18 AM 7/3/2022
+710: *6:18 AM 7/3/2022-6:18 AM 7/3/2022
+711: *6:18 AM 7/3/2022-6:22 AM 7/3/2022
+712: *6:22 AM 7/3/2022-6:23 AM 7/3/2022
+713: *6:23 AM 7/3/2022-6:26 AM 7/3/2022
+714: *6:26 AM 7/3/2022-6:31 AM 7/3/2022
+715: *6:31 AM 7/3/2022-6:32 AM 7/3/2022
+716: *6:32 AM 7/3/2022-6:34 AM 7/3/2022
+717: *6:34 AM 7/3/2022-6:37 AM 7/3/2022
+718: *6:37 AM 7/3/2022-6:39 AM 7/3/2022
+719: *6:40 AM 7/3/2022-6:41 AM 7/3/2022
+720: *6:41 AM 7/3/2022-6:44 AM 7/3/2022
+721: *6:44 AM 7/3/2022-6:46 AM 7/3/2022
+722: *6:46 AM 7/3/2022-6:50 AM 7/3/2022
+723: *6:50 AM 7/3/2022-6:50 AM 7/3/2022
+724: *6:50 AM 7/3/2022-6:55 AM 7/3/2022
+725: *6:55 AM 7/3/2022-7:00 AM 7/3/2022
+726: *7:00 AM 7/3/2022-7:01 AM 7/3/2022
+727: *7:01 AM 7/3/2022-7:02 AM 7/3/2022
+728: *7:02 AM 7/3/2022-7:04 AM 7/3/2022
+729: *7:04 AM 7/3/2022-7:06 AM 7/3/2022
+ok - ari_history_list
+ok - plorder
+ok - test
+ok - goto rumor setup code
+ok - goto ari_pre_action
+ok - wieso geht es nicht???
+ok - habe A.payment!
+ok choice:
+ok 1- select building, then select rumor
+ok =>2- select a rumor AND a building
+730: *7:06 AM 7/3/2022-7:07 AM 7/3/2022
+731: *7:07 AM 7/3/2022-7:09 AM 7/3/2022
+732: *7:09 AM 7/3/2022-7:10 AM 7/3/2022
+733: *7:11 AM 7/3/2022-7:14 AM 7/3/2022
+734: *7:14 AM 7/3/2022-7:24 AM 7/3/2022
+735: *7:24 AM 7/3/2022-10:15 AM 7/3/2022
+757: *10:16 AM 7/3/2022-10:20 AM 7/3/2022
+758: *10:20 AM 7/3/2022-10:23 AM 7/3/2022
+759: *10:24 AM 7/3/2022-10:27 AM 7/3/2022
+760: *10:27 AM 7/3/2022-10:28 AM 7/3/2022
+761: *10:28 AM 7/3/2022-10:28 AM 7/3/2022
+762: *10:29 AM 7/3/2022-6:12 AM 7/4/2022
+__________ mo 4.7.22 =>100 ewew 0=fa,1ok,2+lu,3*co,-1~pa,-2-qu,-3!
+810: *6:12 AM 7/4/2022-6:14 AM 7/4/2022
+811: *6:14 AM 7/4/2022-6:16 AM 7/4/2022
+812: *6:16 AM 7/4/2022-6:16 AM 7/4/2022
+813: *6:16 AM 7/4/2022-6:20 AM 7/4/2022
+814: *6:20 AM 7/4/2022-6:21 AM 7/4/2022
+815: *6:26 AM 7/4/2022-6:26 AM 7/4/2022
+816: *6:26 AM 7/4/2022-6:28 AM 7/4/2022
+817: *6:28 AM 7/4/2022-6:30 AM 7/4/2022
+818: *6:30 AM 7/4/2022-6:33 AM 7/4/2022
+819: *6:33 AM 7/4/2022-6:33 AM 7/4/2022
+ok - test arrFunc
+ok - revisit arrRepeat
+ok - gib jedem player buildings mit harvest und rumors
+ok - test rCard
+ok - rRank(ranks)
+ok - mach ein add_rumor_cards_to_buildings in test
+ok - weg mit dem weg
+820: *6:33 AM 7/4/2022-6:34 AM 7/4/2022
+821: *6:34 AM 7/4/2022-6:37 AM 7/4/2022
+822: *6:37 AM 7/4/2022-6:39 AM 7/4/2022
+823: *6:39 AM 7/4/2022-6:42 AM 7/4/2022
+824: *6:42 AM 7/4/2022-6:51 AM 7/4/2022
+825: *6:51 AM 7/4/2022-6:54 AM 7/4/2022
+826: *6:54 AM 7/4/2022-6:54 AM 7/4/2022
+ok - wieso sieht man nichts? arrFunc(n,func) param 1 ist NUMBER
+827: *6:54 AM 7/4/2022-6:56 AM 7/4/2022
+828: *6:56 AM 7/4/2022-6:59 AM 7/4/2022
+ok - schau ob das bereits genuegt!
+ok - cards darin sollen padding:3,h:24,w:16,
+ok - d_rumors muss mFlex sein!
+ok - ui_type_building soll zu baustelle!
+ok - present rumors on buildings
+ok - test
+ok - add rumors test: give_buildings_rumors
+829: *7:00 AM 7/4/2022-7:01 AM 7/4/2022
+830: *7:01 AM 7/4/2022-7:02 AM 7/4/2022
+831: *7:02 AM 7/4/2022-7:03 AM 7/4/2022
+832: *7:03 AM 7/4/2022-7:04 AM 7/4/2022
+833: *7:05 AM 7/4/2022-7:09 AM 7/4/2022
+ok ?wieso hat player die action 'rumor' nicht??? for rumor command 834: *7:09 AM 7/4/2022-7:10 AM 7/4/2022
+835: *7:12 AM 7/4/2022-7:12 AM 7/4/2022
+836: *7:12 AM 7/4/2022-7:16 AM 7/4/2022
+837: *7:16 AM 7/4/2022-7:19 AM 7/4/2022
+838: *7:19 AM 7/4/2022-7:20 AM 7/4/2022
+839: *7:20 AM 7/4/2022-7:22 AM 7/4/2022
+840: *7:22 AM 7/4/2022-7:22 AM 7/4/2022
+841: *7:23 AM 7/4/2022-7:23 AM 7/4/2022
+842: *7:24 AM 7/4/2022-7:26 AM 7/4/2022
+843: *7:26 AM 7/4/2022-7:29 AM 7/4/2022
+844: *7:29 AM 7/4/2022-7:29 AM 7/4/2022
+845: *7:43 AM 7/4/2022-9:36 AM 7/4/2022
+855: *9:36 AM 7/4/2022-9:38 AM 7/4/2022
+856: *9:38 AM 7/4/2022-8:18 PM 7/4/2022
+__________ di 5.7.22 =>100 ewew 0=fa,1ok,2+lu,3*co,-1~pa,-2-qu,-3!
+900: *8:18 PM 7/4/2022-6:32 AM 7/5/2022
+901: *6:32 AM 7/5/2022-6:33 AM 7/5/2022
+902: *6:33 AM 7/5/2022-6:34 AM 7/5/2022
+903: *6:34 AM 7/5/2022-6:39 AM 7/5/2022
+904: *6:39 AM 7/5/2022-6:44 AM 7/5/2022
+905: *6:44 AM 7/5/2022-6:46 AM 7/5/2022
+906: *6:46 AM 7/5/2022-6:50 AM 7/5/2022
+907: *6:50 AM 7/5/2022-6:51 AM 7/5/2022
+908: *6:51 AM 7/5/2022-6:56 AM 7/5/2022
+909: *6:56 AM 7/5/2022-6:57 AM 7/5/2022
+910: *6:57 AM 7/5/2022-6:59 AM 7/5/2022
+911: *6:59 AM 7/5/2022-7:04 AM 7/5/2022
+912: *7:04 AM 7/5/2022-7:12 AM 7/5/2022
+913: *7:12 AM 7/5/2022-7:14 AM 7/5/2022
+914: *7:14 AM 7/5/2022-7:14 AM 7/5/2022
+915: *7:17 AM 7/5/2022-7:17 AM 7/5/2022
+916: *7:17 AM 7/5/2022-7:21 AM 7/5/2022
+917: *7:21 AM 7/5/2022-7:26 AM 7/5/2022
+918: *7:26 AM 7/5/2022-7:32 AM 7/5/2022
+919: *7:32 AM 7/5/2022-7:32 AM 7/5/2022
+920: *7:32 AM 7/5/2022-7:33 AM 7/5/2022
+921: *7:33 AM 7/5/2022-7:34 AM 7/5/2022
+922: *7:34 AM 7/5/2022-7:36 AM 7/5/2022
+923: *7:36 AM 7/5/2022-8:06 AM 7/5/2022
+924: *8:06 AM 7/5/2022-8:10 AM 7/5/2022
+925: *8:10 AM 7/5/2022-8:12 AM 7/5/2022
+926: *8:12 AM 7/5/2022-8:14 AM 7/5/2022
+927: *8:14 AM 7/5/2022-8:16 AM 7/5/2022
+ok - buy rumor
+ok - baustelle 66
+1 - WO?
+2 - wo wollt ich das verwenden
+3- test arrTakeLast(arr,n,from) 
+928: *8:16 AM 7/5/2022-8:22 AM 7/5/2022
+929: *8:22 AM 7/5/2022-8:23 AM 7/5/2022
+930: *8:24 AM 7/5/2022-8:26 AM 7/5/2022
+931: *8:26 AM 7/5/2022-8:33 AM 7/5/2022
+932: *8:33 AM 7/5/2022-8:33 AM 7/5/2022
+933: *8:33 AM 7/5/2022-8:35 AM 7/5/2022
+934: *8:35 AM 7/5/2022-8:38 AM 7/5/2022
+935: *8:38 AM 7/5/2022-8:43 AM 7/5/2022
+ok - mach einen check filter x=>
+ok - WIESO IST DA EIN CHURCH??????
+ok - make building lead explicit! (in fen?)
+936: *8:43 AM 7/5/2022-8:45 AM 7/5/2022
+937: *8:45 AM 7/5/2022-8:46 AM 7/5/2022
+938: *8:46 AM 7/5/2022-8:49 AM 7/5/2022
+939: *8:49 AM 7/5/2022-8:51 AM 7/5/2022
+940: *8:51 AM 7/5/2022-8:57 AM 7/5/2022
+1- need test mit 1 schweine building bei other!
+2- output_arr_short
+3- weiter 
+941: *8:57 AM 7/5/2022-9:00 AM 7/5/2022
+942: *9:00 AM 7/5/2022-9:05 AM 7/5/2022
+1- brauch stage rumor_discard! 29?
+2- was jetzt???
+3- bug!!!!
+943: *9:05 AM 7/5/2022-9:09 AM 7/5/2022
+944: *9:09 AM 7/5/2022-9:09 AM 7/5/2022
+945: *9:09 AM 7/5/2022-9:10 AM 7/5/2022
+946: *9:11 AM 7/5/2022-9:14 AM 7/5/2022
+947: *9:15 AM 7/5/2022-9:15 AM 7/5/2022
+948: *9:15 AM 7/5/2022-9:18 AM 7/5/2022
+949: *9:18 AM 7/5/2022-9:19 AM 7/5/2022
+950: *9:19 AM 7/5/2022-9:23 AM 7/5/2022
+ok - riesen bug!!!
+ok - need 1 1
+ok - rem cons!
+1- bug!
+2- test
+3- give_correct_building!
+951: *9:23 AM 7/5/2022-9:24 AM 7/5/2022
+952: *9:24 AM 7/5/2022-9:30 AM 7/5/2022
+953: *9:30 AM 7/5/2022-9:32 AM 7/5/2022
+954: *9:32 AM 7/5/2022-10:25 AM 7/5/2022
+ok - need pause!!!
+970: *10:26 AM 7/5/2022-10:27 AM 7/5/2022
+971: *10:27 AM 7/5/2022-10:28 AM 7/5/2022
+972: *10:28 AM 7/5/2022-10:29 AM 7/5/2022
+973: *10:29 AM 7/5/2022-10:32 AM 7/5/2022
+974: *10:32 AM 7/5/2022-10:33 AM 7/5/2022
+975: *10:33 AM 7/5/2022-10:34 AM 7/5/2022
+976: *11:40 AM 7/5/2022-11:56 AM 7/5/2022
+977: *11:56 AM 7/5/2022-11:57 AM 7/5/2022
+32: 'rumor_both',
+978: *11:57 AM 7/5/2022-11:58 AM 7/5/2022
+ok - geht zu 32
+979: *11:58 AM 7/5/2022-12:02 PM 7/5/2022
+980: *12:02 PM 7/5/2022-12:07 PM 7/5/2022
+981: *12:07 PM 7/5/2022-12:07 PM 7/5/2022
+ok - rem cons
+ok - muss mir den building owner merken!
+ok - pre_action(32)
+982: *12:07 PM 7/5/2022-12:12 PM 7/5/2022
+983: *12:13 PM 7/5/2022-12:13 PM 7/5/2022
+984: *12:13 PM 7/5/2022-12:13 PM 7/5/2022
+985: *12:13 PM 7/5/2022-12:16 PM 7/5/2022
+1000: *7:08 PM 7/5/2022-7:08 PM 7/5/2022
+__________ mi 6.7.22 =>100 ewew 0=fa,1ok,2+lu,3*co,-1~pa,-2-qu,-3!
+1: *7:09 PM 7/5/2022-6:23 AM 7/6/2022
+2: *6:23 AM 7/6/2022-6:25 AM 7/6/2022
+3: *6:25 AM 7/6/2022-6:28 AM 7/6/2022
+4: *6:28 AM 7/6/2022-6:29 AM 7/6/2022
+5: *6:29 AM 7/6/2022-6:30 AM 7/6/2022
+6: *6:30 AM 7/6/2022-6:32 AM 7/6/2022
+7: *6:32 AM 7/6/2022-6:34 AM 7/6/2022
+8: *6:34 AM 7/6/2022-6:37 AM 7/6/2022
+9: *6:37 AM 7/6/2022-6:39 AM 7/6/2022
+10: *6:39 AM 7/6/2022-6:44 AM 7/6/2022
+11: *6:44 AM 7/6/2022-6:44 AM 7/6/2022
+ok - rem cons
+ok - goto aristo 194
+ok -WTF???
+ok - test: ensure market and stalls in stage 5: goto sims
+ok - warum ist stage und phase falsch? test
+ok - mach stage queen in dem test
+ok - brauche reverse stage fuer blackmail
+ok goto ari_pre
+ok - if click blackmail action: select a other building w/ rumor
+ok 5: 
+ok - goto code ari actions
+ok 1. there must be an other farm with a rumor
+ok 2. Q phase or have a Q
+ok 3. 
+ok - when is blackmail allowed?
+ok - finally: blackmail!
+ok - inspect is done!
+12: *6:44 AM 7/6/2022-6:46 AM 7/6/2022
+13: *6:46 AM 7/6/2022-6:50 AM 7/6/2022
+14: *6:50 AM 7/6/2022-6:56 AM 7/6/2022
+15: *6:56 AM 7/6/2022-7:00 AM 7/6/2022
+16: *7:00 AM 7/6/2022-7:02 AM 7/6/2022
+17: *7:02 AM 7/6/2022-7:04 AM 7/6/2022
+18: *7:04 AM 7/6/2022-7:09 AM 7/6/2022
+19: *7:09 AM 7/6/2022-7:09 AM 7/6/2022
+20: *7:09 AM 7/6/2022-7:10 AM 7/6/2022
+21: *7:10 AM 7/6/2022-7:11 AM 7/6/2022
+22: *7:11 AM 7/6/2022-7:15 AM 7/6/2022
+23: *7:16 AM 7/6/2022-7:17 AM 7/6/2022
+24: *7:17 AM 7/6/2022-7:19 AM 7/6/2022
+25: *7:19 AM 7/6/2022-7:23 AM 7/6/2022
+26: *7:23 AM 7/6/2022-7:24 AM 7/6/2022
+27: *7:24 AM 7/6/2022-7:27 AM 7/6/2022
+28: *7:27 AM 7/6/2022-7:29 AM 7/6/2022
+ok - ACHTUNG!!!!! farms statt farm!!!!!!!!!!!!!!!!!!!!!!!
+29: *7:29 AM 7/6/2022-7:30 AM 7/6/2022
+30: *7:30 AM 7/6/2022-7:33 AM 7/6/2022
+31: *7:33 AM 7/6/2022-7:37 AM 7/6/2022
+32: *7:37 AM 7/6/2022-7:37 AM 7/6/2022
+33: *7:39 AM 7/6/2022-7:39 AM 7/6/2022
+34: *7:39 AM 7/6/2022-8:41 AM 7/6/2022
+39: *8:41 AM 7/6/2022-8:45 AM 7/6/2022
+40: *8:45 AM 7/6/2022-8:47 AM 7/6/2022
+41: *8:47 AM 7/6/2022-8:49 AM 7/6/2022
+42: *8:49 AM 7/6/2022-9:02 AM 7/6/2022
+ok - einsetzen!
+1- test: mach blackmailed auf ein building
+2- change path!
+3- mach eine class rubberstamp
+- noch besser: stamp filter!
+43: *9:02 AM 7/6/2022-9:02 AM 7/6/2022
+44: *9:02 AM 7/6/2022-9:04 AM 7/6/2022
+45: *9:04 AM 7/6/2022-9:08 AM 7/6/2022
+46: *9:08 AM 7/6/2022-9:10 AM 7/6/2022
+47: *9:10 AM 7/6/2022-9:12 AM 7/6/2022
+48: *9:12 AM 7/6/2022-9:12 AM 7/6/2022
+49: *9:12 AM 7/6/2022-9:21 AM 7/6/2022
+50: *9:24 AM 7/6/2022-9:35 AM 7/6/2022
+51: *9:35 AM 7/6/2022-9:35 AM 7/6/2022
+52: *9:35 AM 7/6/2022-10:24 AM 7/6/2022
+53: *10:25 AM 7/6/2022-10:26 AM 7/6/2022
+54: *10:26 AM 7/6/2022-10:29 AM 7/6/2022
+55: *10:29 AM 7/6/2022-10:33 AM 7/6/2022
+56: *10:34 AM 7/6/2022-1:02 PM 7/6/2022 A gittertuer
+1- eigenen test!!!
+2- flexible sizing!!!
+3- weiter verbessern!!!
+156: *1:02 PM 7/6/2022-4:20 PM 7/6/2022
+157: *4:20 PM 7/6/2022-4:25 PM 7/6/2022
+158: *4:25 PM 7/6/2022-4:27 PM 7/6/2022
+159: *4:27 PM 7/6/2022-4:28 PM 7/6/2022
+160: *4:28 PM 7/6/2022-4:31 PM 7/6/2022
+161: *4:31 PM 7/6/2022-4:33 PM 7/6/2022
+162: *4:33 PM 7/6/2022-4:33 PM 7/6/2022
+163: *4:33 PM 7/6/2022-4:53 PM 7/6/2022
+164: *4:53 PM 7/6/2022-4:56 PM 7/6/2022
+165: *4:57 PM 7/6/2022-5:05 PM 7/6/2022
+166: *5:05 PM 7/6/2022-5:12 PM 7/6/2022
+167: *5:12 PM 7/6/2022-5:13 PM 7/6/2022
+168: *5:13 PM 7/6/2022-5:18 PM 7/6/2022
+169: *5:18 PM 7/6/2022-5:22 PM 7/6/2022
+170: *5:22 PM 7/6/2022-5:22 PM 7/6/2022
+171: *5:22 PM 7/6/2022-5:29 PM 7/6/2022
+172: *5:29 PM 7/6/2022-5:35 PM 7/6/2022
+173: *5:35 PM 7/6/2022-5:38 PM 7/6/2022
+174: *5:38 PM 7/6/2022-5:40 PM 7/6/2022
+175: *5:40 PM 7/6/2022-5:42 PM 7/6/2022
+176: *5:42 PM 7/6/2022-5:47 PM 7/6/2022
+ok - rem cons
+ok - black ops font => fonts.css
+ok - fonts
+ok - black ops one!
+ok - anderer test!
+ok andere farben???
+ok - suche fredericka the great
+ok - moechte den fredericka the great font downloaden!
+ok - andren font ausprobieren!
+ok - cleanup
+ok - mStamp(d,text)
+ok - mStyleStamp function 
+ok - black ops font?
+ok - mach das stamp1 in code
+ok - welches war das das ich verwendet habe? stamp1
+ok - clear css
+ok - mach den stamp als mStyle
+ok 1- wie schreib ich blackmail drueber???
+ok 2- cards 492 bug
+ok 3- eigenen test: wie mach ich eine hand?
+177: *5:47 PM 7/6/2022-5:48 PM 7/6/2022
+178: *5:48 PM 7/6/2022-5:50 PM 7/6/2022
+ok - hab jetzt ein mStamp!
+__________ do 7.7.22 =>100 ewew 0=fa,1ok,2+lu,3*co,-1~pa,-2-qu,-3!
+200: *7:19 PM 7/6/2022-7:21 PM 7/6/2022
+201: *7:21 PM 7/6/2022-7:24 PM 7/6/2022
+202: *7:24 PM 7/6/2022-7:29 PM 7/6/2022
+203: *7:29 PM 7/6/2022-7:33 PM 7/6/2022
+204: *7:33 PM 7/6/2022-7:34 PM 7/6/2022
+205: *7:34 PM 7/6/2022-7:45 PM 7/6/2022
+206: *7:45 PM 7/6/2022-7:47 PM 7/6/2022
+207: *7:47 PM 7/6/2022-7:47 PM 7/6/2022
+208: *7:47 PM 7/6/2022-5:43 AM 7/7/2022
+209: *5:43 AM 7/7/2022-5:45 AM 7/7/2022
+210: *5:45 AM 7/7/2022-5:49 AM 7/7/2022
+211: *5:49 AM 7/7/2022-5:54 AM 7/7/2022
+212: *5:54 AM 7/7/2022-5:57 AM 7/7/2022
+213: *5:57 AM 7/7/2022-6:00 AM 7/7/2022
+==> IMMER bei tests: o.fen.turn[0] ist der player der dran ist!!!!!
+214: *6:00 AM 7/7/2022-6:00 AM 7/7/2022
+215: *6:00 AM 7/7/2022-6:01 AM 7/7/2022
+216: *6:01 AM 7/7/2022-6:02 AM 7/7/2022
+217: *6:02 AM 7/7/2022-6:03 AM 7/7/2022
+218: *6:03 AM 7/7/2022-6:12 AM 7/7/2022
+219: *6:12 AM 7/7/2022-6:13 AM 7/7/2022
+220: *6:13 AM 7/7/2022-6:16 AM 7/7/2022
+221: *6:16 AM 7/7/2022-6:18 AM 7/7/2022
+222: *6:18 AM 7/7/2022-6:18 AM 7/7/2022
+223: *6:19 AM 7/7/2022-6:26 AM 7/7/2022
+224: *6:27 AM 7/7/2022-6:28 AM 7/7/2022
+225: *6:28 AM 7/7/2022-6:32 AM 7/7/2022
+226: *6:32 AM 7/7/2022-6:35 AM 7/7/2022
+227: *6:36 AM 7/7/2022-6:41 AM 7/7/2022
+228: *6:41 AM 7/7/2022-6:42 AM 7/7/2022
+ok - verify: recalc stall blackmailed!!!!!!!
+ok delete blackmail related stuff, next action
+ok - blackmail_end stage! bei blackmailer:
+ok - brauch ein stage fuer blackmail complete
+ok - process payment vorherr machen!!!!!!!!!!!!!!!!!
+ok - find process_payment
+ok - back to ari_pre_action
+ok - brauche einen stage fuer accept_blackmail
+229: *6:42 AM 7/7/2022-6:51 AM 7/7/2022
+230: *6:51 AM 7/7/2022-6:54 AM 7/7/2022
+231: *6:54 AM 7/7/2022-6:55 AM 7/7/2022
+232: *6:56 AM 7/7/2022-7:02 AM 7/7/2022
+233: *7:02 AM 7/7/2022-7:05 AM 7/7/2022
+234: *7:05 AM 7/7/2022-7:25 AM 7/7/2022
+235: *7:25 AM 7/7/2022-7:25 AM 7/7/2022
+236: *7:25 AM 7/7/2022-7:26 AM 7/7/2022
+237: *7:26 AM 7/7/2022-7:26 AM 7/7/2022
+238: *7:26 AM 7/7/2022-8:33 AM 7/7/2022
+239: *8:34 AM 7/7/2022-8:42 AM 7/7/2022
+240: *8:42 AM 7/7/2022-8:45 AM 7/7/2022
+241: *8:45 AM 7/7/2022-8:47 AM 7/7/2022
+242: *8:47 AM 7/7/2022-8:47 AM 7/7/2022
+243: *8:47 AM 7/7/2022-8:50 AM 7/7/2022
+244: *8:50 AM 7/7/2022-9:07 AM 7/7/2022
+245: *9:07 AM 7/7/2022-9:08 AM 7/7/2022
+246: *9:08 AM 7/7/2022-9:11 AM 7/7/2022
+ok - fritz fehler: loose cards have to be counted to hand value!!!
+247: *9:11 AM 7/7/2022-12:46 PM 7/7/2022 A shed
+350: *12:46 PM 7/7/2022-1:20 PM 7/7/2022
+351: *1:20 PM 7/7/2022-1:23 PM 7/7/2022
+352: *1:23 PM 7/7/2022-1:26 PM 7/7/2022
+ok - bill pay, einkaufen, therapy
+360: *3:26 PM 7/7/2022-6:35 PM 7/7/2022
+361: *8:28 PM 7/7/2022-8:32 PM 7/7/2022
+362: *8:32 PM 7/7/2022-9:12 PM 7/7/2022
+__________ do 7.7.22 =>100 ewew 0=fa,1ok,2+lu,3*co,-1~pa,-2-qu,-3!
+370: *9:12 PM 7/7/2022-9:14 PM 7/7/2022
+371: *9:14 PM 7/7/2022-6:18 AM 7/8/2022
+372: *6:18 AM 7/8/2022-6:19 AM 7/8/2022
+ok - bug aristo: inspect erlaubt obwohl es garkein building gibt!!!
+373: *6:19 AM 7/8/2022-6:29 AM 7/8/2022
+374: *6:29 AM 7/8/2022-6:30 AM 7/8/2022
+375: *6:30 AM 7/8/2022-6:31 AM 7/8/2022
+376: *6:31 AM 7/8/2022-6:33 AM 7/8/2022
+377: *6:34 AM 7/8/2022-6:34 AM 7/8/2022
+378: *6:34 AM 7/8/2022-6:40 AM 7/8/2022
+379: *6:40 AM 7/8/2022-
+- test at localhost!
+- localhost!
+- config!
+- stage weg!
+- 1147
+choices what next?
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+- wie ist es bei ball???
+ACHTUNG! BUG!!! auction soll VOR journey stage kommen!!!
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+there is no other way than ahead and I will have to suffer now for 10 days
+if it happens I will cancel therapy
+
+
+- was soll passieren?
+// 24: 'rumors_weitergeben',
+- goto ari_preaction
+- goto ari_pre_action
+- remove exp commissions
+- jedes mal: select 1 player and 1 rumor card
+- if it is 2 player game, this phase is skipped???
+- rumors aufteilen phase!
+- rumors for players presenten
+- das deck sowie bank deck
+- wie kann ich deck_rumors presenten? goto present_new
+- show rumors
+- bug 1232
+- show rumors genauso wie commissions
+- jeder player im setup n-1 rumors!
+- brauch ein rumors deck
+- basemin 602 rem cons
+- noch ein test wo ich aufpasse ob die richtigen cards es sind!
+- open test
+- mach einen test nur mit 2 players
 - test
-- prep baustelle2
+- instruction
+- test
+- reduce comm_setup+num
+- wie heissen die commission cards?
+- als erstes nimm selected items von den commissions weg und add them to comm_setup_di vom naechsten spieleer
+
+- jedesmal wenn next player wiedere plorder[0] ist, muss ich die commission cards zu den existierenden hinzufuegen
+
+- mache ein
+- was sind die selections
+- set fen.comm_setup_num in setup
+- open ari_pre_action
+- in stage 23 muss commissions selected werden!
+- bug geh dahin
+- bug geh dahin
+- start
+- open test
+- check in config
+- mach ein exp_rumors
+- setup: mach setup commissions falls comm expansion aktiv
+- im setup commissions
+- add this stage to basemin
+- brauche einen stage: comm_weitergeben
+ich brauch ein setup stage: setup commissions
+
+- wie mach ich aristo weitergeben von commissions am anfang?
+
+von jetzt an egal was in der aussenwelt passiert bin ich nur noch ein zuschauer. ich muss all die emotionen in mir und die panik als teil der aussenwelt sehen und all das was aussen passiert wurzelt in meinem inneren. das innere ist teil vom aussen. 
+
+ich kann handeln, aber keine meine aktionen hat irgendeine bedeutung 
+
+die aktionen die ich mache sind nur aktionen
+sie haben kein resultat
+
+ich kann reden aber es fuehrt zu nichts gutem
+ich kann handeln aber das beste zudem es fuehren kann ist NICHTS
+ich kann worte sagen, aber auch die sollen alle zu NICHTS fuehren
+ich kann diese zerstoererische mind damit beschaeftigen, software zu schreiben oder musik zu machen, aber nichts was diese mind tut soll irgendein ergebnis haben, es soll alles immer nur zu NICHTS fuehren
+
+und ich muss mich innerlich detachen von allem was ich wahrnehme, fuehle, denke, oder glaube oder zu bewirken glaube
+
+von allen sounds und allen lichtern so wie in einem drogentrip genau so soll ich leben das ist besser als dinge anzustreben die ich fuer gut halte und die am ende immer nur als schreckliche qualen enden fuer mich und andere
+
+Gott, wenn du mich nicht mit weisheit ausgestattet hast, dann bitte lass mich auch nichts mehr bewirken. NICHTS garnichts!
+
+jede handlung in der welt ab jetzt soll random und detached sein.
+
+logik reason gefuehl neigung und zeit soll NUR NOCH in eine phantasiewelt in der es keine grenzen gibt und keine auswirkungen gibt fliessen. dazu hab ich den computer bekommen. dazu hab ich das klavier bekommen, das sogar unhoerbar sein kann sodass es NICHTS bewirken kann im aussen
+
+keine einzige handlung soll mehr einem zweck dienen.
+
+und mein kleines maedchen das bitte schuetze und erbarme dich ihrer! lass sie nicht leide! egal was du mit mir tust
+
+von jetzt an halt ich mich nur noch an garnichts tun das absolute minimum tun und nichts ini dieser welt antreiben
+
+freude machen den menschen um mich wenn ich dazu imstande bin und sonst beten beten darum dass gott mich aus diesem dasein erloest denn es ist so schmerezvoll
+
+in 1 jahr bin ich nicht mehr auf dieser welt ich brauch nur noch 30Kdann ist alles vorbei
+
+just look at the pain inside it is unbearable
+this is what she is living unbearable pain
+how can you let her live like that?
+no this is not bearable
+I can see I am actually bearing it
+I do not want to participate in this life anymore
+
+
+
+- aristo rumors!
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+- smart ordering
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+- ich brauch den index in der oldgroup auch noch!!!
+extreme anxiety ich bin ein gewaltopfer und hab es nicht bemerkt
+ist das nicht ein narrative?
+kann ich schauen wie sich das entwickelt?
+
+- er geht nicht zu present die ganze zeit!
+- ich muss mir nur bei drop was merken
+
+1- wo wird unterschieden ob er zum server geht oder nicht?
+2- wo geht er hin nach present?
+3- open code
+
+
+
+
+
+
+
+it is not my will, so much is clear
+I am trembling right now and extremely anxious
+this is because of his violence
+it is because we women are blamed for the violence of them
+it is because I am being treated like that and still the blame is entirely on me
+life as a woman makes no sense in this world. it must be a punishment.
+
+
+- spreading muss anders sein!
+- goto fritz drop
+- dd in order!!! (no reordering!!!)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 - fix bug!
 - ok, so dieser fehler wird gemacht!!!

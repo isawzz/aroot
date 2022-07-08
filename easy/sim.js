@@ -1347,18 +1347,18 @@ function arisim_stage_4_all_mimi_starts(fen, n = 3) {
 	fen.action_number = 1;
 	//console.log('HAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAALLLLLLLLLLLLLOOOOOOOOO', minplayer, fen.num_actions)
 }
-function arisim_stage_4_all(fen, n = 3) {
+function arisim_stage_4_all(fen, n = 3,changeturn=true) {
 	//move 2 or 3 cards to stalls
 	for (let i = 0; i < n; i++) top_elem_from_to(fen.players.mimi.hand, fen.players.mimi.stall);
 	let others = get_keys(fen.players).filter(x => x != 'mimi');
-	for (const uname of others) {
-		for (let i = 0; i < n; i++)	top_elem_from_to(fen.players[uname].hand, fen.players[uname].stall);
+	for (const plname of others) {
+		for (let i = 0; i < n; i++)	top_elem_from_to(fen.players[plname].hand, fen.players[plname].stall);
 	}
 
 	let list = [];
-	for (const uname of get_keys(fen.players)) {
-		fen.players[uname].stall_value = arrSum(fen.players[uname].stall.map(x => ari_get_card(x).val));
-		list.push({ uname: uname, val: fen.players[uname].stall_value });
+	for (const plname of get_keys(fen.players)) {
+		fen.players[plname].stall_value = arrSum(fen.players[plname].stall.map(x => ari_get_card(x).val));
+		list.push({ uname: plname, val: fen.players[plname].stall_value });
 	}
 
 	//need to set num_actions! and iturn to player with least stall value!
@@ -1366,8 +1366,8 @@ function arisim_stage_4_all(fen, n = 3) {
 	list = sortBy(list, 'val');
 	let minplayer = list[0].uname;
 	fen.iturn = fen.plorder.indexOf(minplayer);
-	fen.turn = [minplayer];
-	fen.num_actions = fen.total_pl_actions = fen.players[minplayer].stall.length;
+	if (changeturn) fen.turn = [minplayer];
+	fen.num_actions = fen.total_pl_actions = fen.players[fen.turn[0]].stall.length;
 	fen.action_number = 1;
 	//console.log('HAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAALLLLLLLLLLLLLOOOOOOOOO', minplayer, fen.num_actions)
 }
@@ -1381,9 +1381,13 @@ function ari_test_hand_to_discard(fen, uname, keep = 0) {
 }
 function stage_building(fen, i_pl, type) {
 	let n = type == 'chateau' ? 6 : type == 'estate' ? 5 : 4;
-	type += 's';
-	let uname = fen.plorder[i_pl];
-	fen.players[uname].buildings[type].push({ list: deck_deal(fen.deck, n), h: null });
+	let plname = fen.plorder[i_pl];
+	//console.log('fen',fen, plname)
+	lookupSet(fen.players[plname],['buildings',type],[]);
+	let building = { list: deck_deal(fen.deck, n), h: null, type: type };
+	building.lead = building.list[0];
+	fen.players[plname].buildings[type].push(building);
+	return building;
 }
 function stage_correct_buildings(fen, o) { //unames, types, ranks) {
 	//eg. o={mimi:{farm:2,estate:2,chateau:1},leo:{farm:3}};

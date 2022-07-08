@@ -107,6 +107,7 @@ function create_card_assets_c52() {
 }
 function ui_type_building(b, dParent, styles = {}, path = 'farm', title = '', get_card_func = ari_get_card) {
 
+	//console.log('hallo!!!!!!!!!!!!!')
 	let cont = ui_make_container(dParent, get_container_styles(styles));
 	let cardcont = mDiv(cont);
 
@@ -131,6 +132,19 @@ function ui_type_building(b, dParent, styles = {}, path = 'farm', title = '', ge
 		d_harvest = mDiv(d, { position: 'absolute', w: 20, h: 20, bg: 'orange', opacity: .5, fg: 'black', top: '45%', left: -10, rounding: '50%', align: 'center' }, null, 'H');
 	}
 
+	let d_rumors = null, rumorItems = [];
+	//console.log('b',b)
+	if (!isEmpty(b.rumors)) {
+		//console.log('ja, hat rumors!!!!!!!!!!!!!!')
+		let d = cont;
+		mStyle(d, { position: 'relative' });
+		d_rumors = mDiv(d, { display: 'flex', gap: 2, position: 'absolute', h: 30, bottom: 0, right: 0 }); //,bg:'green'});
+		for (const rumor of b.rumors) {
+			let dr = mDiv(d_rumors, { h: 24, w: 16, vmargin: 3, align: 'center', bg: 'dimgray', rounding: 2 }, null, 'R');
+			rumorItems.push({ div: dr, key: rumor });
+		}
+	}
+
 	let card = isEmpty(items) ? { w: 1, h: 100, ov: 0 } : items[0];
 	//console.log('card',card)
 	mContainerSplay(cardcont, 2, card.w, card.h, items.length, card.ov * card.w);
@@ -149,6 +163,7 @@ function ui_type_building(b, dParent, styles = {}, path = 'farm', title = '', ge
 		items: items,
 		schwein: schwein,
 		harvest: d_harvest,
+		rumors: rumorItems,
 		keycard: items[0],
 
 	};
@@ -537,6 +552,7 @@ function spread_hand(path, ov) {
 	//items.map(x => ui_add_cards_to_hand_container(container, items));
 }
 function to_aristocard(ckey, color = RED, sz = 100, w) {
+	//console.log('ckey', ckey);
 	let info = jsCopy(C52Cards[ckey.substring(0, 2)]);
 	info.key = ckey;
 	info.cardtype = ckey[2];

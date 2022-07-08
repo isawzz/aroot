@@ -1,6 +1,6 @@
 function activate_ui() {
 
-	if (uiActivated) return;
+	if (uiActivated) {DA.ai_is_moving = false; return; }
 	//console.log('______ activate_ui','\nprevturn',Clientdata.last_turn,'\n=>turn',Clientdata.this_turn,'\nprevstage',Clientdata.last_stage,'\n=>stage',Clientdata.this_stage);
 
 	if ((Clientdata.this_stage != Clientdata.last_stage || FirstLoad) && Clientdata.this_stage == 'card_selection') {
