@@ -7618,24 +7618,29 @@ ok - bug aristo: inspect erlaubt obwohl es garkein building gibt!!!
 384: *7:07 AM 7/8/2022-7:10 AM 7/8/2022
 385: *7:10 AM 7/8/2022-7:15 AM 7/8/2022
 386: *7:15 AM 7/8/2022-7:16 AM 7/8/2022
+ok - wie heisst die action
+ok - dasselbe bei rumor setup: 1 player and 1 rumor
+ok - ai move: rumor: make sure ai selects 1 building and 1 rumor!!!
+ok =>upload!
+ok - aristo 26: bug
+ok - upload
+ok - bug: wenn bei church nicht genug cards habe zum tiden!
+ok aristo 988
+ok - test fuer alle actions
+ok - bleibt stecken bei ai is moving!!!
+ok - test at localhost!
+ok - localhost!
+ok - config!
+ok - stage weg!
+ok - 1147
+ok choices what next?
 387: *7:16 AM 7/8/2022-7:22 AM 7/8/2022
-388: *7:22 AM 7/8/2022-
-- wie heisst die action
-- dasselbe bei rumor setup: 1 player and 1 rumor
-- ai move: rumor: make sure ai selects 1 building and 1 rumor!!!
-=>upload!
-- aristo 26: bug
-- upload
-- bug: wenn bei church nicht genug cards habe zum tiden!
-aristo 988
-- test fuer alle actions
-- bleibt stecken bei ai is moving!!!
-- test at localhost!
-- localhost!
-- config!
-- stage weg!
-- 1147
-choices what next?
+388: *7:22 AM 7/8/2022-7:27 AM 7/8/2022
+389: *7:29 AM 7/8/2022-7:36 AM 7/8/2022
+390: *7:36 AM 7/8/2022-
+- besseren bot fuer bluff!
+- overlapping true
+- a l'honneur bot?
 
 
 
