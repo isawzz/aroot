@@ -129,24 +129,7 @@ function bluff_ack_uplayer() {
 
 //#endregion
 
-
 //#region helpers
-function aggregate_player_hands_by_rank(fen) {
-	let di_ranks = {};
-	let akku = [];
-	for (const uname in fen.players) {
-		let pl = fen.players[uname];
-		let hand = pl.hand;
-		for (const c of hand) {
-			akku.push(c);
-			let r = c[0];
-			if (isdef(di_ranks[r])) di_ranks[r] += 1; else di_ranks[r] = 1;
-		}
-	}
-	//console.log('di_ranks', di_ranks);
-	fen.akku = akku;
-	return di_ranks;
-}
 function apply_skin1(item) {
 	let d = item.container; mCenterFlex(d); mStyle(d, { position: 'relative', w: 400 }); //,bg:'pink'});
 	mText(`${item.label}: <span style="font-size:20px;margin:10px;color:red">${item.content}</span>`, d);
@@ -445,8 +428,8 @@ function handle_bid() {
 		//next person's turn
 	}
 }
-function iHigh(item) { let d = iDiv(item); mStyle(d, { bg: 'darkgray' }); } //mClass(d, 'highbg'); }
-function iUnhigh(item) { let d = iDiv(item); mStyle(d, { bg: 'transparent' }); } //mClassRemove(d, 'silver'); }
+function iHigh(item) { let d = iDiv(item); mStyle(d, { bg: 'darkgray' }); } 
+function iUnhigh(item) { let d = iDiv(item); mStyle(d, { bg: 'transparent' }); } 
 function inc_handsize(fen, uname) {
 	let pl = fen.players[uname];
 	//console.log('handsize',pl.handsize,typeof pl.handsize)
@@ -503,7 +486,6 @@ function input_to_anzeige1(caption, index) {
 	//iDiv(UI.panelItems[index]).innerHTML = bid[index];
 	for (let i = 0; i < 4; i++)	iDiv(UI.panelItems[i]).innerHTML = bid[i];
 }
-
 function is_higher_ranked_name(f1, f2) {
 	// let di2 = { _: 0, three: 3, four: 4, five: 5, six: 6, seven: 7, eight: 8, nine: 9, ten: 'T', jack: 'J', queen: 'Q', king: 'K', ace: 'A' };
 	let di2 = { _: 0, three: 3, four: 4, five: 5, six: 6, seven: 7, eight: 8, nine: 9, ten: 10, jack: 11, queen: 12, king: 13, ace: 14 };

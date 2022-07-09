@@ -2,7 +2,7 @@ function onclick_ack() {
 	if (nundef(Z) || nundef(Z.func.clear_ack)) return;
 
 	Z.func.clear_ack();
-	turn_send_move_update();
+	turn_send_move_update(true);
 }
 function onclick_cancelmenu() { hide('dMenu'); }
 function onclick_game_menu_item(ev) {

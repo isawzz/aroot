@@ -1061,6 +1061,24 @@ function add_rumors_to_buildings(o) {
 		}
 	}
 }
+function add_a_correct_building_to(fen, uname, type) {
+	let ranks = lookupSet(DA, ['test', 'extra', 'ranks'], 'A23456789TJQK');
+	if (ranks.length <= 0) {
+		console.log('===>ranks empty!', ranks)
+		ranks = lookupSetOverride(DA, ['test', 'extra', 'ranks'], 'A23456789TJQK');
+	}
+	let r = ranks[0]; lookupSetOverride(DA, ['test', 'extra', 'ranks'], ranks.substring(1));
+	let keys = [`${r}Sn`, `${r}Hn`, `${r}Cn`, `${r}Dn`];
+	if (type != 'farm') keys.push(`${r}Cn`); if (type == 'chateau') keys.push(`${r}Hn`);
+	fen.players[uname].buildings[type].push({ list: keys, h: null });
+
+	//console.log('keys', keys);
+}
+function add_a_schwein(fen, uname) {
+	let type = rChoose(['farm', 'estate', 'chateau']);
+	let keys = deck_deal(fen.deck, type[0] == 'f' ? 4 : type[0] == 'e' ? 5 : 6);
+	fen.players[uname].buildings[type].push({ list: keys, h: null });
+}
 function each_hand_of_one(o) {
 	let [fen, uplayer] = [o.fen, o.fen.turn[0]];
 	for (const plname of fen.plorder) {

@@ -7640,7 +7640,30 @@ ok choices what next?
 390: *7:36 AM 7/8/2022-7:50 AM 7/8/2022
 490: *4:50 AM 7/9/2022-4:50 AM 7/9/2022
 __________ sa 9.7.22 =>100 ewew 0=fa,1ok,2+lu,3*co,-1~pa,-2-qu,-3!
-491: *7:50 AM 7/8/2022-
+491: *7:50 AM 7/8/2022-5:02 AM 7/9/2022
+492: *5:02 AM 7/9/2022-5:04 AM 7/9/2022
+493: *5:04 AM 7/9/2022-5:22 AM 7/9/2022
+494: *5:22 AM 7/9/2022-5:53 AM 7/9/2022
+495: *5:53 AM 7/9/2022-6:02 AM 7/9/2022
+496: *6:02 AM 7/9/2022-6:22 AM 7/9/2022
+497: *6:22 AM 7/9/2022-6:23 AM 7/9/2022
+498: *6:23 AM 7/9/2022-6:25 AM 7/9/2022
+499: *6:25 AM 7/9/2022-6:30 AM 7/9/2022
+500: *6:30 AM 7/9/2022-6:47 AM 7/9/2022
+501: *6:47 AM 7/9/2022-6:47 AM 7/9/2022
+502: *6:47 AM 7/9/2022-
+
+- bluff geht gut, teste a l'honneur!
+- search but got
+- fehler tritt nicht bei localhost auf!!!
+- steige um zu localhost!
+- bug bei bluff!!! clear ack geht nicht!!!!
+- er sagt: expect * *
+- upload to telecave
+- viel code cleanup gemacht!!!
+- ferro wuerd gern das pass mit einem timer versehen!
+- koennte den discard button direkt auf card geben wie bei a l'honneur!
+
 - wenn nmax unreasonable, aendere word zu hoeherem word
 - intelligenteres ueberbieten bei bluff!
 - besseren bot fuer bluff!

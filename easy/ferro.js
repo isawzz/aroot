@@ -181,12 +181,6 @@ function fp_card_selection() {
 	let cards = selitems.map(x => x.o);
 	let cmd = A.last_selected.key;
 
-	//A.keep_selection = true; //not sure if still need this?
-	//console.log('===>last selected', cmd); //last selected item is a submit button!
-	//console.log('fp_card_selection');
-
-	//if (isEmpty(A.selected)) { select_error('select at least 1 card!'); return; }
-
 	if (cmd == 'discard') {
 		//if only 1 card selected, discard it
 		//first deal with error cases!
@@ -401,12 +395,6 @@ function calc_ferro_score(roundwinner) {
 		if (uplayer == plname) pl.score -= round * 5;
 		else pl.score += calc_hand_value(pl.hand);
 	}
-}
-function calc_hand_value(hand, card_func = ferro_get_card) {
-	let vals = hand.map(x => card_func(x).val);
-	//console.log('vals', vals);
-	let sum = vals.reduce((a, b) => a + b, 0);
-	return sum;
 }
 function calc_ferro_highest_goal_achieved(pl) {
 	let di = {
@@ -653,82 +641,10 @@ function find_players_with_min_score() {
 	return minscorepls;
 
 }
-function find_group_rank(j) { return j[0][0]; }
-function find_index_of_jolly(j) { return j.findIndex(x => is_jolly(x)); }
-function find_jolly_rank(j) {
-	let jolly_idx = find_index_of_jolly(j);
-	let rankstr = 'A23456789TJQKA';
-	if (jolly_idx == -1) return false;
-	if (jolly_idx > 0) {
-		let rank_before_index = j[jolly_idx - 1][0];
-		let rank_needed = rankstr[rankstr.indexOf(rank_before_index) + 1];
-		return rank_needed;
-	} else {
-		let rank_after_index = j[jolly_idx + 1][0];
-		let rank_needed = rank_after_index == 'A' ? 'K' : rankstr[rankstr.indexOf(rank_after_index) - 1];
-		return rank_needed;
-	}
-}
-function get_journeys_with_jolly_for_key(key) {
-	let [plorder, stage, A, fen, uplayer] = [Z.plorder, Z.stage, Z.A, Z.fen, Z.uplayer];
-	let sets = [];
-	for (const plname of plorder) {
-		let pl = fen.players[plname];
-		let i = 0;
-		for (const j of pl.journeys) {
-			if (try_replace_jolly(key, j, false)) sets.push({ plname: plname, j: j, index: i });
-			i++;
-		}
-	}
-	return sets;
-}
-function get_all_journeys() {
-	let [plorder, stage, A, fen, uplayer] = [Z.plorder, Z.stage, Z.A, Z.fen, Z.uplayer];
-	let sets = [];
-	for (const plname of plorder) {
-		let pl = fen.players[plname];
-		let i = 0;
-		for (const j of pl.journeys) {
-			sets.push({ plname: plname, j: j, jnew: jsCopy(j), index: i });
-			i++;
-		}
-	}
-	return sets;
-}
 function get_available_goals(plname) {
 	return ['3', '33', '4', '44', '5', '55', '7R'].filter(x => !Z.fen.players[plname].goals[x]);
 }
 function get_round_goal() { return get_keys(Z.fen.players[Z.uplayer].goals).sort()[Z.round - 1]; }
-function get_sequence_suit(j) {
-	let non_jolly_form_seq = firstCond(j, x => !is_jolly(x));
-	let suit = non_jolly_form_seq[1];
-	return suit;
-}
-function has_at_most_n_jolly(j, n = 1) { return j.filter(x => is_jolly(x)).length <= n; }
-function has_jolly(j) { return firstCond(j, x => is_jolly(x)); }
-function jolly_matches(key, j) {
-	let jolly_idx = find_index_of_jolly(j);
-	if (jolly_idx == -1) return false;
-
-	if (is_group(j)) {
-		let r = find_group_rank(j);
-		if (key[0] == r) return true;
-	} else if (jolly_idx > 0) {
-		let rank_before_index = j[jolly_idx - 1][0];
-		let suit_needed = j[jolly_idx - 1][1];
-		let rankstr = 'A23456789TJQKA';
-		let rank_needed = rankstr[rankstr.indexOf(rank_before_index) + 1];
-		if (key[0] == rank_needed && key[1] == suit_needed) return true;
-	} else {
-		let rank_after_index = j[jolly_idx + 1][0];
-		let suit_needed = j[jolly_idx + 1][1];
-
-		let rankstr = 'A23456789TJQKA';
-		let rank_needed = rank_after_index == 'A' ? 'K' : rankstr[rankstr.indexOf(rank_after_index) - 1];
-		if (key[0] == rank_needed && key[1] == suit_needed) return true;
-	}
-	return false;
-}
 function is_correct_group(j, n = 3) { let r = j[0][0]; return j.length >= n && has_at_most_n_jolly(j, Z.options.jokers_per_group) && j.every(x => is_jolly(x) || x[0] == r); }
 function is_fixed_goal() { return Z.options.phase_order == 'fixed'; }
 function is_group(j) {
@@ -737,8 +653,6 @@ function is_group(j) {
 	return j.every(x => is_jolly(x) || x[0] == rank);
 }
 function is_sequence(j) { return !is_group(j); }
-function is_jolly(ckey) { return ckey[0] == '*'; }
-function is_joker(card) { return is_jolly(card.key); }
 function is_correct_group_illegal(cards) {
 	//assumes that if this is a sequence, the sequence is correct!
 	//this just tests whether the player is allowed to put down a 7sequence at this time
@@ -784,13 +698,6 @@ function is_legal_if_7R(cards) {
 	return true;
 
 }
-function matches_on_either_end_new(key, j, rankstr = 'A23456789TJQKA') {
-	let jfirst = arrFirst(j.o.list);
-	let jlast = arrLast(j.o.list);
-	for (let i = 0; i < rankstr.length - 1; i++) { let r = rankstr[i]; if (jfirst[0] == rankstr[i + 1]) return true; }
-	for (let i = rankstr.length - 1; i > 0; i--) { let r = rankstr[i]; if (jlast[0] == rankstr[i - 1]) return true; }
-	return false;
-}
 function onclick_by_rank_ferro() {
 	let [plorder, stage, A, fen, uplayer, pl] = [Z.plorder, Z.stage, Z.A, Z.fen, Z.uplayer, Z.fen.players[Z.uplayer]];
 	let items = ui_get_hand_items(uplayer).map(x => x.o);
@@ -827,39 +734,6 @@ function onclick_by_suit_ferro() {
 }
 function onclick_clear_selection_ferro() { clear_selection(); }
 
-function replace_jolly(key, j) {
-	//assume validity has been verified!
-	let jolly_idx = find_index_of_jolly(j);
-	j[jolly_idx] = key;
-}
-function try_add_to_group(key, j, addkey = true) {
-	if (is_group(j)) {
-		if (key[0] == find_group_rank(j)) { if (addkey) j.push(key); return true; }
-	} else {
-		if (matches_on_either_end_new(key, j)) { if (addkey) j.push(key); return true; }
-	}
-	return false;
-}
-function try_replace_jolly(key, j, replace = true) {
-	let jolly_idx = find_index_of_jolly(j);
-	if (jolly_idx == -1) return false;
-
-	if (is_group(j)) {
-		let r = find_group_rank(j);
-		if (key[0] == r) { if (replace) j[jolly_idx] = key; return true; }
-	} else if (jolly_idx > 0) {
-		let rank_before_index = j[jolly_idx - 1][0];
-		let rankstr = 'A23456789TJQKA';
-		let rank_needed = rankstr[rankstr.indexOf(rank_before_index) + 1];
-		if (key[0] == rank_needed) { if (replace) j[jolly_idx] = key; return true; }
-	} else {
-		let rank_after_index = j[jolly_idx + 1][0];
-		let rankstr = 'A23456789TJQKA';
-		let rank_needed = rank_after_index == 'A' ? 'K' : rankstr[rankstr.indexOf(rank_after_index) - 1];
-		if (key[0] == rank_needed) { if (replace) j[jolly_idx] = key; return true; }
-	}
-	return false;
-}
 function ui_get_buy_or_pass_items() {
 	//console.log('uplayer',uplayer,UI.players[uplayer])
 	let items = [], i = 0;
@@ -904,7 +778,6 @@ function ui_get_ferro_items() {
 	reindex_items(items);
 	return items;
 }
-
 function ui_get_submit_items(commands) {
 	let items = [], i = 0;
 	for (const cmd of commands) { //just strings!

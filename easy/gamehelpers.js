@@ -146,6 +146,7 @@ function get_user_pic_and_name(uname, dParent, sz = 50, border = 'solid medium w
 	mAppend(dParent, elem);
 	return elem;
 }
+function get_texture(name) { return `url(../base/assets/images/textures/${name}.png)`; }
 function is_advanced_user() {
 	let advancedUsers = ['mimi', 'bob', 'buddy', 'minnow', 'nimble', 'leo', 'guest'];
 	//console.log('U',isdef(U)?U.name:'undefined!!!');
@@ -392,8 +393,9 @@ function show_tables(ms = 500) {
 	let tables = Serverdata.tables;
 	if (isEmpty(tables)) { mText('no active game tables', dParent); return []; }
 
+	tables.map(x=>x.game_friendly = Config.games[x.game].friendly);
 	mText(`<h2>game tables</h2>`, dParent, { maleft: 12 })
-	let t = mDataTable(tables, dParent, null, ['friendly', 'game', 'players'], 'tables', false);
+	let t = mDataTable(tables, dParent, null, ['friendly', 'game_friendly', 'players'], 'tables', false);
 
 	mTableCommandify(t.rowitems, {
 		0: (item, val) => hFunc(val, 'onclick_table', val, item.id),

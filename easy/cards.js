@@ -1,49 +1,11 @@
-function create_fen_deck(cardtype, num_decks = 1, num_jokers = 0) {
-	let arr = get_keys(C52Cards).map(x => x + cardtype);
-	while (num_decks > 1) { arr = arr.concat(arr); num_decks--; }
 
-	while (num_jokers > 0) { arr.push('*H' + cardtype); num_jokers--; }
-
-	//console.log('arr',arr)
-	return arr;
-}
-
-function sheriff_card(name, color) {
-	let di = SHERIFF.cards;
-	let info = valf(di[name], { ksym: 'crossbow', kcenter: 'green apple', label: 'crossbow', type: 'contraband', value: 9, penalty: 4 });
-	let bcolor = SHERIFF.color[info.type]; // type == 'legal' ? 'lime' : type == 'contraband' ? 'crimson' : 'orangered';
-	let c = cPortrait(null, { margin: 12, border: `solid 4px ${bcolor}`, bg: valf(color, colorLight('gold', .6)) });
-	let d = iDiv(c);
-	//console.log('d', d);
-
-	let ds = mSym(info.ksym, d, { sz: 30 }, 'tl');
-	ds = mSymText(info.value, d, { sz: 25, rounding: '50%', bg: 'gold', margin: 3 }, 'tr');
-	ds = mText(info.label.toUpperCase(), d, { family: 'Algerian', w: '100%', fz: 12, align: 'center', position: 'absolute', bottom: 0 });//mPlace(ds,'tc',0,8)
-	ds = mText(info.label.toUpperCase(), d, { family: 'Algerian', w: '100%', fz: 12, align: 'center', position: 'absolute', top: 0 });//mPlace(ds,'tc',0,8)
-	ds = mSymText(info.penalty, d, { sz: 25, rounding: '50%', bg: 'crimson', margin: 3 }, 'br');
-	ds = mSym(info.kcenter, d, { sz: 70 }, 'cc'); mPos(ds, 'calc( 50% - 35px )', 'calc( 50% - 35px )');
-	// ds = mText('penalty:',d,{fz:12,display:'inline'});mPlace(ds,'bc',0,8)
-	//set_card_border(c,5,'lime')
-	return c;
-}
-function get_joker_info() {
-	return {
-		c52key: `card_0J`, //'card_1J', //`card_${1+n%2}`,
-		color: "#e6194B",
-		friendly: "Joker",
-		key: '*Hn',
-		h: 100,
-		irank: 14,
-		isort: 100,
-		isuit: 3,
-		ov: 0.25,
-		rank: "*",
-		short: "J",
-		suit: "H",
-		sz: 100,
-		val: 1,
-		w: 70,
-	};
+//#region get_card and card assets
+function ari_get_card(ckey, h, w, ov = .2) {
+	//console.log('ckey', ckey);
+	let type = ckey[2];
+	let info = type == 'n' ? to_aristocard(ckey) : type == 'l' ? to_luxurycard(ckey) : to_commissioncard(ckey);
+	let card = cardFromInfo(info, h, w, ov);
+	return card;
 }
 function ferro_get_card(ckey, h, w, ov = .25) {
 	//joker is represented as '*Hn' where second letter is digit 0..9 (up to 9 jokers in play!)
@@ -56,21 +18,14 @@ function ferro_get_card(ckey, h, w, ov = .25) {
 	info.key = ckey;
 	info.cardtype = ckey[2]; //n,l,c=mini...
 	let [r, s] = [info.rank, info.suit];
-	info.val = r == '*' ? 50 : r=='A' ? 20 : 'TJQK'.includes(r) ? 10 : Number(r);
+	info.val = r == '*' ? 50 : r == 'A' ? 20 : 'TJQK'.includes(r) ? 10 : Number(r);
 	//console.log('r',r,'val',info.val)
 	info.color = RED;
-	info.sz = info.h = valf(h,Config.ui.card.h);
+	info.sz = info.h = valf(h, Config.ui.card.h);
 	info.w = valf(w, info.sz * .7);
 	info.irank = '23456789TJQKA*'.indexOf(r);
 	info.isuit = 'SHCDJ'.indexOf(s);
 	info.isort = info.isuit * 14 + info.irank;
-	let card = cardFromInfo(info, h, w, ov);
-	return card;
-}
-function ari_get_card(ckey, h, w, ov = .2) {
-	//console.log('ckey', ckey);
-	let type = ckey[2];
-	let info = type == 'n' ? to_aristocard(ckey) : type == 'l' ? to_luxurycard(ckey) : to_commissioncard(ckey);
 	let card = cardFromInfo(info, h, w, ov);
 	return card;
 }
@@ -105,6 +60,84 @@ function create_card_assets_c52() {
 	C52Cards = di;
 	return di;
 }
+function sheriff_card(name, color) {
+	let di = SHERIFF.cards;
+	let info = valf(di[name], { ksym: 'crossbow', kcenter: 'green apple', label: 'crossbow', type: 'contraband', value: 9, penalty: 4 });
+	let bcolor = SHERIFF.color[info.type]; // type == 'legal' ? 'lime' : type == 'contraband' ? 'crimson' : 'orangered';
+	let c = cPortrait(null, { margin: 12, border: `solid 4px ${bcolor}`, bg: valf(color, colorLight('gold', .6)) });
+	let d = iDiv(c);
+	//console.log('d', d);
+
+	let ds = mSym(info.ksym, d, { sz: 30 }, 'tl');
+	ds = mSymText(info.value, d, { sz: 25, rounding: '50%', bg: 'gold', margin: 3 }, 'tr');
+	ds = mText(info.label.toUpperCase(), d, { family: 'Algerian', w: '100%', fz: 12, align: 'center', position: 'absolute', bottom: 0 });//mPlace(ds,'tc',0,8)
+	ds = mText(info.label.toUpperCase(), d, { family: 'Algerian', w: '100%', fz: 12, align: 'center', position: 'absolute', top: 0 });//mPlace(ds,'tc',0,8)
+	ds = mSymText(info.penalty, d, { sz: 25, rounding: '50%', bg: 'crimson', margin: 3 }, 'br');
+	ds = mSym(info.kcenter, d, { sz: 70 }, 'cc'); mPos(ds, 'calc( 50% - 35px )', 'calc( 50% - 35px )');
+	// ds = mText('penalty:',d,{fz:12,display:'inline'});mPlace(ds,'bc',0,8)
+	//set_card_border(c,5,'lime')
+	return c;
+}
+function to_aristocard(ckey, color = RED, sz = 100, w) {
+	//console.log('ckey', ckey);
+	let info = jsCopy(C52Cards[ckey.substring(0, 2)]);
+	info.key = ckey;
+	info.cardtype = ckey[2];
+	let [r, s] = [info.rank, info.suit];
+	info.val = r == 'A' ? 1 : 'TJQK'.includes(r) ? 10 : Number(r);
+	info.color = color;
+	info.sz = info.h = sz;
+	info.w = valf(w, sz * .7);
+	info.irank = 'A23456789TJQK'.indexOf(r);
+	info.isuit = 'SHCD'.indexOf(s);
+	info.isort = info.isuit * 13 + info.irank;
+	return info;
+}
+function to_luxurycard(ckey, color = 'gold', sz = 100, w) { return to_aristocard(ckey, color); }
+function to_commissioncard(ckey, color = GREEN, sz = 40, w) { return to_aristocard(ckey, color, sz); }
+
+//#region card face up or down
+function face_down_alt(item, bg, texture_name) {
+	//console.log('haaaaaaaaaaaaaaaaaaaaaaaa')
+	let dCover = item.live.dCover;
+	if (nundef(dCover)) {
+		let d = iDiv(item);
+		dCover = item.live.dCover = mDiv(d, { background: bg, rounding: mGetStyle(d, 'rounding'), position: 'absolute', width: '100%', height: '100%', left: 0, top: 0 });
+		let t = get_texture(texture_name);
+		dCover.style.backgroundImage = t;
+		dCover.style.backgroundRepeat = 'repeat';
+	} else mStyle(dCover, { display: 'block' });
+}
+function face_down(item, color, texture) {
+	if (!item.faceUp) return;
+	if (isdef(texture) || lookup(item, ['live', 'dCover'])) {
+		face_down_alt(item, color, texture);
+	} else {
+		let svgCode = C52.card_2B; //C52 is cached asset loaded in _start
+		item.div.innerHTML = svgCode;
+		if (nundef(color)) color = item.color;
+		if (isdef(item.color)) item.div.children[0].children[1].setAttribute('fill', item.color);
+	}
+	item.faceUp = false;
+}
+function face_up(item) {
+	if (item.faceUp) return;
+	//console.log('html',item.html)
+	if (lookup(item, ['live', 'dCover'])) mStyle(item.live.dCover, { display: 'none' });
+	else item.div.innerHTML = isdef(item.c52key) ? C52[item.c52key] : item.html;
+	item.faceUp = true;
+}
+function toggle_face(item) { if (item.faceUp) face_down(item); else face_up(item); }
+function anim_toggle_face_orig(item, callback) {
+	let d = iDiv(item);
+	mClass(d, 'aniflip');
+	TO.anim = setTimeout(() => {
+		if (item.faceUp) face_down(item); else face_up(item); mClassRemove(d, 'aniflip');
+		if (isdef(callback)) callback();
+	}, 300);
+}
+
+//#region ui_type_...
 function ui_type_building(b, dParent, styles = {}, path = 'farm', title = '', get_card_func = ari_get_card) {
 
 	//console.log('hallo!!!!!!!!!!!!!')
@@ -187,7 +220,7 @@ function ui_type_deck(list, dParent, styles = {}, path = 'deck', title = 'deck',
 		//append in umgekehrter reihenfolge!?
 		for (let i = items.length - 1; i >= 0; i--) { let x = items[i]; face_down(x); mAppend(cardcont, iDiv(x)); mStyle(iDiv(x), { position: 'absolute', top: 0, left: 0 }) }
 		// (old code) mContainerSplay(cont, 4, ct.w, ct.h, list.length, 0); // ui_add_cards_to_deck_container(cont, items);
-		mText(list.length, iDiv(ct), { position: 'absolute', left: list.length>100?'10%':'25%', top: 10, fz: ct.h / 3 }); //add number of cards in deck to top card
+		mText(list.length, iDiv(ct), { position: 'absolute', left: list.length > 100 ? '10%' : '25%', top: 10, fz: ct.h / 3 }); //add number of cards in deck to top card
 	}
 	return {
 		ctype: 'deck',
@@ -238,13 +271,13 @@ function ui_type_hand(list, dParent, styles = {}, path = 'hand', title = 'hand',
 function ui_type_lead_hand(list, dParent, styles = {}, path = 'hand', title = 'hand', get_card_func = ari_get_card, show_if_empty = false) {
 
 	//copyKeys({wmin:500,bg:'red'},styles); //testing wmin
-	let hcard=isdef(styles.h)?styles.h-30:Config.ui.card.h;
-	addKeys(get_container_styles(styles),styles);
+	let hcard = isdef(styles.h) ? styles.h - 30 : Config.ui.card.h;
+	addKeys(get_container_styles(styles), styles);
 	let cont = ui_make_container(dParent, styles);
 
 	//mStyle(cont,{bg:'lime'})
 
-	let items = list.map(x => get_card_func(x,hcard));
+	let items = list.map(x => get_card_func(x, hcard));
 
 	let cardcont = mDiv(cont);
 	//if (!isEmpty(items)) {
@@ -314,20 +347,20 @@ function ui_type_rank_count(list, dParent, styles, path, title, get_card_func, s
 		items: items,
 	}
 }
-function ui_type_church(list, dParent, styles = {}, path = 'trick', title = '', get_card_func = ari_get_card, show_if_empty = false){
+function ui_type_church(list, dParent, styles = {}, path = 'trick', title = '', get_card_func = ari_get_card, show_if_empty = false) {
 	let cont = ui_make_container(dParent, get_container_styles(styles));
 	let cardcont = mDiv(cont, { display: 'flex' });
 	let items = [];
 	let n = Z.plorder.length;
 	//let inc=360/(n==2?4:n),rotation=inc;
-	let inc=90;
+	let inc = 90;
 	//4 players: start at 90, 3 players: start at 0
-	let rotation = n%2?0:90;
+	let rotation = n % 2 ? 0 : 90;
 	//console.log('list',list);
 	for (const ckey of list) {
-		let d = mDiv(cardcont, { origin:'center', transform:`rotate( ${rotation}deg )`, position: 'absolute', left:8 });
+		let d = mDiv(cardcont, { origin: 'center', transform: `rotate( ${rotation}deg )`, position: 'absolute', left: 8 });
 		let c = get_card_func(ckey);
-		if (ckey!=arrLast(list)) face_down(c);
+		if (ckey != arrLast(list)) face_down(c);
 		mAppend(d, iDiv(c));
 		remove_card_shadow(c);
 		//set_card_style(c, { shadow:'blue' });  //bg: 'orange', fg:'red' }, null);
@@ -350,56 +383,137 @@ function ui_type_church(list, dParent, styles = {}, path = 'trick', title = '', 
 }
 
 //#region helpers
-function get_texture(name) { return `url(../base/assets/images/textures/${name}.png)`; }
-
-function face_down_alt(item, bg, texture_name) {
-	//console.log('haaaaaaaaaaaaaaaaaaaaaaaa')
-	let dCover = item.live.dCover;
-	if (nundef(dCover)) {
-		let d = iDiv(item);
-		dCover = item.live.dCover = mDiv(d, { background: bg, rounding: mGetStyle(d, 'rounding'), position: 'absolute', width: '100%', height: '100%', left: 0, top: 0 });
-		let t = get_texture(texture_name);
-		dCover.style.backgroundImage = t;
-		dCover.style.backgroundRepeat = 'repeat';
-	} else mStyle(dCover, { display: 'block' });
-}
-function face_down(item, color, texture) {
-	if (!item.faceUp) return;
-	if (isdef(texture) || lookup(item, ['live','dCover'])) {
-		face_down_alt(item, color, texture);
-	} else {
-		let svgCode = C52.card_2B; //C52 is cached asset loaded in _start
-		item.div.innerHTML = svgCode;
-		if (nundef(color)) color = item.color;
-		if (isdef(item.color)) item.div.children[0].children[1].setAttribute('fill', item.color);
+function aggregate_player_hands_by_rank(fen) {
+	//fen.akku will contain all player hand cards! 
+	//returns di {rank:count}
+	let di_ranks = {};
+	let akku = [];
+	for (const uname in fen.players) {
+		let pl = fen.players[uname];
+		let hand = pl.hand;
+		for (const c of hand) {
+			akku.push(c);
+			let r = c[0];
+			if (isdef(di_ranks[r])) di_ranks[r] += 1; else di_ranks[r] = 1;
+		}
 	}
-	item.faceUp = false;
+	//console.log('di_ranks', di_ranks);
+	fen.akku = akku;
+	return di_ranks;
 }
-function face_up(item) {
-	if (item.faceUp) return;
-	//console.log('html',item.html)
-	if (lookup(item,['live','dCover'])) mStyle(item.live.dCover, { display: 'none' });
-	else item.div.innerHTML = isdef(item.c52key) ? C52[item.c52key] : item.html;
-	item.faceUp = true;
+function calc_hand_value(hand, card_func = ferro_get_card) {
+	let vals = hand.map(x => card_func(x).val);
+	//console.log('vals', vals);
+	let sum = vals.reduce((a, b) => a + b, 0);
+	return sum;
 }
-function toggle_face(item) { if (item.faceUp) face_down(item); else face_up(item); }
-function anim_toggle_face_orig(item, callback) {
-	let d = iDiv(item);
-	mClass(d, 'aniflip');
-	TO.anim = setTimeout(() => {
-		if (item.faceUp) face_down(item); else face_up(item); mClassRemove(d, 'aniflip');
-		if (isdef(callback)) callback();
-	}, 300);
-}
+function create_fen_deck(cardtype, num_decks = 1, num_jokers = 0) {
+	let arr = get_keys(C52Cards).map(x => x + cardtype);
+	while (num_decks > 1) { arr = arr.concat(arr); num_decks--; }
 
+	while (num_jokers > 0) { arr.push('*H' + cardtype); num_jokers--; }
+
+	//console.log('arr',arr)
+	return arr;
+}
+function find_index_of_jolly(j) { return j.findIndex(x => is_jolly(x)); }
+function find_jolly_rank(j, rankstr = 'A23456789TJQKA') {
+	let jolly_idx = find_index_of_jolly(j);
+	if (jolly_idx == -1) return false;
+	if (jolly_idx > 0) {
+		let rank_before_index = j[jolly_idx - 1][0];
+		let rank_needed = rankstr[rankstr.indexOf(rank_before_index) + 1];
+		return rank_needed;
+	} else {
+		let rank_after_index = j[jolly_idx + 1][0];
+		let rank_needed = rank_after_index == 'A' ? 'K' : rankstr[rankstr.indexOf(rank_after_index) - 1];
+		return rank_needed;
+	}
+}
+function get_group_rank(j) { let non_jolly_key = firstCond(j, x => !is_jolly(x)); return non_jolly_key[0]; }
+function get_sequence_suit(j) { let non_jolly_key = firstCond(j, x => !is_jolly(x)); return non_jolly_key[1]; }
+function get_joker_info() {
+	return {
+		c52key: `card_0J`, //'card_1J', //`card_${1+n%2}`,
+		color: "#e6194B",
+		friendly: "Joker",
+		key: '*Hn',
+		h: 100,
+		irank: 14,
+		isort: 100,
+		isuit: 3,
+		ov: 0.25,
+		rank: "*",
+		short: "J",
+		suit: "H",
+		sz: 100,
+		val: 1,
+		w: 70,
+	};
+}
 function get_container_styles(styles = {}) { let defaults = valf(Config.ui.container, {}); defaults.position = 'relative'; addKeys(defaults, styles); return styles; }
 function get_containertitle_styles(styles = {}) { let defaults = valf(Config.ui.containertitle, {}); defaults.position = 'absolute'; addKeys(defaults, styles); return styles; }
+function has_at_most_n_jolly(j, n = 1) { return j.filter(x => is_jolly(x)).length <= n; }
+function has_jolly(j) { return firstCond(j, x => is_jolly(x)); }
+function is_jolly(ckey) { return ckey[0] == '*'; }
+function is_joker(card) { return is_jolly(card.key); }
+function is_overlapping_set(cards, max_jollies_allowed = 1, seqlen = 7, group_same_suit_allowed = true) {
+
+	//sequence can be up or down
+	//case 2,3,4,3,2 oder 2,3,4,5,4,3
+	//auf jeden fall nimm mindestens 3 cards vom anfang: die muessen eine seq or group ergeben!
+	//let orig_cards = jsCopy(cards);
+	let istart = 0;
+	let inextstart = 0;
+	let lmin = 3;
+	let legal = true;
+
+	if (cards.length < lmin) return false;
+
+	while (legal && istart<=cards.length-lmin) {
+		let cl = cards.slice(istart, istart + lmin);
+		//console.log('istart',istart,'looking at',cl.map(x=>x.key).join(','));
+		//check that cl is a ferro set
+		let set = ferro_is_set(cl, max_jollies_allowed, seqlen, group_same_suit_allowed);
+
+		if (set) { istart++; inextstart = Math.min(istart + lmin,cards.length-3); }
+		else if (!set && inextstart == istart) return false;
+		else istart++;
+
+	}
+	return cards.map(x => x.key);
+}
+function jolly_matches(key, j, rankstr = 'A23456789TJQKA') {
+	let jolly_idx = find_index_of_jolly(j);
+	if (jolly_idx == -1) return false;
+
+	if (is_group(j)) {
+		let r = get_group_rank(j);
+		if (key[0] == r) return true;
+	} else if (jolly_idx > 0) {
+		let rank_before_index = j[jolly_idx - 1][0];
+		let suit_needed = j[jolly_idx - 1][1];
+		let rank_needed = rankstr[rankstr.indexOf(rank_before_index) + 1];
+		if (key[0] == rank_needed && key[1] == suit_needed) return true;
+	} else {
+		let rank_after_index = j[jolly_idx + 1][0];
+		let suit_needed = j[jolly_idx + 1][1];
+		let rank_needed = rank_after_index == 'A' ? 'K' : rankstr[rankstr.indexOf(rank_after_index) - 1];
+		if (key[0] == rank_needed && key[1] == suit_needed) return true;
+	}
+	return false;
+}
 function pop_top(o) {
 	if (isEmpty(o.list)) return null;
 	let t = o.get_topcard();	//console.log('===>get_topcard:',t.key)
 	o.list.shift();
 	o.renew(o.list, o.cardcontainer, o.items, o.get_card_func);
 	return t;
+}
+function replace_jolly(key, j) {
+	//assume validity has been verified and only 1 jolly per group
+	let jolly_idx = find_index_of_jolly(j);
+	j[jolly_idx] = key;
 }
 function remove_card_shadow(c) { iDiv(c).firstChild.setAttribute('class', null); }
 function set_card_border(item, thickness = 1, color = 'black') {
@@ -503,16 +617,16 @@ function sortCardItemsToSequence(items, rankstr = '23456789TJQKA', jolly_allowed
 
 	let final_sequence = [];
 	let jollies_needed = 0;
-	let len=partial_sequences.length;
-	let ij=0;
+	let len = partial_sequences.length;
+	let ij = 0;
 	for (let i = 0; i < len; i++) {
 		let index = (i + istart) % len;
 		let list = partial_sequences[index].seq;
 		final_sequence = final_sequence.concat(list);
-		let nj=partial_sequences[index].diff_to_next - 1;
+		let nj = partial_sequences[index].diff_to_next - 1;
 		//console.log('list',list,'nj',nj)
-		if (i<len-1) {
-			for(let j=0;j<nj;j++) {final_sequence.push(jollies[ij++]);}
+		if (i < len - 1) {
+			for (let j = 0; j < nj; j++) { final_sequence.push(jollies[ij++]); }
 			jollies_needed += nj;
 		}
 	}
@@ -520,7 +634,7 @@ function sortCardItemsToSequence(items, rankstr = '23456789TJQKA', jolly_allowed
 	//console.log('jollies_needed', jollies_needed);
 
 	//now, sort sequence in place!
-	for(let i=0;i<final_sequence.length;i++){items[i]=final_sequence[i];}
+	for (let i = 0; i < final_sequence.length; i++) { items[i] = final_sequence[i]; }
 	return jollies_needed;
 
 }
@@ -551,23 +665,6 @@ function spread_hand(path, ov) {
 	//clearElement(container);
 	//items.map(x => ui_add_cards_to_hand_container(container, items));
 }
-function to_aristocard(ckey, color = RED, sz = 100, w) {
-	//console.log('ckey', ckey);
-	let info = jsCopy(C52Cards[ckey.substring(0, 2)]);
-	info.key = ckey;
-	info.cardtype = ckey[2];
-	let [r, s] = [info.rank, info.suit];
-	info.val = r == 'A' ? 1 : 'TJQK'.includes(r) ? 10 : Number(r);
-	info.color = color;
-	info.sz = info.h = sz;
-	info.w = valf(w, sz * .7);
-	info.irank = 'A23456789TJQK'.indexOf(r);
-	info.isuit = 'SHCD'.indexOf(s);
-	info.isort = info.isuit * 13 + info.irank;
-	return info;
-}
-function to_luxurycard(ckey, color = 'gold', sz = 100, w) { return to_aristocard(ckey, color); }
-function to_commissioncard(ckey, color = GREEN, sz = 40, w) { return to_aristocard(ckey, color, sz); }
 function ui_add_container_title(title, cont, items, show_if_empty) {
 	if (isdef(title) && (!isEmpty(items) || show_if_empty)) {
 		//size container at least as wide as title needs!
@@ -636,30 +733,6 @@ function ui_add_cards_to_deck_container(cont, items, list) {
 	}
 	return items[0];
 }
-
-
-
-//#region ari
-function add_a_correct_building_to(fen, uname, type) {
-	let ranks = lookupSet(DA, ['test', 'extra', 'ranks'], 'A23456789TJQK');
-	if (ranks.length <= 0) {
-		console.log('===>ranks empty!', ranks)
-		ranks = lookupSetOverride(DA, ['test', 'extra', 'ranks'], 'A23456789TJQK');
-	}
-	let r = ranks[0]; lookupSetOverride(DA, ['test', 'extra', 'ranks'], ranks.substring(1));
-	let keys = [`${r}Sn`, `${r}Hn`, `${r}Cn`, `${r}Dn`];
-	if (type != 'farm') keys.push(`${r}Cn`); if (type == 'chateau') keys.push(`${r}Hn`);
-	fen.players[uname].buildings[type].push({ list: keys, h: null });
-
-	//console.log('keys', keys);
-}
-function add_a_schwein(fen, uname) {
-	let type = rChoose(['farm', 'estate', 'chateau']);
-	let keys = deck_deal(fen.deck, type[0] == 'f' ? 4 : type[0] == 'e' ? 5 : 6);
-	fen.players[uname].buildings[type].push({ list: keys, h: null });
-}
-//#endregion
-
 
 
 

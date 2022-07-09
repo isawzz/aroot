@@ -89,13 +89,13 @@ function fritz_present_new(z, dParent, uplayer) {
 
 	//all cards in drop area are droppable
 	for (const group of DA.TJ) {
-		assertion(isdef(group.id),'no group id',group);
+		assertion(isdef(group.id), 'no group id', group);
 		let d = iDiv(group);
 		//console.log('d',d);
 		let ch = arrChildren(iDiv(group));
 		let cards = ch.map(x => Items[x.id]);
 		//console.log('cards', cards);
-		cards.map(x => mDroppable(x, drop_card_fritz)); 
+		cards.map(x => mDroppable(x, drop_card_fritz));
 	}
 
 	//if ddarea is empty, write drag and drop hint
@@ -119,7 +119,6 @@ function fritz_present_new(z, dParent, uplayer) {
 
 
 }
-
 function fritz_present_player(playername, dMiddle) {
 	let [fen, ui, stage] = [Z.fen, UI, Z.stage];
 	let pl = fen.players[playername];
@@ -162,7 +161,6 @@ function fritz_state_info(dParent) {
 	let user_html = get_user_pic_html(Z.uplayer, 30);
 	dParent.innerHTML = `Round ${Z.round}:&nbsp;player: ${user_html} `;
 }
-
 function fritz_activate_ui() {
 	//return;
 	let [plorder, stage, A, fen, uplayer, pl] = [Z.plorder, Z.stage, Z.A, Z.fen, Z.uplayer, Z.fen.players[Z.uplayer]];
@@ -201,7 +199,6 @@ function fritz_activate_ui() {
 }
 
 // #region fritz helpers
-
 function add_card_to_group(card, oldgroup, oldindex, targetcard, targetgroup) {
 	card.groupid = targetgroup.id;
 
@@ -212,9 +209,9 @@ function add_card_to_group(card, oldgroup, oldindex, targetcard, targetgroup) {
 	}
 
 	card.source = 'group';
-	mDroppable(iDiv(card), drop_card_fritz); 
+	mDroppable(iDiv(card), drop_card_fritz);
 
-	if (nundef(targetcard)){ //} || targetcard.id == arrLast(targetgroup.ids)) {
+	if (nundef(targetcard)) { //} || targetcard.id == arrLast(targetgroup.ids)) {
 		targetgroup.ids.push(card.id);
 		mAppend(iDiv(targetgroup), iDiv(card));
 	} else {
@@ -228,7 +225,7 @@ function add_card_to_group(card, oldgroup, oldindex, targetcard, targetgroup) {
 		// 	console.log('oldindex', oldindex, 'index of targetcard', group.ids.indexOf(targetcard.id));
 		// }
 
-		let index = targetgroup.ids.indexOf(targetcard.id)+1;
+		let index = targetgroup.ids.indexOf(targetcard.id) + 1;
 
 		//how do I get the old group?
 		//console.log('inserting card at index', index);
@@ -265,7 +262,7 @@ function cleanup_or_resplay(oldgroup) {
 		mRemove(iDiv(oldgroup));
 		removeInPlace(DA.TJ, oldgroup);
 		delete Items[oldgroupid];
-	} else if (isdef(oldgroup)) { oldgroup.ov = .3222;resplay_container(oldgroup,.3222) }
+	} else if (isdef(oldgroup)) { oldgroup.ov = .3222; resplay_container(oldgroup, .3222) }
 }
 function deck_deal_safe_fritz(fen, plname, n = 1) {
 	if (fen.deck.length < n) {
@@ -362,7 +359,7 @@ function end_of_turn_fritz() {
 	//#region TJ group processing
 
 	//all TJ groups must be checked and loose cards placed in loosecards
-	console.log('eot inspecting groups',DA.TJ.length)
+	console.log('eot inspecting groups', DA.TJ.length)
 	let ploose = {};
 	fen.journeys = [];
 	fen.loosecards = [];
@@ -449,20 +446,20 @@ function frnew(card, ev) {
 
 	//making a new group in TJ
 	let id = getUID('g');
-	let d = mDiv(Items.dOpenTable, { bg: 'random', display: 'grid', margin: 10}, id); //, transition:'all * .5s' }, id);
-	let targetgroup = { div: d, id: id, ids: [], ov:.5222 };
+	let d = mDiv(Items.dOpenTable, { bg: 'random', display: 'grid', margin: 10 }, id); //, transition:'all * .5s' }, id);
+	let targetgroup = { div: d, id: id, ids: [], ov: .5222 };
 	assertion(isdef(DA.TJ), 'DA.TJ undefined in frnew!!!');
 	DA.TJ.push(targetgroup);
 	Items[id] = targetgroup;
 
-	assertion(isdef(targetgroup.id),'NO ID IN frnew!!!!!!!',targetgroup);
+	assertion(isdef(targetgroup.id), 'NO ID IN frnew!!!!!!!', targetgroup);
 	add_card_to_group(card, oldgroup, oldindex, null, targetgroup);
 	if (targetgroup != oldgroup) cleanup_or_resplay(oldgroup);
 	// console.log('groups', DA.TJ);
 }
 function fradd(card, targetgroup, targetcard) {
 	let [oldgroup, oldindex] = untie_card(card);
-	assertion(isdef(targetgroup.id),'NO ID IN fradd!!!!!!!',targetgroup);
+	assertion(isdef(targetgroup.id), 'NO ID IN fradd!!!!!!!', targetgroup);
 	add_card_to_group(card, oldgroup, oldindex, targetcard, targetgroup);
 	if (targetgroup != oldgroup) cleanup_or_resplay(oldgroup);
 	//console.log('groups', DA.TJ);
@@ -519,35 +516,9 @@ function fritz_new_player_hands(fen, starter, options) {
 
 	}
 }
-function is_overlapping_set(cards, max_jollies_allowed = 1, seqlen = 7, group_same_suit_allowed = true) {
+function output_loose_and_journeys(fen) {
 
-	//sequence can be up or down
-	//case 2,3,4,3,2 oder 2,3,4,5,4,3
-	//auf jeden fall nimm mindestens 3 cards vom anfang: die muessen eine seq or group ergeben!
-	//let orig_cards = jsCopy(cards);
-	let istart = 0;
-	let inextstart = 0;
-	let lmin = 3;
-	let legal = true;
-
-	if (cards.length < lmin) return false;
-
-	while (legal && istart<=cards.length-lmin) {
-		let cl = cards.slice(istart, istart + lmin);
-		//console.log('istart',istart,'looking at',cl.map(x=>x.key).join(','));
-		//check that cl is a ferro set
-		let set = ferro_is_set(cl, max_jollies_allowed, seqlen, group_same_suit_allowed);
-
-		if (set) { istart++; inextstart = Math.min(istart + lmin,cards.length-3); }
-		else if (!set && inextstart == istart) return false;
-		else istart++;
-
-	}
-	return cards.map(x => x.key);
-}
-function output_loose_and_journeys(fen){
-
-	for(const j of fen.journeys){ console.log('journey', j.join(', ')); }
+	for (const j of fen.journeys) { console.log('journey', j.join(', ')); }
 	//console.log('journeys:', fen.journeys);
 
 	for (const plname in fen.players) { console.log('loosecards', plname, fen.players[plname].loosecards.join(', ')); }

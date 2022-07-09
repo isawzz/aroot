@@ -1,6 +1,67 @@
 
 //#region ferro ausmisten
+function matches_on_either_end_new(key, j, rankstr = 'A23456789TJQKA') {
+	let jfirst = arrFirst(j.o.list);
+	let jlast = arrLast(j.o.list);
+	for (let i = 0; i < rankstr.length - 1; i++) { let r = rankstr[i]; if (jfirst[0] == rankstr[i + 1]) return true; }
+	for (let i = rankstr.length - 1; i > 0; i--) { let r = rankstr[i]; if (jlast[0] == rankstr[i - 1]) return true; }
+	return false;
+}
+function get_all_journeys() {
+	let [plorder, stage, A, fen, uplayer] = [Z.plorder, Z.stage, Z.A, Z.fen, Z.uplayer];
+	let sets = [];
+	for (const plname of plorder) {
+		let pl = fen.players[plname];
+		let i = 0;
+		for (const j of pl.journeys) {
+			sets.push({ plname: plname, j: j, jnew: jsCopy(j), index: i });
+			i++;
+		}
+	}
+	return sets;
+}
 
+function try_add_to_group(key, j, addkey = true) {
+	if (is_group(j)) {
+		if (key[0] == find_group_rank(j)) { if (addkey) j.push(key); return true; }
+	} else {
+		if (matches_on_either_end_new(key, j)) { if (addkey) j.push(key); return true; }
+	}
+	return false;
+}
+function try_replace_jolly(key, j, replace = true) {
+	let jolly_idx = find_index_of_jolly(j);
+	if (jolly_idx == -1) return false;
+
+	if (is_group(j)) {
+		let r = find_group_rank(j);
+		if (key[0] == r) { if (replace) j[jolly_idx] = key; return true; }
+	} else if (jolly_idx > 0) {
+		let rank_before_index = j[jolly_idx - 1][0];
+		let rankstr = 'A23456789TJQKA';
+		let rank_needed = rankstr[rankstr.indexOf(rank_before_index) + 1];
+		if (key[0] == rank_needed) { if (replace) j[jolly_idx] = key; return true; }
+	} else {
+		let rank_after_index = j[jolly_idx + 1][0];
+		let rankstr = 'A23456789TJQKA';
+		let rank_needed = rank_after_index == 'A' ? 'K' : rankstr[rankstr.indexOf(rank_after_index) - 1];
+		if (key[0] == rank_needed) { if (replace) j[jolly_idx] = key; return true; }
+	}
+	return false;
+}
+function get_journeys_with_jolly_for_key(key) {
+	let [plorder, stage, A, fen, uplayer] = [Z.plorder, Z.stage, Z.A, Z.fen, Z.uplayer];
+	let sets = [];
+	for (const plname of plorder) {
+		let pl = fen.players[plname];
+		let i = 0;
+		for (const j of pl.journeys) {
+			if (try_replace_jolly(key, j, false)) sets.push({ plname: plname, j: j, index: i });
+			i++;
+		}
+	}
+	return sets;
+}
 function ui_get_jolly_items() {
 	//find journey items that contain a jolly replaceable by A.selectedCards[0].key
 	let items = [], i = 0;

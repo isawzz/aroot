@@ -71,7 +71,7 @@ games:
       #mode: 'solo,multi,hotseat'
       mode: 'solo,hotseat,multi'
       handsize: '3,5,11'
-      maxrounds: '4,5,6,1,2,7'
+      maxrounds: '5,1,2,7'
       phase_order: 'fixed,choice'
       # allow_sequences: 'yes,no'
       # allow_exchange: 'yes,no'
@@ -99,7 +99,7 @@ games:
       vocab: 'animals,objectPlus,lifePlus'
       #level_setting: 'player,choose,min,max,default'
       num_cards: '3,2'
-      num_symbols: '4,6,8,12,17,7'
+      num_symbols: '4,12,17,7'
     rows: 3
     cols: 2
     min_scale: 0.75
