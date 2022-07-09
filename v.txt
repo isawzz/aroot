@@ -7637,7 +7637,12 @@ ok choices what next?
 387: *7:16 AM 7/8/2022-7:22 AM 7/8/2022
 388: *7:22 AM 7/8/2022-7:27 AM 7/8/2022
 389: *7:29 AM 7/8/2022-7:36 AM 7/8/2022
-390: *7:36 AM 7/8/2022-
+390: *7:36 AM 7/8/2022-7:50 AM 7/8/2022
+490: *4:50 AM 7/9/2022-4:50 AM 7/9/2022
+__________ sa 9.7.22 =>100 ewew 0=fa,1ok,2+lu,3*co,-1~pa,-2-qu,-3!
+491: *7:50 AM 7/8/2022-
+- wenn nmax unreasonable, aendere word zu hoeherem word
+- intelligenteres ueberbieten bei bluff!
 - besseren bot fuer bluff!
 - overlapping true
 - a l'honneur bot?

@@ -827,11 +827,6 @@ function onclick_by_suit_ferro() {
 }
 function onclick_clear_selection_ferro() { clear_selection(); }
 
-function path2UI(path) {
-	let res = lookup(UI, path.split('.'));
-	//console.log('res',res);
-	return res;
-}
 function replace_jolly(key, j) {
 	//assume validity has been verified!
 	let jolly_idx = find_index_of_jolly(j);
@@ -909,23 +904,7 @@ function ui_get_ferro_items() {
 	reindex_items(items);
 	return items;
 }
-function ui_get_jolly_items() {
-	//find journey items that contain a jolly replaceable by A.selectedCards[0].key
-	let items = [], i = 0;
-	let sets = Z.A.jollySets;
-	console.log('...sets', sets);
-	for (const s of sets) {
-		let o = UI.players[s.plname].journeys[s.index];
-		let name = `${s.plname}_j${i}`;
-		o.div = o.container;
-		let item = { o: o, a: name, key: o.list[0], friendly: name, path: o.path, index: i, ui: o.container };
-		i++;
-		items.push(item);
 
-	}
-	return items;
-
-}
 function ui_get_submit_items(commands) {
 	let items = [], i = 0;
 	for (const cmd of commands) { //just strings!

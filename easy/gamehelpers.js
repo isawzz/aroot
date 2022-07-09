@@ -159,6 +159,12 @@ function is_shield_mode() {
 		|| Z.mode == 'multi' && Z.role == 'inactive' && Z.host != Z.uname
 		|| Z.mode == 'multi' && Z.role == 'inactive' && Z.pl.playmode != 'bot'
 }
+function path2fen(fen, path) { let o = lookup(fen, path.split('.')); return o; }
+function path2UI(path) {
+	let res = lookup(UI, path.split('.'));
+	//console.log('res',res);
+	return res;
+}
 function player_stat_count(key, n, dParent, styles = {}) {
 	let sz = valf(styles.sz, 16);
 	//console.log('hallo!!!')

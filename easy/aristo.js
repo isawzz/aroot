@@ -1650,7 +1650,6 @@ function get_suitlists_sorted_by_rank(blatt, remove_duplicates = false) {
 	}
 	return di;
 }
-function path2fen(fen, path) { let o = lookup(fen, path.split('.')); return o; }
 function reindex_items(items) { let i = 0; items.map(x => { x.index = i; i++; }); }
 function remove_hover_ui(b) { b.onmouseenter = null; b.onmouseleave = null; }
 function set_hover_ui(b, item) {

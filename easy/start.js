@@ -160,17 +160,6 @@ function ai_move(ms = 100) {
 			let i2 = firstCond(A.items, x => x.key == 'discard');
 			selitems = [i1, i2];
 
-			// for (const item of selitems) {
-			// 	select_last(item, select_toggle); // item.key != 'discard'?select_toggle:null);
-			// }
-			// A.selected.length = 1;
-			// console.log('A.selected', A.selected);
-			// clearTimeout(TO.ai);
-			// loader_on();
-			// console.log('callback', A.callback)
-			// TO.ai = setTimeout(() => { if (isdef(A.callback)) A.callback(); loader_off(); }, ms);
-			// return; //wichtig 
-
 		} else {
 			selitems = [A.items[1]]; //waehlt immer pass
 		}
