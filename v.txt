@@ -7700,21 +7700,34 @@ ok - ui_get_church_items
 564: *7:16 AM 7/10/2022-7:18 AM 7/10/2022
 565: *7:18 AM 7/10/2022-7:23 AM 7/10/2022
 566: *7:23 AM 7/10/2022-7:27 AM 7/10/2022
-567: *7:27 AM 7/10/2022-
-- copy to aroot
-- check ob noch irgendwo einen select check brauche!
-- bei select_error wenn es genau 2 selected sind, kann ich den 2ten unselected machen!!!
+567: *7:27 AM 7/10/2022-7:37 AM 7/10/2022
+568: *7:37 AM 7/10/2022-7:38 AM 7/10/2022
+569: *7:38 AM 7/10/2022-7:44 AM 7/10/2022
+570: *7:44 AM 7/10/2022-
+brauche:
+- continue without player X
+- random button fuer alle!
+- mimi button reihe compact!
+- restart without player X
+- skip to next phase: commissions, rumors, journey, stalls, ball, auction
 
-- rem cons
-- uname ist falsch!!!
-- goto apiserver: wie wird role determined?
-- typo
-- show role ist falsch bei hotseat!!!
-- find items.find
-- bug baustelle2 12
 
-- wo geht er hin?
-- goto post_tide
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
