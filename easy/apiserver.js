@@ -143,6 +143,7 @@ function update_current_table() {
 	if (nundef(Z) || nundef(Z.prev)) Z = { prev: {} };
 	assertion(isdef(Z), 'ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ', Z);
 	set_user(U.name);
+	//console.log('uname should be set to ', U.name);
 
 	//HISTORY: update prev turn,stage,step,phase,round,modified
 	//DA.prevturn = isdef(Z.prev.turn)?jsCopy(Z.prev.turn):null; console.log('DA.prevturn',DA.prevturn);
@@ -153,7 +154,7 @@ function update_current_table() {
 	Z.prev.turn = Clientdata.last_turn;
 
 	//paste data to Z:
-	copyKeys(o, Z);
+	copyKeys(o, Z, {uname:true});  //muss uname excepten weil sonst haut es in hotseat mode nicht hin bei TESTING!
 	//console.log('writing notes:',Z.notes[Z.uname])
 
 	//now determine which player's view I need to present!

@@ -241,12 +241,19 @@ function select_toggle() { //item,ev) {
 function select_error(msg, callback = null, stay = false) {
 	let [A] = [Z.A];
 	DA.callback = callback;
+
+	//soll ich die selected items unselected machen? nein, weil user sonst nicht weiß, was er gewählt hat 
 	if (A.maxselected == 1 && A.selected.length > 0) {
 		//console.log('last_selected', A.last_selected, 'selected', A.selected);
 		let item = A.items[A.selected[0]];
 		ari_make_unselected(item);
 		A.selected = [];
 		//unselect A.items[A.selected[0]]
+	}else if (A.selected.length == 2){
+		//make second item unselected
+		let item = A.items[A.selected[1]];
+		ari_make_unselected(item);
+		A.selected = [A.selected[0]];
 	}
 	dError.innerHTML = msg;
 	if (stay) {

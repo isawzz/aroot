@@ -52,11 +52,11 @@ games:
     options:
       #mode: 'solo,multi,hotseat'
       mode: 'solo,hotseat,multi'
-      handsize: '7,9,11,13,10'
+      handsize: '9,11,13,10'
       cycles: '3,2,1'
       #jokers: '0,2,3,1'
       #per_move: '60,50,40'
-      seconds_per_game: '600,300,60,180,120'
+      seconds_per_game: '600,60,180,120'
       seconds_per_move: '10,3,4,5'
       #timing: 'game,adaptive,move'
       jokers: '3,2,1,0'

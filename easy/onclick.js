@@ -177,6 +177,18 @@ function onclick_user(uname) {
 
 }
 function onclick_tables() { phpPost({ app: 'simple' }, 'tables'); }
+function onclick_tide_all() {	
+
+	//each player must get tides={val:x};
+	let [game, fen, uplayer, turn, stage] = [Z.game, Z.fen, Z.uplayer, Z.turn, Z.stage];
+	for(const plname in fen.players) {
+		let pl = fen.players[plname];
+		if (isdef(pl.tides)) { continue; }
+		pl.tides = { val: rNumber(8,10) };
+	}
+
+	proceed_to_newcards_selection();
+}
 
 function toggle_select(item, funcs) {
 	let params = [...arguments];

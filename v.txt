@@ -7651,8 +7651,156 @@ __________ sa 9.7.22 =>100 ewew 0=fa,1ok,2+lu,3*co,-1~pa,-2-qu,-3!
 499: *6:25 AM 7/9/2022-6:30 AM 7/9/2022
 500: *6:30 AM 7/9/2022-6:47 AM 7/9/2022
 501: *6:47 AM 7/9/2022-6:47 AM 7/9/2022
-502: *6:47 AM 7/9/2022-
+502: *6:47 AM 7/9/2022-7:03 AM 7/9/2022
+503: *7:03 AM 7/9/2022-7:04 AM 7/9/2022
+504: *7:04 AM 7/9/2022-7:05 AM 7/9/2022
+505: *7:05 AM 7/9/2022-7:10 AM 7/9/2022
+506: *7:11 AM 7/9/2022-7:16 AM 7/9/2022
+507: *7:16 AM 7/9/2022-7:33 AM 7/9/2022
+508: *7:33 AM 7/9/2022-7:35 AM 7/9/2022
+509: *7:35 AM 7/9/2022-7:46 AM 7/9/2022
+510: *7:47 AM 7/9/2022-7:52 AM 7/9/2022
+511: *7:52 AM 7/9/2022-7:53 AM 7/9/2022
+512: *7:53 AM 7/9/2022-7:55 AM 7/9/2022
+513: *7:55 AM 7/9/2022-7:56 AM 7/9/2022
+514: *7:56 AM 7/9/2022-7:58 AM 7/9/2022
+515: *7:58 AM 7/9/2022-8:07 AM 7/9/2022
+516: *8:07 AM 7/9/2022-8:09 AM 7/9/2022
+517: *8:09 AM 7/9/2022-8:10 AM 7/9/2022
+518: *8:10 AM 7/9/2022-8:11 AM 7/9/2022
+519: *8:11 AM 7/9/2022-9:50 AM 7/9/2022
+ok - suche das geraet!
+520: *9:50 AM 7/9/2022-12:34 PM 7/9/2022
+521: *12:34 PM 7/9/2022-12:35 PM 7/9/2022
+522: *12:40 PM 7/9/2022-12:44 PM 7/9/2022
+523: *12:44 PM 7/9/2022-12:53 PM 7/9/2022
+524: *12:58 PM 7/9/2022-1:03 PM 7/9/2022
+525: *1:03 PM 7/9/2022-1:05 PM 7/9/2022
+526: *1:05 PM 7/9/2022-1:25 PM 7/9/2022
+527: *1:25 PM 7/9/2022-1:38 PM 7/9/2022
+528: *1:38 PM 7/9/2022-7:34 PM 7/9/2022
+__________ so 10.7.22 =>100 ewew 0=fa,1ok,2+lu,3*co,-1~pa,-2-qu,-3!
+550: *7:34 PM 7/9/2022-6:24 AM 7/10/2022
+551: *6:24 AM 7/10/2022-6:27 AM 7/10/2022
+ok - brauch einen button: onclick tide all
+552: *6:28 AM 7/10/2022-6:29 AM 7/10/2022
+553: *6:29 AM 7/10/2022-6:32 AM 7/10/2022
+554: *6:32 AM 7/10/2022-6:35 AM 7/10/2022
+555: *6:35 AM 7/10/2022-6:37 AM 7/10/2022
+556: *6:37 AM 7/10/2022-6:37 AM 7/10/2022
+ok - was passiert dann? post_church
+ok - ui_get_church_items
+557: *6:37 AM 7/10/2022-6:40 AM 7/10/2022
+558: *6:40 AM 7/10/2022-6:46 AM 7/10/2022
+559: *6:46 AM 7/10/2022-6:58 AM 7/10/2022
+560: *6:58 AM 7/10/2022-7:05 AM 7/10/2022
+561: *7:05 AM 7/10/2022-7:06 AM 7/10/2022
+562: *7:06 AM 7/10/2022-7:08 AM 7/10/2022
+563: *7:08 AM 7/10/2022-7:16 AM 7/10/2022
+564: *7:16 AM 7/10/2022-7:18 AM 7/10/2022
+565: *7:18 AM 7/10/2022-7:23 AM 7/10/2022
+566: *7:23 AM 7/10/2022-7:27 AM 7/10/2022
+567: *7:27 AM 7/10/2022-
+- copy to aroot
+- check ob noch irgendwo einen select check brauche!
+- bei select_error wenn es genau 2 selected sind, kann ich den 2ten unselected machen!!!
 
+- rem cons
+- uname ist falsch!!!
+- goto apiserver: wie wird role determined?
+- typo
+- show role ist falsch bei hotseat!!!
+- find items.find
+- bug baustelle2 12
+
+- wo geht er hin?
+- goto post_tide
+
+
+
+
+
+
+
+germknoedl vegam:
+250 g	Dinkelmehl Type 630
+½ Würfel	Frischhefe
+125 ml	Sojadrink, lauwarm
+50 g	Rohrzucker
+2 EL	Sonnenblumenöl
+
+OR
+
+200 ml Hafermilch
+20 g frische Hefe
+2 EL Zucker
+400 g Dinkelnmehl, Type 630
+¼ TL Salz
+50 g pflanzliche Butter, weich
+
+tips damit nicht zusammenfallen:
+1. loecher reinstechen
+2. tuck zwischen knoedl und deckel geben
+3. laenger daempfen!
+
+veganer mohnzopf:
+Zutaten
+Hefeteig
+20 g frische Hefe oder 1 Päckchen Trockenhefe
+250 ml lauwarme Hafermilch, evtl. etwas mehr
+30 g Zucker
+500 g Mehl
+100 g weiche Butter
+1 TL Salz
+Mohnfüllung
+250 ml Milch
+Abrieb von ½ Bio Zitrone
+50 g Zucker
+1 Prise Salz
+50 g Weichweizengrieß
+75 g gemahlener Mohn
+Glasur
+100 g Puderzucker
+1 EL Zitronensaft
+Kastenform 23 cm
+
+- brauche button fuer tide all
+- goto code post_tide
+
+- was ist stage 17 und wohin geht es? church, post_tide
+- ari_pre => baustelle
+- rumor code zurueckgeebn!
+- goto make_church
+ok - how to start in church phase? ltest70_aristo_church
+
+
+
+
+
+
+- start TESTING
+- back to testing!!!!
+- noch ein bug! was wenn er 2 players or 2 cards choosed!
+=>schau auch bei random church ai move!!!!
+
+
+
+
+
+
+
+- upload
+- bug aristo 909!!!! fen.players[cand] undefined!!!!
+- upload!
+- goto aristo 905
+- fehler in post_church!!!!!! aristo 905 includes of null
+- items!
+- wie weiss ich welche players schon rumors bekommen haben?
+- passing rumors: nur die players die noch keinen haben!!!!!
+- same w/ spotit numsymbols
+- upload
+- config ferro max rounds: weniger choices
+- als erstes muss ich in games den string aendern! zu friendly
 - bluff geht gut, teste a l'honneur!
 - search but got
 - fehler tritt nicht bei localhost auf!!!

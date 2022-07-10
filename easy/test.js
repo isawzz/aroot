@@ -19,11 +19,21 @@ function start_tests() {
 	//ltest69_ferro_is_group(); //
 	//#endregion
 
-	ltest57_aristo();
+	ltest70_aristo_church(); //ltest57_aristo();
 
 }
 
 //#region live server tests
+function ltest70_aristo_church() {
+	TESTING = true; DA.testing = true; DA.test = {
+		mods: [give_players_stalls, make_church], iter: 0, maxiter: 200, running: false, step: true, suiteRunning: false, number: 0, list: [0]
+	};
+	DA.test.end = () => { }; //console.log('discard:',Z.fen.deck_discard);}
+	DA.auto_moves = [];//[['random']];
+	let playernames = [U.name, 'felix', 'leo', 'gul']; //, 'gul', 'amanda', 'lauren'];
+
+	startgame('aristo', playernames.map(x => ({ name: x, playmode: 'human' })), { mode: 'hotseat' });
+}
 function ltest69_ferro_is_group(){
 	let j=['*Hn','8Dn','8Hn'];
 	let x = is_group(j);

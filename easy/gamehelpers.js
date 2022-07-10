@@ -217,7 +217,16 @@ function remove_player(fen, uname) {
 	return fen.plorder;
 }
 function remove_hourglass(uname) { let d = mBy(`dh_${uname}`); if (isdef(d)) mRemove(d); }
-function set_user(name) { if (isdef(U) && U.name != name) { Z.prev.u = U; Z.prev.uname = U.name; } U = Z.u = firstCond(Serverdata.users, x => x.name == name); Z.uname = name; }
+function set_user(name) { 
+	if (isdef(U) && U.name != name) { 
+		Z.prev.u = U; 
+		Z.prev.uname = U.name; 
+	} 
+	U = Z.u = firstCond(Serverdata.users, x => x.name == name); 
+	//console.log('set_user', name, U);
+	Z.uname = name; 
+	//console.log('Z.uname', Z.uname);
+}
 function set_player(name, fen) {
 	if (isdef(PL) && PL.name != name) { Z.prev.pl = PL; Z.prev.uplayer = PL.name; }
 	PL = Z.pl = firstCond(Serverdata.users, x => x.name == name);
@@ -345,11 +354,29 @@ function show_role() {
 	let d = mBy('dAdminMiddle');
 	clearElement(d);
 	let hotseatplayer = Z.uname != Z.uplayer && Z.mode == 'hotseat' && Z.host == Z.uname;
-	let styles = Z.role == 'active' || hotseatplayer ? { fg: 'red', weight: 'bold', fz: 20 } : { fg: 'black', weight: null, fz: null };
-	// let text = Z.role == 'active'? `<div class='mCenterCenterFlex'>${get_waiting_html()}It's your turn!</div>`:Z.role == 'spectator'?"(spectating)":'';
-	let text = hotseatplayer ? `you turn for ${Z.uplayer}` : Z.role == 'active' ? `It's your turn!` : Z.role == 'spectator' ? "(spectating)" : `(${Z.turn[0]}'s turn)`;
+
+	let styles,text;
+	let boldstyle = { fg: 'red', weight: 'bold', fz: 20 };
+	let normalstyle = { fg: 'black', weight: null, fz: null };
+	if (hotseatplayer){
+		styles = boldstyle;
+		text = `you turn for ${Z.uplayer}`;
+	}else if (Z.role == 'spectator') {
+		styles = normalstyle;
+		text = `(spectating)`;
+	}else if (Z.role == 'active') {
+		styles = boldstyle;
+		text = `It's your turn!`;
+	}else{
+		assertion(Z.role == 'inactive', 'role is not active or inactive or spectating ' + Z.role);
+		styles = normalstyle;
+		text =  `(${Z.turn[0]}'s turn)`;
+	}
+
+	// let styles = Z.role == 'active' || hotseatplayer ? { fg: 'red', weight: 'bold', fz: 20 } : { fg: 'black', weight: null, fz: null };
+	// let text = hotseatplayer ? `you turn for ${Z.uplayer}` : Z.role == 'active' ? `It's your turn!` : Z.role == 'spectator' ? "(spectating)" : `(${Z.turn[0]}'s turn)`;
 	d.innerHTML = text;
-	mStyle(d, styles);//style="font-weight:bold;font-size:20px"
+	mStyle(d, styles);
 }
 function show_settings(dParent) {
 	let [options, fen, uplayer] = [Z.options, Z.fen, Z.uplayer];
