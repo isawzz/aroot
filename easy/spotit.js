@@ -1,5 +1,4 @@
 function spotit() {
-	function clear_ack() { console.log('clear_ack'); }
 	function state_info(dParent) { spotit_state(dParent); }
 	function setup(players, options) {
 		let fen = { players: {}, plorder: jsCopy(players), turn: [players[0]], stage: 'init', phase: '' };
@@ -19,7 +18,7 @@ function spotit() {
 	function check_gameover() { return spotit_check_gameover(Z); }
 	function stats(Z, dParent) { spotit_stats(dParent); }
 	function activate_ui() { spotit_activate(); }
-	return { clear_ack, state_info, setup, present, present_player, check_gameover, stats, activate_ui };
+	return { state_info, setup, present, present_player, check_gameover, stats, activate_ui };
 }
 
 function spotit_activate() {

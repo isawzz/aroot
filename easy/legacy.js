@@ -4904,7 +4904,7 @@ function ui_game_menu_item(g, g_tables = []) {
 	return `
 	<div onclick="onclick_game_menu_item(event)" gamename=${g.id} style='cursor:pointer;border-radius:10px;margin:10px;padding:5px;padding-top:15px;width:120px;height:90px;display:inline-block;background:${bg};position:relative;'>
 	${nundef(color) ? '' : runderkreis(color, id)}
-	<span style='font-size:50px;font-family:${sym.family}'>${sym.text}</span><br>${g.friendly}</div>
+	<span style='font-size:50px;font-family:${sym.family}'>${sym.text}</span><br>${g.friendly.toString()}</div>
 	`;
 }
 

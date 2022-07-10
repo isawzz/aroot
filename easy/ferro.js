@@ -1,5 +1,4 @@
 function ferro() {
-	function clear_ack() { console.log('clear_ack'); }
 	function state_info(dParent) { ferro_state_new(dParent); }
 	function setup(players, options) {
 		let fen = { players: {}, plorder: jsCopy(players), history: [] };
@@ -37,7 +36,7 @@ function ferro() {
 	function check_gameover() { return isdef(Z.fen.winners) ? Z.fen.winners : false; }
 	function stats(Z, dParent) { ferro_stats_new(dParent); }
 	function activate_ui() { ferro_activate_ui(); }
-	return { clear_ack, state_info, setup, present, present_player, check_gameover, stats, activate_ui };
+	return { state_info, setup, present, present_player, check_gameover, stats, activate_ui };
 }
 
 function ferro_pre_action() {

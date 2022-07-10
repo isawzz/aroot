@@ -70,12 +70,23 @@ function gamestep() {
 	//notes: once this is set by player, will NOT be erased!
 	//how to clear notes????
 	//if (isdef(Z.prev.notes[uplayer])) Z.notes[uplayer]=Z.prev.notes[uplayer];
+	//game specific buttons hide or show
+	for(const id of ['bSpotitStart','bClearAck','bRandomMove','bSkipPlayer']) hide(id);
+	if (Z.game == 'spotit' && Z.uname == Z.host && Z.stage == 'init') show('bSpotitStart');
+	else if (Z.game == 'bluff' && Z.uname == Z.host && Z.stage == 1) show('bClearAck');
+	else if (['ferro','bluff','aristo'].includes(Z.game)) show('bRandomMove');
+
+
 
 	DA.running = true; clear_screen();
 	dTable = mBy('dTable'); mFall(dTable); mClass('dTexture', 'wood');
 
 	//console.log('Z',Z)
 	if (Z.uname == Z.host) show('dHostButtons'); else hide('dHostButtons');
+
+
+
+
 	show_title();
 	show_role();
 	Z.func.present(Z, dTable, Z.uplayer);	// *** Z.uname und Z.uplayer ist IMMER da! ***

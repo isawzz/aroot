@@ -7703,11 +7703,27 @@ ok - ui_get_church_items
 567: *7:27 AM 7/10/2022-7:37 AM 7/10/2022
 568: *7:37 AM 7/10/2022-7:38 AM 7/10/2022
 569: *7:38 AM 7/10/2022-7:44 AM 7/10/2022
-570: *7:44 AM 7/10/2022-
+570: *7:44 AM 7/10/2022-7:49 AM 7/10/2022
+571: *7:49 AM 7/10/2022-7:49 AM 7/10/2022
+572: *7:49 AM 7/10/2022-7:50 AM 7/10/2022
+573: *7:50 AM 7/10/2022-7:55 AM 7/10/2022
+574: *7:56 AM 7/10/2022-8:09 AM 7/10/2022
+575: *8:09 AM 7/10/2022-
+- a l'honneur geht nicht!!!!
+- was hat es mit restart move button auf sich!?
+- last is immer besser! back to TESTING
+- oder: in TESTING gemacht und in aroot copiert?
+- das muss in aroot gemacht werden dann in TESTING copiert!
+- mimi button reihe compact!
+
+
+
+
+
+
 brauche:
 - continue without player X
 - random button fuer alle!
-- mimi button reihe compact!
 - restart without player X
 - skip to next phase: commissions, rumors, journey, stalls, ball, auction
 

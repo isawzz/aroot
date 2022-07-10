@@ -148,7 +148,7 @@ function get_user_pic_and_name(uname, dParent, sz = 50, border = 'solid medium w
 }
 function get_texture(name) { return `url(../base/assets/images/textures/${name}.png)`; }
 function is_advanced_user() {
-	let advancedUsers = ['mimi', 'bob', 'buddy', 'minnow', 'nimble', 'leo', 'guest'];
+	let advancedUsers = ['mimi', 'bob', 'buddy', 'minnow', 'nimble', 'leo', 'guest', 'felix'];
 	//console.log('U',isdef(U)?U.name:'undefined!!!');
 	return isdef(U) && advancedUsers.includes(U.name);
 }
@@ -406,7 +406,7 @@ function show_status(s) {
 	//console.log('........show_status', s)
 	if (is_advanced_user()) {
 		clear_status();
-		show_fleeting_message(s, 'dTest', { fz: 14, position: 'absolute', top: 5, right: 10 }, 'dStatus');
+		if (!TESTING && !s.includes('reload')) show_fleeting_message(s, 'dTest', { fz: 14, position: 'absolute', top: 5, right: 10 }, 'dStatus');
 	}
 }
 function show_tables(ms = 500) {
@@ -446,7 +446,7 @@ function show_username() {
 	mAppend(d, get_logout_button());
 	mAppend(d, dpic);
 
-	if (is_advanced_user()) show('dAdvanced'); else hide('dAdvanced');
+	if (is_advanced_user()) {if (TESTING) show('dAdvanced');show('dAdvanced1');} else {hide('dAdvanced');hide('dAdvanced1');}
 
 	phpPost({ app: 'easy' }, 'tables');
 }
