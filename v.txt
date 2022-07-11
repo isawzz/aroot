@@ -7828,18 +7828,34 @@ DONE ok - scroll log when not your turn
 705: *4:31 AM 7/11/2022-4:44 AM 7/11/2022
 706: *4:44 AM 7/11/2022-4:50 AM 7/11/2022
 707: *4:50 AM 7/11/2022-4:50 AM 7/11/2022
-708: *4:50 AM 7/11/2022-
-=>ak
-- brauch die player reihenfolge!!!
-- fritz auch dasselbe!
-ferro 489 bug
-- open start
-- brauch ich ueberhaupt das shield?
-- goto test
-- mach multi mode test + random
-- partial shield!
+708: *4:50 AM 7/11/2022-7:07 AM 7/11/2022
+720: *7:07 AM 7/11/2022-7:07 AM 7/11/2022 schon wieder katze iwadkwew!
+721: *7:08 AM 7/11/2022-7:16 AM 7/11/2022
+722: *7:16 AM 7/11/2022-7:16 AM 7/11/2022
+ok - brauch die player reihenfolge!!!
+ok - fritz auch dasselbe!
+ok ferro 489 bug
+ok - open start
+ok - brauch ich ueberhaupt das shield?
+ok - goto test
+ok - mach multi mode test + random
+ok - partial shield!
+DONE ok - player reihenfolge in main window!!!!!
+723: *7:17 AM 7/11/2022-7:21 AM 7/11/2022
+724: *7:21 AM 7/11/2022-7:23 AM 7/11/2022
+725: *7:23 AM 7/11/2022-7:25 AM 7/11/2022
+726: *7:25 AM 7/11/2022-7:30 AM 7/11/2022
+727: *7:30 AM 7/11/2022-7:31 AM 7/11/2022
+728: *7:31 AM 7/11/2022-
+- goto ari_pre_action
+- mach church test
+- mach ein herald order in aristo!
+- revisit church_order!
 
-- player reihenfolge in main window!!!!!
+- hotseat mode: er sagt nicht mehr: your turn for X
+- soll die reihenfolge auf der seite immer nach current player ... sein?
+- aristo order checken!
+
 - wo ist der random button die ganze zeit gewesen????? in telecave!
 - waere gut wenn man sein blatt auch wenn man nicht dran ist reorganizen kann (so wie in letter tycoon)
 - und man sollte nicht von anderen sehen wie viele punkte sie im blatt haben
