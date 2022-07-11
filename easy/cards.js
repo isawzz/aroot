@@ -409,12 +409,13 @@ function calc_hand_value(hand, card_func = ferro_get_card) {
 }
 function create_fen_deck(cardtype, num_decks = 1, num_jokers = 0) {
 	let arr = get_keys(C52Cards).map(x => x + cardtype);
-	while (num_decks > 1) { arr = arr.concat(arr); num_decks--; }
+	let newarr = [];
+	while (num_decks > 0) { newarr = newarr.concat(arr); num_decks--; }
 
-	while (num_jokers > 0) { arr.push('*H' + cardtype); num_jokers--; }
+	while (num_jokers > 0) { newarr.push('*H' + cardtype); num_jokers--; }
 
 	//console.log('arr',arr)
-	return arr;
+	return newarr;
 }
 function find_index_of_jolly(j) { return j.findIndex(x => is_jolly(x)); }
 function find_jolly_rank(j, rankstr = 'A23456789TJQKA') {

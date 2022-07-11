@@ -6,7 +6,7 @@ function fritz() {
 
 		//calc how many decks are needed (basically 1 suit per person, plus 1 for the deck)
 		let n = players.length;
-		fen.num_decks = n == 2 ? 1 : 2 + (n > 5 ? Math.ceil((n - 5) / 2) : 0); //<=5?2:Math.max(2,Math.ceil(players.length/3));
+		fen.num_decks = 2 + n >= 9 ? 2 : n >= 7 ? 1 : 0; //n == 2 ? 1 : 2 + (n > 5 ? Math.ceil((n - 5) / 2) : 0); //<=5?2:Math.max(2,Math.ceil(players.length/3));
 
 		fritz_new_table(fen, options);
 		let deck = fen.deck;
@@ -141,6 +141,8 @@ function fritz_present_player(playername, dMiddle) {
 	} else {
 		//console.log('player has no loose cards',pl);
 	}
+	ensure_buttons_visible_for(playername);
+
 }
 function fritz_stats_new(z, dParent) {
 	let player_stat_items = UI.player_stat_items = ui_player_info(z, dParent);
@@ -266,7 +268,7 @@ function cleanup_or_resplay(oldgroup) {
 }
 function deck_deal_safe_fritz(fen, plname, n = 1) {
 	if (fen.deck.length < n) {
-		fen.deck = create_fen_deck('n');
+		fen.deck = create_fen_deck('n', fen.num_decks, 0); 
 		fen.loosecards.push('*Hn'); //1 jolly kommt dazu!
 	}
 	let newcards = deck_deal(fen.deck, n);

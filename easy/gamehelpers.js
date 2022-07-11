@@ -333,6 +333,26 @@ function show_message(msg = '', stay = false) {
 		mClear(d);
 	}
 }
+function show_history_popup() {
+	let fen = Z.fen;
+	if (!isEmpty(fen.history)) {
+		let html = '';
+		for (const arr of jsCopy(fen.history).reverse()) {
+			//html+=`<h1>${k}</h1>`;
+			for (const line of arr) {
+				html += `<p>${line}</p>`;
+			}
+		}
+		let dpop = mPopup('', dTable, { fz: 16, fg: 'white', top: 0, right: 0, border: 'white', padding: 10, bg: 'dimgray' }, 'dOptions');
+		let dHistory = mDiv(dpop, { padding: 6, margin: 4, bg: '#00000060', fg: 'white', hmax: `calc( 100vh - 250px )`, 'overflow-y': 'auto', wmin: 240, rounding: 12 }, null, html); //JSON.stringify(fen.history));
+		mInsert(dpop, mCreateFrom(`<div style="text-align:center;width:100%;font-family:Algerian;font-size:22px;">${Z.game}</div>`));
+		// let bclose = mButtonX(dpop,'tr',hide_options_popup,null,12);
+		let bclose = mButtonX(dpop,hide_options_popup,'tr');
+
+		//mNode(fen.history, dHistory, 'history');
+	}
+	//console.log('popup', dpop);
+}
 function show_options_popup(options) {
 	let opresent = {};
 	let di = { mode: 'gamemode', yes: true, no: false };
@@ -378,7 +398,7 @@ function show_role() {
 	d.innerHTML = text;
 	mStyle(d, styles);
 }
-function show_settings(dParent) {
+function old_show_settings(dParent) {
 	let [options, fen, uplayer] = [Z.options, Z.fen, Z.uplayer];
 	clearElement(dParent);
 	mFlex(dParent);
@@ -390,6 +410,23 @@ function show_settings(dParent) {
 	options.playermode = playermode;
 	d.onmouseenter = () => show_options_popup(options);
 	d.onmouseleave = hide_options_popup;
+}
+function show_settings(dParent) {
+	let [options, fen, uplayer] = [Z.options, Z.fen, Z.uplayer];
+	clearElement(dParent);
+	mFlex(dParent);
+	let playermode = get_playmode(uplayer); //console.log('playermode',playermode)
+	let game_mode = Z.mode;
+	// let dplaymode = mDiv(dParent, { fg: 'blue' }, null, playermode); // playermode == 'bot' ? 'bot' : '');
+	// let dgamemode = mDiv(dParent, { fg: 'red' }, null, Z.mode); //Z.mode == 'hotseat' ? 'h' : '');
+	let dHistoryButton = miPic('scroll', dParent, { fz: 20, padding: 6, h: 40, box: true, matop: 2, rounding: '50%', cursor: 'pointer' });
+	let d = miPic('gear', dParent, { fz: 20, padding: 6, h: 40, box: true, matop: 2, rounding: '50%', cursor: 'pointer' });
+	options.playermode = playermode;
+	d.onmouseenter = () => show_options_popup(options);
+	d.onmouseleave = hide_options_popup;
+	dHistoryButton.onmouseenter = () => show_history_popup(options);
+
+	//dHistoryButton.onmouseleave = hide_options_popup;
 }
 function status_message_new(msg, dParent, styles = {}) {
 }

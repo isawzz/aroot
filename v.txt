@@ -7846,44 +7846,103 @@ DONE ok - player reihenfolge in main window!!!!!
 725: *7:23 AM 7/11/2022-7:25 AM 7/11/2022
 726: *7:25 AM 7/11/2022-7:30 AM 7/11/2022
 727: *7:30 AM 7/11/2022-7:31 AM 7/11/2022
-728: *7:31 AM 7/11/2022-
-- goto ari_pre_action
-- mach church test
-- mach ein herald order in aristo!
-- revisit church_order!
-
-- hotseat mode: er sagt nicht mehr: your turn for X
-- soll die reihenfolge auf der seite immer nach current player ... sein?
-- aristo order checken!
-
-- wo ist der random button die ganze zeit gewesen????? in telecave!
-- waere gut wenn man sein blatt auch wenn man nicht dran ist reorganizen kann (so wie in letter tycoon)
-- und man sollte nicht von anderen sehen wie viele punkte sie im blatt haben
-- I just clicked the card to buy it, but nothing happened. It just switched to Felix and he bought the card.
-- turn multiple info
+728: *7:31 AM 7/11/2022-8:50 AM 7/11/2022
+729: *8:50 AM 7/11/2022-8:51 AM 7/11/2022
+ok - goto ari_pre_action
+ok - mach church test
+ok - mach ein herald order in aristo!
+ok - revisit church_order!
+ok - hotseat mode: er sagt nicht mehr: your turn for X
+ok - soll die reihenfolge auf der seite immer nach current player ... sein?
+ok - aristo order checken!
+730: *8:51 AM 7/11/2022-9:02 AM 7/11/2022
+731: *9:02 AM 7/11/2022-10:09 AM 7/11/2022
+732: *10:09 AM 7/11/2022-10:10 AM 7/11/2022
+ok - test 2 player
+ij - select order!
+ok - after church revert to herald order!
+733: *10:10 AM 7/11/2022-10:17 AM 7/11/2022
+734: *10:17 AM 7/11/2022-10:21 AM 7/11/2022
+ok - that works fine!
+ok - copy to localhost und schau ob bRandomMove bei aristo geht!!!
+ok - wo ist der random button die ganze zeit gewesen????? in telecave!
+735: *10:21 AM 7/11/2022-10:22 AM 7/11/2022
+736: *10:22 AM 7/11/2022-10:23 AM 7/11/2022
+DONE ok - waere gut wenn man sein blatt auch wenn man nicht dran ist reorganizen kann (so wie in letter tycoon)
+737: *10:23 AM 7/11/2022-10:24 AM 7/11/2022
+738: *10:24 AM 7/11/2022-10:28 AM 7/11/2022
+739: *10:28 AM 7/11/2022-10:30 AM 7/11/2022
+740: *10:30 AM 7/11/2022-10:33 AM 7/11/2022
+741: *10:33 AM 7/11/2022-10:33 AM 7/11/2022
+ok - bluff next ok
+ok - aristo is ok, ferro next ok
+ok - test multi
+ok - mach eine shield_inactive option?
+ok - check alle games ob sie shield brauchen
+742: *10:34 AM 7/11/2022-10:35 AM 7/11/2022
+743: *10:35 AM 7/11/2022-10:39 AM 7/11/2022
+744: *10:39 AM 7/11/2022-10:43 AM 7/11/2022
+745: *10:43 AM 7/11/2022-10:57 AM 7/11/2022
+746: *10:58 AM 7/11/2022-11:01 AM 7/11/2022
+747: *11:01 AM 7/11/2022-11:02 AM 7/11/2022
+ok - spotit
+ok - ueberlege wie ich das mit dem shield mache!!! hab cards nur draggable gemacht wenn Z.role == active
+ok - fritz needs a shield
+ok - fritz num_decks ist 0!!!
+ok - fritz
+748: *11:02 AM 7/11/2022-11:05 AM 7/11/2022
+749: *11:05 AM 7/11/2022-11:15 AM 7/11/2022
+750: *11:15 AM 7/11/2022-11:18 AM 7/11/2022
+751: *11:18 AM 7/11/2022-11:18 AM 7/11/2022
+ok - check aristo hidden stats
+ok - hidden = 
+ok - player stats
+ok - ferro: und man sollte nicht von anderen sehen wie viele punkte sie im blatt haben
+ok - fritz man soll die card punkte nicht sehen!!!
+752: *11:21 AM 7/11/2022-11:28 AM 7/11/2022
+753: *11:28 AM 7/11/2022-11:31 AM 7/11/2022
+754: *11:31 AM 7/11/2022-11:34 AM 7/11/2022
+ok - onclick clear ack
+DONE ok - ferro buy test
 DONE ok - formel fuer deck number
-- buy: wenn jemand kauft, abbrechen
-- auto timer for confirmation moves oder noch simpler! (muendlich!)
-- both the hands and the player info should be in turn order with your info on top
-- hover log
+DONE ok - buy: wenn jemand kauft or ack, abbrechen
+ok - auto timer for confirmation moves oder noch simpler! (muendlich!)
+ok - I just clicked the card to buy it, but nothing happened. It just switched to Felix and he bought the card.
+ok - both the hands and the player info should be in turn order with your info on top
+DONE ok - hover log
+DONE ok - shield needs to be partial!!!
+DONE ok church order in herald order!!!
+755: *11:34 AM 7/11/2022-11:34 AM 7/11/2022
+756: *11:34 AM 7/11/2022-11:37 AM 7/11/2022
+757: *11:37 AM 7/11/2022-11:44 AM 7/11/2022
+758: *11:44 AM 7/11/2022-11:47 AM 7/11/2022
+759: *11:47 AM 7/11/2022-11:51 AM 7/11/2022
+ok - multiple players
+ok - ich mach state: turn_round: turn: player, buy_round: next turn: player
+ok fen.turn_after_ack[0]
+ok - ferro: turn info should NOT change in buy_or_pass mode!!!
+DONE ok - turn multiple info
+760: *11:53 AM 7/11/2022-12:29 PM 7/11/2022
+761: *12:29 PM 7/11/2022-
+- geh nochmal zu ari_history_list
+keywords fuer is_card, is_player, is_command (string item das nicht ein player ist)
+a=action,p=player,c=card,...
+
+- koennte layout option machen fuer den log!
+- log besser
 - force redraw when inactive checken
 - help
 - multigame interface
-- shield needs to be partial!!!
 
 ==> alle die player info soll AUCH IM PLAYER REPLICATED SEIN!!!!!
 
 
 
-
-kann ich es ein bisschen besser machen?
 race conditions?
 
 
-church order in herald order!!!
 10:19 AM
 scroll log when not your turn
-log besser
 action
 12:30 PM
 

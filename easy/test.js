@@ -19,28 +19,83 @@ function start_tests() {
 	//ltest69_ferro_is_group(); //
 	//#endregion
 
-	ltest70_aristo_church(); //ltest57_aristo();
+	//ltest70_aristo_church(); //ltest57_aristo();
+	ltest78_aristo_church();
 
 }
 
 //#region live server tests
-function ltest70_aristo_church() {
-	TESTING = true; DA.testing = true; DA.test = {
-		mods: [give_players_stalls, make_church], iter: 0, maxiter: 200, running: false, step: true, suiteRunning: false, number: 0, list: [0]
-	};
+function ltest78_aristo_church() {
+	TESTING = true; DA.testing = true; DA.test = { mods: [give_players_stalls, make_church], iter: 0, maxiter: 200, running: false, step: true, suiteRunning: false, number: 0, list: [0] };
+	DA.test.end = () => { }; //console.log('discard:',Z.fen.deck_discard);}
+	DA.auto_moves = [['random'],['random']];
+	let playernames = [U.name, 'felix']; //, 'gul', 'amanda', 'lauren'];
+	startgame('aristo', playernames.map(x => ({ name: x, playmode: 'human' })), { mode: 'hotseat' });
+}
+function ltest77_aristo_church() {
+	TESTING = true; DA.testing = true; DA.test = { mods: [give_players_stalls, make_church], iter: 0, maxiter: 200, running: false, step: true, suiteRunning: false, number: 0, list: [0] };
+	DA.test.end = () => { }; //console.log('discard:',Z.fen.deck_discard);}
+	DA.auto_moves = [];//[['random']];
+	let playernames = [U.name, 'felix', 'leo', 'gul']; //, 'gul', 'amanda', 'lauren'];
+	startgame('aristo', playernames.map(x => ({ name: x, playmode: 'human' })), { mode: 'hotseat' });
+}
+function ltest76_aristo_multi() {
+	TESTING = true; DA.testing = true; DA.test = { mods: [make_long_history], iter: 0, maxiter: 200, running: false, step: true, suiteRunning: false, number: 0, list: [0] };
+	DA.test.end = () => { }; //console.log('discard:',Z.fen.deck_discard);}
+	DA.auto_moves = [];//[['random']];
+	let playernames = ['mimi', 'felix', 'gul'];
+	startgame('aristo', playernames.map(x => ({ name: x, playmode: 'human' })), { mode: 'hotseat', rumors: 'no', commission: 'no', journey: 'no' });
+}
+function ltest75_ferro_multi() {
+	TESTING = true; DA.testing = true; DA.test = { mods: [make_long_history], iter: 0, maxiter: 200, running: false, step: true, suiteRunning: false, number: 0, list: [0] };
+	DA.test.end = () => { }; //console.log('discard:',Z.fen.deck_discard);}
+	DA.auto_moves = [['random']];//[['random']];
+	let playernames = ['mimi', 'felix', 'gul', 'amanda', 'lauren', 'valerie', 'guest', 'nimble', 'sheeba', 'sarah']; //, 'gul', 'amanda', 'lauren'];
+	startgame('ferro', playernames.map(x => ({ name: x, playmode: 'human' })), { mode: 'multi' });
+}
+function ltest74_ferro_scroll_history() {
+	TESTING = true; DA.testing = true; DA.test = { mods: [make_long_history], iter: 0, maxiter: 200, running: false, step: true, suiteRunning: false, number: 0, list: [0] };
+	DA.test.end = () => { }; //console.log('discard:',Z.fen.deck_discard);}
+	DA.auto_moves = [];//[['random']];
+	let playernames = ['mimi', 'felix', 'gul', 'amanda', 'lauren', 'valerie', 'guest', 'nimble', 'sheeba', 'sarah']; //, 'gul', 'amanda', 'lauren'];
+	startgame('ferro', playernames.map(x => ({ name: x, playmode: 'human' })), { mode: 'hotseat' });
+}
+function ltest73_ferro_deck_empty() {
+	TESTING = true; DA.testing = true; DA.test = { mods: [make_deck_empty], iter: 0, maxiter: 200, running: false, step: true, suiteRunning: false, number: 0, list: [0] };
+	DA.test.end = () => { }; //console.log('discard:',Z.fen.deck_discard);}
+	DA.auto_moves = [];//[['random']];
+	let playernames = [U.name, 'felix', 'gul', 'amanda', 'lauren', 'valerie', 'guest', 'nimble', 'sheeba', 'sarah']; //, 'gul', 'amanda', 'lauren'];
+	startgame('ferro', playernames.map(x => ({ name: x, playmode: 'human' })), { mode: 'hotseat' });
+}
+function ltest72_ferro() {
+	TESTING = true; DA.testing = true; DA.test = { mods: [], iter: 0, maxiter: 200, running: false, step: true, suiteRunning: false, number: 0, list: [0] };
+	DA.test.end = () => { }; //console.log('discard:',Z.fen.deck_discard);}
+	DA.auto_moves = [];//[['random']];
+	let playernames = [U.name, 'felix', 'gul', 'amanda', 'lauren', 'valerie', 'guest', 'nimble', 'sheeba', 'sarah']; //, 'gul', 'amanda', 'lauren'];
+	startgame('ferro', playernames.map(x => ({ name: x, playmode: 'human' })), { mode: 'hotseat' });
+}
+function ltest71_ferro() {
+	TESTING = true; DA.testing = true; DA.test = { mods: [], iter: 0, maxiter: 200, running: false, step: true, suiteRunning: false, number: 0, list: [0] };
 	DA.test.end = () => { }; //console.log('discard:',Z.fen.deck_discard);}
 	DA.auto_moves = [];//[['random']];
 	let playernames = [U.name, 'felix', 'leo', 'gul']; //, 'gul', 'amanda', 'lauren'];
 
+	startgame('ferro', playernames.map(x => ({ name: x, playmode: 'human' })), { mode: 'hotseat' });
+}
+function ltest70_aristo_church() {
+	TESTING = true; DA.testing = true; DA.test = { mods: [give_players_stalls, make_church], iter: 0, maxiter: 200, running: false, step: true, suiteRunning: false, number: 0, list: [0] };
+	DA.test.end = () => { }; //console.log('discard:',Z.fen.deck_discard);}
+	DA.auto_moves = [];//[['random']];
+	let playernames = [U.name, 'felix', 'leo', 'gul']; //, 'gul', 'amanda', 'lauren'];
 	startgame('aristo', playernames.map(x => ({ name: x, playmode: 'human' })), { mode: 'hotseat' });
 }
-function ltest69_ferro_is_group(){
-	let j=['*Hn','8Dn','8Hn'];
+function ltest69_ferro_is_group() {
+	let j = ['*Hn', '8Dn', '8Hn'];
 	let x = is_group(j);
-	console.log('is_group',x);
-	j=['8Hn','*Dn','8Hn'];
+	console.log('is_group', x);
+	j = ['8Hn', '*Dn', '8Hn'];
 	x = is_group(j);
-	console.log('is_group',x);
+	console.log('is_group', x);
 }
 function ltest68_aristo_blackmail_owner_defend() {
 	TESTING = true; DA.testing = true; DA.test = { mods: [set_blackmail_owner_stage_defend], iter: 0, maxiter: 200, running: false, step: true, suiteRunning: false, number: 0, list: [0] };
@@ -1284,6 +1339,19 @@ function make_church(o) {
 	fen.stage = 1004;
 	fen.market = ['JHn', 'QSn'];
 }
+function make_long_history(o) {
+	let [fen, uplayer] = [o.fen, o.fen.turn[0]];
+	fen.history = [];
+	for (let i = 0; i < 100; i++) {
+		fen.history.push([`line ${i}: something happened`]);
+	}
+}
+function make_deck_empty(o) {
+	let fen = o.fen;
+	fen.deck_discard = fen.deck;
+	output_arr_short(fen.deck);
+	fen.deck = [];
+}
 function make_deck_discard(o) {
 	let fen = o.fen;
 	let uplayer = o.uplayer;
@@ -1308,10 +1376,10 @@ function prep_for_church_downgrade(o) {
 }
 function set_blackmail_owner_stage_defend(o) {
 	set_blackmail_owner_stage(o);
-	console.log('==>blackmailed is',o.fen.turn[0])
+	console.log('==>blackmailed is', o.fen.turn[0])
 	let fen = o.fen;
 	let uplayer = fen.turn[0];
-	console.log('==>blackmailed is',uplayer)
+	console.log('==>blackmailed is', uplayer)
 	let building = path2fen(fen, fen.blackmail.building_path);
 	let lead = building.lead;
 	fen.players[uplayer].rumors.push(`${lead[0]}Cr`);
@@ -1325,7 +1393,7 @@ function set_blackmail_owner_stage(o) {
 	let fen = o.fen;
 	//console.log(fen)
 	let uplayer = fen.turn[0];
-	console.log('blackmailed is',uplayer)
+	console.log('blackmailed is', uplayer)
 	give_various_buildings_to(o, uplayer);
 	let other = firstCond(fen.plorder, (p) => p != uplayer);
 
@@ -1340,23 +1408,29 @@ function set_blackmail_owner_stage(o) {
 }
 function set_player_tides(o) {
 	let [fen, uplayer] = [o.fen, o.fen.turn[0]];
+	let min = 1000, minplayer = null;
 	for (const plname of fen.plorder) {
 		let pl = fen.players[plname];
 		let hkey = pl.hand[0];
-		pl.tides = { keys: [hkey], val: ari_get_card(hkey).val };
+		let val = ari_get_card(hkey).val;
+		pl.tides = { keys: [hkey], val: val };
+		if (val < min) { min = val; minplayer = plname; }
+
 		console.log('player', plname, 'tides', pl.tides);
 	}
 	let sorted = sortByDescending(fen.plorder, x => fen.players[x].tides.val);
 	fen.church_order = jsCopy(fen.plorder);
-	//fen.selection_order = sorted;
-	fen.stage = 18;
+	fen.tide_minimum =
+		//fen.selection_order = sorted;
+
+		fen.stage = 21;
 }
 function set_queen_phase(o) {
 	//console.log('deck', jsCopy(otree.deck));
 	fen = o.fen;
 	fen.phase = o.phase = 'queen';
 	arisim_stage_3(fen);
-	arisim_stage_4_all(fen,3,false);
+	arisim_stage_4_all(fen, 3, false);
 	ensure_actions(fen);
 	o.stage = fen.stage;
 	//[o.stage, fen.turn] = [fen.stage, o.turn];

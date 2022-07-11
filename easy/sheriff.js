@@ -149,7 +149,7 @@ function sheriff() {
 
 		let player_stat_items = UI.player_stat_items = ui_player_info(z, dParent); //fen.plorder.map(x => fen.players[x]));
 		let fen = z.fen;
-		let herald = fen.plorder[0];
+		let herald = fen.heraldorder[0];
 		for (const uname of fen.plorder) {
 			let pl = fen.players[uname];
 			let item = player_stat_items[uname];

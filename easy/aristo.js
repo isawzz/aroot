@@ -7,7 +7,9 @@ function aristo() {
 	function aristo_setup(players, options) {
 		let fen = { players: {}, plorder: jsCopy(players), history: [] };
 		//let deck = fen.deck = get_keys(C52Cards).filter(x => 'br'.includes(x[2]));
-		let deck = fen.deck = create_fen_deck('n', 2);
+		let n = players.length;
+		let num_decks = fen.num_decks = 2 + (n >= 8 ? 2 : n >= 6 ? 1 : 0); // 2 + (n > 5 ? Math.ceil((n - 5) / 2) : 0); //<=5?2:Math.max(2,Math.ceil(players.length/3));
+		let deck = fen.deck = create_fen_deck('n', num_decks);
 		//console.log('deck',deck)
 		//console.log('deck length is',deck.length);
 		shuffle(deck);
@@ -40,6 +42,7 @@ function aristo() {
 		fen.phase = 'king'; //TODO: king !!!!!!!
 		fen.num_actions = 0;
 		fen.herald = fen.plorder[0];
+		fen.heraldorder = jsCopy(fen.plorder);
 
 		if (exp_commissions(options)) { [fen.stage, fen.turn] = [23, [fen.plorder[0]]]; fen.comm_setup_num = 3; }
 		else if (exp_rumors(options)) { [fen.stage, fen.turn] = [24, [fen.plorder[0]]]; }
@@ -83,7 +86,7 @@ function aristo() {
 
 		let uname_plays = fen.plorder.includes(Z.uname);
 		let show_first = uname_plays && Z.mode == 'multi' ? Z.uname : uplayer;
-		let order = [show_first].concat(fen.plorder.filter(x => x != show_first));
+		let order = arrCycle(fen.plorder, fen.plorder.indexOf(show_first)); //[show_first].concat(fen.plorder.filter(x => x != show_first));
 		for (const plname of order) {
 			let pl = fen.players[plname];
 
@@ -176,7 +179,7 @@ function aristo() {
 
 		let player_stat_items = UI.player_stat_items = ui_player_info(z, dParent); //fen.plorder.map(x => fen.players[x]));
 		let fen = z.fen;
-		let herald = fen.plorder[0];
+		let herald = fen.heraldorder[0];
 		for (const uname of fen.plorder) {
 			let pl = fen.players[uname];
 			let item = player_stat_items[uname];
@@ -718,16 +721,18 @@ function check_if_church() {
 function determine_church_turn_order() {
 	let [fen, A, uplayer, plorder] = [Z.fen, Z.A, Z.uplayer, Z.plorder];
 
+	let initial = [];
 	for (const plname of fen.plorder) {
 		let pl = fen.players[plname];
 		pl.vps = ari_calc_fictive_vps(fen, plname);
 		pl.max_journey_length = ari_get_max_journey_length(fen, plname);
 		pl.score = pl.vps * 10000 + pl.max_journey_length * 100 + pl.coins;
+		initial.push(pl);
 		//console.log('score', plname, pl.score);
 	}
-	let playerlist = dict2list(fen.players, 'name');
-	let sorted = sortByDescending(playerlist, 'score');
-	//console.log('scores', sorted.map(x => `${x.name}:${x.score}`));
+	//let playerlist = dict2list(fen.players, 'name');
+	let sorted = sortByDescending(initial, 'score');
+	console.log('church order: scores', sorted.map(x => `${x.name}:${x.score}`));
 	return sorted.map(x => x.name);
 }
 function is_in_middle_of_church() {
@@ -735,7 +740,7 @@ function is_in_middle_of_church() {
 	return isdef(fen.players[uplayer].tides);
 }
 function post_church() {
-	let [fen, A, uplayer, plorder] = [Z.fen, Z.A, Z.uplayer, Z.plorder];
+	let [fen, A, uplayer] = [Z.fen, Z.A, Z.uplayer];
 	let pl = fen.players[uplayer];
 	let items = A.selected.map(x => A.items[x]);
 
@@ -775,6 +780,7 @@ function post_church() {
 		//proceed to next stage after church! also mark this round not to contain any more churches!!!
 		//list all properties related to churches in fen.players and fen: delete them!
 		Z.stage = 14;
+		let plorder = fen.plorder = jsCopy(fen.heraldorder);
 		Z.turn = [plorder[0]];
 		//church ends here!!!
 		turn_send_move_update();
@@ -894,12 +900,18 @@ function post_tide_minimum() {
 
 	//player already has tides!
 	pl.tides.keys = pl.tides.keys.concat(st);
-	pl.tides.val += arrSum(st.map(x => ari_get_card(x.key).val));
+	let newval = arrSum(st.map(x => ari_get_card(x.key).val));
+	pl.tides.val += newval;
 	//console.log('player', uplayer, 'tides', st, 'value', pl.tides.val);
 
 	//verify that val is at least tide_minimum
 	console.log('tide_minimum', fen.tide_minimum);
 	console.log('val', pl.tides.val);
+
+	if (newval < fen.tide_minimum){
+		select_error(`you need to tide at least ${fen.tide_minimum} to reach minimum`);
+		return;
+	}
 
 
 	//tided cards have to be removed!
@@ -930,8 +942,12 @@ function post_complementing_market_after_church() {
 function proceed_to_newcards_selection() {
 	//determine selection order for newcards selection
 	let fen = Z.fen;
-	let selorder = fen.selorder = sortByDescending(fen.church_order, x => fen.players[x].tides.val);
+
+	let selorder = fen.selorder = sortByFuncDescending(fen.church_order, x => fen.players[x].tides.val);
+	//console.log('church_order',fen.church_order);
+	//console.log('selorder',selorder);
 	fen.toBeSelected = jsCopy(selorder);
+	fen.plorder = selorder;
 	Z.turn = [selorder[0]];
 	Z.stage = 19;
 	turn_send_move_update();
@@ -1388,9 +1404,9 @@ function ari_history_list(lines, title = 'unknown') {
 function ari_move_herald(fen) {
 	// let cur_herald = fen.plorder[0];
 	// let next_herald = fen.plorder[1];
-	fen.plorder = arrCycle(fen.plorder, 1);
-	ari_history_list([`*** new herald: ${fen.plorder[0]} ***`], 'herald');
-	return fen.plorder[0];
+	fen.heraldorder = arrCycle(fen.heraldorder, 1);
+	ari_history_list([`*** new herald: ${fen.heraldorder[0]} ***`], 'herald');
+	return fen.heraldorder[0];
 }
 function ari_move_market_to_discard() {
 	let fen = Z.fen;
@@ -1453,7 +1469,8 @@ function ari_next_phase() {
 		[Z.stage, Z.turn] = set_journey_or_stall_stage(fen, Z.options, Z.phase);
 	} else {
 		//gesamte runde fertig: herald moves!
-		fen.herald = ari_move_herald(fen, uplayer); //fen.plorder changed in there!
+		fen.herald = ari_move_herald(fen, uplayer); 
+		fen.plorder = jsCopy(fen.heraldorder);
 		ari_add_harvest_cards(fen);
 		Z.phase = 'king';
 		let taxneeded = ari_tax_phase_needed(fen);
@@ -2234,7 +2251,8 @@ function ari_start_action_stage() {
 }
 function ari_start_church_stage() {
 	//need to sort players by their vps, and set Z.turn and Z.stage
-	let order = Z.fen.church_order = determine_church_turn_order();
+	let [fen] = [Z.fen];
+	let order = fen.plorder = fen.church_order = determine_church_turn_order();
 	[Z.turn, Z.stage] = [[order[0]], 17];
 	turn_send_move_update();
 }

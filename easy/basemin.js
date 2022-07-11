@@ -324,7 +324,7 @@ function mButton(caption, handler, dParent, styles, classes, id) {
 	if (isdef(id)) x.id = id;
 	return x;
 }
-function mButtonX(dParent, pos = 'tr', handler = null, defaultBehavior = 'hide', sz = 40) {
+function old_mButtonX(dParent, pos = 'tr', handler = null, defaultBehavior = 'hide', sz = 40) {
 	//ACHTUNG!!! default behavior is: removing dParent
 	dParent = toElem(dParent);
 	// let sz = 40;
@@ -338,6 +338,13 @@ function mButtonX(dParent, pos = 'tr', handler = null, defaultBehavior = 'hide',
 
 	d2.onclick = isdef(handler) ? handler : defaultBehavior == 'hide' ? () => hide(dParent) : () => dParent.remove();
 	mPlace(d2, pos, 10);
+	return d2;
+}
+function mButtonX(dParent, handler,pos='tr', sz = 25) {
+	let d2 = mDiv(dParent, { fg:'white', w: sz, h: sz, pointer: 'cursor' }, null, `<i class="fa fa-times" style="font-size:${sz}px;"></i>`, 'btnX');
+	//let d2 = mDiv(dParent, { fg:'white', w: sz, h: sz, pointer: 'cursor' }, null, 'CLOSE', 'btnX');
+	mPlace(d2, pos, 10);
+	d2.onclick = handler;
 	return d2;
 }
 function mBy(id) { return document.getElementById(id); }
@@ -677,6 +684,7 @@ function mPlace(elem, pos, offx, offy) {
 }
 function mPos(d, x, y, unit = 'px') { mStyle(d, { left: x, top: y, position: 'absolute' }, unit); }
 function mPopup(content, dParent, styles, id) {
+	if (isdef(mBy(id))) mRemove(id);
 	mIfNotRelative(dParent);
 	if (nundef(styles)) styles = { top: 0, left: 0 };
 	styles.position = 'absolute';
