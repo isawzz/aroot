@@ -897,6 +897,11 @@ function post_tide_minimum() {
 	pl.tides.val += arrSum(st.map(x => ari_get_card(x.key).val));
 	//console.log('player', uplayer, 'tides', st, 'value', pl.tides.val);
 
+	//verify that val is at least tide_minimum
+	console.log('tide_minimum', fen.tide_minimum);
+	console.log('val', pl.tides.val);
+
+
 	//tided cards have to be removed!
 	remove_tides_from_play(fen, uplayer, st);
 	// for (const tide of st) { removeInPlace(pl.hand, tide); }

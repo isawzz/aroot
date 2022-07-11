@@ -7708,16 +7708,82 @@ ok - ui_get_church_items
 572: *7:49 AM 7/10/2022-7:50 AM 7/10/2022
 573: *7:50 AM 7/10/2022-7:55 AM 7/10/2022
 574: *7:56 AM 7/10/2022-8:09 AM 7/10/2022
-575: *8:09 AM 7/10/2022-
-- a l'honneur geht nicht!!!!
-- was hat es mit restart move button auf sich!?
-- last is immer besser! back to TESTING
-- oder: in TESTING gemacht und in aroot copiert?
-- das muss in aroot gemacht werden dann in TESTING copiert!
-- mimi button reihe compact!
+575: *8:09 AM 7/10/2022-8:10 AM 7/10/2022
+576: *8:10 AM 7/10/2022-8:23 AM 7/10/2022
+577: *8:23 AM 7/10/2022-8:25 AM 7/10/2022
+578: *8:25 AM 7/10/2022-8:39 AM 7/10/2022
+579: *8:40 AM 7/10/2022-8:45 AM 7/10/2022
+580: *8:45 AM 7/10/2022-9:00 AM 7/10/2022
+581: *9:00 AM 7/10/2022-9:08 AM 7/10/2022
+582: *9:08 AM 7/10/2022-9:11 AM 7/10/2022
+583: *9:11 AM 7/10/2022-12:57 PM 7/10/2022
+584: *12:58 PM 7/10/2022-7:06 PM 7/10/2022
+ok - schau was fuer einen score alle am anfang haben!
+ok - zu TESTING zurueck!
+ok - church: verify that player minplayer is tiding enough!!!
+ok - remove Ally Bob und Leo
+ok - reloaded message nur bei TESTING
+ok - was ist wenn spotit restarted?
+ok - am anfang von gamestep
+ok - game specific buttons!!! spotitstart, clear ack, skip, random
+ok - show_games
+ok - a l'honneur geht nicht!!!!
+ok - was hat es mit restart move button auf sich!?
+ok - last is immer besser! back to TESTING
+ok - oder: in TESTING gemacht und in aroot copiert?
+ok - das muss in aroot gemacht werden dann in TESTING copiert!
+ok - mimi button reihe compact!
+__________ mo 11.7.22 =>100 ewew 0=fa,1ok,2+lu,3*co,-1~pa,-2-qu,-3!
+640: *7:06 PM 7/10/2022-7:53 PM 7/10/2022
+650: *7:53 PM 7/10/2022-8:01 PM 7/10/2022
+ok - geh wieder zurueck zu der seite
+ok - brauch ich docker am PATH?
+ok - ich sollte die gesamte platform auf heroku geben!
+651: *8:02 PM 7/10/2022-8:31 PM 7/10/2022
+kann ich es ein bisschen besser machen?
+race conditions?
 
 
+church order in herald order!!!
+10:19 AM
+scroll log when not your turn
+log besser
+action
+12:30 PM
+waere gut wenn man sein blatt auch wenn man nicht dran ist reorganizen kann (so wie in letter tycoon)
+Lauren — Today at 10:40 AM
+nd man sollte nicht von anderen sehen wie viele punkte sie im blatt haben
+tawzz — Today at 10:45 AM
+ja
+Lauren — Today at 10:46 AM
+I just clicked the card to buy it, but nothing happened. It just switched to Felix and he bought the card.
+It said click the card to buy, which is what I did - I definitely didn't hit "pass"
+tawzz — Today at 10:46 AM
+yes it is because felix is before you in player order
+Lauren — Today at 10:47 AM
+Ah I see
+So it asks everyone at once if they want to buy
+tawzz — Today at 10:47 AM
+you csn see player order as they are arranged on the right
+ok ja can do that better
+tawzz — Today at 11:08 AM
+turn multiple info
+formel fuer deck number
+felixludos — Today at 11:11 AM
+auto timer for confirmation moves
+both the hands and the player info should be in turn order with your info on top
+tawzz — Today at 11:16 AM
+hover log
+force redraw when inactive checken
+ev glasnost
+felixludos — Today at 11:27 AM
+ja das ist nachher
+tawzz — Today at 11:35 AM
+help
+tawzz — Today at 11:43 AM
+multigame interface
 
+3:
 
 
 

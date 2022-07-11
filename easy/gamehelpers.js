@@ -455,6 +455,7 @@ function show_users(ms = 300) {
 	mClear(dParent);
 	//mStyle(dParent, { gap: 10, padding: 10 });
 	for (const u of Serverdata.users) {
+		if (['ally','bob','leo'].includes(u.name)) continue;
 		let d = get_user_pic_and_name(u.name, dParent);
 		d.onclick = () => onclick_user(u.name);
 		mStyle(d, { cursor: 'pointer' });

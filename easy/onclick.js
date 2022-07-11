@@ -30,6 +30,7 @@ function onclick_game_menu_item(ev) {
 	let params = [gamename, DA.playerlist];
 	let funcs = [style_not_playing, style_playing_as_human, style_playing_as_bot];
 	for (const u of Serverdata.users) {
+		if (['ally','bob','leo'].includes(u.name)) continue;
 		let d = get_user_pic_and_name(u.name, dParent, 40); mStyle(d, { w: 60 })
 		let item = { uname: u.name, div: d, state: 0, inlist: false, isSelected: false };
 
