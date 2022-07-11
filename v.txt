@@ -7740,6 +7740,126 @@ ok - geh wieder zurueck zu der seite
 ok - brauch ich docker am PATH?
 ok - ich sollte die gesamte platform auf heroku geben!
 651: *8:02 PM 7/10/2022-8:31 PM 7/10/2022
+652: *2:19 AM 7/11/2022-2:21 AM 7/11/2022
+ok - araxis start
+653: *2:21 AM 7/11/2022-2:23 AM 7/11/2022
+654: *2:23 AM 7/11/2022-2:31 AM 7/11/2022
+655: *2:31 AM 7/11/2022-2:32 AM 7/11/2022
+656: *2:32 AM 7/11/2022-2:34 AM 7/11/2022
+657: *2:35 AM 7/11/2022-2:35 AM 7/11/2022
+658: *2:36 AM 7/11/2022-2:37 AM 7/11/2022
+659: *2:37 AM 7/11/2022-2:39 AM 7/11/2022
+660: *2:39 AM 7/11/2022-2:40 AM 7/11/2022
+661: *2:40 AM 7/11/2022-2:40 AM 7/11/2022
+662: *2:40 AM 7/11/2022-2:46 AM 7/11/2022
+663: *2:46 AM 7/11/2022-2:58 AM 7/11/2022
+664: *2:58 AM 7/11/2022-2:59 AM 7/11/2022
+665: *2:59 AM 7/11/2022-3:00 AM 7/11/2022
+666: *3:00 AM 7/11/2022-3:02 AM 7/11/2022
+667: *3:02 AM 7/11/2022-3:03 AM 7/11/2022
+668: *3:03 AM 7/11/2022-3:05 AM 7/11/2022
+669: *3:05 AM 7/11/2022-3:08 AM 7/11/2022
+670: *3:08 AM 7/11/2022-3:09 AM 7/11/2022
+671: *3:09 AM 7/11/2022-3:11 AM 7/11/2022
+ok amanda hat ein AHn bekommen! das war bottom of deck_discard ok
+ok - jetzt muss nochmal alle durchgehen
+ok - deck_discard.top = 6Hn, bottom = QSn, discards:4Sn (=>top)
+ok - was ist da los?
+ok - test
+ok - make_deck_empty
+ok - wie kann ich das testen?
+ok - how to recycle array in js
+ok - muss das deck reversed werden wenn recycle? JA!
+ok - find create_fen_deck!
+ok - find correct file!
+ok - aendere users in DB.yaml!
+ok - woher kommen die namen beim testen?
+ok - ferro 10 players
+672: *3:11 AM 7/11/2022-3:12 AM 7/11/2022
+673: *3:12 AM 7/11/2022-3:12 AM 7/11/2022
+674: *3:13 AM 7/11/2022-3:14 AM 7/11/2022
+675: *3:14 AM 7/11/2022-3:15 AM 7/11/2022
+ok - examine deck_deal_safe: gibt es reshuffling bei aristo? JA
+676: *3:15 AM 7/11/2022-3:16 AM 7/11/2022
+DONE! ok - formel fuer decknumber!
+677: *3:16 AM 7/11/2022-3:16 AM 7/11/2022
+678: *3:16 AM 7/11/2022-3:17 AM 7/11/2022
+679: *3:17 AM 7/11/2022-3:18 AM 7/11/2022
+680: *3:18 AM 7/11/2022-3:20 AM 7/11/2022
+681: *3:20 AM 7/11/2022-3:21 AM 7/11/2022
+682: *3:21 AM 7/11/2022-3:22 AM 7/11/2022
+683: *3:22 AM 7/11/2022-3:23 AM 7/11/2022
+684: *3:23 AM 7/11/2022-3:25 AM 7/11/2022
+685: *3:25 AM 7/11/2022-3:36 AM 7/11/2022
+686: *3:36 AM 7/11/2022-3:36 AM 7/11/2022
+687: *3:37 AM 7/11/2022-3:38 AM 7/11/2022
+688: *3:38 AM 7/11/2022-3:45 AM 7/11/2022
+689: *3:45 AM 7/11/2022-3:51 AM 7/11/2022
+690: *3:51 AM 7/11/2022-3:53 AM 7/11/2022
+691: *3:53 AM 7/11/2022-3:58 AM 7/11/2022
+692: *3:58 AM 7/11/2022-3:59 AM 7/11/2022
+693: *3:59 AM 7/11/2022-4:01 AM 7/11/2022
+694: *4:01 AM 7/11/2022-4:02 AM 7/11/2022
+ok - for now leave it as is
+ok - goto code mPopup
+ok - mPopup geht nicht wenn schon ein popup da ist!
+ok - test players ohne U.name
+ok - kann ruhig hoeher oben anfangen!
+ok - was ist los mit font awesome???
+ok - was???
+ok - mButtonX wo?
+ok - wie macht man einen close button?
+ok - mach einen close button!
+ok - history kann hoeher sein
+ok - suche dTitleRight
+ok - mach einfach nur ein toggle fuer history!
+ok - statt dem human/hotseat ein toggle fuer players und ein toggle fuer history
+695: *4:02 AM 7/11/2022-4:05 AM 7/11/2022
+696: *4:05 AM 7/11/2022-4:08 AM 7/11/2022
+DONE ok - scroll log when not your turn
+697: *4:08 AM 7/11/2022-4:09 AM 7/11/2022
+698: *4:09 AM 7/11/2022-4:13 AM 7/11/2022
+699: *4:14 AM 7/11/2022-4:14 AM 7/11/2022
+700: *4:14 AM 7/11/2022-4:16 AM 7/11/2022
+701: *4:16 AM 7/11/2022-4:17 AM 7/11/2022
+702: *4:17 AM 7/11/2022-4:22 AM 7/11/2022
+703: *4:22 AM 7/11/2022-4:22 AM 7/11/2022
+704: *4:22 AM 7/11/2022-4:31 AM 7/11/2022
+705: *4:31 AM 7/11/2022-4:44 AM 7/11/2022
+706: *4:44 AM 7/11/2022-4:50 AM 7/11/2022
+707: *4:50 AM 7/11/2022-4:50 AM 7/11/2022
+708: *4:50 AM 7/11/2022-
+=>ak
+- brauch die player reihenfolge!!!
+- fritz auch dasselbe!
+ferro 489 bug
+- open start
+- brauch ich ueberhaupt das shield?
+- goto test
+- mach multi mode test + random
+- partial shield!
+
+- player reihenfolge in main window!!!!!
+- wo ist der random button die ganze zeit gewesen????? in telecave!
+- waere gut wenn man sein blatt auch wenn man nicht dran ist reorganizen kann (so wie in letter tycoon)
+- und man sollte nicht von anderen sehen wie viele punkte sie im blatt haben
+- I just clicked the card to buy it, but nothing happened. It just switched to Felix and he bought the card.
+- turn multiple info
+DONE ok - formel fuer deck number
+- buy: wenn jemand kauft, abbrechen
+- auto timer for confirmation moves oder noch simpler! (muendlich!)
+- both the hands and the player info should be in turn order with your info on top
+- hover log
+- force redraw when inactive checken
+- help
+- multigame interface
+- shield needs to be partial!!!
+
+==> alle die player info soll AUCH IM PLAYER REPLICATED SEIN!!!!!
+
+
+
+
 kann ich es ein bisschen besser machen?
 race conditions?
 
@@ -7750,38 +7870,6 @@ scroll log when not your turn
 log besser
 action
 12:30 PM
-waere gut wenn man sein blatt auch wenn man nicht dran ist reorganizen kann (so wie in letter tycoon)
-Lauren — Today at 10:40 AM
-nd man sollte nicht von anderen sehen wie viele punkte sie im blatt haben
-tawzz — Today at 10:45 AM
-ja
-Lauren — Today at 10:46 AM
-I just clicked the card to buy it, but nothing happened. It just switched to Felix and he bought the card.
-It said click the card to buy, which is what I did - I definitely didn't hit "pass"
-tawzz — Today at 10:46 AM
-yes it is because felix is before you in player order
-Lauren — Today at 10:47 AM
-Ah I see
-So it asks everyone at once if they want to buy
-tawzz — Today at 10:47 AM
-you csn see player order as they are arranged on the right
-ok ja can do that better
-tawzz — Today at 11:08 AM
-turn multiple info
-formel fuer deck number
-felixludos — Today at 11:11 AM
-auto timer for confirmation moves
-both the hands and the player info should be in turn order with your info on top
-tawzz — Today at 11:16 AM
-hover log
-force redraw when inactive checken
-ev glasnost
-felixludos — Today at 11:27 AM
-ja das ist nachher
-tawzz — Today at 11:35 AM
-help
-tawzz — Today at 11:43 AM
-multigame interface
 
 3:
 
