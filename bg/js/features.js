@@ -88,7 +88,7 @@ function showActiveMessage(msg, handler, styles = {}, fade = false) {
 
 	let defStyles = { fz: 22, rounding: 10, vpadding: 12, hpadding: 0, matop: 50 };
 	styles = mergeOverride(defStyles, styles);
-	if (nundef(styles.fg)) styles.fg = colorIdealText(Session.color);
+	if (nundef(styles.fg)) styles.fg = colorIdealText(G.color);
 
 	clearFleetingMessage();
 	let d = fleetingMessage(msg, styles, fade);
@@ -100,8 +100,8 @@ function showFleetingMessage(msg, msDelay, styles = {}, fade = false, ms = 3000)
 	let defStyles = { fz: 22, rounding: 10, padding: '2px 12px', matop: 50 };
 	styles = mergeOverride(defStyles, styles);
 
-	//console.log('bg is', Session.color, '\n', styles, arguments)
-	if (nundef(styles.fg)) styles.fg = colorIdealText(Session.color);
+	//console.log('bg is', G.color, '\n', styles, arguments)
+	if (nundef(styles.fg)) styles.fg = colorIdealText(G.color);
 
 	clearFleetingMessage();
 	if (msDelay) {
@@ -198,7 +198,7 @@ function makeCategories() {
 		transport: getGSGElements(g => g == 'Travel & Places', s => startsWith(s, 'transport')),
 	};
 
-	let incompatible = DA.incompatibleCats = {
+	let incompatible = Daat.incompatibleCats = {
 		animal: ['mammal'],
 		clothing: ['object'],
 		emotion: ['gesture'],
@@ -221,13 +221,13 @@ function makeCategories() {
 
 //keys and categories
 function genCats(n) {
-	//console.log('???????',DA.incompatibleCats)
+	//console.log('???????',Daat.incompatibleCats)
 	let di = {};
 	let cats = Object.keys(Categories);
 	//console.log('cats available:',cats)
 	for (let i = 0; i < n; i++) {
 		let cat = chooseRandom(cats);
-		let incompat = DA.incompatibleCats[cat];
+		let incompat = Daat.incompatibleCats[cat];
 		//console.log('cats',cats,'\ncat',cat,'\nincompat',incompat)
 		cats = arrMinus(cats, incompat);
 		removeInPlace(cats, cat);
@@ -252,8 +252,14 @@ function removeDuplicates(keys, prop) {
 	return res.map(x => x.key);
 }
 function setKeys({ allowDuplicates, nMin = 25, lang, key, keySets, filterFunc, param, confidence, sortByFunc } = {}) {
-	let keys = jsCopy(keySets[key]);
+	// console.log('setKeys (legacy)',nMin,lang,key,keySets,'\nfilterFunc',filterFunc);
+	//G.keys = setKeys({ nMin, lang: G.language, keySets: KeySets, key: G.vocab });
 
+	let keys = jsCopy(keySets[key]);
+	// console.log('setKeys (from',getFunctionsNameThatCalledThisFunction()+')',keys)
+	//if (isdef(filterFunc)) console.log('f',filterFunc);
+
+	// console.log('setKeys',keys)
 	if (isdef(nMin)) {
 		let diff = nMin - keys.length;
 		let additionalSet = diff > 0 ? nMin > 100 ? firstCondDictKeys(keySets, k => k != key && keySets[k].length > diff) : 'best100' : null;
@@ -287,6 +293,8 @@ function setKeys({ allowDuplicates, nMin = 25, lang, key, keySets, filterFunc, p
 		if (isMatch) { primary.push(k); } else { spare.push(k); }
 	}
 
+	//console.assert(isEmpty(intersection(spare,primary)))
+
 	if (isdef(nMin)) {
 		//if result does not have enough elements, take randomly from other
 		let len = primary.length;
@@ -307,46 +315,15 @@ function setKeys({ allowDuplicates, nMin = 25, lang, key, keySets, filterFunc, p
 
 //#endregion
 
-//#region loader and _on _off switches
-function testbuttons_on() {
-	let buttons = arrChildren(mBy('dTestButtons'));
-	for (const b of arrFromIndex(buttons, 1)) {
-		mClassRemove(b, 'disabled');
-		mClass(b, 'enabled');
-	}
-	mBy('b_delete_table').innerHTML = 'delete current table';
-}
-function testbuttons_off() {
-	let buttons = arrChildren(mBy('dTestButtons'));
-	for (const b of arrFromIndex(buttons, 1)) {
-		mClass(b, 'disabled');
-		mClassRemove(b, 'enabled');
-		// mClassReplace(b,'enabled','disabled');
-	}
-	mBy('b_delete_table').innerHTML = 'delete most recent table';
-}
-
+//#region loader and switches
 function loader_on() { mBy('loader_holder').className = 'loader_on'; }
 function loader_off() { mBy('loader_holder').className = 'loader_off'; }
-function table_shield_on() {
-	if (nundef(dTableShield)) {
-		dTableShield = mDiv(dTable, { position: 'absolute', bg: '#0000ff80', w: '100%', h: '100%' }); //VERTICAL SIDEBAR!!!
-		dTableShield.style.zIndex = 1000;
-	}
-}
-function table_shield_off() { 
-	if (isdef(dTableShield)) { dTableShield.remove(); dTableShield = null; } 
-}
-function shield_on() { show('dShield'); mStyle(dShield, { bg: '#00000080' }); }
-function shield_off() { hide('dShield'); }
 function click_shield_on(msg) { show_shield(msg); }
 function click_shield_off() { mBy('dShield').style.display = 'none'; }
 function show_shield(msg) {
 	mBy('dShield').style.display = 'block';
 	mBy('dShield').innerHTML = msg;
 }
-function modal_on() { let d = mBy('dModal'); return d; }
-function modal_off() { let d = mBy('dModal'); d.innerHTML = ''; d.style.display = 'none'; }
 function polling_shield_on(msg) {
 	let d = mBy('dPollingShield');
 	d.style.display = 'block';
@@ -362,117 +339,35 @@ function just_message(msg, styles = {}) {//,handler) {
 	// copyKeys(styles, def_styles);
 	// let dContent = mDiv(d, def_styles, null, msg);
 }
+function status_message(msg, styles = {}) {//,handler) {
+	let d = mBy('dMessage');
+	show(d);
+	clearElement(d);
+	// let bg = 'transparent'; // colorTrans('silver', .25);
+	let def_styles = { padding: 20, align: 'center', position: 'absolute', fg: 'contrast', fz: 24, w: '100vw' };
+	copyKeys(styles, def_styles);
+	let dContent = mDiv(d, def_styles, null, msg);
+	//let d = mScreen(mBy('dMessage'), { bg: bg, display: 'flex', layout: 'fvcc' });
+	//let dContent = mDiv(d, { display: 'flex', layout: 'fvcs', fg: 'contrast', fz: 24, bg: 'silver', patop: 50, pabottom: 50, matop: -50, w: '100vw' },null,msg);
+
+	//onclick = (ev) => { evNoBubble(ev); hide('dMessage'); onclick = null; if (isdef(handler)) {handler(); }};
+
+}
+function status_message_off() {
+	let d = mBy('dMessage');
+	clearElement(d);
+	hide(d);
+	onclick = null;
+}
 function badges_on() {
-	if (!isdef(mBy('dLeiste'))) initSidebar();
+	initSidebar();
 	Session.is_badges = true;
-	Badges = [];
 }
 function badges_off() {
-	hide('dLeftSide');
+	hide('sidebar');
 	delete Session.is_badges;
-	Badges = [];
 }
-function actions_on() {
-	if (!isdef(mBy('dLeiste'))) initActionPanel();
-	Session.is_actions = true;
-	Actions = [];
-}
-function actions_off() {
-	hide('dLeftSide');
-	delete Session.is_actions;
-	Actions = [];
-}
-//function turn_reload_on(){Session.reload_func = 'turn'}
-//function race_reload_on(){Session.reload_func = 'race'}
 
-function main_menu_off() { close_sidebar(); open_mini_user_info(); }
-function main_menu_on() { open_sidebar(); close_mini_user_info(); }
-
-//#endregion
-
-//#region initTable
-function initTable() {
-	let table = mBy('table');
-	clearElement(table);
-	mStyle(table, { overflow: 'hidden' });
-
-	initLineTop();
-	initLineTitle();
-	initLineTable();
-	initLineBottom();
-
-	dTable = dLineTableMiddle;
-	dTitle = dLineTitleMiddle;
-	console.log(dTable,dTitle)
-}
-function initSidebar() {
-	show('dLeftSide');
-	let dParent = mBy('dLeftSide');
-	clearElement(dParent);
-	//console.log('dLeiste wird angelegt!!!!!!!')
-	dLeiste = mDiv(dParent);
-	mStyle(dLeiste, { wmin: 70, hmax: '100vh', display: 'flex', 'flex-flow': 'column wrap' });
-}
-function initActionPanel() {
-	show('dLeftSide');
-	let dParent = mBy('dLeftSide');
-	clearElement(dParent);
-	//console.log('dLeiste wird angelegt!!!!!!!')
-	dLeiste = mDiv(dParent);
-	mStyle(dLeiste, { wmin: 70, hmin: '100%', display: 'flex', 'flex-flow': 'column wrap' });
-}
-function initAux() {
-	dAux = mBy('dAux');
-}
-function initLineTop() {
-	dLineTopOuter = mDiv(table); dLineTopOuter.id = 'lineTopOuter';
-	dLineTop = mDiv(dLineTopOuter); dLineTop.id = 'lineTop';
-	dLineTopLeft = mDiv(dLineTop); dLineTopLeft.id = 'lineTopLeft';
-	dLineTopRight = mDiv(dLineTop); dLineTopRight.id = 'lineTopRight';
-	dLineTopMiddle = mDiv(dLineTop); dLineTopMiddle.id = 'lineTopMiddle';
-
-	dScore = mDiv(dLineTopMiddle);
-	dScore.id = 'dScore';
-
-	dLevel = mDiv(dLineTopLeft);
-	dLevel.id = 'dLevel';
-
-	dGameTitle = mDiv(dLineTopRight);
-	dGameTitle.id = 'dGameTitle';
-	let d = mDiv(dLineTopRight);
-	d.id = 'time';
-
-	mLinebreak(table);
-}
-function initLineTitle() {
-	dLineTitleOuter = mDiv(table); dLineTitleOuter.id = 'lineTitleOuter';
-	dLineTitle = mDiv(dLineTitleOuter); dLineTitle.id = 'lineTitle';
-	if (PROJECTNAME != 'belinda') mStyle(dLineTitle, { matop: 5 });
-	dLineTitleLeft = mDiv(dLineTitle); dLineTitleLeft.id = 'lineTitleLeft';
-	dLineTitleRight = mDiv(dLineTitle); dLineTitleRight.id = 'lineTitleRight';
-	dLineTitleMiddle = mDiv(dLineTitle); dLineTitleMiddle.id = 'lineTitleMiddle';
-
-	mLinebreak(table);
-}
-function initLineTable() {
-	dLineTableOuter = mDiv(table); dLineTableOuter.id = 'lineTableOuter';
-	dLineTable = mDiv(dLineTableOuter); dLineTable.id = 'lineTable';
-	dLineTableLeft = mDiv(dLineTable); dLineTableLeft.id = 'lineTableLeft';
-	dLineTableMiddle = mDiv(dLineTable); dLineTableMiddle.id = 'lineTableMiddle';
-	mClass(dLineTableMiddle, 'flexWrap');
-	dLineTableRight = mDiv(dLineTable); dLineTableRight.id = 'lineTableRight';
-
-	mLinebreak(table);
-}
-function initLineBottom() {
-	dLineBottomOuter = mDiv(table); dLineBottomOuter.id = 'lineBottomOuter';
-	dLineBottom = mDiv(dLineBottomOuter); dLineBottom.id = 'lineBottom';
-	dLineBottomLeft = mDiv(dLineBottom); dLineBottomLeft.id = 'lineBottomLeft';
-	dLineBottomRight = mDiv(dLineBottom); dLineBottomRight.id = 'lineBottomRight';
-	dLineBottom = mDiv(dLineBottom); dLineBottom.id = 'lineBottomMiddle';
-
-	mLinebreak(table);
-}
 //#endregion
 
 //#region internet
@@ -515,45 +410,24 @@ function menu_enabled(key, elem) {
 //#endregion
 
 //#region sidebar
-function disable_sidebar() { close_sidebar(); }
 function close_sidebar() {
-	let d = mBy('left_panel'); d.style.flex = 0;
-	// console.log('hallo',d,d.parentNode.style.display);
-	// //d.remove(); return;
-	// d.style.flexGrow = 0;
-	// d.style.flexShrink = 1;
-	// d.style.flexBasis = 0;
-	// d.style.overflowX = 'hidden';
-	// // = '0 0 0'; 
-	// //d.style.minWidth = 0;	d.style.width = 0;
-	DA.left_panel = 'closed';
+	mBy('left_panel').style.flex = 0;
+	DA.sidebar = 'closed';
 }
 function open_sidebar() {
-	DA.left_panel = 'open';
+	DA.sidebar = 'open';
 	mBy('left_panel').style.flex = 1;
 }
-function sidebar_transition_on() {
-	let d = mBy('left_panel');
-	mClass(d, 'alltransition');
-
-}
-function sidebar_transition_off() {
-	let d = mBy('left_panel');
-	mClass(d, 'notransition');
-}
 function toggle_sidebar() {
-	//console.log('DA.left_panel:',DA.left_panel, nundef(DA.left_panel) || DA.left_panel == 'open'?'should close':'should open');
-
-	if (nundef(DA.left_panel) || DA.left_panel == 'open') close_sidebar(); else open_sidebar();
+	// console.log('DA.sidebar:',DA.sidebar);
+	if (nundef(DA.sidebar) || DA.sidebar == 'open') close_sidebar(); else open_sidebar();
 }
 
 //#endregion
 
 //#region user
 function add_new_user(udata, save = true) {
-	//alert('add_new_user!!!! ' + udata.name);
-	console.log('WILL NOT ADD NEW USERS AT THIS TIME!!!', udata); return;
-	console.assert(isDict(udata) && isdef(udata.name) && isString(udata.name) && udata.name.length < 50, 'CANNOT ADD THIS WEIRED USER ' + udata.name);
+	alert('add_new_user!!!! ' + udata.name);
 
 	DB.users[udata.name] = udata;
 	if (save) db_save();
@@ -571,28 +445,20 @@ function get_def_players_for_user(uname, list) {
 function get_user_color() { return get_current_userdata().color; }
 function get_user_names() { return Object.keys(DB.users); }
 function get_current_userdata() { return DB.users[Session.cur_user]; }
-function get_preferred_lang(uname) { return lookup(DB.users, [uname, 'lang']) ?? 'E'; }
-function get_startlevel(user, game) { return lookup(DB.users, [user, 'games', game, 'startlevel']) ?? lookup(DB.games, [game, 'def_startlevel']) ?? 0; }
-function set_preferred_lang(uname, val) { val = val.toUpperCase(); if ('EDSFC'.indexOf(val) >= 0) return lookupSetOverride(DB.users, [uname, 'lang'], val); }
-function set_startlevel(user, game, val) { return lookupSetOverride(DB.users, [user, 'games', game, 'startlevel'], val); }
+function get_startlevel(user, game) { return lookup(DB.users, [user, 'games', game, 'startlevel']); }
+function set_startlevel(user, game, val) { lookupSetOverride(DB.users, [user, 'games', game, 'startlevel'], val); }
 function get_elo(user, game) { return lookup(DB.users, [user, 'games', game, 'elo']) ?? 100; }
 function get_winnerlist(game) { return lookupSet(DB.games, [game, 'winnerlist'], []); }
 function set_elo(user, game, val) { lookupSetOverride(DB.users, [user, 'games', game, 'elo'], val); }
 function reset_elo(user, game) { set_elo(user, game, 100); }
 function reset_game_values_for_user(user) {
 	let defaults = {
-		'gul': { gSpotit: { startlevel: 0 }, gMaze: { startlevel: 0 }, gAnagram: { startlevel: 0 } },
-		'nasi': { gSpotit: { startlevel: 0 }, gMaze: { startlevel: 0 }, gAnagram: { startlevel: 0 } },
-		'felix': { gSpotit: { startlevel: 5 }, gMaze: { startlevel: 5 }, gAnagram: { startlevel: 3 } },
-		'lauren': { gSpotit: { startlevel: 5 }, gMaze: { startlevel: 5 }, gAnagram: { startlevel: 5 } },
-		'mimi': { gSpotit: { startlevel: 0 }, gMaze: { startlevel: 0 }, gAnagram: { startlevel: 0 } },
+		'gul': { gSpotit: { startlevel: 0 } },
+		'nasi': { gSpotit: { startlevel: 0 } },
+		'felix': { gSpotit: { startlevel: 5 } },
+		'mimi': { gSpotit: { startlevel: 2 } },
 	};
-
-	let norm = {};
-	for (const g in DB.games) {
-		norm[g] = { startlevel: DB.games[g].def_startlevel };
-	}
-	lookupSetOverride(DB.users, [user, 'games'], valf(defaults[user], norm));
+	lookupSetOverride(DB.users, [user, 'games'], valf(defaults[user], {}));
 }
 function reset_game_values_for_all_users() { for (const uname in DB.users) { reset_game_values_for_user(uname); } }
 function reset_winnerlist_for_game(game) { lookupSetOverride(DB.games, [game, 'winnerlist'], []); }
@@ -602,23 +468,21 @@ function reset_db_values() {
 	reset_game_values_for_all_users();
 }
 function load_user(name, display_ui = true) {
-	//console.log('...load_user',name);
 	//sets Session.cur_user and adds user if DB.users[name] does not exist
 	//if show, also show_user() on screen
 	//console.log('load_user',getFunctionsNameThatCalledThisFunction(),name);
 
-	//if (user_already_loaded(name)) return DB.users[name];
-	//console.log('no,user has NOT been loaded!',name);
+	if (user_already_loaded()) return DB.users[name];
 
-	if (nundef(name)) name = 'guest';
+	if (nundef(name)) name = localStorage.getItem('user') ?? 'guest';
 
 	// make sure there are data in DB.users
 	let udata = lookup(DB, ['users', name]);
-	//console.log('found user in db? udata for',name,udata);
+	//console.log('udata for',name,udata);
 	if (!udata) udata = add_new_user({ name: name, color: randomColor(), motto: random_motto(), image: false, games: {}, tables: {} });
 
 	Session.cur_user = name;
-	if (!is_admin(name)) localStorage.setItem('user', name);
+	localStorage.setItem('user', name);
 	if (display_ui) show_user(udata);
 
 	if (name == 'mimi') show('dAdminButtons'); else hide('dAdminButtons');
@@ -632,8 +496,7 @@ function load_user(name, display_ui = true) {
 // 	to_server(txt, `save_${key}`);
 // }
 function show_user(user) {
-	//where(user);
-	//console.log('show user',user);
+	where(user);
 	mStyle(mBy('user_info'), { opacity: 1 });
 	//mBy('user_info').style.opacity = 1;
 	mBy("username").innerHTML = mBy('mini_username').innerHTML = user.name;
@@ -694,8 +557,8 @@ function open_mini_user_info() {
 
 }
 function toggle_mini_user_info() {
-	//console.log('DA.left_panel:',DA.left_panel);
-	if (nundef(DA.left_panel) || DA.left_panel == 'open') close_mini_user_info(); else open_mini_user_info();
+	//console.log('DA.sidebar:',DA.sidebar);
+	if (nundef(DA.sidebar) || DA.sidebar == 'open') close_mini_user_info(); else open_mini_user_info();
 }
 
 //#endregion user

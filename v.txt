@@ -7923,7 +7923,100 @@ ok fen.turn_after_ack[0]
 ok - ferro: turn info should NOT change in buy_or_pass mode!!!
 DONE ok - turn multiple info
 760: *11:53 AM 7/11/2022-12:29 PM 7/11/2022
-761: *12:29 PM 7/11/2022-
+761: *12:29 PM 7/11/2022-3:06 PM 7/11/2022
+__________ di 12.7.22 =>100 ewew 0=fa,1ok,2+lu,3*co,-1~pa,-2-qu,-3!
+800: *3:06 PM 7/11/2022-5:05 AM 7/12/2022
+801: *5:05 AM 7/12/2022-5:11 AM 7/12/2022
+802: *5:11 AM 7/12/2022-5:13 AM 7/12/2022
+803: *5:13 AM 7/12/2022-5:15 AM 7/12/2022
+804: *5:16 AM 7/12/2022-5:18 AM 7/12/2022
+805: *5:18 AM 7/12/2022-5:18 AM 7/12/2022
+806: *5:18 AM 7/12/2022-5:19 AM 7/12/2022
+807: *5:19 AM 7/12/2022-5:23 AM 7/12/2022
+809: *5:23 AM 7/12/2022-5:24 AM 7/12/2022
+810: *5:24 AM 7/12/2022-5:28 AM 7/12/2022
+811: *5:28 AM 7/12/2022-5:29 AM 7/12/2022
+812: *5:29 AM 7/12/2022-5:33 AM 7/12/2022
+813: *5:33 AM 7/12/2022-5:33 AM 7/12/2022
+814: *5:33 AM 7/12/2022-5:35 AM 7/12/2022
+815: *5:35 AM 7/12/2022-5:36 AM 7/12/2022
+816: *5:36 AM 7/12/2022-5:46 AM 7/12/2022
+817: *5:46 AM 7/12/2022-5:47 AM 7/12/2022
+818: *5:47 AM 7/12/2022-5:51 AM 7/12/2022
+819: *5:51 AM 7/12/2022-5:52 AM 7/12/2022
+820: *5:52 AM 7/12/2022-5:55 AM 7/12/2022
+821: *5:55 AM 7/12/2022-6:16 AM 7/12/2022
+822: *6:16 AM 7/12/2022-6:26 AM 7/12/2022
+823: *6:26 AM 7/12/2022-7:02 AM 7/12/2022
+824: *7:02 AM 7/12/2022-7:55 AM 7/12/2022
+833: *7:55 AM 7/12/2022-7:56 AM 7/12/2022
+834: *7:56 AM 7/12/2022-8:05 AM 7/12/2022
+835: *8:40 AM 7/12/2022-8:40 AM 7/12/2022
+836: *8:40 AM 7/12/2022-8:54 AM 7/12/2022
+837: *8:55 AM 7/12/2022-1:33 PM 7/12/2022
+838: *1:33 PM 7/12/2022-1:35 PM 7/12/2022
+839: *1:35 PM 7/12/2022-1:36 PM 7/12/2022
+840: *1:36 PM 7/12/2022-1:37 PM 7/12/2022
+841: *1:37 PM 7/12/2022-1:39 PM 7/12/2022
+842: *1:39 PM 7/12/2022-1:42 PM 7/12/2022
+843: *1:42 PM 7/12/2022-1:44 PM 7/12/2022
+844: *1:44 PM 7/12/2022-1:46 PM 7/12/2022
+845: *1:46 PM 7/12/2022-1:50 PM 7/12/2022
+846: *1:50 PM 7/12/2022-1:51 PM 7/12/2022
+847: *1:51 PM 7/12/2022-1:53 PM 7/12/2022
+848: *1:54 PM 7/12/2022-1:55 PM 7/12/2022
+849: *1:55 PM 7/12/2022-2:00 PM 7/12/2022
+859: *2:00 PM 7/12/2022-2:04 PM 7/12/2022
+860: *2:04 PM 7/12/2022-2:05 PM 7/12/2022
+861: *2:05 PM 7/12/2022-2:06 PM 7/12/2022
+862: *2:06 PM 7/12/2022-2:13 PM 7/12/2022
+863: *2:13 PM 7/12/2022-
+- er killt die gesamte history!!!!
+- wieso ist das scroll soweit auf der seine? schau ob es ein gap gibt?
+- game left
+- x weiter obeN!!!
+- game friendly
+- close history geht wieder hinunter
+- hieight of dHistory!
+- show_history_popup simpler!!!
+- wo wird show_history called?
+- colorlighter
+mach das popup mit rounding und dem hellen bh
+- wo lande ich?
+- show_history
+1- white
+2- background ist schlech!
+3- html +=
+- schlhuck
+- back to beautify!
+- unicode for spade
+
+
+
+
+- hab ich alles schon gemacht! search in aroot
+- search use
+- how to use an svg symbol w3schools
+- font awesome spade
+- kuerzel fuer card: Kheart
+- find dTitleRight
+- gear und scroll muessen anders sein!
+- when hover scroll, move history into popup!
+- scroll
+- bug baustelle2 10
+- start mit random move
+- isRank52, isSuit52
+- gibt es ein is_rank52, is_suit52? NEIN
+- call it
+- how to get player color?
+- bug 8
+- test
+- ari_history_list
+- wo ist show_history
+- wie bekomm ich die words?
+
+- beautify history
+ferro: brauch die action den player
 - geh nochmal zu ari_history_list
 keywords fuer is_card, is_player, is_command (string item das nicht ein player ist)
 a=action,p=player,c=card,...
