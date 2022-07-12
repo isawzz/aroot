@@ -32,6 +32,19 @@ function collect_game_specific_options(game) {
 	}
 	return di;
 }
+function compute_hidden(plname){
+	let [fen, uplayer] = [Z.fen, Z.uplayer];
+	let pl = fen.players[plname];
+
+	let hidden;
+	if (isdef(fen.winners)) hidden = false;
+	else if (Z.role == 'spectator') hidden = plname != uplayer;
+	else if (Z.mode == 'hotseat') hidden = (pl.playmode == 'bot' || plname != uplayer);
+	else hidden = plname != Z.uname;
+
+	return hidden;
+
+}
 function ev_to_gname(ev) { evNoBubble(ev); return evToTargetAttribute(ev, 'gamename'); }
 function generate_table_name(n) {
 	let existing = Serverdata.tables.map(x => x.friendly);
@@ -270,20 +283,6 @@ function show_game_options(dParent, game) {
 	}
 
 }
-function show_history(fen, dParent) {
-	if (!isEmpty(fen.history)) {
-		let html = '';
-		for (const arr of jsCopy(fen.history).reverse()) {
-			//html+=`<h1>${k}</h1>`;
-			for (const line of arr) {
-				html += `<p>${line}</p>`;
-			}
-		}
-		let dHistory = mDiv(dParent, { padding: 6, margin: 4, bg: '#00000060', fg: 'white', hmax: 400, 'overflow-y': 'auto', wmin: 240, rounding: 12 }, null, html); //JSON.stringify(fen.history));
-		//mNode(fen.history, dHistory, 'history');
-	}
-
-}
 function show_home_logo() {
 	let bg = colorLight();
 	let dParent = mBy('dAdminLeft');
@@ -332,26 +331,6 @@ function show_message(msg = '', stay = false) {
 	anim.onfinish = () => {
 		mClear(d);
 	}
-}
-function show_history_popup() {
-	let fen = Z.fen;
-	if (!isEmpty(fen.history)) {
-		let html = '';
-		for (const arr of jsCopy(fen.history).reverse()) {
-			//html+=`<h1>${k}</h1>`;
-			for (const line of arr) {
-				html += `<p>${line}</p>`;
-			}
-		}
-		let dpop = mPopup('', dTable, { fz: 16, fg: 'white', top: 0, right: 0, border: 'white', padding: 10, bg: 'dimgray' }, 'dOptions');
-		let dHistory = mDiv(dpop, { padding: 6, margin: 4, bg: '#00000060', fg: 'white', hmax: `calc( 100vh - 250px )`, 'overflow-y': 'auto', wmin: 240, rounding: 12 }, null, html); //JSON.stringify(fen.history));
-		mInsert(dpop, mCreateFrom(`<div style="text-align:center;width:100%;font-family:Algerian;font-size:22px;">${Z.game}</div>`));
-		// let bclose = mButtonX(dpop,'tr',hide_options_popup,null,12);
-		let bclose = mButtonX(dpop,hide_options_popup,'tr');
-
-		//mNode(fen.history, dHistory, 'history');
-	}
-	//console.log('popup', dpop);
 }
 function show_options_popup(options) {
 	let opresent = {};
@@ -411,23 +390,7 @@ function old_show_settings(dParent) {
 	d.onmouseenter = () => show_options_popup(options);
 	d.onmouseleave = hide_options_popup;
 }
-function show_settings(dParent) {
-	let [options, fen, uplayer] = [Z.options, Z.fen, Z.uplayer];
-	clearElement(dParent);
-	mFlex(dParent);
-	let playermode = get_playmode(uplayer); //console.log('playermode',playermode)
-	let game_mode = Z.mode;
-	// let dplaymode = mDiv(dParent, { fg: 'blue' }, null, playermode); // playermode == 'bot' ? 'bot' : '');
-	// let dgamemode = mDiv(dParent, { fg: 'red' }, null, Z.mode); //Z.mode == 'hotseat' ? 'h' : '');
-	let dHistoryButton = miPic('scroll', dParent, { fz: 20, padding: 6, h: 40, box: true, matop: 2, rounding: '50%', cursor: 'pointer' });
-	let d = miPic('gear', dParent, { fz: 20, padding: 6, h: 40, box: true, matop: 2, rounding: '50%', cursor: 'pointer' });
-	options.playermode = playermode;
-	d.onmouseenter = () => show_options_popup(options);
-	d.onmouseleave = hide_options_popup;
-	dHistoryButton.onmouseenter = () => show_history_popup(options);
 
-	//dHistoryButton.onmouseleave = hide_options_popup;
-}
 function status_message_new(msg, dParent, styles = {}) {
 }
 function show_stage() {

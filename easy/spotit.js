@@ -44,6 +44,7 @@ function spotit_present(z, dParent, uplayer) {
 	let [fen, ui, stage] = [z.fen, UI, z.stage];
 	let [dOben, dOpenTable, dMiddle, dRechts] = tableLayoutMR(dParent, 1, 0); ///tableLayoutOMR(dParent, 5, 1);
 
+	//fen.shield = true;
 	//clearTimeout(TO.main);// das koennt noch von vorigem bot gesetzt sein!!!
 
 	let dt = dOpenTable; clearElement(dt); mCenterFlex(dt);

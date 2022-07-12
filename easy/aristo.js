@@ -97,15 +97,7 @@ function aristo() {
 			mLinebreak(d, 9);
 			//R.add_ui_node(d, getUID('u'), uplayer);
 
-			//hidden cards if: spectator && plname != uplayer
-			// or
-			// hotseat && plname is bot 
-			// or 
-			// plname != uname
-			let hidden;;
-			if (Z.role == 'spectator') hidden = plname != uplayer;
-			else if (Z.mode == 'hotseat') hidden = (pl.playmode == 'bot' || plname != uplayer);
-			else hidden = plname != Z.uname;
+			let hidden = compute_hidden(plname);
 
 			ari_present_player(z, plname, d, hidden);
 		}
@@ -180,11 +172,11 @@ function aristo() {
 		let player_stat_items = UI.player_stat_items = ui_player_info(z, dParent); //fen.plorder.map(x => fen.players[x]));
 		let fen = z.fen;
 		let herald = fen.heraldorder[0];
-		for (const uname of fen.plorder) {
-			let pl = fen.players[uname];
-			let item = player_stat_items[uname];
+		for (const plname of fen.plorder) {
+			let pl = fen.players[plname];
+			let item = player_stat_items[plname];
 			let d = iDiv(item); mCenterFlex(d); mLinebreak(d);
-			if (uname == herald) {
+			if (plname == herald) {
 				//console.log('d', d, d.children[0]); let img = d.children[0];
 				mSym('tied-scroll', d, { fg: 'gold', fz: 24, padding: 4 }, 'TR');
 			}
@@ -195,13 +187,13 @@ function aristo() {
 				}
 			}
 			player_stat_count('coin', pl.coins, d);
-			if (!isEmpty(fen.players[uname].stall) && fen.stage >= 5 && fen.stage <= 6) {
-				player_stat_count('shinto shrine', !fen.actionsCompleted.includes(uname) || fen.stage < 6 ? calc_stall_value(fen, uname) : '_', d);
+			if (!isEmpty(fen.players[plname].stall) && fen.stage >= 5 && fen.stage <= 6) {
+				player_stat_count('shinto shrine', !fen.actionsCompleted.includes(plname) || fen.stage < 6 ? calc_stall_value(fen, plname) : '_', d);
 			}
-			player_stat_count('star', uname == U.name || isdef(fen.winners) ? ari_calc_real_vps(fen, uname) : ari_calc_fictive_vps(fen, uname), d);
+			player_stat_count('star', plname == U.name || isdef(fen.winners) ? ari_calc_real_vps(fen, plname) : ari_calc_fictive_vps(fen, plname), d);
 
-			if (fen.turn.includes(uname)) {
-				show_hourglass(uname, d, 30, { left: -3, top: 0 }); //'calc( 50% - 36px )' });
+			if (fen.turn.includes(plname)) {
+				show_hourglass(plname, d, 30, { left: -3, top: 0 }); //'calc( 50% - 36px )' });
 			}
 		}
 	}
@@ -1394,10 +1386,11 @@ function ari_get_max_journey_length(fen, uplayer) {
 	let sorted_journeys = sortByDescending(pl.journeys.map(x => ({ arr: x, len: x.length })), 'len');
 	return isEmpty(pl.journeys) ? 0 : sorted_journeys[0].len;
 }
-function ari_history_list(lines, title = 'unknown') {
+function ari_history_list(lines, title = '') {
 	let fen = Z.fen;
 	if (nundef(fen.history)) fen.history = [];
-	fen.history.push(lines);
+	let html = beautify_history(lines,title, fen,Z.uplayer);
+	fen.history.push(html);
 	//lookupSetOverride(Z.fen,['history',title],lines);
 	//console.log('____history', fen.history);
 }

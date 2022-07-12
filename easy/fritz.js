@@ -6,7 +6,7 @@ function fritz() {
 
 		//calc how many decks are needed (basically 1 suit per person, plus 1 for the deck)
 		let n = players.length;
-		fen.num_decks = 2 + n >= 9 ? 2 : n >= 7 ? 1 : 0; //n == 2 ? 1 : 2 + (n > 5 ? Math.ceil((n - 5) / 2) : 0); //<=5?2:Math.max(2,Math.ceil(players.length/3));
+		fen.num_decks = 2 + (n >= 9 ? 2 : n >= 7 ? 1 : 0); //n == 2 ? 1 : 2 + (n > 5 ? Math.ceil((n - 5) / 2) : 0); //<=5?2:Math.max(2,Math.ceil(players.length/3));
 
 		fritz_new_table(fen, options);
 		let deck = fen.deck;
@@ -40,6 +40,8 @@ function fritz_present_new(z, dParent, uplayer) {
 	//console.log('present')
 	DA.hovergroup = null;
 	let [fen, ui, stage] = [z.fen, UI, z.stage];
+	//fen.shield=true;
+	console.log('role',Z.role)
 	let [dOben, dOpenTable, dMiddle, dRechts] = tableLayoutMR(dParent, 5, 1); mFlexWrap(dOpenTable)
 	Config.ui.card.h = 130;
 	Config.ui.container.h = Config.ui.card.h + 30;
@@ -490,7 +492,7 @@ function fritz_card(ckey, h, w, ov, draggable) {
 	Items[card.id] = card;
 
 	//make each card ui draggable
-	if (draggable) mDraggable(card);
+	if (draggable && Z.role == 'active') mDraggable(card);
 
 	return card;
 }

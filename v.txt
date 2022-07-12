@@ -7970,59 +7970,36 @@ __________ di 12.7.22 =>100 ewew 0=fa,1ok,2+lu,3*co,-1~pa,-2-qu,-3!
 860: *2:04 PM 7/12/2022-2:05 PM 7/12/2022
 861: *2:05 PM 7/12/2022-2:06 PM 7/12/2022
 862: *2:06 PM 7/12/2022-2:13 PM 7/12/2022
-863: *2:13 PM 7/12/2022-
-- er killt die gesamte history!!!!
-- wieso ist das scroll soweit auf der seine? schau ob es ein gap gibt?
-- game left
-- x weiter obeN!!!
-- game friendly
-- close history geht wieder hinunter
-- hieight of dHistory!
-- show_history_popup simpler!!!
-- wo wird show_history called?
-- colorlighter
-mach das popup mit rounding und dem hellen bh
-- wo lande ich?
-- show_history
-1- white
-2- background ist schlech!
-3- html +=
-- schlhuck
-- back to beautify!
-- unicode for spade
+863: *2:13 PM 7/12/2022-2:58 PM 7/12/2022
+864: *2:58 PM 7/12/2022-3:02 PM 7/12/2022
+865: *3:02 PM 7/12/2022-3:05 PM 7/12/2022
+866: *3:05 PM 7/12/2022-3:09 PM 7/12/2022
+867: *3:10 PM 7/12/2022-3:12 PM 7/12/2022
+868: *3:12 PM 7/12/2022-3:15 PM 7/12/2022
+ok - joker!
+ok - zuerst rank dann suit
+ok - jetzt moecht ich ferrocarril mit maleft:10
+ok - warum ist show_history jetzt nicht heller bg?
+ok - er killt die gesamte history!!!!
+ok - wieso ist das scroll soweit auf der seine? schau ob es ein gap gibt?
+ok - game left
+ok - x weiter obeN!!!
+ok - game friendly
+ok - close history geht wieder hinunter
+ok - hieight of dHistory!
+869: *3:15 PM 7/12/2022-3:25 PM 7/12/2022
+870: *3:25 PM 7/12/2022-3:26 PM 7/12/2022
+871: *3:26 PM 7/12/2022-3:26 PM 7/12/2022
+872: *3:26 PM 7/12/2022-3:27 PM 7/12/2022
+DONE ok - log besser
+873: *3:27 PM 7/12/2022-
+- copy!
+- IMMER wenn er inactive ist sol force redraw sein!
+- ari test
 
 
-
-
-- hab ich alles schon gemacht! search in aroot
-- search use
-- how to use an svg symbol w3schools
-- font awesome spade
-- kuerzel fuer card: Kheart
-- find dTitleRight
-- gear und scroll muessen anders sein!
-- when hover scroll, move history into popup!
-- scroll
-- bug baustelle2 10
-- start mit random move
-- isRank52, isSuit52
-- gibt es ein is_rank52, is_suit52? NEIN
-- call it
-- how to get player color?
-- bug 8
-- test
-- ari_history_list
-- wo ist show_history
-- wie bekomm ich die words?
-
-- beautify history
-ferro: brauch die action den player
-- geh nochmal zu ari_history_list
-keywords fuer is_card, is_player, is_command (string item das nicht ein player ist)
-a=action,p=player,c=card,...
 
 - koennte layout option machen fuer den log!
-- log besser
 - force redraw when inactive checken
 - help
 - multigame interface

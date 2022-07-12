@@ -20,15 +20,98 @@ function start_tests() {
 	//#endregion
 
 	//ltest70_aristo_church(); //ltest57_aristo();
-	ltest78_aristo_church();
+	ltest82_ferro(); //ltest85_card_short_text(); //ltest83_svg();
+
 
 }
+function landing(){
+	return;
+	if (!TESTING) return;
+	console.log('dHistory',UI.dHistory)
+	show_history_popup();
 
+}
 //#region live server tests
+function ltest85_card_short_text() {
+	let dTable = mBy('dTable'); clearElement(dTable); mStyle(dTable, { hmin: 400 });
+
+	// let [d,ckey,sz]=[mDiv(dTable,{},null,`hallo das ist ein <span style='color:green;font-size:20px'>&spadesuit;</span>K`),'KSn',25];
+	let ckey = 'KCn';
+	let sz=20;
+	//let d=mDiv(dTable,{},null,`hallo das ist ein ${mSuit(ckey,sz)}K`);
+	let d=mDiv(dTable,{},null,`hallo das ist ein ${mCardText(ckey)}.`);
+	return;
+	//let card = cBlank(dTable); let d = iDiv(card); let sz = card.h / 6;
+	// let [d,ckey,sz]=[mDiv(dTable,{},null,'hallo das ist ein '),'KSn',25];
+	// let s1 = mSuit(ckey, d, { w: sz, h: sz }); //console.log('s1', s1);
+	// mStyle(s1,{display:'inline-block',matop:4});
+	// d.innerHTML += 'K';
+}
+function ltest84_svg() {
+	let dTable = mBy('dTable'); clearElement(dTable); mStyle(dTable, { hmin: 400 })
+	let card = cBlank(dTable); let d = iDiv(card); let sz = card.h / 6;
+	let i = 0;
+	for (let suit of ['H', 'S', 'D', 'C']) {
+		let s1 = mSuit(suit, d, { w: sz, h: sz }); //console.log('s1', s1);
+		mPos(s1, sz * i, 0); i++;
+	}
+}
+function ltest83_svg() {
+	dTable = mBy('dTexture'); mCenterFlex(dTable); mStyle(dTable, { hmin: 500 }); mClass(dTable, 'wood');
+	mStyle(dTable, { gap: 10 });
+	let card;
+	card = cBlankSvg(dTable);
+	console.log('card', card); //mClass(iDiv(card),'hoverScale')
+	let g = iG(card); //console.log('g', g);
+
+	//1 produce
+	let x = mgSuit('Pik'); //console.log('x', x);
+	//2 attach
+	//mAppend(iG(card),x); // braucht man nicht!
+	//3 size
+	mgSize(x, 40);
+	//4 position
+	mgPos(card, x); //,50,50);
+}
+function ltest83_ferro_multi() {
+	TESTING = true; DA.testing = true; DA.test = { mods: [], iter: 0, maxiter: 200, running: false, step: true, suiteRunning: false, number: 0, list: [0] };
+	DA.test.end = () => { }; //console.log('discard:',Z.fen.deck_discard);}
+	DA.auto_moves = [];//[['random']];
+	let playernames = ['mimi', 'felix']; //, 'gul', 'amanda']; //, 'lauren', 'valerie', 'guest', 'nimble', 'sheeba', 'sarah']; //, 'gul', 'amanda', 'lauren'];
+	startgame('ferro', playernames.map(x => ({ name: x, playmode: 'human' })), { mode: 'multi' });
+}
+function ltest82_ferro() {
+	TESTING = true; DA.testing = true; DA.test = { mods: [make_long_history], iter: 0, maxiter: 200, running: false, step: true, suiteRunning: false, number: 0, list: [0] };
+	DA.test.end = () => { }; //console.log('discard:',Z.fen.deck_discard);}
+	DA.auto_moves = [['random']];
+	let playernames = ['mimi', 'felix', 'gul'];//, 'amanda', 'lauren', 'valerie', 'guest', 'nimble', 'sheeba', 'sarah']; //, 'gul', 'amanda', 'lauren'];
+	startgame('ferro', playernames.map(x => ({ name: x, playmode: 'human' })), { mode: 'hotseat' });
+}
+function ltest81_spotit_multi() {
+	TESTING = true; DA.testing = true; DA.test = { mods: [make_long_history], iter: 0, maxiter: 200, running: false, step: true, suiteRunning: false, number: 0, list: [0] };
+	DA.test.end = () => { }; //console.log('discard:',Z.fen.deck_discard);}
+	DA.auto_moves = [];//[['random']];
+	let playernames = ['mimi', 'felix']; //, 'gul', 'amanda', 'lauren'];
+	startgame('spotit', playernames.map(x => ({ name: x, playmode: 'human' })), { mode: 'multi' });
+}
+function ltest80_fritz_multi() {
+	TESTING = true; DA.testing = true; DA.test = { mods: [make_long_history], iter: 0, maxiter: 200, running: false, step: true, suiteRunning: false, number: 0, list: [0] };
+	DA.test.end = () => { }; //console.log('discard:',Z.fen.deck_discard);}
+	DA.auto_moves = [];//[['random']];
+	let playernames = ['mimi', 'felix']; //, 'gul', 'amanda', 'lauren'];
+	startgame('fritz', playernames.map(x => ({ name: x, playmode: 'human' })), { mode: 'multi' });
+}
+function ltest79_bluff_multi() {
+	TESTING = true; DA.testing = true; DA.test = { mods: [make_long_history], iter: 0, maxiter: 200, running: false, step: true, suiteRunning: false, number: 0, list: [0] };
+	DA.test.end = () => { }; //console.log('discard:',Z.fen.deck_discard);}
+	DA.auto_moves = [];//[['random']];
+	let playernames = ['mimi', 'felix']; //, 'gul', 'amanda', 'lauren'];
+	startgame('bluff', playernames.map(x => ({ name: x, playmode: 'human' })), { mode: 'multi' });
+}
 function ltest78_aristo_church() {
 	TESTING = true; DA.testing = true; DA.test = { mods: [give_players_stalls, make_church], iter: 0, maxiter: 200, running: false, step: true, suiteRunning: false, number: 0, list: [0] };
 	DA.test.end = () => { }; //console.log('discard:',Z.fen.deck_discard);}
-	DA.auto_moves = [['random'],['random']];
+	DA.auto_moves = [['random'], ['random']];
 	let playernames = [U.name, 'felix']; //, 'gul', 'amanda', 'lauren'];
 	startgame('aristo', playernames.map(x => ({ name: x, playmode: 'human' })), { mode: 'hotseat' });
 }
@@ -44,7 +127,7 @@ function ltest76_aristo_multi() {
 	DA.test.end = () => { }; //console.log('discard:',Z.fen.deck_discard);}
 	DA.auto_moves = [];//[['random']];
 	let playernames = ['mimi', 'felix', 'gul'];
-	startgame('aristo', playernames.map(x => ({ name: x, playmode: 'human' })), { mode: 'hotseat', rumors: 'no', commission: 'no', journey: 'no' });
+	startgame('aristo', playernames.map(x => ({ name: x, playmode: 'human' })), { mode: 'multi', rumors: 'no', commission: 'no', journey: 'no' });
 }
 function ltest75_ferro_multi() {
 	TESTING = true; DA.testing = true; DA.test = { mods: [make_long_history], iter: 0, maxiter: 200, running: false, step: true, suiteRunning: false, number: 0, list: [0] };
@@ -826,10 +909,15 @@ function testKartePositionSuit() {
 	//mStyle(dTable, { gap: 10 }); 
 
 	let card = cBlank(dTable); let d = iDiv(card); let sz = card.h / 6;
-	console.log('card', card);
+	//console.log('card', card);
 
 	//alles auf einmal:
-	let s1 = mSuit('Herz', d, { sz: 30, bg: 'green' }, 'tc'); //console.log('s1', s1);
+	//let sz = 30;
+	let i = 0;
+	for (let suit of ['H', 'S', 'D', 'C']) {
+		let s1 = mSuit(suit, d, { w: sz, h: sz }); //console.log('s1', s1);
+		mPos(s1, sz * i, 0); i++;
+	}
 	// let s2 = mSuit('Herz', d, { sz: sz }, 'cr'); //console.log('s2', s2);
 	// let s3 = mSuit('Herz', d, { sz: sz }, 'bc'); //console.log('s3', s3);
 	// let s4 = mSuit('Herz', d, { sz: sz }, 'cl'); //console.log('s4', s4);
@@ -1343,7 +1431,10 @@ function make_long_history(o) {
 	let [fen, uplayer] = [o.fen, o.fen.turn[0]];
 	fen.history = [];
 	for (let i = 0; i < 100; i++) {
-		fen.history.push([`line ${i}: something happened`]);
+		let lines = [`${rChoose(get_keys(fen.players))} discards ${rCard()}`];
+		let title = 'discard';
+		let html = beautify_history(lines, title, fen, uplayer);
+		fen.history.push(html);
 	}
 }
 function make_deck_empty(o) {

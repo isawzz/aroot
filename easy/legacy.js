@@ -4794,10 +4794,8 @@ function hFunc(content, funcname, arg1, arg2, arg3) {
 	let html = `<a style='color:blue' href="javascript:${funcname}('${arg1}','${arg2}','${arg3}');">${content}</a>`;
 	return html;
 }
-function hide_options_popup() {
-	let d = mBy('dOptions');
-	if (isdef(d)) mRemove(d);
-}
+function hide_options_popup() {	let d = mBy('dOptions');	if (isdef(d)) mRemove(d);}
+function hide_history_popup() {	let d = mBy('dHistoryPopup');	if (isdef(d)) {mAppend(UI.dHistoryParent,UI.dHistory);mRemove(d);}}
 function rPlayerOrder(players) { return shuffle(jsCopy(players)); }
 function show_settings_orig(options) {
 	clearElement('dTitleRight');

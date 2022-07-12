@@ -1,4 +1,5 @@
 function ferro() {
+	function clear_ack() { if (Z.stage == 'buy_or_pass') ferro_change_to_turn_round(); }
 	function state_info(dParent) { ferro_state_new(dParent); }
 	function setup(players, options) {
 		let fen = { players: {}, plorder: jsCopy(players), history: [] };
@@ -36,7 +37,7 @@ function ferro() {
 	function check_gameover() { return isdef(Z.fen.winners) ? Z.fen.winners : false; }
 	function stats(Z, dParent) { ferro_stats_new(dParent); }
 	function activate_ui() { ferro_activate_ui(); }
-	return { state_info, setup, present, present_player, check_gameover, stats, activate_ui };
+	return { clear_ack, state_info, setup, present, present_player, check_gameover, stats, activate_ui };
 }
 
 function ferro_pre_action() {
@@ -78,10 +79,7 @@ function ferro_present_new(z, dParent, uplayer) {
 		mFlexWrap(d);
 		mLinebreak(d, 10);
 
-		if (isdef(fen.winners)) hidden = false;
-		else if (Z.role == 'spectator') hidden = plname != uplayer;
-		else if (Z.mode == 'hotseat') hidden = (pl.playmode == 'bot' || plname != uplayer);
-		else hidden = plname != Z.uname;
+		let hidden = compute_hidden(plname);
 
 		ferro_present_player_new(z, plname, d, hidden);
 	}
@@ -137,28 +135,29 @@ function ferro_state_new(dParent) {
 		let goal_html = `<div style="font-weight:bold;border-radius:50%;background:white;color:red;line-height:100%;padding:4px 8px">${goal}</div>`;
 		dParent.innerHTML = `Round ${Z.round}:&nbsp;&nbsp;minimum:&nbsp;${goal_html}`;
 	} else {
-		let user_html = get_user_pic_html(Z.uplayer, 30);
-		dParent.innerHTML = `Round ${Z.round}:&nbsp;player: ${user_html} `;
+		let user_html = get_user_pic_html(Z.stage == 'buy_or_pass'?Z.fen.turn_after_ack[0]:Z.turn[0], 30);
+		// dParent.innerHTML = `Round ${Z.round}:&nbsp;player: ${user_html} `;
+		dParent.innerHTML = `Round ${Z.round}:&nbsp;${Z.stage == 'buy_or_pass'?'next ':''}turn: ${user_html} `;
 	}
 }
 function ferro_stats_new(z, dParent) {
 	let player_stat_items = UI.player_stat_items = ui_player_info(z, dParent);
 	let fen = z.fen;
-	for (const uname of fen.plorder) {
-		let pl = fen.players[uname];
-		let item = player_stat_items[uname];
+	for (const plname of fen.plorder) {
+		let pl = fen.players[plname];
+		let item = player_stat_items[plname];
 		let d = iDiv(item); mCenterFlex(d); mLinebreak(d);
 		player_stat_count('coin', pl.coins, d);
 		// player_stat_count('hand with fingers splayed', pl.hand.length, d);
 		//console.log('pl.hand', pl.hand);
 		player_stat_count('pinching hand', pl.hand.length, d);
-		player_stat_count('hand with fingers splayed', calc_hand_value(pl.hand), d);
+		if (!compute_hidden(plname)) player_stat_count('hand with fingers splayed', calc_hand_value(pl.hand), d);
 		player_stat_count('star', pl.score, d);
 
 		mLinebreak(d, 4);
 		//console.log('is fixed goal', is_fixed_goal());
 		if (!is_fixed_goal()) {
-			let d2 = mDiv(d, { padding: 4, display: 'flex' }, `d_${uname}_goals`);
+			let d2 = mDiv(d, { padding: 4, display: 'flex' }, `d_${plname}_goals`);
 			let sz = 16;
 			let styles_done = { h: sz, fz: sz, maleft: 6, fg: 'grey', 'text-decoration': 'line-through green', weight: 'bold' };
 			let styles_todo = { h: sz, fz: sz, maleft: 6, border: 'red', weight: 'bold', padding: 4, 'line-height': sz }; // 'text-decoration': 'underline red', 
@@ -167,7 +166,7 @@ function ferro_stats_new(z, dParent) {
 			}
 		}
 
-		if (fen.turn.includes(uname)) { show_hourglass(uname, d, 30, { left: -3, top: 0 }); }
+		if (fen.turn.includes(plname)) { show_hourglass(plname, d, 30, { left: -3, top: 0 }); }
 	}
 }
 function fp_card_selection() {
@@ -200,15 +199,6 @@ function fp_card_selection() {
 			} else {
 				rollback();
 				ferro_transaction_error(DA.min_goals, DA.transactionlist, 'turn_send_move_update');
-
-				// let msg_min_req = `You need to fulfill the minimum requirement of ${DA.min_goals.join(' or ')}!`;
-				// let l = DA.transactionlist;
-				// let [jolly,auflegen,anlegen]=[l.includes('jolly'),l.includes('auflegen'),l.includes('anlegen')];
-				// let msg_action = anlegen?'anlegen requires auflegen von minimum first!':
-				// 'jolly'?'to exchange a jolly you need to be able to auflegen!':
-				// 'your sets are not good enough!';
-
-				// select_error(`your transaction was ILLEGAL!!! ${msg_min_req} ${msg_action} ...performing rollback...`,turn_send_move_update,true);
 
 			}
 		} else {
@@ -354,7 +344,7 @@ function ferro_change_to_turn_round() {
 
 	for (const plname of fen.canbuy) {
 		let pl = fen.players[plname];
-		if (pl.buy) {
+		if (pl.buy==true) {
 			let card = fen.deck_discard.shift();
 			pl.hand.push(card);
 			deck_deal_safe_ferro(fen, plname, 1);
@@ -376,6 +366,7 @@ function ferro_change_to_turn_round() {
 function ferro_ack_uplayer() {
 	let [A, fen, stage, uplayer] = [Z.A, Z.fen, Z.stage, Z.uplayer];
 	fen.players[uplayer].buy = A.selected[0] == 0;
+
 	ack_player(uplayer);
 }
 
@@ -434,7 +425,7 @@ function end_of_round_ferro() {
 	let pl = fen.players[uplayer];
 	//score all players
 	calc_ferro_score(uplayer);
-	ari_history_list([`${uplayer} wins the round`], 'action');
+	ari_history_list([`${uplayer} wins the round`], 'round');
 	Z.stage = 'card_selection';
 	fen.round_winner = uplayer;
 	fen.plorder = arrCycle(plorder, 1);
@@ -456,7 +447,7 @@ function end_of_round_ferro() {
 	Z.round += 1;
 	//console.log('starter',starter,'turn',Z.turn,'round',Z.round);
 	if (Z.round > Z.options.maxrounds) {
-		ari_history_list([`game over`], 'action');
+		ari_history_list([`game over`], 'game');
 		Z.stage = 'game_over';
 		fen.winners = find_players_with_min_score();
 	}
@@ -599,7 +590,7 @@ function ferro_process_set(keys) {
 
 	//console.log('journey is finally', j)
 
-	ari_history_list([`${uplayer} reveals ${j.join(', ')}`], 'action');
+	ari_history_list([`${uplayer} reveals ${j.join(', ')}`], 'auflegen');
 	Z.stage = 'card_selection';
 
 }
@@ -611,7 +602,7 @@ function ferro_process_jolly(key, j) {
 	//console.log(`${a} replaced by ${b}`);
 	arrReplace1(fen.players[uplayer].hand, a, b);
 	replace_jolly(key, j);
-	ari_history_list([`${uplayer} replaces for jolly`], 'action');
+	ari_history_list([`${uplayer} replaces for jolly`], 'jolly');
 	Z.stage = 'card_selection';
 }
 function ferro_transaction_error(goals, transactions, callbackname) {

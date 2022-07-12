@@ -290,6 +290,30 @@ const SHERIFF = {
 }
 //#endregion cards
 
+//#region from base m,i,mg
+function mgSvg(dParent, attrs) { return mgTag('svg', dParent, attrs); }
+function mgText(text, dParent, attrs, styles) { return mgTag('text', dParent, attrs, styles, text); }
+function mgTag(tag, dParent, attrs, styles = {}, innerHTML) {
+	let elem = gCreate(tag);
+	mStyle(elem, styles);
+	mAttrs(elem, attrs);
+	if (isdef(innerHTML)) elem.innerHTML = innerHTML;
+	if (isdef(dParent)) mAppend(dParent, elem);
+	return elem;
+}
+function iSvg(i) { return isdef(i.live) ? i.live.svg : isdef(i.svg) ? i.svg : i; }
+function iG(i) { return isdef(i.live) ? i.live.g : isdef(i.g) ? i.g : i; }
+function mAttrs(elem, attrs) { for (const k in attrs) { elem.setAttribute(k, attrs[k]); } }
+function mBackground(bg, fg) { mStyle(document.body, { bg: bg, fg: fg }); }
+function mBoxFromMargins(dParent, t, r, b, l, styles, id, inner, classes) {
+	let d = mDiv(dParent, { position: 'absolute', top: t, right: r, bottom: b, left: l }, id, inner, classes);
+	let pos = dParent.style.position;
+	if (pos != 'absolute') dParent.style.position = 'relative';
+	if (isdef(styles)) mStyle(d, styles);
+	return d;
+}
+//#endregion
+
 //#region m prefix (DOM)
 function mAnimate(elem, prop, valist, callback, msDuration = 1000, easing = 'cubic-bezier(1,-0.03,.86,.68)', delay = 0, forwards = 'none') {
 	//usage: mAnimate(elem, 'opacity', [0, 0, 1], funcNull, 2000, 'ease-in', 6000, 'both');
@@ -340,10 +364,10 @@ function old_mButtonX(dParent, pos = 'tr', handler = null, defaultBehavior = 'hi
 	mPlace(d2, pos, 10);
 	return d2;
 }
-function mButtonX(dParent, handler,pos='tr', sz = 25) {
-	let d2 = mDiv(dParent, { fg:'white', w: sz, h: sz, pointer: 'cursor' }, null, `<i class="fa fa-times" style="font-size:${sz}px;"></i>`, 'btnX');
+function mButtonX(dParent, handler, pos='tr', sz = 25, color='white') {
+	let d2 = mDiv(dParent, { fg:color, w: sz, h: sz, pointer: 'cursor' }, null, `<i class="fa fa-times" style="font-size:${sz}px;"></i>`, 'btnX');
 	//let d2 = mDiv(dParent, { fg:'white', w: sz, h: sz, pointer: 'cursor' }, null, 'CLOSE', 'btnX');
-	mPlace(d2, pos, 10);
+	mPlace(d2, pos, 2);
 	d2.onclick = handler;
 	return d2;
 }
@@ -357,6 +381,7 @@ function mCard(dParent, styles, classtr = '', id = null) {
 	// console.log('classes', classes);
 	return mDiv(dParent, styles, id, null, classes);
 }
+function mCardText(ckey,sz,color){ return is_jolly(ckey)? '<span style="font-family:Algerian">jolly</span>':`${ckey[0]}${mSuit(ckey,sz,color)}`;}
 function mCenterFlex(d, hCenter = true, vCenter = false, wrap = true) {
 	let styles = { display: 'flex' };
 	if (hCenter) styles['justify-content'] = 'center';
@@ -872,59 +897,14 @@ function mStamp(d1, text, color, sz) {
 	//mClass(d2,`${color}stamp`);
 
 }
+function mSuit(ckey,sz=20,color=null){
+	let suit = ckey.length == 1?ckey:ckey[1];
+	let di = {S:'&spades;',H:'&hearts;',D:'&diams;',C:'&clubs;'};
+	color = valf(color,suit == 'H' || suit == 'D'?'red':'black');
+	let html = `<span style='color:${color};font-size:${sz}px'>${di[suit]}</span>`;
+	return html;
 
-function mSuit(key, d, styles, pos, classes) {
-	let svg = gCreate('svg');
-	//svg.setAttribute('height', 25); //geht!!!
-	let el = gCreate('use');
-	el.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', '#' + key);
-	mAppend(svg, el);
-
-	console.log('el', el); return;
-
-	if (isdef(d)) mAppend(d, svg);
-	styles = valf(styles, { bg: 'random' });
-	let sz = isdef(styles.h) ? styles.h : isdef(styles.sz) ? styles.sz : styles.w;
-	if (isdef(sz)) { el.setAttribute('height', sz); svg.setAttribute('sz', sz); }
-	mStyle(el, styles);
-
-	if (isdef(classes)) mClass(svg, classes);
-	if (isdef(d)) { mAppend(d, svg); gSizeToContent(svg); }
-
-	//geht nur fuer eck positions!
-	if (isdef(pos)) { mSuitPos(svg, pos); }
-	// 	pos = pos.toLowerCase();
-	// 	let di={t:'top',b:'bottom',r:'right',l:'left'};
-	// 	svg.style.position = 'absolute';
-	// 	svg.style[di[pos[0]]] = svg.style[di[pos[1]]] = 0;
-	// }
-	return svg;
 }
-function mSuitPos(svg, pos) {
-	// pos is: tl, tb, bl, br or cl, cr, tc, bc, cc
-	pos = pos.toLowerCase();
-
-	if (pos[0] == 'c' || pos[1] == 'c') {
-		let dCard = svg.parentNode;
-		let r = getRect(dCard);
-		let [wCard, hCard] = [r.w, r.h];
-		let [wSym, hSym] = [svg.getAttribute('width'), svg.getAttribute('height')];
-
-		switch (pos) {
-			case 'cc': mStyle(svg, { position: 'absolute', left: (wCard - wSym) / 2, top: (hCard - hSym) / 2 }); break;
-			case 'tc': mStyle(svg, { position: 'absolute', left: (wCard - wSym) / 2, top: 0 }); break;
-			case 'bc': mStyle(svg, { position: 'absolute', left: (wCard - wSym) / 2, bottom: 0 }); break;
-			case 'cl': mStyle(svg, { position: 'absolute', left: 0, top: (hCard - hSym) / 2 }); break;
-			case 'cr': mStyle(svg, { position: 'absolute', right: 0, top: (hCard - hSym) / 2 }); break;
-		}
-		return;
-	}
-	let di = { t: 'top', b: 'bottom', r: 'right', l: 'left' };
-	svg.style.position = 'absolute';
-	svg.style[di[pos[0]]] = svg.style[di[pos[1]]] = 0;
-}
-function mSuitSize(suit, sz) { suit.setAttribute('sz', sz); suit.firstChild.setAttribute('height', sz); gSizeToContent(suit); }
-
 function mSize(d, w, h, unit = 'px', sizing) { if (nundef(h)) h = w; mStyle(d, { width: w, height: h }, unit); if (isdef(sizing)) setRect(d, sizing); }
 const STYLE_PARAMS = {
 	align: 'text-align',
@@ -3349,7 +3329,7 @@ function choose(arr, n, excepti) { return rChoose(arr, n, null, excepti); }
 function chooseRandom(arr) { return rChoose(arr); }
 function coin(percent = 50) { let r = Math.random(); r *= 100; return r < percent; }
 function rAlphanums(n) { return rChoose(toLetters('0123456789abcdefghijklmnopq'), n); }
-function rCard(postfix = 'n', ranks = 'A23456789TJQK', suits = 'HSDC') { return rChoose(ranks) + rChoose(suits) + postfix; }
+function rCard(postfix = 'n', ranks = '*A23456789TJQK', suits = 'HSDC') { return rChoose(ranks) + rChoose(suits) + postfix; }
 function rRank(ranks = 'A23456789TJQK') { return rChoose(ranks); }
 function rSuit(suit = 'HSDC') { return rChoose(suit); }
 function rCoin(percent = 50) {
