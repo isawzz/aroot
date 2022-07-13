@@ -8072,7 +8072,9 @@ ok - history fuer aristo!!!
 ok 1. ph,hp,prh,hrp sind die layouts
 ok - show_history soll layouts haben
 ok - mach eine clientData var fuerr das history layout!!!
-940: *10:15 AM 7/13/2022-
+940: *10:15 AM 7/13/2022-10:23 AM 7/13/2022
+941: *10:23 AM 7/13/2022-
+- ferro bug bei anlegen!!!! -1
 
 - remove chose not to complement
 
