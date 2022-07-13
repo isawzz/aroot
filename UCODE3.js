@@ -1,3 +1,20 @@
+function _show_history(fen, dParent) {
+	if (!isEmpty(fen.history)) {
+		let html = '';
+		for (const arr of jsCopy(fen.history).reverse()) {
+			html += arr;//html+=`<h1>${k}</h1>`;
+			//for (const line of arr) { html += `<p>${line}</p>`; }
+		}
+		// let dHistory =  mDiv(dParent, { padding: 6, margin: 4, bg: '#ffffff80', fg: 'black', hmax: 400, 'overflow-y': 'auto', wmin: 240, rounding: 12 }, null, html); //JSON.stringify(fen.history));
+		let dHistory = mDiv(dParent, { paleft: 12, bg: colorLight('#EDC690', .5), box:true, matop: 10, patop: 10, w: '100%', hmax: `calc( 100vh - 250px )`, 'overflow-y': 'auto', wmin: 260 }, null, html); //JSON.stringify(fen.history));
+		// let dHistory =  mDiv(dParent, { padding: 6, margin: 4, bg: '#ffffff80', fg: 'black', hmax: 400, 'overflow-y': 'auto', wmin: 240, rounding: 12 }, null, html); //JSON.stringify(fen.history));
+		//mNode(fen.history, dHistory, 'history');
+		UI.dHistoryParent = dParent;
+		UI.dHistory = dHistory;
+		console.log('dHistory', dHistory);
+	}
+
+}
 
 //#region ferro ausmisten
 function matches_on_either_end_new(key, j, rankstr = 'A23456789TJQKA') {

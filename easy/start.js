@@ -1,6 +1,7 @@
 onload = start; var FirstLoad = true;
 
 function start() { let uname = localStorage.getItem('uname'); if (isdef(uname)) U = { name: uname }; phpPost({ app: 'simple' }, 'assets'); }
+//function start() { let uname = null; if (isdef(uname)) U = { name: uname }; phpPost({ app: 'simple' }, 'assets'); }
 function start_with_assets() {
 
 	show_home_logo();
@@ -75,7 +76,7 @@ function gamestep() {
 	if (Z.game == 'spotit' && Z.uname == Z.host && Z.stage == 'init') show('bSpotitStart');
 	else if (Z.game == 'bluff' && Z.uname == Z.host && Z.stage == 1) show('bClearAck');
 	else if (['ferro','bluff','aristo'].includes(Z.game)) {
-		console.log('random should show because game is', Z.game)
+		//console.log('random should show because game is', Z.game)
 		show('bRandomMove');
 	}
 
@@ -86,9 +87,6 @@ function gamestep() {
 
 	//console.log('Z',Z)
 	if (Z.uname == Z.host) show('dHostButtons'); else hide('dHostButtons');
-
-
-
 
 	show_title();
 	show_role();
@@ -112,7 +110,7 @@ function gamestep() {
 		if (Z.options.zen_mode != 'yes') autopoll();
 	}
 
-	landing();
+	//landing();
 
 }
 

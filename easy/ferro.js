@@ -7,7 +7,7 @@ function ferro() {
 		//calc how many decks are needed (basically 1 suit per person, plus 1 for the deck)
 		let n = players.length;
 		let num_decks = fen.num_decks = 2 + (n >= 9 ? 2 : n >= 7 ? 1 : 0); // 2 + (n > 5 ? Math.ceil((n - 5) / 2) : 0); //<=5?2:Math.max(2,Math.ceil(players.length/3));
-		console.log('num_decks', num_decks);
+		//console.log('num_decks', num_decks);
 		let deck = fen.deck = create_fen_deck('n', num_decks, 4 * num_decks);
 		let deck_discard = fen.deck_discard = [];
 		shuffle(deck);
@@ -169,156 +169,6 @@ function ferro_stats_new(z, dParent) {
 		if (fen.turn.includes(plname)) { show_hourglass(plname, d, 30, { left: -3, top: 0 }); }
 	}
 }
-function fp_card_selection() {
-	let [plorder, stage, A, fen, uplayer, pl] = [Z.plorder, Z.stage, Z.A, Z.fen, Z.uplayer, Z.fen.players[Z.uplayer]];
-
-	let selitems = A.selectedCards = A.selected.map(x => A.items[x]);
-	let cards = selitems.map(x => x.o);
-	let cmd = A.last_selected.key;
-
-	if (cmd == 'discard') {
-		//if only 1 card selected, discard it
-		//first deal with error cases!
-		if (selitems.length != 1) { select_error('select exactly 1 hand card to discard!'); return; }
-
-		let item = selitems[0];
-		if (!item.path.includes(`${uplayer}.hand`)) { select_error('select a hand card to discard!', () => { ari_make_unselected(item); A.selected = []; }); return; }
-
-		//here I have to check for transaction and commit or rollback
-		//if transactionlist is non-empty, check if player's minimum req has been fullfilled
-		//console.log('discard', DA.transactionlist);
-		assertion(DA.transactionlist.length == 0 || DA.simulate, '!!!!!!!!!!!!!!!!transactionlist is not empty!');
-		if (DA.transactionlist.length > 0) {
-			//console.log('VERIFYING TRANSACTION............')
-			//console.log('DA.transactionlist', jsCopy(DA.transactionlist));
-			let legal = verify_min_req();
-			clear_transaction();
-			if (legal) {
-				ferro_process_discard(); //discard selected card
-				turn_send_move_update();
-			} else {
-				rollback();
-				ferro_transaction_error(DA.min_goals, DA.transactionlist, 'turn_send_move_update');
-
-			}
-		} else {
-			//console.log('should process discard!!!')
-			ferro_process_discard(); //discard selected card
-			turn_send_move_update();
-		}
-	} else if (cmd == 'jolly') {
-
-		//first, error cases: have to select exactly 2 cards
-		if (selitems.length != 2) { select_error('select a hand card and the jolly you want!'); return; }
-		//one card has to be hand, the other jolly from a group
-		let handcard = selitems.find(x => !is_joker(x.o) && x.path.includes(`${uplayer}.hand`));
-		let jolly = selitems.find(x => is_joker(x.o) && !x.path.includes(`${uplayer}.hand`));
-		if (!isdef(handcard) || !isdef(jolly)) { select_error('select a hand card and the jolly you want!'); return; }
-
-		let key = handcard.key;
-		let j = path2fen(fen, jolly.path);
-		if (!jolly_matches(key, j)) { select_error('your card does not match jolly!'); return; }
-
-		//if player has not yet played a set, simulate transaction!!!!
-		if (pl.journeys.length == 0) { add_transaction(cmd); }
-		ferro_process_jolly(key, j);
-		turn_send_move_update();
-
-	} else if (cmd == 'auflegen') {
-
-		if (selitems.length < 3) { select_error('select cards to form a group!'); return; }
-		// console.log('HAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA', cards.map(x=>x.key))
-		let newset = ferro_is_set(cards, Z.options.jokers_per_group);
-
-		//console.log('nach is_set', newset);
-
-		//console.log('is_set', is_set);
-		if (!newset) { select_error('this is NOT a valid set!'); return; }
-
-		//special case fuer 7R: geht nur in 7R round wenn fixed order
-		let is_illegal = is_correct_group_illegal(cards);
-		//console.log('is_legal', is_legal);
-
-		if (is_illegal) { select_error(is_illegal); return; }
-
-		if (pl.journeys.length == 0) { add_transaction(cmd); }
-		let keys = newset; //cards.map(x => x.key);
-		ferro_process_set(keys);
-		turn_send_move_update();
-
-	} else if (cmd == 'anlegen') {
-
-		if (selitems.length < 1) { select_error('select at least 1 hand card and the first card of a group!'); return; }
-
-		let handcards = selitems.filter(x => !is_joker(x.o) && x.path.includes(`${uplayer}.hand`));
-		let groupcard = selitems.find(x => !is_joker(x.o) && !x.path.includes(`${uplayer}.hand`));
-		if (isEmpty(handcards) || !isdef(groupcard)) { select_error('select 1 or more hand cards and the first card of a group!'); return; }
-
-		//test try_anlegen for all handcards
-		//if more than one handcard, test if all have the same rank
-		let hand_rank = handcards[0].key[0];
-		let handcards_same_rank = handcards.every(x => x.key[0] == hand_rank);
-		let j = path2fen(fen, groupcard.path);
-
-		if (is_group(j)) {
-			if (!handcards_same_rank) { select_error('all hand cards must have the same rank!'); return; }
-
-			let group_rank = groupcard.key[0];
-			if (group_rank == hand_rank) {
-				//console.log('anlegen is legal');
-
-				for (const h of handcards) {
-					elem_from_to(h.key, fen.players[uplayer].hand, j);
-				}
-				turn_send_move_update();
-				return;
-			} else {
-				select_error('hand cards do not match the group!');
-				return;
-			}
-		} else { //its a sequence!
-			//sort hand cards
-			//more than 1 hand_card!
-			let suit = get_sequence_suit(j);
-			let handkeys = handcards.map(x => x.key); //console.log('suit',suit,'keys', keys);
-			if (firstCond(handkeys, x => x[1] != suit)) { select_error('hand card suit does not match the group!'); return; }
-
-			//look if first key is a jolly
-			let ij = j.findIndex(x => is_jolly(x));
-			let j_has_jolly = ij > -1;
-			let rank_to_be_relaced_by_jolly = j_has_jolly ? find_jolly_rank(j) : null;
-
-			let r = rank_to_be_relaced_by_jolly;
-			if (r) {
-				j[ij] = r + suit + 'n';
-			}
-
-			//now should have a seequence without jolly!
-			keys = handkeys.concat(j);
-			let allcards = keys.map(x => ferro_get_card(x)); // handcards.concat(j.map(x=>ferro_get_card(x)));
-			let jneeded = sortCardItemsToSequence(allcards, undefined, 0);
-
-			//now replace back if r != null
-			//console.log('new sequence', allcards.map(x => x.key), 'jneeded', jneeded);
-			if (jneeded == 0) {
-				//if r != null need to replace r key by * in final sequence
-				let seq = allcards.map(x => x.key);
-				if (r) { arrReplace1(seq, r + suit + 'n', '*Hn'); }
-				//console.log('new sequence', seq);
-				j.length = 0;
-				j.push(...seq);
-				for (const k of handkeys) { removeInPlace(fen.players[uplayer].hand, k); }
-				turn_send_move_update();
-				//console.log('YES!');
-
-			} else {
-				if (r != null) { j[ij] = '*Hn'; }
-				select_error('hand cards cannot be added to sequence!');
-				return;
-			}
-		}
-	}
-}
 
 //#region ack NEW!
 function ferro_change_to_ack_round() {
@@ -453,6 +303,158 @@ function end_of_round_ferro() {
 	}
 
 }
+function fp_card_selection() {
+	let [plorder, stage, A, fen, uplayer, pl] = [Z.plorder, Z.stage, Z.A, Z.fen, Z.uplayer, Z.fen.players[Z.uplayer]];
+
+	let selitems = A.selectedCards = A.selected.map(x => A.items[x]);
+	let cards = selitems.map(x => x.o);
+	let cmd = A.last_selected.key;
+
+	if (cmd == 'discard') {
+		//if only 1 card selected, discard it
+		//first deal with error cases!
+		if (selitems.length != 1) { select_error('select exactly 1 hand card to discard!'); return; }
+
+		let item = selitems[0];
+		if (!item.path.includes(`${uplayer}.hand`)) { select_error('select a hand card to discard!', () => { ari_make_unselected(item); A.selected = []; }); return; }
+
+		//here I have to check for transaction and commit or rollback
+		//if transactionlist is non-empty, check if player's minimum req has been fullfilled
+		//console.log('discard', DA.transactionlist);
+		assertion(DA.transactionlist.length == 0 || DA.simulate, '!!!!!!!!!!!!!!!!transactionlist is not empty!');
+		if (DA.transactionlist.length > 0) {
+			//console.log('VERIFYING TRANSACTION............')
+			//console.log('DA.transactionlist', jsCopy(DA.transactionlist));
+			let legal = verify_min_req();
+			clear_transaction();
+			if (legal) {
+				ferro_process_discard(); //discard selected card
+				turn_send_move_update();
+			} else {
+				rollback();
+				ferro_transaction_error(DA.min_goals, DA.transactionlist, 'turn_send_move_update');
+
+			}
+		} else {
+			//console.log('should process discard!!!')
+			ferro_process_discard(); //discard selected card
+			turn_send_move_update();
+		}
+	} else if (cmd == 'jolly') {
+
+		//first, error cases: have to select exactly 2 cards
+		if (selitems.length != 2) { select_error('select a hand card and the jolly you want!'); return; }
+		//one card has to be hand, the other jolly from a group
+		let handcard = selitems.find(x => !is_joker(x.o) && x.path.includes(`${uplayer}.hand`));
+		let jolly = selitems.find(x => is_joker(x.o) && !x.path.includes(`${uplayer}.hand`));
+		if (!isdef(handcard) || !isdef(jolly)) { select_error('select a hand card and the jolly you want!'); return; }
+
+		let key = handcard.key;
+		let j = path2fen(fen, jolly.path);
+		if (!jolly_matches(key, j)) { select_error('your card does not match jolly!'); return; }
+
+		//if player has not yet played a set, simulate transaction!!!!
+		if (pl.journeys.length == 0) { add_transaction(cmd); }
+		ferro_process_jolly(key, j);
+		turn_send_move_update();
+
+	} else if (cmd == 'auflegen') {
+
+		if (selitems.length < 3) { select_error('select cards to form a group!'); return; }
+		else if (pl.hand.length == selitems.length){ select_error('you need to keep a card for discard!!',clear_selection); return; }
+		// console.log('HAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA', cards.map(x=>x.key))
+		let newset = ferro_is_set(cards, Z.options.jokers_per_group);
+
+		//console.log('nach is_set', newset);
+
+		//console.log('is_set', is_set);
+		if (!newset) { select_error('this is NOT a valid set!'); return; }
+
+		//special case fuer 7R: geht nur in 7R round wenn fixed order
+		let is_illegal = is_correct_group_illegal(cards);
+		//console.log('is_legal', is_legal);
+
+		if (is_illegal) { select_error(is_illegal); return; }
+
+		if (pl.journeys.length == 0) { add_transaction(cmd); }
+		let keys = newset; //cards.map(x => x.key);
+		ferro_process_set(keys);
+		turn_send_move_update();
+
+	} else if (cmd == 'anlegen') {
+
+		if (selitems.length < 1) { select_error('select at least 1 hand card and the first card of a group!'); return; }
+		else if (pl.hand.length == selitems.length-1){ select_error('you need to keep a card for discard!!',clear_selection); return; }
+
+		let handcards = selitems.filter(x => !is_joker(x.o) && x.path.includes(`${uplayer}.hand`));
+		let groupcard = selitems.find(x => !is_joker(x.o) && !x.path.includes(`${uplayer}.hand`));
+		if (isEmpty(handcards) || !isdef(groupcard)) { select_error('select 1 or more hand cards and the first card of a group!'); return; }
+
+		//test try_anlegen for all handcards
+		//if more than one handcard, test if all have the same rank
+		let hand_rank = handcards[0].key[0];
+		let handcards_same_rank = handcards.every(x => x.key[0] == hand_rank);
+		let j = path2fen(fen, groupcard.path);
+
+		if (is_group(j)) {
+			if (!handcards_same_rank) { select_error('all hand cards must have the same rank!'); return; }
+
+			let group_rank = groupcard.key[0];
+			if (group_rank == hand_rank) {
+				//console.log('anlegen is legal');
+
+				for (const h of handcards) {
+					elem_from_to(h.key, fen.players[uplayer].hand, j);
+				}
+				turn_send_move_update();
+				return;
+			} else {
+				select_error('hand cards do not match the group!');
+				return;
+			}
+		} else { //its a sequence!
+			//sort hand cards
+			//more than 1 hand_card!
+			let suit = get_sequence_suit(j);
+			let handkeys = handcards.map(x => x.key); //console.log('suit',suit,'keys', keys);
+			if (firstCond(handkeys, x => x[1] != suit)) { select_error('hand card suit does not match the group!'); return; }
+
+			//look if first key is a jolly
+			let ij = j.findIndex(x => is_jolly(x));
+			let j_has_jolly = ij > -1;
+			let rank_to_be_relaced_by_jolly = j_has_jolly ? find_jolly_rank(j) : null;
+
+			let r = rank_to_be_relaced_by_jolly;
+			if (r) {
+				j[ij] = r + suit + 'n';
+			}
+
+			//now should have a seequence without jolly!
+			keys = handkeys.concat(j);
+			let allcards = keys.map(x => ferro_get_card(x)); // handcards.concat(j.map(x=>ferro_get_card(x)));
+			let jneeded = sortCardItemsToSequence(allcards, undefined, 0);
+
+			//now replace back if r != null
+			//console.log('new sequence', allcards.map(x => x.key), 'jneeded', jneeded);
+			if (jneeded == 0) {
+				//if r != null need to replace r key by * in final sequence
+				let seq = allcards.map(x => x.key);
+				if (r) { arrReplace1(seq, r + suit + 'n', '*Hn'); }
+				//console.log('new sequence', seq);
+				j.length = 0;
+				j.push(...seq);
+				for (const k of handkeys) { removeInPlace(fen.players[uplayer].hand, k); }
+				turn_send_move_update();
+				//console.log('YES!');
+
+			} else {
+				if (r != null) { j[ij] = '*Hn'; }
+				select_error('hand cards cannot be added to sequence!');
+				return;
+			}
+		}
+	}
+}
 function old_ensure_buttons_visible_ferro() {
 	if (isdef(mBy('dbPlayer'))) return;
 	let [plorder, stage, A, fen, uplayer, pl] = [Z.plorder, Z.stage, Z.A, Z.fen, Z.uplayer, Z.fen.players[Z.uplayer]];
@@ -494,7 +496,7 @@ function ensure_buttons_visible_for(plname) {
 	let fen = Z.fen;
 	let pl = fen.players[plname];
 	let plui = UI.players[plname];
-	console.log('plui', plui);
+	//console.log('plui', plui);
 	if (pl.hand.length <= 1) return; // only display for hand size > 1
 	let d = iDiv(plui);
 	mStyle(d, { position: 'relative' })

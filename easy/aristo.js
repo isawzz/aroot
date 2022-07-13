@@ -44,9 +44,13 @@ function aristo() {
 		fen.herald = fen.plorder[0];
 		fen.heraldorder = jsCopy(fen.plorder);
 
-		if (exp_commissions(options)) { [fen.stage, fen.turn] = [23, [fen.plorder[0]]]; fen.comm_setup_num = 3; }
-		else if (exp_rumors(options)) { [fen.stage, fen.turn] = [24, [fen.plorder[0]]]; }
-		else[fen.stage, fen.turn] = set_journey_or_stall_stage(fen, options, fen.phase);
+		if (exp_commissions(options)) {
+			ari_history_list([`commission trading starts`], 'commissions', fen);
+			[fen.stage, fen.turn] = [23, [fen.plorder[0]]]; fen.comm_setup_num = 3;
+		} else if (exp_rumors(options)) {
+			ari_history_list([`gossiping starts`], 'rumors', fen);
+			[fen.stage, fen.turn] = [24, [fen.plorder[0]]];
+		} else[fen.stage, fen.turn] = set_journey_or_stall_stage(fen, options, fen.phase);
 
 		return fen;
 	}
@@ -224,6 +228,7 @@ function aristo() {
 
 	return { state_info: aristo_state, setup: aristo_setup, present: aristo_present, present_player: ari_present_player, check_gameover: aristo_check_gameover, stats: ari_player_stats, activate_ui: aristo_activate };
 }
+
 
 //#region actions
 function ari_get_actions(uplayer) {
@@ -742,19 +747,19 @@ function post_church() {
 
 	//which of items is a card and which one is a string item?
 	let card = items.find(x => x.path && x.path.includes('church')); if (isdef(card)) card = card.key;
-	let cand = items.length > 1 ? items.find(x => !x.path) : fen.candidates[0]; 
+	let cand = items.length > 1 ? items.find(x => !x.path) : fen.candidates[0];
 	if (isdef(cand) && isDict(cand)) cand = cand.key;
 
 	//console.log('card', card, 'cand', cand);
 
 	if (nundef(card) || nundef(cand)) {
-		select_error(`You must select a card ${items.length>1?'and a candidate':''}!`);
+		select_error(`You must select a card ${items.length > 1 ? 'and a candidate' : ''}!`);
 		return;
 	}
 
 	//card has to be removed from church and given to cand hand
 	elem_from_to(card, fen.church, fen.players[cand].hand);
-	ari_history_list([`${cand} receives ${card} from church!`], 'newcards');
+	ari_history_list([`${cand} receives ${card} from church!`], 'new cards');
 
 	//remove cand from toBeSelected
 	removeInPlace(fen.toBeSelected, cand);
@@ -767,7 +772,7 @@ function post_church() {
 		let cand = fen.toBeSelected[0];
 		let card = fen.church[0];
 		elem_from_to(card, fen.church, fen.players[cand].hand);
-		ari_history_list([`${cand} receives ${card} from church!`], 'newcards');
+		ari_history_list([`${cand} receives ${card} from church!`], 'new cards');
 
 		//proceed to next stage after church! also mark this round not to contain any more churches!!!
 		//list all properties related to churches in fen.players and fen: delete them!
@@ -849,17 +854,17 @@ function post_tide() {
 				let buildings = arrFlatten(get_values(pl.buildings));
 				console.log('buildings', buildings);
 				if (isEmpty(buildings)) {
-					ari_history_list([`${minplayer} does not have a building to downgrade!`], 'tide_minplayer_tide');
+					ari_history_list([`${minplayer} does not have a building to downgrade!`], 'downgrade');
 					proceed_to_newcards_selection();
 					return;
 				}
 
-				ari_history_list([`${minplayer} must downgrade a building to tide ${min}!`], 'tide_minplayer_tide');
+				ari_history_list([`${minplayer} must downgrade a building to tide ${min}!`], 'downgrade');
 				Z.stage = 22;
 
 			} else {
 				//must select more cards to tide!
-				ari_history_list([`${minplayer} must tide more cards to reach ${min}!`], 'tide_minplayer_tide');
+				ari_history_list([`${minplayer} must tide more cards to reach ${min}!`], 'tide');
 				Z.stage = 21;
 				//
 			}
@@ -900,7 +905,7 @@ function post_tide_minimum() {
 	console.log('tide_minimum', fen.tide_minimum);
 	console.log('val', pl.tides.val);
 
-	if (newval < fen.tide_minimum){
+	if (newval < fen.tide_minimum) {
 		select_error(`you need to tide at least ${fen.tide_minimum} to reach minimum`);
 		return;
 	}
@@ -920,7 +925,8 @@ function post_complementing_market_after_church() {
 	for (const ckey of selectedKeys) {
 		elem_from_to(ckey, fen.players[uplayer].hand, fen.players[uplayer].stall);
 	}
-	ari_history_list([`${uplayer} chose ${selectedKeys.length == 0 ? 'NOT ' : ''} to complement stall`], 'complement_stall');
+	//ari_history_list([`${uplayer} chose ${selectedKeys.length == 0 ? 'NOT ' : ''} to complement stall`], 'complement stall');
+	if (selectedKeys.length > 0) ari_history_list([`${uplayer} complements stall`], 'complement stall');
 
 	let next = get_next_player(Z, uplayer);
 	if (next == plorder[0]) {
@@ -1085,8 +1091,13 @@ function process_comm_setup() {
 		delete fen.comm_setup_di;
 		delete fen.comm_setup_num;
 
-		if (exp_rumors) { [Z.stage, Z.turn] = [24, [plorder[0]]]; }
-		else { [Z.stage, Z.turn] = set_journey_or_stall_stage(fen, Z.options, fen.phase); }
+		ari_history_list([`commission trading ends`], 'commissions');
+
+		if (exp_rumors) { 
+			[Z.stage, Z.turn] = [24, [plorder[0]]]; 
+			ari_history_list([`gossiping starts`], 'rumors');
+		
+		}else { [Z.stage, Z.turn] = set_journey_or_stall_stage(fen, Z.options, fen.phase); }
 
 	} else if (next == plorder[0]) {
 		//next commission round starts
@@ -1386,11 +1397,14 @@ function ari_get_max_journey_length(fen, uplayer) {
 	let sorted_journeys = sortByDescending(pl.journeys.map(x => ({ arr: x, len: x.length })), 'len');
 	return isEmpty(pl.journeys) ? 0 : sorted_journeys[0].len;
 }
-function ari_history_list(lines, title = '') {
-	let fen = Z.fen;
+function ari_history_list(lines, title = '',fen) {
+	if (nundef(fen)) fen = Z.fen;
 	if (nundef(fen.history)) fen.history = [];
-	let html = beautify_history(lines,title, fen,Z.uplayer);
-	fen.history.push(html);
+
+	// let html = beautify_history(lines,title, fen,Z.uplayer);
+	// fen.history.push(html);
+	fen.history.push({ title: title, lines: lines });
+
 	//lookupSetOverride(Z.fen,['history',title],lines);
 	//console.log('____history', fen.history);
 }
@@ -1454,7 +1468,7 @@ function ari_next_phase() {
 
 				let n = fen.players[uplayer].buildings[k].length;
 				fen.players[uplayer].coins += n;
-				if (n > 0) ari_history_list([`${uplayer} gets ${n} coins for ${k} buildings`]);
+				if (n > 0) ari_history_list([`${uplayer} gets ${n} coins for ${k} buildings`], 'payout');
 			}
 		}
 
@@ -1462,7 +1476,7 @@ function ari_next_phase() {
 		[Z.stage, Z.turn] = set_journey_or_stall_stage(fen, Z.options, Z.phase);
 	} else {
 		//gesamte runde fertig: herald moves!
-		fen.herald = ari_move_herald(fen, uplayer); 
+		fen.herald = ari_move_herald(fen, uplayer);
 		fen.plorder = jsCopy(fen.heraldorder);
 		ari_add_harvest_cards(fen);
 		Z.phase = 'king';
@@ -2219,7 +2233,7 @@ function post_stall_selected() {
 	ensure_stallSelected(fen);
 	fen.stallSelected.push(uplayer);
 
-	ari_history_list([`${uplayer} puts up a stall for ${selectedKeys.length} action${plural(selectedKeys.length)}`], 'stall');
+	ari_history_list([`${uplayer} puts up a stall for ${selectedKeys.length} action${plural(selectedKeys.length)}`], 'market');
 
 	//if all players have selected, calc stall values and set uplayer to player with minimum
 	if (is_stall_selection_complete()) {
@@ -2247,6 +2261,9 @@ function ari_start_church_stage() {
 	let [fen] = [Z.fen];
 	let order = fen.plorder = fen.church_order = determine_church_turn_order();
 	[Z.turn, Z.stage] = [[order[0]], 17];
+
+	ari_history_list([`inquisition starts!`], 'church');
+
 	turn_send_move_update();
 }
 //#endregion
@@ -2448,6 +2465,9 @@ function process_rumors_setup() {
 		}
 		delete fen.rumor_setup_di;
 		delete fen.rumor_setup_receivers;
+		ari_history_list([`gossiping ends`], 'rumors');
+
+
 		[Z.stage, Z.turn] = set_journey_or_stall_stage(fen, Z.options, fen.phase);
 	} else if (isEmpty(remaining)) {
 		//next rumor round starts
@@ -2728,14 +2748,14 @@ function ui_get_rumors_and_players_items(uplayer) {
 	}
 
 	let players = [];
-	let received = valf(Z.fen.rumor_setup_receivers,[]);
-	for(const plname in UI.players) {
+	let received = valf(Z.fen.rumor_setup_receivers, []);
+	for (const plname in UI.players) {
 		if (plname == uplayer || received.includes(plname)) continue;
 		players.push(plname);
 	}
 	items = items.concat(ui_get_string_items(players));
 
-	assertion(comm.items.length == players.length,'irgendwas stimmt nicht mit rumors verteilung!!!!',players,comm)
+	assertion(comm.items.length == players.length, 'irgendwas stimmt nicht mit rumors verteilung!!!!', players, comm)
 
 	reindex_items(items);
 	return items;

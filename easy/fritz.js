@@ -327,7 +327,7 @@ function end_of_round_fritz(plname) {
 	let pl = fen.players[uplayer];
 
 	calc_fritz_score();
-	ari_history_list([`${plname} wins the round`], 'action');
+	ari_history_list([`${plname} wins the round`], 'round over');
 	fen.round_winner = plname;
 
 	plorder = fen.plorder = jsCopy(fen.roundorder); //restore fen.plorder to contain all players
@@ -335,7 +335,7 @@ function end_of_round_fritz(plname) {
 	if (Z.round >= fen.maxrounds) {
 		//game end!
 		fen.winners = find_players_with_min_score();
-		ari_history_list([`game over: ${fen.winners.join(', ')} win${fen.winners.length == 1 ? 's' : ''}`], 'action');
+		ari_history_list([`game over: ${fen.winners.join(', ')} win${fen.winners.length == 1 ? 's' : ''}`], 'game over');
 		Z.stage = 'game_over';
 		console.log('end of game: stage', Z.stage, '\nplorder', fen.plorder, '\nturn', Z.turn);
 	} else {
@@ -417,7 +417,7 @@ function end_of_turn_fritz() {
 		ckey = ui_discarded_card.key;
 		//console.log('discard', discard);
 		elem_from_to(ckey, fen.players[uplayer].hand, fen.deck_discard);
-		//ari_history_list([`${uplayer} discards ${c}`], 'discard');
+		ari_history_list([`${uplayer} discards ${c}`], 'discard');
 
 	}
 
@@ -436,7 +436,7 @@ function end_of_turn_fritz() {
 		end_of_round_fritz(uplayer);
 	} else if (ms <= 100) {
 		console.log(`time is up for ${uplayer}!!!`);
-		ari_history_list([`${uplayer} runs out of time`], 'action');
+		ari_history_list([`${uplayer} runs out of time`], 'timeout');
 		if (fen.plorder.length <= 1) { end_of_round_fritz(uplayer); }
 		else { Z.turn = [get_next_player(Z, uplayer)]; deck_deal_safe_fritz(fen, Z.turn[0]); removeInPlace(fen.plorder, uplayer); }
 	} else { Z.turn = [get_next_player(Z, uplayer)]; deck_deal_safe_fritz(fen, Z.turn[0]); }

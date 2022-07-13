@@ -456,6 +456,7 @@ function get_container_styles(styles = {}) { let defaults = valf(Config.ui.conta
 function get_containertitle_styles(styles = {}) { let defaults = valf(Config.ui.containertitle, {}); defaults.position = 'absolute'; addKeys(defaults, styles); return styles; }
 function has_at_most_n_jolly(j, n = 1) { return j.filter(x => is_jolly(x)).length <= n; }
 function has_jolly(j) { return firstCond(j, x => is_jolly(x)); }
+function is_card_key(ckey, rankstr = '*A23456789TJQK', suitstr = 'SHCD') { return rankstr.includes(ckey[0]) && suitstr.includes(ckey[1]); }
 function is_jolly(ckey) { return ckey[0] == '*'; }
 function is_joker(card) { return is_jolly(card.key); }
 function is_overlapping_set(cards, max_jollies_allowed = 1, seqlen = 7, group_same_suit_allowed = true) {

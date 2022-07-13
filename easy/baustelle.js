@@ -45,11 +45,11 @@ function ari_pre_action() {
 
 				//uplayer looses all hand and stall cards!!!
 
-				ari_history_list([`${uplayer} must downgrade a building to tide ${min}!`], 'tide_minplayer_tide');
+				ari_history_list([`${uplayer} must downgrade a building to tide ${min}!`], 'downgrade');
 				select_add_items(ui_get_building_items(uplayer, A.payment), process_downgrade, 'must select a building to downgrade', 1, 1);
 			} else {
 				//must select more cards to tide!
-				ari_history_list([`${uplayer} must tide more cards to reach ${min}!`], 'tide_minplayer_tide');
+				ari_history_list([`${uplayer} must tide more cards to reach ${min}!`], 'tide');
 				select_add_items(ui_get_hand_and_stall_items(uplayer), post_tide_minimum, `must select cards to reach at least ${fen.tide_minimum}`, 1, 100);
 			}
 
@@ -106,8 +106,6 @@ function ari_pre_action() {
 	}
 
 }
-
-
 
 
 

@@ -1,3 +1,46 @@
+function old_show_settings(dParent) {
+	let [options, fen, uplayer] = [Z.options, Z.fen, Z.uplayer];
+	clearElement(dParent);
+	mFlex(dParent);
+	let playermode = get_playmode(uplayer); //console.log('playermode',playermode)
+	let game_mode = Z.mode;
+	let dplaymode = mDiv(dParent, { fg: 'blue' }, null, playermode); // playermode == 'bot' ? 'bot' : '');
+	let dgamemode = mDiv(dParent, { fg: 'red' }, null, Z.mode); //Z.mode == 'hotseat' ? 'h' : '');
+	let d = miPic('gear', dParent, { fz: 20, padding: 6, h: 40, box: true, matop: 2, rounding: '50%', cursor: 'pointer' });
+	options.playermode = playermode;
+	d.onmouseenter = () => show_options_popup(options);
+	d.onmouseleave = hide_options_popup;
+}
+function show_history_popup() {
+	
+	if (isEmpty(Z.fen.history)) return;
+	assertion(isdef(UI.dHistoryParent) && isdef(UI.dHistory), 'UI.dHistoryParent && UI.dHistory do NOT exist!!!');
+	let dParent = UI.dHistoryParent;
+	let dh=UI.dHistory;
+	if (dParent.firstChild == dh) {
+		HRPLayout();
+
+	}else if (dParent.lastChild == dh){
+		mInsert(dParent, dh);
+	}else{
+		//swap it back down
+		mAppend(dParent, dh);
+		UI.DRR.remove();
+
+	}
+
+	
+}
+function _show_history_popup() {
+
+	if (isdef(mBy('dHistoryPopup')) || isEmpty(Z.fen.history)) return;
+	let dpop = mPopup('', dTable, { fz: 16, bg: colorLight('#EDC690', .5), rounding: 8, fg: 'dimgray', top: 0, right: 0, border: 'white' }, 'dHistoryPopup');
+	mAppend(dpop, UI.dHistory);
+	mInsert(dpop, mCreateFrom(`<div style="margin-left:10px;text-align:left;width:100%;font-family:Algerian;font-size:22px;">${Config.games[Z.game].friendly}</div>`));
+	//let bclose = mButtonX(dpop, hide_options_popup, 'tr');
+	let bclose = mButtonX(dpop, hide_history_popup, 'tr', 25, 'dimgray');
+}
+
 function show_history_popup() {
 	
 	let fen = Z.fen;

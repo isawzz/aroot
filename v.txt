@@ -7992,17 +7992,95 @@ ok - hieight of dHistory!
 871: *3:26 PM 7/12/2022-3:26 PM 7/12/2022
 872: *3:26 PM 7/12/2022-3:27 PM 7/12/2022
 DONE ok - log besser
-873: *3:27 PM 7/12/2022-
-- copy!
-- IMMER wenn er inactive ist sol force redraw sein!
-- ari test
+873: *3:27 PM 7/12/2022-4:50 PM 7/12/2022
+874: *5:25 PM 7/12/2022-5:27 PM 7/12/2022
+875: *5:27 PM 7/12/2022-5:28 PM 7/12/2022
+876: *5:28 PM 7/12/2022-5:29 PM 7/12/2022
+877: *5:29 PM 7/12/2022-5:31 PM 7/12/2022
+878: *5:31 PM 7/12/2022-5:54 AM 7/13/2022
+__________ mi 13.7.22 =>100 ewew 0=fa,1ok,2+lu,3*co,-1~pa,-2-qu,-3!
+900: *5:54 AM 7/13/2022-5:55 AM 7/13/2022
+901: *5:55 AM 7/13/2022-5:56 AM 7/13/2022
+902: *5:56 AM 7/13/2022-5:59 AM 7/13/2022
+903: *5:59 AM 7/13/2022-6:00 AM 7/13/2022
+904: *6:00 AM 7/13/2022-6:05 AM 7/13/2022
+905: *6:05 AM 7/13/2022-6:11 AM 7/13/2022
+906: *6:11 AM 7/13/2022-6:23 AM 7/13/2022
+907: *6:23 AM 7/13/2022-6:24 AM 7/13/2022
+908: *6:24 AM 7/13/2022-6:31 AM 7/13/2022
+909: *6:31 AM 7/13/2022-6:37 AM 7/13/2022
+910: *6:38 AM 7/13/2022-6:43 AM 7/13/2022
+ok - history wird on top of playerstats inserted!
+ok - history wird am ende angehaengt
+ok - seh kein x mehr in history popup!
+ok - mach wieder normalen start
+ok - war die ganze zeit im falschen programm!!!!
+ok apiserver output
+ok change back to old history
+ok - es ist wegen html code in history!
+911: *6:44 AM 7/13/2022-6:45 AM 7/13/2022
+912: *6:45 AM 7/13/2022-6:46 AM 7/13/2022
+913: *6:47 AM 7/13/2022-6:47 AM 7/13/2022
+914: *6:47 AM 7/13/2022-6:49 AM 7/13/2022
+915: *6:49 AM 7/13/2022-6:52 AM 7/13/2022
+916: *6:52 AM 7/13/2022-6:56 AM 7/13/2022
+917: *6:56 AM 7/13/2022-6:56 AM 7/13/2022
+=====>TESTING
+918: *6:56 AM 7/13/2022-6:58 AM 7/13/2022
+919: *6:58 AM 7/13/2022-7:01 AM 7/13/2022
+920: *7:02 AM 7/13/2022-7:04 AM 7/13/2022
+ok - test: 2 sets left!
+ok - select_error soll option haben fuer: clear_selection
+ok - make long history is schlecht!!!!
+ok - test ferro mit only 1 set left
+ok - rem cons!
+ok - work on fp_card_selection
+ok - cleanup history zeug: alles zu baustelle3
+ok - goto ferro
+DONOE ok ==> ferro bug: wenn hand empty!!!! und nicht discarded habe dann muss alles rollback!!!!
+921: *7:05 AM 7/13/2022-7:06 AM 7/13/2022
+922: *7:06 AM 7/13/2022-7:06 AM 7/13/2022
+923: *7:07 AM 7/13/2022-7:08 AM 7/13/2022
+924: *7:08 AM 7/13/2022-7:11 AM 7/13/2022
+925: *7:11 AM 7/13/2022-7:21 AM 7/13/2022
+926: *7:21 AM 7/13/2022-7:21 AM 7/13/2022
+927: *7:23 AM 7/13/2022-7:24 AM 7/13/2022
+928: *7:24 AM 7/13/2022-7:40 AM 7/13/2022
+929: *7:40 AM 7/13/2022-7:40 AM 7/13/2022
+930: *7:40 AM 7/13/2022-7:46 AM 7/13/2022
+931: *7:46 AM 7/13/2022-7:46 AM 7/13/2022
+932: *7:46 AM 7/13/2022-7:47 AM 7/13/2022
+=====>aroot
+933: *7:47 AM 7/13/2022-7:49 AM 7/13/2022
+934: *7:49 AM 7/13/2022-7:55 AM 7/13/2022
+935: *7:55 AM 7/13/2022-8:03 AM 7/13/2022
+936: *8:03 AM 7/13/2022-8:08 AM 7/13/2022
+ok - was ist stage 16?
+ok - need to ari history: commissions: trading starts
+ok - need to ari history: commissions: trading ends
+ok - need to ari history: rumors: gossip starts
+ok - need to ari history: gossip: gossip ends
+ok - anstatt stall schreibe market
+937: *8:08 AM 7/13/2022-8:08 AM 7/13/2022
+938: *8:12 AM 7/13/2022-8:13 AM 7/13/2022
+939: *8:13 AM 7/13/2022-8:13 AM 7/13/2022
+ok - find CHURCH EVENT
+ok - need to ari history: church! inquisition starts
+ok - checked ari_history list for all games!!!
+ok - find ari_history_list
+ok - history fuer aristo!!!
+ok 1. ph,hp,prh,hrp sind die layouts
+ok - show_history soll layouts haben
+ok - mach eine clientData var fuerr das history layout!!!
+940: *10:15 AM 7/13/2022-
 
+- remove chose not to complement
 
-
-- koennte layout option machen fuer den log!
+- falls history zu lange: cache!!!
 - force redraw when inactive checken
 - help
 - multigame interface
+
 
 ==> alle die player info soll AUCH IM PLAYER REPLICATED SEIN!!!!!
 

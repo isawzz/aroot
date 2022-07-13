@@ -17,21 +17,29 @@ function start_tests() {
 	//ltest59_arrTakeLast();
 	//ltest65_stamp(); //ltest58_aristo_building_rumor_harvest();
 	//ltest69_ferro_is_group(); //
-	//#endregion
-
 	//ltest70_aristo_church(); //ltest57_aristo();
-	ltest82_ferro(); //ltest85_card_short_text(); //ltest83_svg();
+	//ltest82_ferro(); //ltest85_card_short_text(); //ltest83_svg();
+	//#endregion
+	ltest86_ferro();
+
 
 
 }
 function landing(){
-	return;
+
 	if (!TESTING) return;
-	console.log('dHistory',UI.dHistory)
+	//console.log('dHistory',UI.dHistory)
 	show_history_popup();
 
 }
 //#region live server tests
+function ltest86_ferro() {
+	TESTING = true; DA.testing = true; DA.test = { mods: [give_player_two_ferro_sets,make_long_history], iter: 0, maxiter: 200, running: false, step: true, suiteRunning: false, number: 0, list: [0] };
+	DA.test.end = () => { }; //console.log('discard:',Z.fen.deck_discard);}
+	DA.auto_moves = [];
+	let playernames = ['mimi', 'felix', 'gul'];//, 'amanda', 'lauren', 'valerie', 'guest', 'nimble', 'sheeba', 'sarah']; //, 'gul', 'amanda', 'lauren'];
+	startgame('ferro', playernames.map(x => ({ name: x, playmode: 'human' })), { mode: 'hotseat' });
+}
 function ltest85_card_short_text() {
 	let dTable = mBy('dTable'); clearElement(dTable); mStyle(dTable, { hmin: 400 });
 
@@ -83,7 +91,7 @@ function ltest83_ferro_multi() {
 function ltest82_ferro() {
 	TESTING = true; DA.testing = true; DA.test = { mods: [make_long_history], iter: 0, maxiter: 200, running: false, step: true, suiteRunning: false, number: 0, list: [0] };
 	DA.test.end = () => { }; //console.log('discard:',Z.fen.deck_discard);}
-	DA.auto_moves = [['random']];
+	DA.auto_moves = [];
 	let playernames = ['mimi', 'felix', 'gul'];//, 'amanda', 'lauren', 'valerie', 'guest', 'nimble', 'sheeba', 'sarah']; //, 'gul', 'amanda', 'lauren'];
 	startgame('ferro', playernames.map(x => ({ name: x, playmode: 'human' })), { mode: 'hotseat' });
 }
@@ -1274,6 +1282,12 @@ function give_player_group(o) {
 	pl.journeys = [['2Hn', '2Sn', '2Hn']];
 
 }
+function give_player_one_ferro_set(o){
+	o.fen.players[o.fen.turn[0]].hand=['*Hn','KHn','KCn'];
+}
+function give_player_two_ferro_sets(o){
+	o.fen.players[o.fen.turn[0]].hand=['*Hn','KHn','KCn','QHn','QCn','QDn'];
+}
 function give_player_7R(o) {
 	let [fen, uplayer] = [o.fen, o.fen.turn[0]];
 	let pl = fen.players[uplayer];
@@ -1433,8 +1447,9 @@ function make_long_history(o) {
 	for (let i = 0; i < 100; i++) {
 		let lines = [`${rChoose(get_keys(fen.players))} discards ${rCard()}`];
 		let title = 'discard';
-		let html = beautify_history(lines, title, fen, uplayer);
-		fen.history.push(html);
+		//let html = beautify_history(lines, title, fen, uplayer);
+		//fen.history.push(html);
+		fen.history.push({title:title,lines:lines});
 	}
 }
 function make_deck_empty(o) {

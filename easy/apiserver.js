@@ -3,7 +3,6 @@ function handle_result(result, cmd) {
 	//if (verbose) console.log('cmd', cmd, '\nresult', result); //return;
 	if (result.trim() == "") return;
 
-
 	// var obj = JSON.parse(result);
 	let obj;
 	try {
@@ -12,6 +11,7 @@ function handle_result(result, cmd) {
 		console.log('ERROR:', result);
 	}
 
+	//delete obj.tables;
 
 	//console.log('___cmd=' + cmd, '\nkeys sent', get_keys(obj));
 	if (verbose) console.log('HANDLERESULT bekommt', jsCopy(obj)); //log_object(obj);

@@ -16,6 +16,32 @@ function activate_ui() {
 
 	uiActivated = true; DA.ai_is_moving = false;
 }
+function beautify_history(lines, title, fen, uplayer) {
+
+	//mach draus ein html
+	//let [fen, uplayer] = [Z.fen, Z.uplayer];
+	let html = `<div class="history"><span style="color:red;font-weight:bold;">${title}: </span>`;
+	for (const l of lines) {
+		let words = toWords(l);
+		for (const w1 of words) {
+			if (is_card_key(w1)) {
+				//html += ` ${ari_get_card(w1).friendly} `; 
+
+				//html += `${w1[0]}<i class="fas fa-spade"></i>`;
+				//let suit =  mCardText(w1).innerHTML;
+				html += mCardText(w1);
+				//console.log('suit', suit);
+				continue;
+			}
+			w = w1.toLowerCase();
+			if (isdef(fen.players[w])) {
+				html += `<span style="color:${get_user_color(w)};font-weight:bold"> ${w} </span>`;
+			} else html += ` ${w} `;
+		}
+	}
+	html += "</div>";
+	return html;
+}
 function deactivate_ui() { uiActivated = false; DA.ai_is_moving = true; }
 function clear_status() { if (nundef(mBy('dStatus'))) return; clearTimeout(TO.fleeting); mRemove("dStatus"); }
 //function clear_table() { clear_status(); clear_title(); mStyle(document.body, { bg: 'white', fg: '#111111' }) }
@@ -377,21 +403,73 @@ function show_role() {
 	d.innerHTML = text;
 	mStyle(d, styles);
 }
-function old_show_settings(dParent) {
+function show_history(fen, dParent) {
+	if (!isEmpty(fen.history)) {
+		let html = '';
+		for (const o of jsCopy(fen.history).reverse()) {
+			//console.log('o', o);
+			html += beautify_history(o.lines,o.title,fen);
+			//html += o;//html+=`<h1>${k}</h1>`;
+			//for (const line of arr) { html += `<p>${line}</p>`; }
+		}
+		// let dHistory =  mDiv(dParent, { padding: 6, margin: 4, bg: '#ffffff80', fg: 'black', hmax: 400, 'overflow-y': 'auto', wmin: 240, rounding: 12 }, null, html); //JSON.stringify(fen.history));
+		let dHistory = mDiv(dParent, { paleft: 12, bg: colorLight('#EDC690', .5), box:true, matop: 10, patop: 10, pabottom:10, w: '100%', hmax: `calc( 100vh - 250px )`, 'overflow-y': 'auto', wmin: 260 }, null, html); //JSON.stringify(fen.history));
+		// let dHistory =  mDiv(dParent, { padding: 6, margin: 4, bg: '#ffffff80', fg: 'black', hmax: 400, 'overflow-y': 'auto', wmin: 240, rounding: 12 }, null, html); //JSON.stringify(fen.history));
+		//mNode(fen.history, dHistory, 'history');
+		UI.dHistoryParent = dParent;
+		UI.dHistory = dHistory;
+		//console.log('dHistory', dHistory);
+
+
+		if (isdef(Clientdata.historyLayout)){
+			show_history_layout(Clientdata.historyLayout);
+		}
+	}
+
+}
+function show_history_layout(layout) {
+	assertion(isdef(UI.dHistoryParent) && isdef(UI.dHistory), 'UI.dHistoryParent && UI.dHistory do NOT exist!!!');
+	if (layout == 'ph') PHLayout();
+	else if (layout == 'hp') HPLayout();
+	else if (layout == 'prh') PRHLayout();
+	else if (layout == 'hrp') HRPLayout();
+	else PHLayout();
+}
+function show_history_popup() {
+	
+	if (isEmpty(Z.fen.history)) return;
+	assertion(isdef(UI.dHistoryParent) && isdef(UI.dHistory), 'UI.dHistoryParent && UI.dHistory do NOT exist!!!');
+
+	let l=valf(Clientdata.historyLayout,'ph');
+	let cycle = ['ph', 'hp', 'prh', 'hrp'];
+	let i = (cycle.indexOf(l)+1)%cycle.length;
+
+	show_history_layout(cycle[i]);
+
+
+	
+}
+function show_settings(dParent) {
 	let [options, fen, uplayer] = [Z.options, Z.fen, Z.uplayer];
 	clearElement(dParent);
 	mFlex(dParent);
+	mStyle(dParent, { 'justify-content': 'end', gap: 12, paright: 10 })
+	//console.log('dParent', dParent)
 	let playermode = get_playmode(uplayer); //console.log('playermode',playermode)
 	let game_mode = Z.mode;
-	let dplaymode = mDiv(dParent, { fg: 'blue' }, null, playermode); // playermode == 'bot' ? 'bot' : '');
-	let dgamemode = mDiv(dParent, { fg: 'red' }, null, Z.mode); //Z.mode == 'hotseat' ? 'h' : '');
-	let d = miPic('gear', dParent, { fz: 20, padding: 6, h: 40, box: true, matop: 2, rounding: '50%', cursor: 'pointer' });
+	// let dplaymode = mDiv(dParent, { fg: 'blue' }, null, playermode); // playermode == 'bot' ? 'bot' : '');
+	// let dgamemode = mDiv(dParent, { fg: 'red' }, null, Z.mode); //Z.mode == 'hotseat' ? 'h' : '');
+	// let st = { fz: 20, padding: 6, h: 40, box: true, matop: 2, rounding: '50%', cursor: 'pointer' };
+	let st = { fz: 20, padding: 0, h: 40, box: true, matop: 2, rounding: '50%', cursor: 'pointer' };
+	let dHistoryButton = miPic('scroll', dParent, st);
+	let d = miPic('gear', dParent, st);
 	options.playermode = playermode;
 	d.onmouseenter = () => show_options_popup(options);
 	d.onmouseleave = hide_options_popup;
-}
+	
+	dHistoryButton.onclick = show_history_popup;
 
-function status_message_new(msg, dParent, styles = {}) {
+	//dHistoryButton.onmouseleave = hide_options_popup;
 }
 function show_stage() {
 	if (isdef(Z.fen.progress)) {
@@ -480,6 +558,8 @@ function show_winners() {
 
 	return Z.fen.winners;
 }
+function status_message_new(msg, dParent, styles = {}) {
+}
 function tableLayoutMR(dParent, m, r) {
 	let ui = UI; ui.players = {};
 	clearElement(dParent);
@@ -495,6 +575,29 @@ function tableLayoutMR(dParent, m, r) {
 	let dSubmitOrRestart = ui.dSubmitOrRestart = mDiv(dOben, { w: '100%' });
 	let dOpenTable = ui.dOpenTable = mDiv(dMiddle, { w: '100%', padding: 10 }); mFlexWrap(dOpenTable);// mLinebreak(d_table);
 	return [dOben, dOpenTable, dMiddle, dRechts];
+}
+function PRHLayout(){
+	let drr=UI.DRR = mDiv(dTable);
+	mAppend(drr,UI.dHistory);
+	Clientdata.historyLayout = 'prh';
+}
+function HRPLayout(){
+	let dr=UI.dRechts;
+	dr.remove();
+	let drr=UI.DRR = mDiv(dTable);
+	mAppend(drr,UI.dHistory);
+	mAppend(dTable,dr);
+	Clientdata.historyLayout = 'hrp';
+}
+function PHLayout(){
+	if (isdef(UI.DRR)) UI.DRR.remove();
+	mAppend(UI.dRechts,UI.dHistory);
+	Clientdata.historyLayout = 'ph';
+}
+function HPLayout(){
+	if (isdef(UI.DRR)) UI.DRR.remove();
+	mInsert(UI.dRechts,UI.dHistory);
+	Clientdata.historyLayout = 'hp';
 }
 function ui_player_info(g, dParent, outerStyles = { dir: 'column' }, innerStyles = {}) {
 	let fen = g.fen;
