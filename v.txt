@@ -8074,15 +8074,53 @@ ok - show_history soll layouts haben
 ok - mach eine clientData var fuerr das history layout!!!
 940: *10:15 AM 7/13/2022-10:23 AM 7/13/2022
 941: *10:23 AM 7/13/2022-10:38 AM 7/13/2022
-
-- ferro bug bei anlegen!!!! -1
-
-- remove chose not to complement
-
+942: *12:29 PM 7/13/2022-6:17 AM 7/14/2022
+1000: *6:18 AM 7/14/2022-6:18 AM 7/14/2022
+__________ do 14.7.22 =>100 ewew 0=fa,1ok,2+lu,3*co,-1~pa,-2-qu,-3!
+1: *6:18 AM 7/14/2022-6:24 AM 7/14/2022
+2: *6:24 AM 7/14/2022-6:25 AM 7/14/2022
+wieviel ist 3000 x 2 sec? 6000 sec = 100min ist ueber 1h
+3: *6:25 AM 7/14/2022-6:30 AM 7/14/2022
+4: *6:30 AM 7/14/2022-6:31 AM 7/14/2022
+5: *6:31 AM 7/14/2022-6:32 AM 7/14/2022
+6: *6:32 AM 7/14/2022-6:39 AM 7/14/2022
+7: *6:39 AM 7/14/2022-6:40 AM 7/14/2022
+8: *6:40 AM 7/14/2022-6:46 AM 7/14/2022
+9: *6:47 AM 7/14/2022-6:50 AM 7/14/2022
+10: *6:50 AM 7/14/2022-6:57 AM 7/14/2022
+11: *6:57 AM 7/14/2022-6:58 AM 7/14/2022
+12: *6:58 AM 7/14/2022-7:02 AM 7/14/2022
+13: *7:02 AM 7/14/2022-7:15 AM 7/14/2022
+14: *7:15 AM 7/14/2022-7:16 AM 7/14/2022
+15: *7:16 AM 7/14/2022-7:20 AM 7/14/2022
+ok - mach das table vs playerstats auf 7:1
+ok - ich muss die history auf 100% machen!
+ok - DRR muss auch ein max-width haben!!!
+ok - open onclick
+ok - wenn zu home (castle) gehe, muss ich dAdmind bg white und weg mit dem turn!
+ok - vielleicht kann ich auch title line grey machen wenn nicht mein turn?
+ok - goto mShield
+ok - koennte ein band message: NOT YOUR TURN machen oder oberen teil von table shielden!
+ok - geht immer pollen auch mit spotit?
+ok - warum sollte ich nicht immer pollen?
+ok - wird keeppolling je verwendet?
+ok - das DA.noshow kann es nicht gewesen sein
+16: *7:20 AM 7/14/2022-7:22 AM 7/14/2022
+ok - ferro bug bei anlegen!!!! -1
+17: *7:22 AM 7/14/2022-7:32 AM 7/14/2022
+18: *7:32 AM 7/14/2022-7:33 AM 7/14/2022
+19: *7:33 AM 7/14/2022-7:40 AM 7/14/2022
+20: *7:40 AM 7/14/2022-7:53 AM 7/14/2022
+21: *7:53 AM 7/14/2022-
+- spotit calc_syms ist kathastrophe!!!!!
+- bug spotit 251!!!!!!!!!!!
+- wo wird der ack button gemacht?
+- mimi hat keinen ack button!
+- upload!
 - falls history zu lange: cache!!!
-- force redraw when inactive checken
 - help
 - multigame interface
+- muss noch das autopoll verbessern!!!
 
 
 ==> alle die player info soll AUCH IM PLAYER REPLICATED SEIN!!!!!

@@ -809,7 +809,7 @@ function mRemove(elem) {
 	elem.remove(); //elem.parentNode.removeChild(elem);
 }
 function mRemoveChildrenFromIndex(dParent, i) { while (dParent.children[i]) { mRemove(dParent.children[i]); } }
-function mShield(dParent, styles = { bg: '#00000045' }, id = null, classnames = null, hideonclick = false) {
+function mShield(dParent, styles = { bg: '#00000020' }, id = null, classnames = null, hideonclick = false) {
 	dParent = toElem(dParent);
 	let d = mDiv(dParent, styles, id, classnames);
 	lookupAddIfToList(DA, ['shields'], d);
@@ -3540,13 +3540,7 @@ class SimpleTimer {
 		this.interval = msTick;
 		this.running = false;
 		this.paused = false;
-		//this.game = G.name;
-
-		//mButton(caption, handler, dParent, styles, classes, id)
-		//this.button = mButton('click', this.togglePause.bind(this), this.elem, { transition: 'all 1s ease', display: 'inline-block', fz: 20, rounding: 12, bg: GREEN, w: 260 }, 'mybutton');
 		this.TO = null;
-		//this.d = mDiv(this.elem, { display: 'inline-block', rounding: 12, bg: GREEN, w: 260 }, null, 'TIMER');
-		// this.d.onclick = this.togglePause.bind(this);
 	}
 	togglePause() { if (this.paused) this.continue(); else this.pause(); }
 	clear() { let elapsed = this.stop(); clearElement(this.elem); return elapsed; }

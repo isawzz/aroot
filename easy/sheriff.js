@@ -52,7 +52,7 @@ function sheriff() {
 	function sheriff_present(z, dParent, uplayer) {
 
 		let [fen, ui] = [z.fen, UI];
-		let [dOben, dOpenTable, dMiddle, dRechts] = tableLayoutMR(dParent, 5, 1);
+		let [dOben, dOpenTable, dMiddle, dRechts] = tableLayoutMR(dParent);
 
 		ari_player_stats(z, dRechts);
 

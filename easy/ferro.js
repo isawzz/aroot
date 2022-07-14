@@ -55,7 +55,7 @@ function ferro_present_new(z, dParent, uplayer) {
 
 	//DA.no_shield = true;
 	let [fen, ui, stage] = [z.fen, UI, z.stage];
-	let [dOben, dOpenTable, dMiddle, dRechts] = tableLayoutMR(dParent, 5, 1);
+	let [dOben, dOpenTable, dMiddle, dRechts] = tableLayoutMR(dParent);
 
 	ferro_stats_new(z, dRechts);
 
@@ -135,9 +135,9 @@ function ferro_state_new(dParent) {
 		let goal_html = `<div style="font-weight:bold;border-radius:50%;background:white;color:red;line-height:100%;padding:4px 8px">${goal}</div>`;
 		dParent.innerHTML = `Round ${Z.round}:&nbsp;&nbsp;minimum:&nbsp;${goal_html}`;
 	} else {
-		let user_html = get_user_pic_html(Z.stage == 'buy_or_pass'?Z.fen.turn_after_ack[0]:Z.turn[0], 30);
+		let user_html = get_user_pic_html(Z.stage == 'buy_or_pass' ? Z.fen.turn_after_ack[0] : Z.turn[0], 30);
 		// dParent.innerHTML = `Round ${Z.round}:&nbsp;player: ${user_html} `;
-		dParent.innerHTML = `Round ${Z.round}:&nbsp;${Z.stage == 'buy_or_pass'?'next ':''}turn: ${user_html} `;
+		dParent.innerHTML = `Round ${Z.round}:&nbsp;${Z.stage == 'buy_or_pass' ? 'next ' : ''}turn: ${user_html} `;
 	}
 }
 function ferro_stats_new(z, dParent) {
@@ -194,7 +194,7 @@ function ferro_change_to_turn_round() {
 
 	for (const plname of fen.canbuy) {
 		let pl = fen.players[plname];
-		if (pl.buy==true) {
+		if (pl.buy == true) {
 			let card = fen.deck_discard.shift();
 			pl.hand.push(card);
 			deck_deal_safe_ferro(fen, plname, 1);
@@ -361,7 +361,7 @@ function fp_card_selection() {
 	} else if (cmd == 'auflegen') {
 
 		if (selitems.length < 3) { select_error('select cards to form a group!'); return; }
-		else if (pl.hand.length == selitems.length){ select_error('you need to keep a card for discard!!',clear_selection); return; }
+		else if (pl.hand.length == selitems.length) { select_error('you need to keep a card for discard!!', clear_selection); return; }
 		// console.log('HAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA', cards.map(x=>x.key))
 		let newset = ferro_is_set(cards, Z.options.jokers_per_group);
 
@@ -384,7 +384,7 @@ function fp_card_selection() {
 	} else if (cmd == 'anlegen') {
 
 		if (selitems.length < 1) { select_error('select at least 1 hand card and the first card of a group!'); return; }
-		else if (pl.hand.length == selitems.length-1){ select_error('you need to keep a card for discard!!',clear_selection); return; }
+		else if (pl.hand.length == selitems.length - 1) { select_error('you need to keep a card for discard!!', clear_selection); return; }
 
 		let handcards = selitems.filter(x => !is_joker(x.o) && x.path.includes(`${uplayer}.hand`));
 		let groupcard = selitems.find(x => !is_joker(x.o) && !x.path.includes(`${uplayer}.hand`));

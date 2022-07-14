@@ -75,6 +75,7 @@ function gamestep() {
 	for(const id of ['bSpotitStart','bClearAck','bRandomMove','bSkipPlayer']) hide(id);
 	if (Z.game == 'spotit' && Z.uname == Z.host && Z.stage == 'init') show('bSpotitStart');
 	else if (Z.game == 'bluff' && Z.uname == Z.host && Z.stage == 1) show('bClearAck');
+	else if (Z.game == 'ferro' && Z.uname == Z.host && Z.stage == 'buy_or_pass') show('bClearAck');
 	else if (['ferro','bluff','aristo'].includes(Z.game)) {
 		//console.log('random should show because game is', Z.game)
 		show('bRandomMove');
@@ -88,6 +89,7 @@ function gamestep() {
 	//console.log('Z',Z)
 	if (Z.uname == Z.host) show('dHostButtons'); else hide('dHostButtons');
 
+	shield_off();
 	show_title();
 	show_role();
 	Z.func.present(Z, dTable, Z.uplayer);	// *** Z.uname und Z.uplayer ist IMMER da! ***
@@ -99,7 +101,7 @@ function gamestep() {
 		Z.scoring = { winners: winners }
 		sendgameover(winners[0], Z.friendly, Z.fen, Z.scoring);
 	} else if (is_shield_mode()) {
-		if (!DA.no_shield == true) { hide('bRestartMove'); } //if (isdef(Z.fen.shield)) mShield(dTable);  }
+		if (!DA.no_shield == true) { hide('bRestartMove'); shield_on(); } //mShield(dTable.firstChild.childNodes[1])} //if (isdef(Z.fen.shield)) mShield(dTable);  }
 		autopoll();
 	} else {
 		Z.A = { level: 0, di: {}, ll: [], items: [], selected: [], tree: null, breadcrumbs: [], sib: [], command: null, autosubmit:Config.autosubmit };
@@ -282,6 +284,9 @@ function stopgame() {
 	clear_timeouts();
 	hide('bRestartMove');
 	hide('dHostButtons');
+	mStyle('dAdmin',{bg:'white'});
+	mClear('dAdminMiddle')
+	for(const id of ['bSpotitStart','bClearAck','bRandomMove','bSkipPlayer']) hide(id);
 
 	pollStop();
 	//clear_table();

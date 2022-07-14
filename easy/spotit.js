@@ -127,36 +127,38 @@ function spotit_state(dParent) {
 //#region internal
 function calc_syms(numSyms) {
 	//should return [rows,cols,colarr]
-	let n = numSyms, rows, cols, colarr;
-	if (n == 3) { rows = 2; cols = 1; }
-	else if (n == 4) { rows = 2; cols = 2; }
-	else if (n == 5) { rows = 3; cols = 1; }
-	else if (n == 6) { rows = 4; cols = 1; }
-	else if (n == 7) { rows = 3; cols = 2; } //default
-	else if (n == 8) { rows = 5; cols = 1; }
-	else if (n == 9) { rows = 5; cols = 9; colarr = [2, 3, 3, 1];}
-	else if (n == 10) { rows = 4; cols = 2; }
-	else if (n == 11) { rows = 4.5; cols = 3; colarr = [2, 3, 4, 2]; }
-	else if (n == 12) { rows = 5; cols = 3; }
-	else if (n == 13) { rows = 5; cols = 3; colarr = [2, 3, 4, 3, 1]; }
-	else if (n == 14) { rows = 5; cols = 2; }
-	else if (n == 17) { rows = 6; cols = 2; }
-	else if (n == 18) { rows = 6; cols = 3; }
+	let n = numSyms, rows, realrows, colarr;
+	if (n == 3) { rows = 2; realrows = 1; colarr = [1,2];}
+	else if (n == 4) { rows = 2; realrows = 2; colarr = [2,2];}
+	else if (n == 5) { rows = 3; realrows = 3; colarr = [1,3,1];}
+	else if (n == 6) { rows = 3.3; realrows = 3; colarr = [2,3,1];}
+	else if (n == 7) { rows = 3; realrows = 3; colarr = [2,3,2];} //default
+	else if (n == 8) { rows = 3.8; realrows = 4; colarr = [1,3,3,1];}
+	else if (n == 9) { rows = 4; realrows = 4; colarr = [2, 3, 3, 1];}
+	else if (n == 10) { rows = 4; realrows = 4; colarr = [2, 3, 3, 2];}
+	else if (n == 11) { rows = 4.5; realrows = 4; colarr = [2, 3, 4, 2]; }
+	else if (n == 12) { rows = 5; realrows = 5; colarr = [1, 3, 4, 3, 1]; } 
+	else if (n == 13) { rows = 5; realrows = 5; colarr = [2, 3, 4, 3, 1]; }
+	else if (n == 14) { rows = 5; realrows = 5; colarr = [2, 3, 4, 3, 2]; }
+	else if (n == 15) { rows = 5.5; realrows = 5; colarr = [2, 3, 5, 3, 2]; }
+	else if (n == 16) { rows = 5.5; realrows = 5; colarr = [2, 3, 5, 4, 2]; }
+	else if (n == 17) { rows = 5.5; realrows = 5; colarr = [2, 4, 5, 4, 2]; } //17
+	else if (n == 18) { rows = 5.8; realrows = 5; colarr = [2, 4, 5, 4, 3]; } //18
 
-	// console.log('...numSyms,rows,cols', numSyms, rows, cols);
-	if (![9,11,13].includes(n)) colarr = _calc_hex_col_array(rows, cols);
+	// // console.log('...numSyms,rows,cols', numSyms, rows, cols);
+	// if (![9,11,13].includes(n)) colarr = _calc_hex_col_array(rows, realrows);
 
-	//correction for certain perCard outcomes:
-	if (rows == 3 && cols == 1) { colarr = [1, 3, 1]; } //5
-	else if (rows == 2 && cols == 1) { colarr = [1, 2]; } //3
-	else if (rows == 4 && cols == 1) { rows = 3.3; colarr = [2, 3, 1]; } //6
-	else if (rows == 5 && cols == 1) { rows = 4; cols = 1; colarr = [1, 3, 3, 1]; } //8
-	else if (rows == 5 && cols == 3) { rows = 5; cols = 1; colarr = [1, 3, 4, 3, 1]; } //12
-	else if (rows == 6 && cols == 2) { rows = 5.5; colarr = [2, 4, 5, 4, 2]; } //17
-	else if (rows == 6 && cols == 3) { rows = 5.8; colarr = [2, 4, 5, 4, 3]; } //18
+	// //correction for certain perCard outcomes:
+	// if (rows == 3 && realrows == 1) { colarr = [1, 3, 1]; } //5
+	// else if (rows == 2 && realrows == 1) { colarr = [1, 2]; } //3
+	// else if (rows == 4 && realrows == 1) { rows = 3.3; colarr = [2, 3, 1]; } //6
+	// else if (rows == 5 && realrows == 1) { rows = 4; realrows = 1; colarr = [1, 3, 3, 1]; } //8
+	// else if (rows == 5 && realrows == 3) { rows = 5; realrows = 1; colarr = [1, 3, 4, 3, 1]; } //12
+	// else if (rows == 6 && realrows == 2) { rows = 5.5; colarr = [2, 4, 5, 4, 2]; } //17
+	// else if (rows == 6 && realrows == 3) { rows = 5.8; colarr = [2, 4, 5, 4, 3]; } //18
 
 	// console.log('colarr',jsCopy(colarr));
-	return [rows, cols, colarr];
+	return [rows, realrows, colarr];
 }
 function cal_num_syms_adaptive() {
 	let [uplayer, fen, notes] = [Z.uplayer, Z.fen, Z.notes];

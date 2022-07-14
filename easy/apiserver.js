@@ -212,7 +212,7 @@ function update_current_table() {
 		// show('bPauseContinue');
 
 		//activate the following to stop polling after some time of inactivity!!!!!!!!!!!
-		const STOP_POLLING_AFTER = 3000;
+		const STOP_POLLING_AFTER = 30000;
 		if (nundef(DA.noshow)) DA.noshow = 1; else DA.noshow++; if (DA.noshow >= STOP_POLLING_AFTER) onclick_stoppolling(); //damit er nicht dauernd weiter pollt!
 
 		autopoll();

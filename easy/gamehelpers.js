@@ -273,6 +273,14 @@ function set_player(name, fen) {
 	copyKeys(fen.players[name], PL);
 	Z.uplayer = name;
 }
+function shield_on(){
+	mShield(dTable.firstChild.childNodes[1]);
+	mStyle('dAdmin',{bg:'silver'});
+}
+function shield_off(){
+	mStyle('dAdmin',{bg:'white'});
+
+}
 function show_fleeting_message(s, dParent, styles, id, ms = 2000) {
 	let d = mDiv(dParent, styles, id, s);
 	mFadeRemove(d, ms);
@@ -413,7 +421,7 @@ function show_history(fen, dParent) {
 			//for (const line of arr) { html += `<p>${line}</p>`; }
 		}
 		// let dHistory =  mDiv(dParent, { padding: 6, margin: 4, bg: '#ffffff80', fg: 'black', hmax: 400, 'overflow-y': 'auto', wmin: 240, rounding: 12 }, null, html); //JSON.stringify(fen.history));
-		let dHistory = mDiv(dParent, { paleft: 12, bg: colorLight('#EDC690', .5), box:true, matop: 10, patop: 10, pabottom:10, w: '100%', hmax: `calc( 100vh - 250px )`, 'overflow-y': 'auto', wmin: 260 }, null, html); //JSON.stringify(fen.history));
+		let dHistory = mDiv(dParent, { paleft: 12, bg: colorLight('#EDC690', .5), box:true, matop:4, rounding:10, patop: 10, pabottom:10, w: '100%', hmax: `calc( 100vh - 250px )`, 'overflow-y': 'auto', w: 260 }, null, html); //JSON.stringify(fen.history));
 		// let dHistory =  mDiv(dParent, { padding: 6, margin: 4, bg: '#ffffff80', fg: 'black', hmax: 400, 'overflow-y': 'auto', wmin: 240, rounding: 12 }, null, html); //JSON.stringify(fen.history));
 		//mNode(fen.history, dHistory, 'history');
 		UI.dHistoryParent = dParent;
@@ -471,6 +479,7 @@ function show_settings(dParent) {
 
 	//dHistoryButton.onmouseleave = hide_options_popup;
 }
+
 function show_stage() {
 	if (isdef(Z.fen.progress)) {
 		let d = mBy('dTitleLeft');
@@ -560,7 +569,7 @@ function show_winners() {
 }
 function status_message_new(msg, dParent, styles = {}) {
 }
-function tableLayoutMR(dParent, m, r) {
+function tableLayoutMR(dParent, m=7, r=1) {
 	let ui = UI; ui.players = {};
 	clearElement(dParent);
 	let bg = 'transparent';

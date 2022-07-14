@@ -42,7 +42,7 @@ function fritz_present_new(z, dParent, uplayer) {
 	let [fen, ui, stage] = [z.fen, UI, z.stage];
 	//fen.shield=true;
 	console.log('role',Z.role)
-	let [dOben, dOpenTable, dMiddle, dRechts] = tableLayoutMR(dParent, 5, 1); mFlexWrap(dOpenTable)
+	let [dOben, dOpenTable, dMiddle, dRechts] = tableLayoutMR(dParent); mFlexWrap(dOpenTable)
 	Config.ui.card.h = 130;
 	Config.ui.container.h = Config.ui.card.h + 30;
 

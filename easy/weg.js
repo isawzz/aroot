@@ -1,3 +1,38 @@
+function calc_syms(numSyms) {
+	//should return [rows,cols,colarr]
+	let n = numSyms, rows, cols, colarr;
+	if (n == 3) { rows = 2; cols = 1; colarr = [1,2];}
+	else if (n == 4) { rows = 2; cols = 2; colarr = [2,2];}
+	else if (n == 5) { rows = 3; cols = 1; colarr = [1,3,1];}
+	else if (n == 6) { rows = 3.3; cols = 1; colarr = [2,3,1];}
+	else if (n == 7) { rows = 3; cols = 2; colarr = [2,3,2];} //default
+	else if (n == 8) { rows = 3.8; cols = 1; colarr = [1,3,3,1];}
+	else if (n == 9) { rows = 5; cols = 9; colarr = [2, 3, 3, 1];}
+	else if (n == 10) { rows = 4; cols = 2; }
+	else if (n == 11) { rows = 4.5; cols = 3; colarr = [2, 3, 4, 2]; }
+	else if (n == 12) { rows = 5; cols = 3; }
+	else if (n == 13) { rows = 5; cols = 4; colarr = [2, 3, 4, 3, 1]; }
+	else if (n == 14) { rows = 5; cols = 2; }
+	else if (n == 17) { rows = 6; cols = 2; }
+	else if (n == 18) { rows = 6; cols = 3; }
+
+	// console.log('...numSyms,rows,cols', numSyms, rows, cols);
+	if (![9,11,13].includes(n)) colarr = _calc_hex_col_array(rows, cols);
+
+	//correction for certain perCard outcomes:
+	if (rows == 3 && cols == 1) { colarr = [1, 3, 1]; } //5
+	else if (rows == 2 && cols == 1) { colarr = [1, 2]; } //3
+	else if (rows == 4 && cols == 1) { rows = 3.3; colarr = [2, 3, 1]; } //6
+	else if (rows == 5 && cols == 1) { rows = 4; cols = 1; colarr = [1, 3, 3, 1]; } //8
+	else if (rows == 5 && cols == 3) { rows = 5; cols = 1; colarr = [1, 3, 4, 3, 1]; } //12
+	else if (rows == 6 && cols == 2) { rows = 5.5; colarr = [2, 4, 5, 4, 2]; } //17
+	else if (rows == 6 && cols == 3) { rows = 5.8; colarr = [2, 4, 5, 4, 3]; } //18
+
+	// console.log('colarr',jsCopy(colarr));
+	return [rows, cols, colarr];
+}
+
+
 function old_show_settings(dParent) {
 	let [options, fen, uplayer] = [Z.options, Z.fen, Z.uplayer];
 	clearElement(dParent);
