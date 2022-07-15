@@ -8111,16 +8111,27 @@ ok - ferro bug bei anlegen!!!! -1
 18: *7:32 AM 7/14/2022-7:33 AM 7/14/2022
 19: *7:33 AM 7/14/2022-7:40 AM 7/14/2022
 20: *7:40 AM 7/14/2022-7:53 AM 7/14/2022
-21: *7:53 AM 7/14/2022-
-- spotit calc_syms ist kathastrophe!!!!!
-- bug spotit 251!!!!!!!!!!!
-- wo wird der ack button gemacht?
-- mimi hat keinen ack button!
-- upload!
-- falls history zu lange: cache!!!
-- help
-- multigame interface
-- muss noch das autopoll verbessern!!!
+21: *7:53 AM 7/14/2022-8:08 AM 7/14/2022
+22: *8:08 AM 7/14/2022-8:18 AM 7/14/2022
+23: *8:18 AM 7/14/2022-8:30 AM 7/14/2022
+24: *8:30 AM 7/14/2022-9:29 PM 7/14/2022
++100
+__________ fr 15.7.22 =>100 ewew 0=fa,1ok,2+lu,3*co,-1~pa,-2-qu,-3!
+125: *9:29 PM 7/14/2022-6:17 AM 7/15/2022
+ok - fritz history statt card macht er eine farbe!!!
+ok - spotit calc_syms ist kathastrophe!!!!!
+ok - bug spotit 251!!!!!!!!!!!
+ok - wo wird der ack button gemacht?
+ok - mimi hat keinen ack button!
+ok - upload!
+ok - falls history zu lange: cache!!!
+ok - help
+ok - multigame interface
+ok - muss noch das autopoll verbessern!!!
+126: *6:19 AM 7/15/2022-6:21 AM 7/15/2022
+127: *6:21 AM 7/15/2022-
+- aristo: stats: how many cards, how many luxury cards
+
 
 
 ==> alle die player info soll AUCH IM PLAYER REPLICATED SEIN!!!!!

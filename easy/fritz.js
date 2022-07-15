@@ -417,7 +417,7 @@ function end_of_turn_fritz() {
 		ckey = ui_discarded_card.key;
 		//console.log('discard', discard);
 		elem_from_to(ckey, fen.players[uplayer].hand, fen.deck_discard);
-		ari_history_list([`${uplayer} discards ${c}`], 'discard');
+		ari_history_list([`${uplayer} discards ${ckey}`], 'discard');
 
 	}
 

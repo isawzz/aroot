@@ -166,7 +166,7 @@ function ai_move(ms = 100) {
 	//mFade(dTable,100); //mAnimateTo(dTable, 'opacity', .2, 100); //irgendwie muss ich table hiden!
 
 	DA.ai_is_moving = true;
-	let [A, fen] = [Z.A, Z.fen];
+	let [A, fen] = [valf(Z.A,{}), Z.fen];
 	let selitems;
 
 	if (Z.game == 'ferro') {
