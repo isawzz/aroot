@@ -34,7 +34,7 @@ function handle_result(result, type) {
 			//let items = ['gAbacus','gTouchPic', 'gAnagram', 'gChess'].map(x => DB.games[x]);
 
 			let items = dict2list(Syms); //all keys
-			//let items = findKeys('light').map(x=>Syms[x]); // filter keys
+			//let items = findKeys('hand').map(x=>Syms[x]); // filter keys
 			//console.log('items',items);
 
 			//let x=Syms.watch;	console.log('x',x);

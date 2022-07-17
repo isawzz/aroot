@@ -18468,10 +18468,10 @@ html:lang(es-US) .sc-vipaa-module .sign-in-settings-skin .fp-active .FP-section 
 	border: none;
 	outline: none;
 	cursor: pointer;
-	-webkit-user-select: none;
+	/* -webkit-user-select: none;
 	-moz-user-select: none;
 	-ms-user-select: none;
-	user-select: none;
+	user-select: none; */
 	-webkit-transition: all 0.3s ease 0s;
 	transition: all 0.3s ease 0s;
 }

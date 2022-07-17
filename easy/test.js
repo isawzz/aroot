@@ -20,9 +20,7 @@ function start_tests() {
 	//ltest70_aristo_church(); //ltest57_aristo();
 	//ltest82_ferro(); //ltest85_card_short_text(); //ltest83_svg();
 	//#endregion
-	ltest86_ferro();
-
-
+	ltest89_aristo_journey();
 
 }
 function landing(){
@@ -33,6 +31,30 @@ function landing(){
 
 }
 //#region live server tests
+function ltest89_aristo_journey() {
+	TESTING = true; DA.testing = true; DA.test = { mods: [], iter: 0, maxiter: 200, running: false, step: true, suiteRunning: false, number: 0, list: [0] };
+	DA.test.end = () => { }; //console.log('discard:',Z.fen.deck_discard);}
+	DA.auto_moves = [];//[['random']];
+	let playernames = [U.name, 'felix','amanda','lauren'];
+
+	startgame('aristo', playernames.map(x => ({ name: x, playmode: 'human' })), { mode: 'hotseat',commission:'no',rumors:'no' });
+}
+function ltest88_aristo_market() {
+	TESTING = true; DA.testing = true; DA.test = { mods: [give_players_stalls], iter: 0, maxiter: 200, running: false, step: true, suiteRunning: false, number: 0, list: [0] };
+	DA.test.end = () => { }; //console.log('discard:',Z.fen.deck_discard);}
+	DA.auto_moves = [];//[['random']];
+	let playernames = [U.name, 'felix'];
+
+	startgame('aristo', playernames.map(x => ({ name: x, playmode: 'human' })), { mode: 'hotseat' });
+}
+function ltest87_aristo() {
+	TESTING = true; DA.testing = true; DA.test = { mods: [], iter: 0, maxiter: 200, running: false, step: true, suiteRunning: false, number: 0, list: [0] };
+	DA.test.end = () => { }; //console.log('discard:',Z.fen.deck_discard);}
+	DA.auto_moves = [];//[['random']];
+	let playernames = [U.name, 'felix'];
+
+	startgame('aristo', playernames.map(x => ({ name: x, playmode: 'human' })), { mode: 'hotseat' });
+}
 function ltest86_ferro() {
 	TESTING = true; DA.testing = true; DA.test = { mods: [give_player_two_ferro_sets,make_long_history], iter: 0, maxiter: 200, running: false, step: true, suiteRunning: false, number: 0, list: [0] };
 	DA.test.end = () => { }; //console.log('discard:',Z.fen.deck_discard);}
@@ -658,7 +680,6 @@ function ltest8_ferro_sim() {
 	startgame('ferro', [{ name: U.name, playmode: 'human' }, { name: 'felix', playmode: 'human' }, { name: 'amanda', playmode: 'human' }], { mode: 'hotseat' });
 
 }
-
 function ltest7_ferro_skin() {
 	startgame('ferro', [{ name: U.name, playmode: 'human' }, { name: 'felix', playmode: 'human' }, { name: 'amanda', playmode: 'human' }], { mode: 'hotseat' });
 

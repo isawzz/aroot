@@ -8129,8 +8129,208 @@ ok - help
 ok - multigame interface
 ok - muss noch das autopoll verbessern!!!
 126: *6:19 AM 7/15/2022-6:21 AM 7/15/2022
-127: *6:21 AM 7/15/2022-
-- aristo: stats: how many cards, how many luxury cards
+127: *6:21 AM 7/15/2022-6:22 AM 7/15/2022
+128: *6:22 AM 7/15/2022-6:23 AM 7/15/2022
+129: *6:23 AM 7/15/2022-6:23 AM 7/15/2022
+130: *6:23 AM 7/15/2022-6:26 AM 7/15/2022
+=====>TESTING
+ok - copy to TESTING
+ok - open aristo
+131: *6:26 AM 7/15/2022-6:27 AM 7/15/2022
+132: *6:27 AM 7/15/2022-6:28 AM 7/15/2022
+133: *6:28 AM 7/15/2022-6:33 AM 7/15/2022
+134: *6:33 AM 7/15/2022-6:39 AM 7/15/2022
+135: *6:39 AM 7/15/2022-
+ok - open test
+ok - aroot iconViewer hand fuer luxury cards>
+ok - sym for luxury cards?
+ok - aristo: stats: how many cards, how many luxury cards
+136: *6:39 AM 7/15/2022-6:42 AM 7/15/2022
+137: *6:42 AM 7/15/2022-6:44 AM 7/15/2022
+138: *6:42 AM 7/15/2022-6:44 AM 7/15/2022
+139: *6:44 AM 7/15/2022-6:48 AM 7/15/2022
+140: *6:48 AM 7/15/2022-6:50 AM 7/15/2022
+141: *6:50 AM 7/15/2022-6:51 AM 7/15/2022
+142: *6:51 AM 7/15/2022-6:51 AM 7/15/2022
+143: *6:51 AM 7/15/2022-6:55 AM 7/15/2022
+====>rechnung: set master password
+144: *6:55 AM 7/15/2022-7:01 AM 7/15/2022
+145: *7:01 AM 7/15/2022-7:10 AM 7/15/2022
+146: *7:10 AM 7/15/2022-7:11 AM 7/15/2022
+147: *7:11 AM 7/15/2022-7:16 AM 7/15/2022
+148: *7:16 AM 7/15/2022-7:18 AM 7/15/2022
+149: *7:18 AM 7/15/2022-7:23 AM 7/15/2022
+150: *7:23 AM 7/15/2022-7:23 AM 7/15/2022
+151: *7:23 AM 7/15/2022-7:25 AM 7/15/2022
+152: *7:25 AM 7/15/2022-7:29 AM 7/15/2022
+153: *7:29 AM 7/15/2022-8:26 AM 7/15/2022
+154: *8:26 AM 7/15/2022-8:34 AM 7/15/2022
+155: *8:36 AM 7/15/2022-8:36 AM 7/15/2022
+156: *8:36 AM 7/15/2022-8:41 AM 7/15/2022
+157: *8:41 AM 7/15/2022-8:48 AM 7/15/2022
+158: *8:48 AM 7/15/2022-8:48 AM 7/15/2022
+1- rufzeichen br
+2- brauch brs
+3- error fields
+159: *8:48 AM 7/15/2022-8:49 AM 7/15/2022 1
+160: *8:49 AM 7/15/2022-8:54 AM 7/15/2022
+161: *8:56 AM 7/15/2022-8:57 AM 7/15/2022
+1- copy to baustelle
+2- setz es wieder auf expired!
+3- 
+162: *8:57 AM 7/15/2022-8:59 AM 7/15/2022 2
+163: *8:59 AM 7/15/2022-9:38 AM 7/15/2022
+164: *9:38 AM 7/15/2022-9:41 AM 7/15/2022
+165: *9:42 AM 7/15/2022-9:47 AM 7/15/2022
+166: *9:47 AM 7/15/2022-9:53 AM 7/15/2022
+167: *10:03 AM 7/15/2022-10:03 AM 7/15/2022
+1- submit on enter: find 'Enter'
+2- tabindex
+3- back to code: how to focus on next input at enter
+168: *10:03 AM 7/15/2022-10:16 AM 7/15/2022 3
+169: *10:16 AM 7/15/2022-10:28 AM 7/15/2022
+170: *10:28 AM 7/15/2022-10:35 AM 7/15/2022
+1- rem cons!
+2- correct
+3- error soll bg red, color yellow sein!
+171: *10:35 AM 7/15/2022-10:37 AM 7/15/2022 4
+172: *10:37 AM 7/15/2022-11:17 AM 7/15/2022
+173: *11:17 AM 7/15/2022-11:21 AM 7/15/2022
+174: *11:22 AM 7/15/2022-11:24 AM 7/15/2022 5
+1- error needs padding!
+2- show_eval_message(false);
+3- coin wieder bei challenge0
+175: *11:24 AM 7/15/2022-11:47 AM 7/15/2022
+176: *11:47 AM 7/15/2022-11:48 AM 7/15/2022
+177: *11:48 AM 7/15/2022-11:51 AM 7/15/2022
+178: *11:51 AM 7/15/2022-11:53 AM 7/15/2022
+1- reset start! 
+2- aendere instruction
+3- show success failure beim anderen!
+179: *11:53 AM 7/15/2022-11:55 AM 7/15/2022
+180: *11:55 AM 7/15/2022-1:49 PM 7/15/2022 6
+181: *1:50 PM 7/15/2022-1:53 PM 7/15/2022
+2- msgFail soll sein: the password is:
+3- wo fail?
+__________ sa 16.7.22 =>100 ewew 0=fa,1ok,2+lu,3*co,-1~pa,-2-qu,-3!
+290: *8:11 PM 7/15/2022-5:56 AM 7/16/2022
+291: *5:56 AM 7/16/2022-5:59 AM 7/16/2022
+292: *5:59 AM 7/16/2022-6:00 AM 7/16/2022
+293: *6:00 AM 7/16/2022-6:02 AM 7/16/2022
+294: *6:02 AM 7/16/2022-6:08 AM 7/16/2022
+295: *6:08 AM 7/16/2022-6:17 AM 7/16/2022
+296: *6:17 AM 7/16/2022-6:20 AM 7/16/2022
+297: *6:20 AM 7/16/2022-6:35 AM 7/16/2022
+298: *6:35 AM 7/16/2022-6:53 AM 7/16/2022
+299: *6:53 AM 7/16/2022-6:57 AM 7/16/2022
+300: *6:57 AM 7/16/2022-7:05 AM 7/16/2022
+301: *7:05 AM 7/16/2022-7:06 AM 7/16/2022
+302: *7:06 AM 7/16/2022-7:17 AM 7/16/2022
+303: *7:17 AM 7/16/2022-7:20 AM 7/16/2022
+304: *7:20 AM 7/16/2022-7:25 AM 7/16/2022
+305: *7:25 AM 7/16/2022-7:53 AM 7/16/2022
+306: *7:53 AM 7/16/2022-7:54 AM 7/16/2022
+307: *7:54 AM 7/16/2022-7:55 AM 7/16/2022
+308: *7:55 AM 7/16/2022-8:03 AM 7/16/2022
+309: *8:03 AM 7/16/2022-8:09 AM 7/16/2022
+310: *8:09 AM 7/16/2022-8:19 AM 7/16/2022
+311: *8:19 AM 7/16/2022-9:57 AM 7/16/2022
+312: *9:57 AM 7/16/2022-10:02 AM 7/16/2022
+313: *10:02 AM 7/16/2022-10:08 AM 7/16/2022
+314: *10:08 AM 7/16/2022-1:03 PM 7/16/2022
+315: *1:03 PM 7/16/2022-6:11 PM 7/16/2022
+316: *6:15 PM 7/16/2022-
+2- copy to TESTING
+3- sorting problem =>Clientdata
+
+- race condition: alle die kaufen wollen muessen clicken
+- am ende kauft der der als erstes ist.
+- confirmation round!
+- sorting 
+- player order nach round win ueberpruefen
+- soll sortiert bleiben auch wenn man out of turn sortiert
+==> ClientData stored sorting order!!!!!
+
+
+1- check ob wenn die cards in legal group sind owner weggeht!!!
+2- fritz
+ok 3- bluff
+- goto code!
+- bandmessage stoert schon wieder!!!
+- bei a l'honneur gibt es einen weireden fehler manchmal wenn DD from discard pile!!! =>forsche nach!!! ==>TESTING!!!
+- wieso kommt msg so spaet bei ende von challen1
+- es ist wegen dem BandMessage ich muss ein mFadeRemove machen!!!
+- check die classes von dem Log In button!
+- such den Login to button
+- warum geht manchmal der Login to boa button nicht???
+- rem cons
+- bei fail restart!
+- output DA.name
+
+- DA muss resetted werden!
+- start_challenge0
+- goto loggedout challenge
+- beim 2ten mal ist challenge nicht mehr on!
+- wenn der challenge aus ist wo ist er dann?
+
+
+- wenn fail: muss ich das password kurz zeigen!!!
+
+- wieso geht submit nicht???
+- 
+- WTF?
+- master pwd renew!
+- start von der loggedout form!!!
+- goto loggedout
+- warum geht die form ueberhaupt nicht?
+- 220
+- pwd_complexity speichern!
+- mach expired!
+
+- ich brauch ein set new password popup!!!
+- geht zu onclick_popup
+- what should happen when click on bw symbol?
+- randomly make bw pwd expitred or loggesout
+- wie soll der password challenge gehen?
+1. click the bitwarden icon
+2. 
+- rem cons
+- wie soll das gehen?
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

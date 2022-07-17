@@ -23,6 +23,21 @@
 		<div id="dTop"></div>
 		<div id="dScreen" style="opacity: 0">
 			<div id="dHome" style="font-size: 14px; padding: 10px">
+				<h2>how to work with bitwarden</h2>
+				<div id="dHowToPassword">
+					<p>
+						1. determine bitwarden state: if bitwarden icon has a little star in the bottom right corner, bitwarden master password needs to be entered or it
+						might have expired.
+					</p>
+					<p>2. click bitwarden icon</p>
+					<p>3. follow instructions in popup:</p>
+					<div style="padding: 0px 25px">
+						<p>3.1 if logged out: enter the master password</p>
+						<p>OR</p>
+						<p>3.2 if expired: set a new master password</p>
+					</div>
+					<a href="javascript:start_challenge4()">Start Password Challenge!</a>
+				</div>
 				<h2>how to log in to bank of america</h2>
 				<div id="dHowToLogin">
 					<p>1. click BOA icon.</p>
@@ -59,7 +74,8 @@
 					<p>2. click on bill icon to generate a monthly statement</p>
 					<p>3. search for appropriate account in account list</p>
 					<p>4. enter amount, and press Make Payment button</p>
-					<a href="javascript:start_challenge2()">Start Bill Pay Challenge!</a><br>
+					<a href="javascript:start_challenge2()">Start Bill Pay Challenge!</a>
+					<br />
 					<a href="javascript:start_challenge3()">Start Full Bill Pay Challenge!</a>
 				</div>
 			</div>
@@ -72,7 +88,6 @@
 		</div>
 		<div id="dPopup" style="position: absolute; display: none"></div>
 		<button id="dummy" class="dummy">dummy</button>
-		<div id="dBandMessage" style="position:fixed;background:skyblue;min-height:100vh;display:none"></div>
-
+		<div id="dBandMessage" style="position: fixed; background: skyblue; min-height: 100vh; display: none"></div>
 	</body>
 </html>
