@@ -3084,6 +3084,13 @@ function addWeekToDate(date, weeks) {
 	d.setDate(d.getDate() + (weeks * 7));
 	return d;
 }
+function calculateDaysBetweenDates(begin, end) {
+	var oneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
+	var firstDate = new Date(begin);
+	var secondDate = new Date(end);
+	var diffDays = Math.round(Math.abs((firstDate.getTime() - secondDate.getTime()) / (oneDay)));
+	return diffDays;
+}
 function date2locale(date) { return date.toLocaleDateString(); }
 function format_date(date) {
 	let d = new Date(date);

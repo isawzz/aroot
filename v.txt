@@ -8239,9 +8239,427 @@ __________ sa 16.7.22 =>100 ewew 0=fa,1ok,2+lu,3*co,-1~pa,-2-qu,-3!
 313: *10:02 AM 7/16/2022-10:08 AM 7/16/2022
 314: *10:08 AM 7/16/2022-1:03 PM 7/16/2022
 315: *1:03 PM 7/16/2022-6:11 PM 7/16/2022
-316: *6:15 PM 7/16/2022-
+316: *6:15 PM 7/16/2022-6:16 PM 7/16/2022
+1- open TESTING
 2- copy to TESTING
 3- sorting problem =>Clientdata
+317: *6:17 PM 7/16/2022-5:01 AM 7/17/2022
+__________ so 17.7.22 =>100 ewew 0=fa,1ok,2+lu,3*co,-1~pa,-2-qu,-3!
+380: *5:02 AM 7/17/2022-5:09 AM 7/17/2022
+381: *5:09 AM 7/17/2022-5:11 AM 7/17/2022
+382: *5:11 AM 7/17/2022-5:19 AM 7/17/2022
+383: *5:19 AM 7/17/2022-5:23 AM 7/17/2022
+384: *5:23 AM 7/17/2022-5:24 AM 7/17/2022
+385: *5:24 AM 7/17/2022-5:25 AM 7/17/2022
+ok - VERBOSE
+ok - test ob games geht!
+386: *5:25 AM 7/17/2022-5:27 AM 7/17/2022
+387: *5:27 AM 7/17/2022-5:27 AM 7/17/2022
+ok - check spelling of Clientdata
+388: *5:28 AM 7/17/2022-5:28 AM 7/17/2022
+=======>> radical simplification!
+389: *5:28 AM 7/17/2022-5:29 AM 7/17/2022
+390: *5:29 AM 7/17/2022-5:31 AM 7/17/2022
+391: *5:31 AM 7/17/2022-5:32 AM 7/17/2022
+392: *5:32 AM 7/17/2022-5:40 AM 7/17/2022
+393: *5:40 AM 7/17/2022-5:42 AM 7/17/2022
+394: *5:42 AM 7/17/2022-5:42 AM 7/17/2022
+=>>POLLING
+395: *5:42 AM 7/17/2022-5:46 AM 7/17/2022
+396: *5:46 AM 7/17/2022-5:50 AM 7/17/2022
+397: *5:50 AM 7/17/2022-5:50 AM 7/17/2022
+398: *5:50 AM 7/17/2022-5:50 AM 7/17/2022
+399: *5:50 AM 7/17/2022-5:51 AM 7/17/2022
+400: *5:51 AM 7/17/2022-5:56 AM 7/17/2022
+401: *5:56 AM 7/17/2022-5:57 AM 7/17/2022
+402: *5:57 AM 7/17/2022-6:00 AM 7/17/2022
+403: *6:00 AM 7/17/2022-6:01 AM 7/17/2022
+404: *6:01 AM 7/17/2022-6:06 AM 7/17/2022
+405: *6:06 AM 7/17/2022-6:10 AM 7/17/2022
+406: *6:10 AM 7/17/2022-6:11 AM 7/17/2022
+407: *6:11 AM 7/17/2022-6:15 AM 7/17/2022
+408: *6:15 AM 7/17/2022-6:20 AM 7/17/2022
+409: *6:20 AM 7/17/2022-6:23 AM 7/17/2022
+410: *6:23 AM 7/17/2022-6:31 AM 7/17/2022
+411: *6:32 AM 7/17/2022-6:33 AM 7/17/2022
+412: *6:33 AM 7/17/2022-6:37 AM 7/17/2022
+413: *6:37 AM 7/17/2022-6:38 AM 7/17/2022
+414: *6:38 AM 7/17/2022-6:43 AM 7/17/2022
+415: *6:43 AM 7/17/2022-6:44 AM 7/17/2022
+416: *6:44 AM 7/17/2022-6:51 AM 7/17/2022
+417: *6:51 AM 7/17/2022-6:58 AM 7/17/2022
+418: *7:01 AM 7/17/2022-7:03 AM 7/17/2022
+419: *7:03 AM 7/17/2022-7:04 AM 7/17/2022
+420: *7:04 AM 7/17/2022-7:05 AM 7/17/2022
+421: *7:05 AM 7/17/2022-8:01 AM 7/17/2022
+422: *8:01 AM 7/17/2022-8:02 AM 7/17/2022
+423: *8:02 AM 7/17/2022-8:04 AM 7/17/2022
+424: *8:04 AM 7/17/2022-8:11 AM 7/17/2022
+1- a_game in config!
+2- just invent a supersimplegame
+3- versuch ein stargame simple!
+425: *8:13 AM 7/17/2022-8:13 AM 7/17/2022 1
+426: *8:13 AM 7/17/2022-8:33 AM 7/17/2022
+427: *8:33 AM 7/17/2022-8:33 AM 7/17/2022
+428: *8:33 AM 7/17/2022-8:37 AM 7/17/2022 2
+1- open old processServerrdata
+2- warum ist fen kein object???
+3- include a_game in games list
+429: *8:37 AM 7/17/2022-8:38 AM 7/17/2022
+430: *8:38 AM 7/17/2022-8:43 AM 7/17/2022
+431: *8:43 AM 7/17/2022-9:13 AM 7/17/2022 3
+1- ne das ist ja ein string!!!
+2- geht so nicht!!!
+3- all objects have to be parsed!
+432: *9:13 AM 7/17/2022-9:24 AM 7/17/2022 4
+1- wird Z als {} init??? NEIN!
+2- need to update table in tables and set uplayer and uname
+3- was brauch ich und ws will ich separate halten?
+433: *9:48 AM 7/17/2022-9:49 AM 7/17/2022 5
+434: *9:49 AM 7/17/2022-10:29 AM 7/17/2022
+435: *10:39 AM 7/17/2022-10:39 AM 7/17/2022
+436: *10:39 AM 7/17/2022-10:49 AM 7/17/2022 6
+1- startgame: table ist NICHT angekommen!!!
+2- bug
+3- versuch uplayer setting zu vereinfachen!!
+437: *10:49 AM 7/17/2022-11:56 AM 7/17/2022
+skype
+438: *11:56 AM 7/17/2022-2:53 PM 7/17/2022 7
+1- warum ist table nicht da?
+2- test
+3- schau zu api.php
+439: *3:22 PM 7/17/2022-3:26 PM 7/17/2022
+440: *3:26 PM 7/17/2022-3:33 PM 7/17/2022
+441: *3:34 PM 7/17/2022-3:37 PM 7/17/2022
+1- ja er macht kein show_games weil er ja supposedly gleich das game startet!!! (also gamestep!)
+2- araxis aufrufen!
+3- warum wird die table nicht angezeigt?
+442: *3:37 PM 7/17/2022-7:27 PM 7/17/2022
+443: *7:27 PM 7/17/2022-7:27 PM 7/17/2022
+wann soll NICHT presentiert werden?
+ok - verwende S fuer Serverdata
+ok - make sure Z always exists
+ok - mach startgame ohne polling!!!
+ok - leg indiv an!
+ok - mach players table neu!!! indiv
+ok ==>fen muss klein gehalten werden!!!!! damit multiple fen historyies storen kann!
+ok - schau mal ob prev fen gestored wird bei client? NEIN!
+ok - brauh einen simplen test fuer startgame!
+ok - transparent server: 
+ok - und zwar so:
+ok startgame legt in players fuer jeden player einen record an
+ok - kann es eh wieder mit den players machen!
+ok - probier globals aus!
+ok - php was macht session_start?
+dann: der server hat einen akku
+=>simplify table data:
+id,friendly,game,host,players,fen,options,modified
+=> was mach ich mit phase,step,round,stage?????
+=>sollte das nicht in der fen sein? und NUR dort!
+__________ mo 18.7.22 =>100 ewew 0=fa,1ok,2+lu,3*co,-1~pa,-2-qu,-3!
+500: *7:57 PM 7/17/2022-12:27 AM 7/18/2022
+501: *12:27 AM 7/18/2022-12:34 AM 7/18/2022
+502: *12:34 AM 7/18/2022-12:36 AM 7/18/2022
+503: *12:36 AM 7/18/2022-12:36 AM 7/18/2022
+504: *12:36 AM 7/18/2022-12:39 AM 7/18/2022
+505: *12:39 AM 7/18/2022-12:41 AM 7/18/2022
+506: *12:41 AM 7/18/2022-12:42 AM 7/18/2022
+507: *12:42 AM 7/18/2022-12:43 AM 7/18/2022
+508: *12:43 AM 7/18/2022-12:49 AM 7/18/2022
+509: *12:49 AM 7/18/2022-12:49 AM 7/18/2022
+510: *12:49 AM 7/18/2022-12:50 AM 7/18/2022
+511: *12:50 AM 7/18/2022-12:51 AM 7/18/2022
+512: *12:51 AM 7/18/2022-12:52 AM 7/18/2022
+513: *12:52 AM 7/18/2022-12:53 AM 7/18/2022
+514: *12:53 AM 7/18/2022-12:54 AM 7/18/2022
+515: *12:54 AM 7/18/2022-12:55 AM 7/18/2022
+516: *12:55 AM 7/18/2022-12:57 AM 7/18/2022
+517: *12:57 AM 7/18/2022-12:58 AM 7/18/2022
+518: *12:58 AM 7/18/2022-1:02 AM 7/18/2022
+519: *1:02 AM 7/18/2022-1:03 AM 7/18/2022
+520: *1:03 AM 7/18/2022-1:04 AM 7/18/2022
+521: *1:04 AM 7/18/2022-1:06 AM 7/18/2022
+522: *1:06 AM 7/18/2022-1:08 AM 7/18/2022
+523: *1:08 AM 7/18/2022-1:09 AM 7/18/2022
+524: *1:09 AM 7/18/2022-1:10 AM 7/18/2022
+525: *1:10 AM 7/18/2022-1:11 AM 7/18/2022
+526: *1:11 AM 7/18/2022-1:11 AM 7/18/2022
+- nein, mach es anders: schau ob fen in php habe?
+- in gtable add turn
+- wo ist gametable sql?
+- create gtable table
+- arbeite  ab sofort mit gtable statt gametable!
+- mach ein turn in gametable
+- brauch ich ein turn in table?
+- Clientdata.this_turn
+- wo wird Z.prev created?
+- brauch die Clientdata!
+- Z.prev: history
+- test
+- log object
+- rem cons
+- 142: friendly
+- mode
+- apiserver 128
+- test
+- apiserver 127
+- test
+- ensure_polling
+- n players
+- deck_deal_safe 
+- mach ein deck
+- wie sind stages in basemin / ARI? stage: { 1: 'market',...}
+-  mach ein deck 
+- jeder kann ein paar cards in seiner hand selected und enter
+- beispiele fuer das Simple game: jeder bekommt eine hand527: *1:11 AM 7/18/2022-1:13 AM 7/18/2022
+528: *1:13 AM 7/18/2022-1:15 AM 7/18/2022
+529: *1:15 AM 7/18/2022-1:18 AM 7/18/2022
+530: *1:18 AM 7/18/2022-1:20 AM 7/18/2022
+531: *1:20 AM 7/18/2022-6:23 AM 7/18/2022
+532: *6:25 AM 7/18/2022-6:29 AM 7/18/2022
+533: *6:29 AM 7/18/2022-6:30 AM 7/18/2022
+534: *6:30 AM 7/18/2022-6:32 AM 7/18/2022
+535: *6:32 AM 7/18/2022-6:34 AM 7/18/2022
+536: *6:34 AM 7/18/2022-a_game 19 deck
+537: *6:35 AM 7/18/2022-6:37 AM 7/18/2022
+538: *6:37 AM 7/18/2022-6:41 AM 7/18/2022
+ok - soll ich doch startgame so lassen? JA
+- alte send und turn send =>baustelle
+539: *6:41 AM 7/18/2022-6:42 AM 7/18/2022
+540: *6:43 AM 7/18/2022-6:43 AM 7/18/2022
+541: *6:44 AM 7/18/2022-6:45 AM 7/18/2022
+542: *6:45 AM 7/18/2022-6:53 AM 7/18/2022
+543: *6:53 AM 7/18/2022-6:56 AM 7/18/2022
+544: *6:56 AM 7/18/2022-6:57 AM 7/18/2022
+545: *6:57 AM 7/18/2022-6:58 AM 7/18/2022
+- apiserver 137 host!
+546: *6:58 AM 7/18/2022-7:01 AM 7/18/2022
+547: *7:01 AM 7/18/2022-7:02 AM 7/18/2022
+548: *7:02 AM 7/18/2022-7:04 AM 7/18/2022
+549: *7:04 AM 7/18/2022-7:05 AM 7/18/2022
+550: *7:06 AM 7/18/2022-7:06 AM 7/18/2022
+551: *7:07 AM 7/18/2022-7:11 AM 7/18/2022
+552: *7:11 AM 7/18/2022-7:14 AM 7/18/2022
+553: *7:14 AM 7/18/2022-7:16 AM 7/18/2022
+554: *7:16 AM 7/18/2022-7:16 AM 7/18/2022
+555: *7:16 AM 7/18/2022-7:21 AM 7/18/2022
+ok - geh zum frueheren polling.js
+ok - it doesnt make sense to poll in hotseat mode STIMMT!
+556: *7:21 AM 7/18/2022-7:32 AM 7/18/2022
+557: *7:33 AM 7/18/2022-7:33 AM 7/18/2022
+558: *7:33 AM 7/18/2022-7:39 AM 7/18/2022
+559: *7:39 AM 7/18/2022-7:41 AM 7/18/2022
+560: *7:41 AM 7/18/2022-7:51 AM 7/18/2022
+561: *7:52 AM 7/18/2022-7:56 AM 7/18/2022
+562: *7:56 AM 7/18/2022-7:59 AM 7/18/2022
+563: *7:59 AM 7/18/2022-8:00 AM 7/18/2022
+564: *8:00 AM 7/18/2022-8:03 AM 7/18/2022
+565: *8:03 AM 7/18/2022-8:11 AM 7/18/2022
+566: *8:11 AM 7/18/2022-
+- kann ganz leicht zeug aus fen extracten!
+- wenn von single zurueckkomme, schau was in result.turn steht!!!
+- wie updated man in php?
+- mach config wieder 10 cards
+- php server fuer single cmd
+- apiserver handle single
+- was muss da jetzt passieren? handled der server das extra?
+- update turn,step,stage
+- options.handsize
+- alter move code zurueck zu start!
+- in baustelle mach jetzt die neuen moves!
+- was soll jetzt passieren?
+- some kind of game display in present
+
+
+
+
+
+
+
+
+- mach wieder das polling expired!
+- mach ein band message please reload - table expired! mit einem reload button drauf!
+- set Clientdata turn in update_table
+- wo wird this_turn = ? in unpack_table 
+- gamehelpers 11: wegen Cliendata.this_turn
+- was hab ich bei cmd move gemacht?
+- ruf gamstep auf!
+- mach ein gamestep in baustelle2
+
+- mach einen button fuer random move
+- wie kann ich das testen?
+- 
+- impl 1 .. 5
+als erstes schau ob/wie der php server fen serlegen kann
+
+
+
+- turn_send
+
+- bear options handsize in config
+- bear game: player hands of 7
+
+cmd ist startgame oder move oder table (get)
+startgame und move haben:
+friendly,game,host,players,fen,options,scoring,notes
+bei server wird modified und id geadded
+api.php verwendet nur was er braucht
+
+- turn send sendet alles!
+
+:this is a dream! there is NO NEED TO THINK ABOUT THE PAST!
+sobald ich eine erkenntnis habe, setze diese AB JETZT um
+no need to regret anything since what has not been known could not have been helped!
+
+a dream is something else entirely!
+download ACIM
+
+
+- das turn_send muss sich aendern! IMMER NUR DAS VERWENDEN!!!
+=>fuer table,startgame und move
+
+bei jedem der folgenden fragt es sich: who is updating fen?
+1. singleplayer: 
+- only 1 player has turn, all others are polling,
+- when player is done others update
+2. race:
+- multiple players have turn
+- all players are polling
+- first player who is done, writes
+- all update
+3. collect:
+- multiple players have turn
+- all are polling
+- when all are done, server writes
+- all update
+4. timed collect:
+- multiple players have turn
+- all are polling
+- when time is up, server writes
+- all update
+5. timed race:
+- multiple players have turn
+- all players are polling
+- first player who is done before timeup, writes
+- all update
+
+
+- jetzt list all the different techniques / combinations of autopoll and presentation
+
+
+
+
+
+
+
+
+
+- das heisst, nachladen muss ich ab da nur die VERAENDERTEN daten
+=>Z.friendly (die current table) oder ev messages die der server von anderem player erhaelt und stored!!!
+- das heisst ich habe mit start ALLE daten vom server bei client!
+- assets cmd ladet sogar die tables!
+- ab wann hab ich die users? JA
+- change title to games
+- mit startgame startet alles
+- jeder player bekommt eine verschiedene zeit within 1 second
+- according to his spot in table.players
+- in _poll kann ich Z.mytime anschauen und warten bis meine zeit gekommen ist
+
+
+
+
+
+
+
+- pollStop ist ok: es macht nur clearTimeout fuerr autopoll
+- super simpel heisst: ?
+- mach ein super simples spiel das ALLE mechanisms contained!
+- probier das mal!
+polling synchronisieren sodass keine race cond entstehen!
+- kann onclicks in polling elim, noshow elim
+
+
+=> immersive experience!!!
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+- als erstes muss ich das polling richtig machen!
+- php assets bleibt so
+- wie kann ich am besten NICHTS machen?
+- get gamehelpers
+- ein cleanes stopgame!
+- almost continuous polling
+exception ist: wenn man drankommt und es ein clean single move ist
+ich brauche:
+- einen timer der mir praezise um eine zeit ein command zum server sendet
+- einen server der data collecten kann
+- Clientdata 
+- simplify data
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 - race condition: alle die kaufen wollen muessen clicken
 - am ende kauft der der als erstes ist.

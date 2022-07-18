@@ -127,8 +127,9 @@ function unpack_table(o) {
 		o.stime = stringBeforeLast(o.timestamp.toString(), 'G').trim();
 		//console.log('timestamp',o.stime);
 	}
-	//console.log('o.game',o)
-	if (isdef(o.game)) { if (nundef(window[o.game])) o.game='fritz';o.func = window[o.game](); }
+	console.log('o.game',o.game)
+	assertion(isdef(window[o.game], 'game function for ' + o.game + ' not defined in window'));
+	if (isdef(o.game)) { o.func = window[o.game](); }
 	if (isdef(o.options.mode)) { o.mode = o.options.mode; }
 	if (lookup(o, ['fen', 'plorder'])) o.plorder = lookup(o, ['fen', 'plorder']);
 	//console.log('table after unpacking', jsCopy(o));
