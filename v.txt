@@ -8653,8 +8653,21 @@ clear => start_multi =>...indiv...=>complete:resolve
 1- das collect muss nach autopoll gecheckt werden!!!
 2- wieso ist jetzt das message nicht mehr on?
 3- ===>>>ewew!!!
-727: *10:56 AM 7/19/2022-
-3-
+727: *10:56 AM 7/19/2022-12:49 PM 7/19/2022
+728: *12:49 PM 7/19/2022-12:52 PM 7/19/2022
+729: *12:52 PM 7/19/2022-12:58 PM 7/19/2022
+730: *12:58 PM 7/19/2022-1:01 PM 7/19/2022 6
+1- indiv table
+2- test
+3-test run
+731: *1:01 PM 7/19/2022-1:04 PM 7/19/2022
+732: *1:07 PM 7/19/2022-1:07 PM 7/19/2022
+733: *1:07 PM 7/19/2022-1:09 PM 7/19/2022 7
+1- problem ist muss delete tables machen!!!
+2- ok need to find out wo indiv hingeht in api.php!
+3- apiserver 185
+734: *1:10 PM 7/19/2022-
+
 
 
 

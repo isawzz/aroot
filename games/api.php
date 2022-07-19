@@ -87,7 +87,7 @@ if ($cmd == "assets") {
 		$state = json_encode($data->state);
 		$modified = get_now();
 		$qw = "UPDATE `indiv` SET `state`='$state',checked=$modified WHERE `friendly` = '$friendly' and `name` = '$uname'";
-		$qr = "SELECT * FROM indiv WHERE `friendly` = '$friendly' and `name` = '$uname' limit 1";
+		$qr = "SELECT * FROM indiv WHERE `friendly` = '$friendly'"; // and `name` = '$uname' limit 1";
 		$res=db_write_read($qw,$qr);
 		// now check if all players have non-empty state
 		$qr = "SELECT * FROM indiv WHERE `friendly` = '$friendly'";
