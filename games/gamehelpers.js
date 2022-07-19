@@ -191,6 +191,7 @@ function is_advanced_user() {
 	//console.log('U',isdef(U)?U.name:'undefined!!!');
 	return isdef(U) && advancedUsers.includes(U.name);
 }
+function is_collect_mode() { return Z.turn.length > 1; }
 function is_just_my_turn() {
 	return isEmpty(Z.turn.filter(x => x != Z.uplayer));
 }
@@ -358,6 +359,10 @@ function show_instruction() {
 
 
 	//mBy('dInstruction'), Z.role == 'active' ? Z.fen.instruction : Z.role == 'inactive' ? 'NOT YOUR TURN' : '<span style="float:right;">Spectating</span>');
+}
+function show_MMM(msg){
+	show_fleeting_message(msg,mBy('dMMM'));//(s, dParent, styles, id, ms = 2000)
+
 }
 function show_message(msg = '', stay = false) {
 	mStyle(dTable, { transition: 'all 1s ease' });

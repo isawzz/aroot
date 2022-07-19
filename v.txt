@@ -8455,7 +8455,27 @@ ok - it doesnt make sense to poll in hotseat mode STIMMT!
 563: *7:59 AM 7/18/2022-8:00 AM 7/18/2022
 564: *8:00 AM 7/18/2022-8:03 AM 7/18/2022
 565: *8:03 AM 7/18/2022-8:11 AM 7/18/2022
-566: *8:11 AM 7/18/2022-
+566: *8:11 AM 7/18/2022-8:12 AM 7/18/2022
+567: *8:12 AM 7/18/2022-8:36 AM 7/18/2022
+568: *8:36 AM 7/18/2022-8:37 AM 7/18/2022
+569: *8:37 AM 7/18/2022-8:39 AM 7/18/2022
+570: *8:39 AM 7/18/2022-8:52 AM 7/18/2022
+571: *8:52 AM 7/18/2022-8:53 AM 7/18/2022
+572: *8:54 AM 7/18/2022-8:59 AM 7/18/2022
+573: *8:59 AM 7/18/2022-9:00 AM 7/18/2022
+574: *9:01 AM 7/18/2022-9:04 AM 7/18/2022
+575: *9:04 AM 7/18/2022-9:04 AM 7/18/2022
+576: *9:04 AM 7/18/2022-9:06 AM 7/18/2022
+- was muss jetzt passieren???
+- der state von beiden ist jetzt empty
+- polling nicht in console zeigen!!!
+- start a multi game!
+- start multi turn
+- a_game_state soll zeigen wer ist on turn
+- test delete tables!
+- wenn delete mache muss ich alles in indiv fuer friendly deleten!!!
+- nachschauen in myadmin
+- soll ich multiple game views at once zeigen?
 - kann ganz leicht zeug aus fen extracten!
 - wenn von single zurueckkomme, schau was in result.turn steht!!!
 - wie updated man in php?
@@ -8469,14 +8489,6 @@ ok - it doesnt make sense to poll in hotseat mode STIMMT!
 - in baustelle mach jetzt die neuen moves!
 - was soll jetzt passieren?
 - some kind of game display in present
-
-
-
-
-
-
-
-
 - mach wieder das polling expired!
 - mach ein band message please reload - table expired! mit einem reload button drauf!
 - set Clientdata turn in update_table
@@ -8485,53 +8497,224 @@ ok - it doesnt make sense to poll in hotseat mode STIMMT!
 - was hab ich bei cmd move gemacht?
 - ruf gamstep auf!
 - mach ein gamestep in baustelle2
-
 - mach einen button fuer random move
 - wie kann ich das testen?
-- 
 - impl 1 .. 5
 als erstes schau ob/wie der php server fen serlegen kann
-
-
-
 - turn_send
-
 - bear options handsize in config
 - bear game: player hands of 7
-
 cmd ist startgame oder move oder table (get)
 startgame und move haben:
 friendly,game,host,players,fen,options,scoring,notes
 bei server wird modified und id geadded
 api.php verwendet nur was er braucht
-
 - turn send sendet alles!
-
 :this is a dream! there is NO NEED TO THINK ABOUT THE PAST!
 sobald ich eine erkenntnis habe, setze diese AB JETZT um
 no need to regret anything since what has not been known could not have been helped!
-
 a dream is something else entirely!
 download ACIM
-
-
 - das turn_send muss sich aendern! IMMER NUR DAS VERWENDEN!!!
 =>fuer table,startgame und move
+577: *9:06 AM 7/18/2022-9:07 AM 7/18/2022
+578: *9:07 AM 7/18/2022-9:09 AM 7/18/2022
+579: *9:09 AM 7/18/2022-9:20 AM 7/18/2022
+580: *9:20 AM 7/18/2022-9:25 AM 7/18/2022
+581: *9:25 AM 7/18/2022-9:28 AM 7/18/2022
+582: *9:28 AM 7/18/2022-9:30 AM 7/18/2022
+583: *9:31 AM 7/18/2022-9:37 AM 7/18/2022
+584: *9:37 AM 7/18/2022-9:41 AM 7/18/2022
+585: *9:41 AM 7/18/2022-9:52 AM 7/18/2022
+586: *9:52 AM 7/18/2022-9:53 AM 7/18/2022
+587: *9:53 AM 7/18/2022-10:06 AM 7/18/2022
+588: *10:06 AM 7/18/2022-11:25 AM 7/18/2022
+589: *11:25 AM 7/18/2022-11:27 AM 7/18/2022
+590: *11:27 AM 7/18/2022-11:29 AM 7/18/2022
+591: *11:29 AM 7/18/2022-11:36 AM 7/18/2022 1
+1- wie weiss ich ob ich in einem collection stage bin?
+2- was ist der stage?
+3- ich sollte bei status abfrage aber auch table status erhalten!
+592: *11:36 AM 7/18/2022-12:30 PM 7/18/2022
+593: *12:30 PM 7/18/2022-7:30 PM 7/18/2022
+__________ mo 18.7.22 =>100 ewew 0=fa,1ok,2+lu,3*co,-1~pa,-2-qu,-3!
+670: *7:30 PM 7/18/2022-5:42 AM 7/19/2022
+ok - mach so ein status abfrager wie bei discord: fuer advanced users!
+671: *5:42 AM 7/19/2022-5:47 AM 7/19/2022
+672: *5:47 AM 7/19/2022-5:48 AM 7/19/2022
+673: *5:49 AM 7/19/2022-5:49 AM 7/19/2022
+674: *5:49 AM 7/19/2022-5:53 AM 7/19/2022
+675: *5:53 AM 7/19/2022-5:55 AM 7/19/2022
+676: *5:55 AM 7/19/2022-5:57 AM 7/19/2022
+677: *5:57 AM 7/19/2022-5:59 AM 7/19/2022
+678: *5:59 AM 7/19/2022-6:01 AM 7/19/2022
+ok - mach dass NUR turn players buttons kriegen!
+679: *6:01 AM 7/19/2022-6:04 AM 7/19/2022
+680: *6:05 AM 7/19/2022-6:06 AM 7/19/2022
+681: *6:06 AM 7/19/2022-6:09 AM 7/19/2022
+682: *6:09 AM 7/19/2022-6:10 AM 7/19/2022
+683: *6:10 AM 7/19/2022-6:13 AM 7/19/2022
+684: *6:13 AM 7/19/2022-6:25 AM 7/19/2022
+685: *6:25 AM 7/19/2022-6:32 AM 7/19/2022
+686: *6:32 AM 7/19/2022-6:34 AM 7/19/2022
+687: *6:35 AM 7/19/2022-6:35 AM 7/19/2022
+688: *6:36 AM 7/19/2022-6:37 AM 7/19/2022
+689: *6:37 AM 7/19/2022-6:44 AM 7/19/2022
+690: *6:44 AM 7/19/2022-6:45 AM 7/19/2022
+691: *6:45 AM 7/19/2022-6:45 AM 7/19/2022
+?- was passiert wenn ich auch indi_move clicke? sends collect_open
+692: *6:45 AM 7/19/2022-6:46 AM 7/19/2022
+693: *6:46 AM 7/19/2022-6:47 AM 7/19/2022
+694: *6:47 AM 7/19/2022-6:51 AM 7/19/2022
+695: *6:51 AM 7/19/2022-6:57 AM 7/19/2022
+696: *6:57 AM 7/19/2022-7:09 AM 7/19/2022
+697: *7:09 AM 7/19/2022-7:13 AM 7/19/2022
+698: *7:13 AM 7/19/2022-7:13 AM 7/19/2022
+699: *7:13 AM 7/19/2022-7:14 AM 7/19/2022
+700: *7:14 AM 7/19/2022-7:18 AM 7/19/2022
+701: *7:18 AM 7/19/2022-7:19 AM 7/19/2022
+702: *7:20 AM 7/19/2022-7:26 AM 7/19/2022
+703: *7:26 AM 7/19/2022-7:26 AM 7/19/2022
+704: *7:26 AM 7/19/2022-7:31 AM 7/19/2022
+705: *7:31 AM 7/19/2022-7:32 AM 7/19/2022
+706: *7:32 AM 7/19/2022-7:42 AM 7/19/2022
+707: *7:42 AM 7/19/2022-9:16 AM 7/19/2022
+ok - make sure api.php that acting_host gets playerdata sent!!!! when lock
+708: *9:16 AM 7/19/2022-9:17 AM 7/19/2022
+709: *9:17 AM 7/19/2022-9:17 AM 7/19/2022
+710: *9:17 AM 7/19/2022-9:23 AM 7/19/2022
+1- brauch ein top message!!!
+2- was ist der stage am anfang? 
+3- mach einen resolve buutton
+711: *9:23 AM 7/19/2022-9:26 AM 7/19/2022 1
+712: *9:31 AM 7/19/2022-9:31 AM 7/19/2022
+- wie soll das jetzt weeitergehen?
+- its my (acting_host's) turn and I just have to complete integration
+- there is NO UI here!!!!
+- was jetzt???
+- ok jetzt kommt: assert that it is only my turn now!!!
+- ja das mit acting_host klappt!
+- OR: koennte fen.acting_host setzen am anfang von so einem collect move
+- wie kann ich das mit dem host shift machen????
+- ich koennte die role des collectors zu dem plorder[0] geben
+- dazu muss aber garantiert sein, dass im gesamten multi prozess plorder ist NOT CHANGED!!!!!!!
+- find remove_player
+- wenn der host removed wird muss ein anderer player den host uebernehmen!!!!!!!
+- muss auch in lock playerdata senden!!!!!!! mindestens wenn der host anfragt!
+- alles klar: wenn collect complete ist und ich bin der host, dann muss ich jetzt fen resolven mit den playerdata und turn senden
+- alle machen autopoll!!!!
+- ich komm zurueck von indiv: wenn ich der host bin soll ich jetzt autopoll ohne present solange bis alle fertig sind!
+- wenn ich nicht
+- die table ist falsch! bei collect_open
+- apiserver 155
+- set multi!
+- was passiert dann???
+- kann ich DIREKT wenn ich locke den turn zu host setzen???
+- any user who gets lock should set turn to host
+- was jetzt???
+- ok so table ist jetzt in lock zustand!
+- notes has been used for first time!
+- apiserver 140
+- bei collect_open reagiere in apiserver!
+- wie kann ich sperren? verwende dazu table.notes
+- wie koennte es jetzt weitergehen?
+was ist wenn ich am server sperre?
+dann kann kein anderer mehr der uebergeber an host werden
+a) ich koennte wenn complete ist sofort am server sperren!
+b) ich koennte noch am server turn zu host setzen und die table senden
+c) oder ich koennte am player der complete hat den turn zum host senden
+- hier gibt es jetzt ein problem fuer race cond:
+wenn ein player der letzte ist und danach noch ein anderer schreiben will, dann DARF NICHT MEHR UEBERSCHRIEBEN WERDEN!!!!!
+713: *9:31 AM 7/19/2022-9:32 AM 7/19/2022
+714: *9:32 AM 7/19/2022-9:35 AM 7/19/2022
+715: *9:35 AM 7/19/2022-9:38 AM 7/19/2022
+716: *9:38 AM 7/19/2022-9:45 AM 7/19/2022 2
+1- fehler!
+2- wieder
+3- apiserverr 53
+717: *9:45 AM 7/19/2022-9:48 AM 7/19/2022
+718: *9:48 AM 7/19/2022-9:49 AM 7/19/2022
+719: *9:49 AM 7/19/2022-10:05 AM 7/19/2022
+720: *10:05 AM 7/19/2022-10:11 AM 7/19/2022 3
+was soll alles automatisiert werden?
+1- automatisieren!
+2- show_MMM
+3- versuch dMMM mit pos absolute auf table zu machen!!!
+721: *10:12 AM 7/19/2022-10:13 AM 7/19/2022
+1- wie ist abfolge?
+clear => start_multi =>...indiv...=>complete:resolve
+2- automatisierung!
+3- ?test
+722: *10:35 AM 7/19/2022-10:35 AM 7/19/2022 4
+723: *10:35 AM 7/19/2022-10:45 AM 7/19/2022
+724: *10:45 AM 7/19/2022-10:48 AM 7/19/2022
+725: *10:48 AM 7/19/2022-10:55 AM 7/19/2022
+726: *10:55 AM 7/19/2022-10:56 AM 7/19/2022 5
+1- das collect muss nach autopoll gecheckt werden!!!
+2- wieso ist jetzt das message nicht mehr on?
+3- ===>>>ewew!!!
+727: *10:56 AM 7/19/2022-
+3-
+
+
+
+- bei collect_open am server:
+1. schreibe player state (state)
+2. check ob alle player states geschrieben sind
+(in dem fall waere dieser player der letzte der seinen state schreibt!)
+
+reihenfolge fuer collect turn:
+
+1. clear/host: alle players clearen, turn still at host JEDER player kann clear ausloesen!
+
+2. host kann jetzt multi ausloesen: (soll automatisch sein! das heisst, multi players werden schon in clear determined!)
+
+3. ein collect move wird durch 'indiv' ausgeloest mit dem command 'collect_open' (can rename to collect!)
+
+
+?- wann wird clear gesetzt? anytime multi stage is imminent
+- bei clear passiert folgendes:
+1- write table: turn=[host],stage=clear
+2- clear ALL player entries for this table
+
+- bei multi passiert am server nix besonderes, es setzt im wesentlichen player list und startet collection process
+
+
+
+- genuegt es wenn der erste der complete bekommt resolved?
+- was passiert wenn collect fertig ist? in welchen mode soll er dann gehen? resolve_collect
+
+- collect_open
+=>brauche ein collect mit ueberschreiben und eines ohne!
+- der server updated den player state
+- dann holt er sich alle player states zusammen
+- checkt ob alle in turn einen non empty state haben
+- if so, returns 
+- wenn ich im multi turn was mache dann geht die info zu dem player state!!! und was wird returned oder was macht der server?
 
 bei jedem der folgenden fragt es sich: who is updating fen?
+
 1. singleplayer: 
 - only 1 player has turn, all others are polling,
 - when player is done others update
+
 2. race:
 - multiple players have turn
 - all players are polling
 - first player who is done, writes
 - all update
+
 3. collect:
 - multiple players have turn
 - all are polling
-- when all are done, server writes
+- when all are done, server notifies complete
+- upon completion host gets to update fen
 - all update
+
+variants: 
+- player can [override] until complete or first entry counts
+- player selections are [hidden] or visible as soon as entered
+
 4. timed collect:
 - multiple players have turn
 - all are polling

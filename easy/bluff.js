@@ -369,6 +369,7 @@ function handle_gehtHoch() {
 	if (loser_handsize > Z.options.max_handsize) {
 		nextplayer = get_next_player(Z, loser)
 		let plorder = fen.plorder = remove_player(fen, loser);
+		//if removed player is host, need to change host!!!!!!!!!
 	} else {
 		nextplayer = loser;
 	}

@@ -34,6 +34,12 @@ function gamestep() {
 }
 
 
+//#region HELPERS..............
+function i_am_host(){return U.name == Z.host;}
+function i_am_acting_host(){return U.name == Z.fen.acting_host;}
+function onclick_status(){
+	query_status();
+}
 function show_admin_ui(){
 	//notes: once this is set by player, will NOT be erased!
 	//how to clear notes????

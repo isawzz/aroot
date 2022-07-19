@@ -22,9 +22,9 @@ games:
     logo: bear
     color: gold
     options:
-      #mode: 'solo,hotseat,multi'
-      mode: 'multi,solo,hotseat'
-      handsize: '11,10,7,3,13'
+      mode: 'solo,hotseat,multi'
+      #mode: 'multi,solo,hotseat'
+      handsize: '7,3,10'
   aristo:
     friendly: Aristocracy
     logo: crown

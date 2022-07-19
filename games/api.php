@@ -41,6 +41,94 @@ if ($cmd == "assets") {
 	$res=db_write_read($qw,$qr);
 	$result->table = $res;
 	$result->status = "table updated!"; 
+}else if ($cmd == 'single_after_collect'){ 
+	$uname = $data->uname;
+	$friendly = $data->friendly;
+	$result->turn = $data->fen->turn;
+	$fen = json_encode($data->fen);
+	$modified = get_now();
+	$qw = "UPDATE gametable SET `fen`='$fen',modified=$modified WHERE `friendly` = '$friendly'"; //ok
+	$qr="SELECT * FROM gametable WHERE `friendly` = '$friendly' limit 1";
+	$res=db_write_read($qw,$qr);
+	$result->table = $res;
+	$result->status = "table updated!"; 
+}else if ($cmd == 'clear'){ 
+	$uname = $data->uname;
+	$friendly = $data->friendly;
+	$result->turn = $data->fen->turn;
+	$fen = json_encode($data->fen);
+	$modified = get_now();
+	$qw = "UPDATE gametable SET `fen`='$fen',modified=$modified,`notes`=NULL WHERE `friendly` = '$friendly'"; //ok
+	$qr="SELECT * FROM gametable WHERE `friendly` = '$friendly' limit 1";
+	$res=db_write_read($qw,$qr);
+	$result->table = $res;
+	$result->status = "players updated!"; 
+	$result->players = array();
+	foreach ($data->players as $player) {
+		$result->players[] = $player;
+		$q="UPDATE `indiv` SET `state`='' WHERE `friendly` = '$friendly' and `name` = '$player'";
+		$res=db_write($q);
+	}
+}else if ($cmd == 'collect_open'){ 
+	$uname = $data->uname;
+	$friendly = $data->friendly;
+	$qr="SELECT * FROM gametable WHERE `friendly` = '$friendly' limit 1";
+  $table = db_read($qr)[0]; 
+	if ($table['notes'] == 'lock') {
+		$result->status = "table already locked - collect complete!";
+		$result->collect_complete = true;
+		$result->too_late = true;
+		$result->table = $table;
+		$qr = "SELECT * FROM indiv WHERE `friendly` = '$friendly'";
+		$result->playerdata=db_read($qr);
+	}else {
+		$result->too_late = false;
+		$result->turn = $data->fen->turn;
+		$state = json_encode($data->state);
+		$modified = get_now();
+		$qw = "UPDATE `indiv` SET `state`='$state',checked=$modified WHERE `friendly` = '$friendly' and `name` = '$uname'";
+		$qr = "SELECT * FROM indiv WHERE `friendly` = '$friendly' and `name` = '$uname' limit 1";
+		$res=db_write_read($qw,$qr);
+		// now check if all players have non-empty state
+		$qr = "SELECT * FROM indiv WHERE `friendly` = '$friendly'";
+		$res=db_read($qr);
+		$result->playerdata = $res;
+		$all_checked = true;
+		foreach ($res as $player) {
+			if ($player['state'] == '') {
+				$all_checked = false;
+				break;
+			}
+		}
+		$result->collect_complete = $all_checked;
+		if ($all_checked) {
+			$data->fen->turn = array($data->fen->acting_host); //array($table['host']);
+			$fen = json_encode($data->fen);
+			$qw = "UPDATE `gametable` SET `notes`='lock',`modified`=$modified,`fen`='$fen' WHERE `friendly` = '$friendly'";
+			$qr="SELECT * FROM gametable WHERE `friendly` = '$friendly' limit 1";
+			$res=db_write_read($qw,$qr);
+			$result->table = $res;
+		}
+		$result->status = "player $uname updated!"; 
+	}
+}else if ($cmd == 'collect_status'){ 
+	$uname = $data->uname;
+	$friendly = $data->friendly;
+	$qr = "SELECT * FROM indiv WHERE `friendly` = '$friendly'";
+	$res=db_read($qr);
+	$all_checked = true;
+	foreach ($res as $player) {
+		if ($player['state'] == '') {
+			$all_checked = false;
+			break;
+		}
+	}
+	$result->playerstates = $res;
+	$result->collect_complete = $all_checked;
+	$qr="SELECT * FROM gametable WHERE `friendly` = '$friendly' limit 1";
+  $table = db_read($qr)[0]; 
+  $result->table = $table;
+
 }else if ($cmd == 'startgame'){ 
 	$friendly = $data->friendly;
 	$game = $data->game;
@@ -62,10 +150,14 @@ if ($cmd == "assets") {
 	$friendly = $data->friendly;
 	$q="DELETE FROM `gametable` WHERE `friendly` = '$friendly'";
 	$res=db_write($q);
+	$q="DELETE FROM `indiv` WHERE `friendly` = '$friendly'";
+	$res=db_write($q);
 	$result->tables = get_tables();
 	$result->status = "tables $friendly deleted"; 
 }else if ($cmd == 'delete_tables'){ 
 	$q="TRUNCATE table `gametable`";
+	$res=db_write($q);
+	$q="TRUNCATE table `indiv`";
 	$res=db_write($q);
 	$result->tables = get_tables();
 	$result->status = "all tables deleted"; 
