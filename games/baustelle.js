@@ -1,18 +1,10 @@
 
-function take_turn_single_after_collect() {
-	//simplest form: player has modified fen and sends fen to server
-	//server updates table
-	prep_move();
-	let o = { uname: Z.uplayer, friendly: Z.friendly, fen: Z.fen }; //, notes: notes, scoring: scoring };
-	let cmd = 'single_after_collect';
-	send_or_sim(o, cmd);
-}
 function take_turn_single() {
 	//simplest form: player has modified fen and sends fen to server
 	//server updates table
 	prep_move();
-	let o = { uname: Z.uplayer, friendly: Z.friendly, fen: Z.fen }; //, notes: notes, scoring: scoring };
-	let cmd = 'single';
+	let o = { uname: Z.uplayer, friendly: Z.friendly, fen: Z.fen, write_fen:true }; //, notes: notes, scoring: scoring };
+	let cmd = 'table';
 	send_or_sim(o, cmd);
 }
 function take_turn_switch_to_host() {

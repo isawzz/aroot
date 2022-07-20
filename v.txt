@@ -8666,7 +8666,31 @@ clear => start_multi =>...indiv...=>complete:resolve
 1- problem ist muss delete tables machen!!!
 2- ok need to find out wo indiv hingeht in api.php!
 3- apiserver 185
-734: *1:10 PM 7/19/2022-
+734: *1:10 PM 7/19/2022-2:05 PM 7/19/2022
+735: *2:05 PM 7/19/2022-2:17 PM 7/19/2022
+736: *2:17 PM 7/19/2022-2:18 PM 7/19/2022 8
+1- kann ich notes verwenden statt es im cmd zu machen?
+2- hier ist das problem: wenn ich table reloade und es ist collect_complete dann muss ich als active_host das machen!
+3- start
+737: *2:18 PM 7/19/2022-2:19 PM 7/19/2022
+738: *2:19 PM 7/19/2022-2:24 PM 7/19/2022
+739: *2:24 PM 7/19/2022-2:45 PM 7/19/2022
+1- eine andere idee ist: ein subcommand zu verwenden
+also ich verwende table fuer polling aber ich habe noch ein zweites das heisst: 
+2- oder kann ich command variabel halten? statt table ev. nehme collect
+3- oder kann ich sogar fen verwewnden jetzt einmal?
+740: *2:45 PM 7/19/2022-2:46 PM 7/19/2022
+741: *2:46 PM 7/19/2022-2:47 PM 7/19/2022
+742: *2:48 PM 7/19/2022-2:49 PM 7/19/2022
+743: *2:49 PM 7/19/2022-3:09 PM 7/19/2022
+1- geh zum code fuer single api.php
+2- single? uplayer,friendly,fen
+3- was sind die daten bei table reload? nur friendly
+744: *3:09 PM 7/19/2022-3:09 PM 7/19/2022 9
+745: *5:02 PM 7/19/2022-
+1- so teste nochmal!
+2- single =>table mit write_fen
+3- alle bisherigen cmd ersetze durch table mit write_fen, write_player
 
 
 
