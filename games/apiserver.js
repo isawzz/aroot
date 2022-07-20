@@ -1,43 +1,47 @@
 function check_collect(obj) {
 	//erwarte dass obj ein collect_complete und ein too_late hat!
-	if (nundef(obj.collect_complete)) return;
-	if (Z.mode != 'multi') { console.log('COLLECT NUR IN MULTI PLAYER MODE!!!!!!'); return; }
+	console.log('notes',Z.notes)
+	if (nundef(obj.collect_complete)) return false;
+	if (Z.mode != 'multi') { console.log('COLLECT NUR IN MULTI PLAYER MODE!!!!!!'); return false; }
+	if (Z.notes != 'indiv' && Z.notes != 'lock'){ console.log('notes is NOT indiv or lock'); return false; }
 	assertion(isdef(obj.playerdata), 'no playerdata but collect_complete');
 
 	let collect_complete = obj.collect_complete;
 	let too_late = obj.too_late;
-	console.log('collect_open', collect_complete, 'too_late', too_late);
+	console.log('notes',Z.notes)
+	//console.log('collect_open', collect_complete, 'too_late', too_late);
 
 	if (i_am_acting_host() && collect_complete) {
 
 		console.log('collect_open: i am host, collect_complete, was nun???');
-
 		assertion(obj.table.fen.turn.length == 1 && obj.table.fen.turn[0] == U.name && U.name == obj.table.fen.acting_host, 'collect_open: acting host is NOT the one in turn!');
-		//integrate all player indiv moves into fen
-		let fen = obj.table.fen;
-		//console.log('YES!')
-
-		update_table(); pollStop();
 		assertion(isdef(Z.func.post_collect), 'post_collect not defined for game ' + obj.table.game);
-		console.log('playerdata', Z.playerdata)
-		for (const p of Z.playerdata) {
-			p.state = JSON.parse(p.state);
-		}
-		console.log('playerdata', Z.playerdata)
+
+		//Z.playerdata = obj.playerdata;
+		//console.log('playerdata vorher', Z.playerdata);
+		for (const p of Z.playerdata) { p.state = JSON.parse(p.state); }
+		//console.log('playerdata nachher', Z.playerdata);
+
 		Z.func.post_collect();
-		return;
 
 
-	} else if (collect_complete) {
-		console.log('collect_open: collect_complete, bin aber nicht der host! was nun???');
+	} else if (collect_complete && (Z.turn.length > 1 || Z.turn[0] != Z.fen.acting_host)) {
+		Z.turn = [Z.fen.acting_host];
+		take_turn_single();
+		//console.log('collect_open: collect_complete, bin aber nicht der host! was nun???');
 
 	} else if (i_am_acting_host()) {
-		console.log('collect_open: i am host, bin aber nicht collect_complete, was nun???');
+		//console.log('collect_open: i am host, bin aber nicht collect_complete, was nun???');
+		//autopoll();
+		return false;
 
 	} else {
-		console.log('collect_open: bin nicht der host, bin nicht collect_complete, was nun???');
+		//console.log('collect_open: bin nicht der host, bin nicht collect_complete, was nun???');
+		//autopoll();
+		return false;
 
 	}
+	return true;
 
 }
 function handle_result(result, cmd) {
@@ -74,107 +78,31 @@ function handle_result(result, cmd) {
 				show_status(`waiting for ${waiting_for.join(', ')}`);
 			} else { show_status('COMPLETE!'); }
 			break;
-
-		case "collect_open":
-			//erwarte dass obj ein collect_complete und ein too_late hat!
-			let collect_complete = obj.collect_complete;
-			let too_late = obj.too_late;
-			console.log('collect_open', collect_complete, 'too_late', too_late);
-
-			if (Z.mode != 'multi') { console.log('COLLECT NUR IN MULTI PLAYER MODE!!!!!!'); return; }
-
-			//do I have obj.table?
-			if (isdef(obj.table)) {
-				let me = U.name; //console.log('me', me);
-				//console.log('obj.table', obj.table); // table ist eh schon unpacked! war ja in processServerdata!!!!!!!
-				let fen = obj.table.fen;
-				let turn = fen.turn;
-				console.log('me', me, 'turn', turn);
-			}
-			if (isdef(obj.playerdata)) {
-				let playerdata = obj.playerdata;
-				console.log('playerdata', playerdata);
-			} else {
-				console.log('playerdata nicht da');
-			}
-
-
-			if (i_am_acting_host() && collect_complete) {
-
-				console.log('collect_open: i am host, collect_complete, was nun???');
-
-				assertion(obj.table.fen.turn.length == 1 && obj.table.fen.turn[0] == U.name && U.name == obj.table.fen.acting_host, 'collect_open: acting host is NOT the one in turn!');
-				//integrate all player indiv moves into fen
-				let fen = obj.table.fen;
-				//console.log('YES!')
-
-				update_table(); pollStop();
-				assertion(isdef(Z.func.post_collect), 'post_collect not defined for game ' + obj.table.game);
-				console.log('playerdata', Z.playerdata)
-				for (const p of Z.playerdata) {
-					p.state = JSON.parse(p.state);
-				}
-				console.log('playerdata', Z.playerdata)
-				Z.func.post_collect();
-				return;
-
-
-			} else if (collect_complete) {
-				console.log('collect_open: collect_complete, bin aber nicht der host! was nun???');
-
-			} else if (i_am_acting_host()) {
-				console.log('collect_open: i am host, bin aber nicht collect_complete, was nun???');
-
-			} else {
-				console.log('collect_open: bin nicht der host, bin nicht collect_complete, was nun???');
-
-			}
-			autopoll();
-			// if (collect_complete) {
-			// 	update_table();
-			// 	autopoll();
-			// 	// if (Z.skip_presentation) {
-			// 	// 	console.log('presentation is skipped!!!')
-			// 	// 	return;
-			// 	// }
-			// 	// // //console.log('obj has keys', Object.keys(obj));
-			// 	// // for (const k in obj) {
-			// 	// // 	if (['table', 'tables', 'users'].includes(k)) continue;
-			// 	// // 	//console.log('k', k, typeof obj[k], obj[k]);
-			// 	// // }
-			// 	// gamestep();
-			// }				//for (const k in obj) { console.log('k', k, typeof obj[k], obj[k]); }
-			break;
-
+		//************************* table *************************** */
 		case "gameover":
 		case "clear":
 		case "table":
 		case "startgame":
 			update_table();
+			console.log('skip',Z.skip_presentation)
 			let is_collect = check_collect(obj);
 
-			if (is_collect) { pollStop(); console.log('WAS NUN?????'); return; }
+			//console.log('haaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa1', is_collect);
+			if (is_collect) { return; }
 
-			if (Z.skip_presentation) { pollStop(); console.log('not presenting!'); return; }
-			
-			console.log('WILL PRESENT! obj has keys', Object.keys(obj));
+			//console.log('haaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa2')
+			if (Z.skip_presentation) { autopoll(); return; }
+
+
+			//console.log('haaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa3')
+
+			//console.log('WILL PRESENT! obj has keys', Object.keys(obj));
 			//for (const k in obj) { if (['table', 'tables', 'users'].includes(k)) continue; console.log('k', k, typeof obj[k], obj[k]); }
-			
-			gamestep(); break;
 
-		// case "table":
-		// case "startgame":
+			clear_timeouts();
+			gamestep();
+			break;
 
-		// 	//console.log('Serverdata', Serverdata);
-		// 	update_table(); 
-		// 	//console.log('will present',!Z.skip_presentation);
-		// 	if (!Z.skip_presentation) {
-		// 		let [fen,uname,role,uplayer,playmode]=[Z.fen,Z.uname,Z.role,Z.uplayer,Z.playmode]
-		// 		console.log('______present',Z.friendly, fen.turn);
-		// 		console.log('uname',uname,role);
-		// 		console.log('uplayer',uplayer,playmode);
-		// 	}else{console.log('not presenting');}
-		// 	break; // console.log('Z', Z); //if (!Z.skip_presentation) gamestep(); break;
 	}
 }
 
@@ -298,10 +226,11 @@ function update_table() {
 	let [uplayer, friendly, modified] = [Z.uplayer, Z.friendly, Z.modified];
 
 	//can skip presentation if: same table & uplayer, state newer (has been modified)
+	//console.log('modified', modified, 'Z.prev.modified', Z.prev.modified);
 	Z.skip_presentation = !FORCE_REDRAW && friendly == Z.prev.friendly && modified <= Z.prev.modified && uplayer == Z.prev.uplayer;
 	FORCE_REDRAW = false;
 
-	if (Z.skip_presentation) { autopoll(); } else { clear_timeouts(); }
+	//if (Z.skip_presentation) { autopoll(); } else { clear_timeouts(); }
 
 }
 

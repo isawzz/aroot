@@ -4,7 +4,7 @@ var AGAME = {
 	}
 };
 function a_game() {
-	function state_info(dParent) { dParent.innerHTML = `turn: ${Z.turn}`; } //console.log('fen',Z.fen); }
+	function state_info(dParent) { dParent.innerHTML = `turn: ${Z.turn}, stage:${Z.stage}`; } //console.log('fen',Z.fen); }
 	function setup(players, options) {
 		let fen = { players: {}, plorder: jsCopy(players), history: [] };
 		shuffle(fen.plorder);
@@ -52,28 +52,28 @@ function present_a_game() {
 	UI.hand = ui_type_hand(pl.hand, dTable, { margin: 20 });
 }
 
-function agmove_single() { removeInPlace(Z.pl.hand, rChoose(Z.pl.hand)); Z.turn = [get_next_player(Z, Z.uplayer)]; take_turn_single(); }
+function agmove_single() { console.log('hhhhhhhhhhhhhh'); if (Z.pl.hand.length > 2) removeInPlace(Z.pl.hand, Z.pl.hand[0]); Z.turn = [get_next_player(Z, Z.uplayer)]; take_turn_single(); }
 function agmove_clear() { Z.stage = 'clear'; Z.fen.acting_host = Z.uplayer; Z.turn = [Z.uplayer]; take_turn_switch_to_host(); }
 function agmove_startmulti() { Z.stage = 'multi'; Z.turn = Z.plorder;[Z.fen.stage_after_collect, Z.fen.turn_after_collect] = ['click', [rChoose(Z.plorder)]]; take_turn_start_multi(); }
 function agmove_indiv() { Z.state = Z.pl.hand[0]; take_turn_collect_open(); }
 function agmove_resolve() {
 
 	console.log('---------------------- RESOLVE ----------------------');
+	assertion(isdef(Z.playerdata), 'no playerdata');
+	assertion(Z.uplayer == Z.fen.acting_host, 'wrong player resolves!!!!',Z.uplayer);
 
 	let [fen, uplayer, pl, pldata] = [Z.fen, Z.uplayer, Z.pl, Z.playerdata];
 
-	assertion(isdef(Z.playerdata), 'no playerdata');
-
+	//blablabl game specific code
 	fen.collection = [];
 	for (const data of pldata) {
 		fen.collection.push({ name: data.name, state: data.state });
 	}
-
 	console.log('players selected the following cards:', fen.collection);
 
-
+	//common code for resolve!!!
 	[Z.stage, Z.turn] = [Z.fen.stage_after_collect, Z.fen.turn_after_collect];
-	take_turn_single();
+	take_turn_resolve('single');
 }
 
 

@@ -26,7 +26,7 @@ function gamestep() {
 		copyKeys(UI, Z);
 		activate_ui(Z); //console.log('uiActivated',uiActivated?'true':'false');
 		Z.func.activate_ui();
-		if (Z.options.zen_mode != 'yes' && Z.mode != 'hotseat') autopoll();
+		if (Z.options.zen_mode != 'yes' && Z.mode != 'hotseat' && Z.turn.length > 1) autopoll();
 	}
 
 	//landing();
@@ -41,9 +41,6 @@ function onclick_status(){
 	query_status();
 }
 function show_admin_ui(){
-	//notes: once this is set by player, will NOT be erased!
-	//how to clear notes????
-	//if (isdef(Z.prev.notes[uplayer])) Z.notes[uplayer]=Z.prev.notes[uplayer];
 	//game specific buttons hide or show
 	for (const id of ['bSpotitStart', 'bClearAck', 'bRandomMove', 'bSkipPlayer']) hide(id);
 	if (Z.game == 'spotit' && Z.uname == Z.host && Z.stage == 'init') show('bSpotitStart');

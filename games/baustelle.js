@@ -1,27 +1,28 @@
 
 function take_turn_single() {
-	//simplest form: player has modified fen and sends fen to server
-	//server updates table
 	prep_move();
-	let o = { uname: Z.uplayer, friendly: Z.friendly, fen: Z.fen, write_fen:true }; //, notes: notes, scoring: scoring };
+	let o = { uname: Z.uplayer, friendly: Z.friendly, fen: Z.fen, write_fen:true }; 
+	console.log('sending', o);
 	let cmd = 'table';
 	send_or_sim(o, cmd);
 }
 function take_turn_switch_to_host() {
-	//fen remains unchanged except for turn and stage, which switches to host
-	//server updates table and clears all players data
 	prep_move();
-	let o = { uname: Z.uplayer, friendly: Z.friendly, fen: Z.fen, players: Z.playerlist }; //, notes: notes, scoring: scoring };
+	let o = { uname: Z.uplayer, friendly: Z.friendly, fen: Z.fen, players: Z.playerlist }; 
 	let cmd = 'clear';
 	send_or_sim(o, cmd);
 }
 function take_turn_start_multi() { take_turn_single(); }
 function take_turn_collect_open() {
-	//simplest form: player has modified fen and sends fen to server
-	//server updates table
 	prep_move();
-	let o = { uname: Z.uplayer, friendly: Z.friendly, fen: Z.fen, state: Z.state }; 
-	let cmd = 'collect_open';
+	let o = { uname: Z.uplayer, friendly: Z.friendly, fen: Z.fen, state: Z.state, write_player: true }; 
+	let cmd = 'table';
+	send_or_sim(o, cmd);
+}
+function take_turn_resolve(notes) {
+	prep_move();
+	let o = { uname: Z.uplayer, friendly: Z.friendly, fen: Z.fen, write_fen:true, write_notes:notes }; 
+	let cmd = 'table';
 	send_or_sim(o, cmd);
 }
 function query_status() {

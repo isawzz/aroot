@@ -8537,7 +8537,7 @@ download ACIM
 3- ich sollte bei status abfrage aber auch table status erhalten!
 592: *11:36 AM 7/18/2022-12:30 PM 7/18/2022
 593: *12:30 PM 7/18/2022-7:30 PM 7/18/2022
-__________ mo 18.7.22 =>100 ewew 0=fa,1ok,2+lu,3*co,-1~pa,-2-qu,-3!
+__________ di 19.7.22 =>100 ewew 0=fa,1ok,2+lu,3*co,-1~pa,-2-qu,-3!
 670: *7:30 PM 7/18/2022-5:42 AM 7/19/2022
 ok - mach so ein status abfrager wie bei discord: fuer advanced users!
 671: *5:42 AM 7/19/2022-5:47 AM 7/19/2022
@@ -8687,10 +8687,166 @@ also ich verwende table fuer polling aber ich habe noch ein zweites das heisst:
 2- single? uplayer,friendly,fen
 3- was sind die daten bei table reload? nur friendly
 744: *3:09 PM 7/19/2022-3:09 PM 7/19/2022 9
-745: *5:02 PM 7/19/2022-
+745: *5:02 PM 7/19/2022-5:24 PM 7/19/2022 10
 1- so teste nochmal!
 2- single =>table mit write_fen
 3- alle bisherigen cmd ersetze durch table mit write_fen, write_player
+746: *5:24 PM 7/19/2022-5:26 PM 7/19/2022
+747: *5:29 PM 7/19/2022-5:29 PM 7/19/2022
+748: *5:29 PM 7/19/2022-5:32 PM 7/19/2022 11
+1- indiv sendet was????
+2- test
+3- start repair
+749: *5:32 PM 7/19/2022-5:34 PM 7/19/2022
+750: *5:34 PM 7/19/2022-6:29 PM 7/19/2022
+751: *6:29 PM 7/19/2022-6:31 PM 7/19/2022
+752: *8:10 PM 7/19/2022-8:11 PM 7/19/2022
+1- 
+2- jetzt sage stage
+3- bin bei WAS NUN gelandet!
+__________ mi 20.7.22 =>100 ewew 0=fa,1ok,2+lu,3*co,-1~pa,-2-qu,-3!
+820: *8:12 PM 7/19/2022-5:13 AM 7/20/2022
+ok - soll nach collect eigentlich presented werden? NEIN
+821: *5:13 AM 7/20/2022-5:17 AM 7/20/2022
+822: *5:17 AM 7/20/2022-5:23 AM 7/20/2022
+823: *5:23 AM 7/20/2022-5:23 AM 7/20/2022
+824: *5:23 AM 7/20/2022-5:24 AM 7/20/2022
+825: *5:24 AM 7/20/2022-5:25 AM 7/20/2022
+826: *5:25 AM 7/20/2022-5:27 AM 7/20/2022
+827: *5:27 AM 7/20/2022-5:28 AM 7/20/2022
+828: *5:28 AM 7/20/2022-5:29 AM 7/20/2022
+829: *5:29 AM 7/20/2022-5:34 AM 7/20/2022
+830: *5:34 AM 7/20/2022-5:40 AM 7/20/2022
+831: *5:40 AM 7/20/2022-5:40 AM 7/20/2022
+832: *5:40 AM 7/20/2022-5:41 AM 7/20/2022
+833: *5:41 AM 7/20/2022-5:42 AM 7/20/2022
+834: *5:42 AM 7/20/2022-5:44 AM 7/20/2022
+835: *5:44 AM 7/20/2022-5:45 AM 7/20/2022
+836: *5:45 AM 7/20/2022-5:51 AM 7/20/2022
+837: *5:51 AM 7/20/2022-5:54 AM 7/20/2022
+838: *5:54 AM 7/20/2022-5:55 AM 7/20/2022
+839: *5:56 AM 7/20/2022-5:57 AM 7/20/2022
+840: *5:57 AM 7/20/2022-5:59 AM 7/20/2022
+- vor / nachteile!
+==>eigentlich noch besser!
+indiv == collect == state
+- hab immer noch dasselbe problem dass wenn in collect stage polling nicht functioniert!!!
+choices:
+=>1. collect info in die fen hineinziehen fen.isindiv
+ - ist die flexibelste loesung eigentlich
+ + erfordert standard fuer collect calls
+2. dem autopoll einen param: requestfunc geben
+ - macht den code noch complizierter
+3. die collect info in notes haben
+ - breaks notes as reserved for server writes!
+4. collect anhand von turn.length > 1 feststellen!
+ - spotit braucht das alles nicht!
+ + brauche ueberhaupt keine zusaetzliche var
+841: *5:59 AM 7/20/2022-6:00 AM 7/20/2022
+842: *6:00 AM 7/20/2022-6:02 AM 7/20/2022
+843: *6:02 AM 7/20/2022-6:03 AM 7/20/2022
+844: *6:03 AM 7/20/2022-6:07 AM 7/20/2022
+845: *6:07 AM 7/20/2022-6:19 AM 7/20/2022
+846: *6:19 AM 7/20/2022-6:23 AM 7/20/2022
+847: *6:24 AM 7/20/2022-6:38 AM 7/20/2022
+848: *6:38 AM 7/20/2022-6:40 AM 7/20/2022
+849: *6:40 AM 7/20/2022-7:17 AM 7/20/2022
+850: *7:17 AM 7/20/2022-7:19 AM 7/20/2022
+851: *7:19 AM 7/20/2022-7:31 AM 7/20/2022
+852: *7:31 AM 7/20/2022-7:32 AM 7/20/2022
+853: *7:32 AM 7/20/2022-7:32 AM 7/20/2022
+854: *7:34 AM 7/20/2022-7:34 AM 7/20/2022 1
+1- restart button geht ueberhaupt nicht mehr!!!
+2- test anderes game restart
+3- wieso geht restart nicht bei a_game????
+855: *7:34 AM 7/20/2022-
+3- muss ich turn_send_move_update ersetzen durch take_turn_single???
+
+- ich glaub es geht jetzt
+- wieso muss ich in single turn pollen???
+- ha weg!
+- notes muessen irgendwann wieder von indiv weggegeben werden!
+- am besten dann wenn complete! am server
+wieder falsch! wenn complete ist aber noch nicht resolved dann soll ich einfach in gamestep gehen!
+1- in clear setze notes='indiv'
+2- multi wird automatisch eingeleitet
+3- jetzt ist indiv on bei poll! ui aendert sich oder nicht ja nach spiel
+4- override und timer wiird bei CLIENT entschieden!!!!
+5- wenn complete (alle haben data) geht wieder zu acting_host und wird auf lock gesetzt!
+
+- muss notes indiv schreiben!!! sobald auf multi gehe!
+- was ist wenn ich doch notes verrwende?
+wenn ich write_fen mache (=single player turn) schreibe notes='single'
+click clear: notes='clear'
+set to multi: notes=indiv,... da kann es mehr geben
+server locks as soon as complete
+resolve: notes=single
+
+
+
+- verify dass IMMER fen gesendet wird!
+- wo brauch ich das isindiv???? 
+- geh dahin im code!
+?- wo / wann wird fen.isindiv gesetzt? dort wo jetzt stage multi gesetzt wird!
+- collect info in die fen hineinziehen fen.isindiv
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+- sollte kein autopoll in update_table machen!!!
+- muss doch pollStop machen??? warum???
+- test
+- best: output stage
+- 
+- wann kann ich was outputten?
+- assertion: if write_player ohne state, HAVE to notes==lock!!!
+- collect ist indiv hat state und write_player
+- verify: in resolve wird notes=null gesetzt! NEIN ist auch nicht notwendig!
+- verify: state wird ignoriert wenn table[notes] = lock JA!
+- nein das ist NICHT ausreichend! solang ich in collect bin muss ALLES was sende mit write_player sein!
+wenn complete bin wird write_player sowieso ignoriert!
+- der letzte macht resolve: ist das safe??? NEIN!
+- derzeit wird resolve nur gemacht wenn es der host ist!
+
+- playerdata ist ok!
+- test run
+- playerdata sollten bei unpack table schon gemacht werden!!!
+
+
+
+
 
 
 
