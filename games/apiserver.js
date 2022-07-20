@@ -1,14 +1,14 @@
 function check_collect(obj) {
 	//erwarte dass obj ein collect_complete und ein too_late hat!
-	console.log('notes',Z.notes)
+	console.log('notes', Z.notes)
 	if (nundef(obj.collect_complete)) return false;
 	if (Z.mode != 'multi') { console.log('COLLECT NUR IN MULTI PLAYER MODE!!!!!!'); return false; }
-	if (Z.notes != 'indiv' && Z.notes != 'lock'){ console.log('notes is NOT indiv or lock'); return false; }
+	if (Z.notes != 'indiv' && Z.notes != 'lock') { console.log('notes is NOT indiv or lock'); return false; }
 	assertion(isdef(obj.playerdata), 'no playerdata but collect_complete');
 
 	let collect_complete = obj.collect_complete;
 	let too_late = obj.too_late;
-	console.log('notes',Z.notes)
+	console.log('notes', Z.notes)
 	//console.log('collect_open', collect_complete, 'too_late', too_late);
 
 	if (i_am_acting_host() && collect_complete) {
@@ -19,9 +19,17 @@ function check_collect(obj) {
 
 		//Z.playerdata = obj.playerdata;
 		//console.log('playerdata vorher', Z.playerdata);
-		for (const p of Z.playerdata) { p.state = JSON.parse(p.state); }
-		//console.log('playerdata nachher', Z.playerdata);
+		if (Z.fen.end_cond == 'all') for (const p of Z.playerdata) { p.state = JSON.parse(p.state); }
+		else if (Z.fen.end_cond == 'first') {
+			for (const p of Z.playerdata) {
+				if (isdef(p.state)) {
+					p.state = JSON.parse(p.state);
+					console.log('*** winning player is', p.name, p.state);
+				}
 
+			}
+			//console.log('playerdata nachher', Z.playerdata);
+		}
 		Z.func.post_collect();
 
 
@@ -84,7 +92,7 @@ function handle_result(result, cmd) {
 		case "table":
 		case "startgame":
 			update_table();
-			console.log('skip',Z.skip_presentation)
+			console.log('skip', Z.skip_presentation)
 			let is_collect = check_collect(obj);
 
 			//console.log('haaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa1', is_collect);
@@ -172,6 +180,7 @@ function unpack_table(table) {
 	//console.log('table has keys', Object.keys(table));
 	for (const k of ['players', 'fen', 'options', 'scoring']) {
 		let val = table[k];
+		console.log('k',k);
 		if (isdef(table[k])) table[k] = JSON.parse(table[k]); else table[k] = {};
 	}
 	if (isdef(table.modified)) { table.timestamp = new Date(Number(table.modified)); table.stime = stringBeforeLast(table.timestamp.toString(), 'G').trim(); }

@@ -8775,8 +8775,36 @@ choices:
 ok - fgu, A spazier?
 3- was passiert bei sendgameover? soll das auch ersetzt werden???
 861: *9:57 AM 7/20/2022-9:59 AM 7/20/2022
+862: *1:41 PM 7/20/2022-1:43 PM 7/20/2022 4
+1- mach es in a_game
 2- brauch jetzt fall2 FCFS
 3- spotit copy to games
+863: *1:43 PM 7/20/2022-1:44 PM 7/20/2022
+864: *1:46 PM 7/20/2022-1:49 PM 7/20/2022
+865: *1:49 PM 7/20/2022-1:56 PM 7/20/2022 5
+1- string starts with php
+2- php how to parse a string into words?
+3- wo wird notes = indiv gesetzt?
+866: *1:56 PM 7/20/2022-2:00 PM 7/20/2022
+1- ich muss in fen.endcond 'all' schreiben damit es geht!!!
+2- wie mach ich das in clear?
+3- es gibt jetzt indiv_all indiv_first indiv_last indiv_N
+867: *3:04 PM 7/20/2022-3:05 PM 7/20/2022
+868: *3:13 PM 7/20/2022-3:15 PM 7/20/2022 6
+1- test again
+2- apiserver 22
+3- clear_first test button
+869: *3:15 PM 7/20/2022-3:15 PM 7/20/2022
+870: *3:19 PM 7/20/2022-3:23 PM 7/20/2022 7
+1- der fehler scheint nach dem resolve zu passieren
+2- apiserver 
+3- apiserver 183 some error!
+871: *3:23 PM 7/20/2022-3:27 PM 7/20/2022
+872: *3:27 PM 7/20/2022-
+2- irgendein weireder fehler ist da
+3- versuch den anderen test
+
+
 
 vielleicht uebergehen zu timed?
 

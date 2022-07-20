@@ -14,7 +14,7 @@ if ($cmd == 'table'){
 	$result->status = "reloaded table $friendly";
 
 	//collecting individual data
-	if ($notes == 'indiv' && isset($data->state)){
+	if (str_starts_with($notes, 'indiv') && isset($data->state)){
 		$uname = $data->uname;
 		$result->too_late = false;
 		$result->turn = $data->fen->turn;
@@ -27,15 +27,21 @@ if ($cmd == 'table'){
 		$qr = "SELECT * FROM indiv WHERE `friendly` = '$friendly'";
 		$res=db_read($qr);
 		$result->playerdata = $res;
-		$all_checked = true;
-		foreach ($res as $player) {
-			if ($player['state'] == '') {
-				$all_checked = false;
-				break;
+
+		//if $notes ends with 'all', then check if all players have non-empty state
+		$done = true;
+		if (str_ends_with($notes, 'all')){
+			foreach ($res as $player){
+				if ($player['state'] == ''){
+					$done = false;
+					break;
+				}
 			}
+		}else if (str_ends_with($notes, 'first')){
+			$done = true;
 		}
-		$result->collect_complete = $all_checked;
-		if ($all_checked) {
+		$result->collect_complete = $done;
+		if ($done) {
 			$data->fen->turn = array($data->fen->acting_host); //array($table['host']);
 			$fen = json_encode($data->fen);
 			$qw = "UPDATE `gametable` SET `notes`='lock',`modified`=$modified,`fen`='$fen' WHERE `friendly` = '$friendly'";
@@ -93,9 +99,11 @@ if ($cmd == 'table'){
 	$uname = $data->uname;
 	$friendly = $data->friendly;
 	$result->turn = $data->fen->turn;
+	$endcond = $data->fen->endcond; // first | all | last | N
+	$notes = "indiv_".$endcond;
 	$fen = json_encode($data->fen);
 	$modified = get_now();
-	$qw = "UPDATE gametable SET `fen`='$fen',modified=$modified,`notes`='indiv' WHERE `friendly` = '$friendly'"; //ok
+	$qw = "UPDATE gametable SET `fen`='$fen',modified=$modified,`notes`='$notes' WHERE `friendly` = '$friendly'"; //ok
 	$qr="SELECT * FROM gametable WHERE `friendly` = '$friendly' limit 1";
 	$res=db_write_read($qw,$qr);
 	$result->table = $res;

@@ -31,7 +31,8 @@ function a_game() {
 		if (Z.stage == 'click') {
 			show_MMM('back to normal!!!!');
 			mButton('single turn move', agmove_single, dTable, { margin: 20 });
-			mButton('clear players', agmove_clear, dTable, { margin: 20 });
+			mButton('clear players', agmove_clear_all, dTable, { margin: 20 });
+			mButton('clear first', agmove_clear_first, dTable, { margin: 20 });
 		} else if (Z.stage == 'clear') {
 			agmove_startmulti();
 		} else {
@@ -53,7 +54,8 @@ function present_a_game() {
 }
 
 function agmove_single() { console.log('hhhhhhhhhhhhhh'); if (Z.pl.hand.length > 2) removeInPlace(Z.pl.hand, Z.pl.hand[0]); Z.turn = [get_next_player(Z, Z.uplayer)]; take_turn_single(); }
-function agmove_clear() { Z.stage = 'clear'; Z.fen.acting_host = Z.uplayer; Z.turn = [Z.uplayer]; take_turn_switch_to_host(); }
+function agmove_clear_all() { Z.stage = 'clear'; Z.fen.endcond = 'all'; Z.fen.acting_host = Z.uplayer; Z.turn = [Z.uplayer]; take_turn_switch_to_host(); }
+function agmove_clear_first() { Z.stage = 'clear'; Z.fen.endcond = 'first'; Z.fen.acting_host = Z.uplayer; Z.turn = [Z.uplayer]; take_turn_switch_to_host(); }
 function agmove_startmulti() { Z.stage = 'multi'; Z.turn = Z.plorder;[Z.fen.stage_after_collect, Z.fen.turn_after_collect] = ['click', [rChoose(Z.plorder)]]; take_turn_start_multi(); }
 function agmove_indiv() { Z.state = Z.pl.hand[0]; take_turn_collect_open(); }
 function agmove_resolve() {
