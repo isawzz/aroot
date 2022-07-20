@@ -8768,10 +8768,15 @@ choices:
 3- test telecave rechnung
 857: *8:42 AM 7/20/2022-9:51 AM 7/20/2022
 858: *9:51 AM 7/20/2022-9:55 AM 7/20/2022
-859: *9:55 AM 7/20/2022-
+859: *9:55 AM 7/20/2022-9:56 AM 7/20/2022
+860: *9:56 AM 7/20/2022-9:57 AM 7/20/2022 3
+1- spotit_move muss ersetzt werden!!!
 2- spotit_move: wie kann ich sendmove ersetzen?
 ok - fgu, A spazier?
 3- was passiert bei sendgameover? soll das auch ersetzt werden???
+861: *9:57 AM 7/20/2022-9:59 AM 7/20/2022
+2- brauch jetzt fall2 FCFS
+3- spotit copy to games
 
 vielleicht uebergehen zu timed?
 
