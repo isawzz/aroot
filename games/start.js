@@ -239,7 +239,8 @@ function sendmove(plname, friendly, fen, action, expected, phase, round, step, s
 	//console.log(`sendmove: simulated: ${DA.simulate}`);
 	if (DA.simulate) phpPostSimulate(o, 'move'); else phpPost(o, 'move');
 }
-function turn_send_move_update(action_star = false) {
+function turn_send_move_update(action_star = false) { 
+	take_turn_single(); return;
 	let [fen, uplayer] = [Z.fen, Z.uplayer];	//console.log('sending move:Z',Z); //return;
 
 	//console.log('uplayer', uplayer, 'action_star', action_star);

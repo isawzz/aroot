@@ -141,6 +141,18 @@ if ($cmd == 'table'){
 	$res=db_write_read($qw,$qr);
 	$result->table = $res;
 	$result->status = "started table $friendly"; 
+}else if ($cmd == 'gameover'){ 
+	$winners = $data->winners;
+	$friendly = $data->friendly;
+	$fen = json_encode($data->fen);
+	$scoring = json_encode($data->scoring);
+	$modified = get_now();
+	$qw = "UPDATE gametable SET `fen`='$fen',`phase`='over',`scoring`='$scoring',modified=$modified WHERE `friendly` = '$friendly'"; //ok
+	$qr="SELECT * FROM gametable WHERE `friendly` = '$friendly' limit 1";
+	$res=db_write_read($qw,$qr);
+	$result->table = $res;
+	$result->status = "scored table $friendly"; 
+	$result->tables = get_tables();
 }else if ($cmd == 'delete_table'){ 
 	$friendly = $data->friendly;
 	$q="DELETE FROM `gametable` WHERE `friendly` = '$friendly'";

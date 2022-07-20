@@ -8761,6 +8761,19 @@ choices:
 3- wieso geht restart nicht bei a_game????
 855: *7:34 AM 7/20/2022-
 3- muss ich turn_send_move_update ersetzen durch take_turn_single???
+855: *8:22 AM 7/20/2022-8:28 AM 7/20/2022
+856: *8:28 AM 7/20/2022-8:38 AM 7/20/2022 2
+1- test aristo games
+2- memory belinda macht fehler beim sprechen!!!
+3- test telecave rechnung
+857: *8:42 AM 7/20/2022-9:51 AM 7/20/2022
+858: *9:51 AM 7/20/2022-9:55 AM 7/20/2022
+859: *9:55 AM 7/20/2022-
+2- spotit_move: wie kann ich sendmove ersetzen?
+ok - fgu, A spazier?
+3- was passiert bei sendgameover? soll das auch ersetzt werden???
+
+vielleicht uebergehen zu timed?
 
 - ich glaub es geht jetzt
 - wieso muss ich in single turn pollen???
