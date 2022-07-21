@@ -3,7 +3,7 @@ function check_collect(obj) {
 	console.log('notes', Z.notes)
 	if (nundef(obj.collect_complete)) return false;
 	if (Z.mode != 'multi') { console.log('COLLECT NUR IN MULTI PLAYER MODE!!!!!!'); return false; }
-	if (Z.notes != 'indiv' && Z.notes != 'lock') { console.log('notes is NOT indiv or lock'); return false; }
+	if (!startsWith(Z.notes,'indiv') && Z.notes != 'lock') { console.log('!!!notes is NOT indiv or lock'); return false; }
 	assertion(isdef(obj.playerdata), 'no playerdata but collect_complete');
 
 	let collect_complete = obj.collect_complete;
@@ -53,7 +53,7 @@ function check_collect(obj) {
 
 }
 function handle_result(result, cmd) {
-	//if (verbose) console.log('cmd', cmd, '\nresult', result); //return;
+	if (verbose) console.log('cmd', cmd, '\nresult', result); //return;
 	if (result.trim() == "") return;
 	let obj;
 	try { obj = JSON.parse(result); } catch { console.log('ERROR:', result); }
@@ -155,7 +155,8 @@ function processServerdata(obj, cmd) {
 
 	for (const k in obj) {
 		if (k == 'tables') Serverdata.tables = obj.tables.map(x => unpack_table(x));
-		else if (k == 'table') { Serverdata.table = unpack_table(obj.table); } //update_current_table(); }
+		else if (k == 'table') { Serverdata.table = unpack_table(obj.table); } 
+		else if (k == 'table') { Serverdata.table = unpack_table(obj.table); } 
 		else if (k == 'users') Serverdata[k] = obj[k];
 		else if (cmd != 'assets') Serverdata[k] = obj[k];
 	}
@@ -180,7 +181,7 @@ function unpack_table(table) {
 	//console.log('table has keys', Object.keys(table));
 	for (const k of ['players', 'fen', 'options', 'scoring']) {
 		let val = table[k];
-		console.log('k',k);
+		console.log('k',k, 'val',val, table[k]);
 		if (isdef(table[k])) table[k] = JSON.parse(table[k]); else table[k] = {};
 	}
 	if (isdef(table.modified)) { table.timestamp = new Date(Number(table.modified)); table.stime = stringBeforeLast(table.timestamp.toString(), 'G').trim(); }

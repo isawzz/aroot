@@ -57,7 +57,7 @@ function agmove_single() { console.log('hhhhhhhhhhhhhh'); if (Z.pl.hand.length >
 function agmove_clear_all() { Z.stage = 'clear'; Z.fen.endcond = 'all'; Z.fen.acting_host = Z.uplayer; Z.turn = [Z.uplayer]; take_turn_switch_to_host(); }
 function agmove_clear_first() { Z.stage = 'clear'; Z.fen.endcond = 'first'; Z.fen.acting_host = Z.uplayer; Z.turn = [Z.uplayer]; take_turn_switch_to_host(); }
 function agmove_startmulti() { Z.stage = 'multi'; Z.turn = Z.plorder;[Z.fen.stage_after_collect, Z.fen.turn_after_collect] = ['click', [rChoose(Z.plorder)]]; take_turn_start_multi(); }
-function agmove_indiv() { Z.state = Z.pl.hand[0]; take_turn_collect_open(); }
+function agmove_indiv() { Z.state = {val:Z.pl.hand[0]}; take_turn_collect_open(); }
 function agmove_resolve() {
 
 	console.log('---------------------- RESOLVE ----------------------');
@@ -65,6 +65,8 @@ function agmove_resolve() {
 	assertion(Z.uplayer == Z.fen.acting_host, 'wrong player resolves!!!!',Z.uplayer);
 
 	let [fen, uplayer, pl, pldata] = [Z.fen, Z.uplayer, Z.pl, Z.playerdata];
+	pldata = JSON.parse(pldata);
+	console.log('pldata', pldata);
 
 	//blablabl game specific code
 	fen.collection = [];

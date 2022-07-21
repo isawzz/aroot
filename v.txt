@@ -8800,9 +8800,38 @@ ok - fgu, A spazier?
 2- apiserver 
 3- apiserver 183 some error!
 871: *3:23 PM 7/20/2022-3:27 PM 7/20/2022
-872: *3:27 PM 7/20/2022-
+872: *3:27 PM 7/20/2022-4:30 PM 7/20/2022 8
+1- test run
 2- irgendein weireder fehler ist da
 3- versuch den anderen test
+873: *4:31 PM 7/20/2022-4:34 PM 7/20/2022
+874: *4:34 PM 7/20/2022-5:16 PM 7/20/2022
+875: *5:16 PM 7/20/2022-5:17 PM 7/20/2022
+876: *5:17 PM 7/20/2022-5:17 PM 7/20/2022 9
+1- goto resolve code output!
+2- resolve ist passiert und fen ist jetzt
+3- apiserver 6
+877: *5:18 PM 7/20/2022-5:18 PM 7/20/2022
+878: *5:29 PM 7/20/2022-5:29 PM 7/20/2022
+879: *5:29 PM 7/20/2022-5:30 PM 7/20/2022 10
+1- es ist ein "" das heisst state wurde nicht geparsed!
+2- 5:29 PM 7/20/2022
+3- apiserver 183 weg
+880: *5:30 PM 7/20/2022-5:32 PM 7/20/2022
+881: *5:32 PM 7/20/2022-5:32 PM 7/20/2022
+882: *5:32 PM 7/20/2022-5:33 PM 7/20/2022 11
+1- state soll ein object sein
+2- es wuerde helfen wenn state einfach ein object waere!
+3- goto collection
+883: *5:33 PM 7/20/2022-6:07 AM 7/21/2022
+__________ do 21.7.22 =>100 ewew 0=fa,1ok,2+lu,3*co,-1~pa,-2-qu,-3!
+950: *6:07 AM 7/21/2022-6:09 AM 7/21/2022
+951: *6:09 AM 7/21/2022-
+2- pldata soll ein object sein!
+3- wo wird eigentlich state gesetzt?
+
+
+
 
 
 
