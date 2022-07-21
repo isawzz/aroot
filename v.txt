@@ -8876,10 +8876,14 @@ __________ do 21.7.22 =>100 ewew 0=fa,1ok,2+lu,3*co,-1~pa,-2-qu,-3!
 3- eine version die ueber playerdata anstatt fen geht!
 992: *10:05 AM 7/21/2022-10:06 AM 7/21/2022
 993: *10:14 AM 7/21/2022-10:14 AM 7/21/2022
-994: *10:14 AM 7/21/2022-
+994: *10:14 AM 7/21/2022-10:48 AM 7/21/2022 6
 1- spotit_move muss ganz anders werden!!!
 2- wie werden playerdata in fen integriert? state.score ==>pl.score
 3- present mit params is temporary!!!
+995: *10:48 AM 7/21/2022-10:57 AM 7/21/2022
+996: *10:57 AM 7/21/2022-
+2- spotit weiter
+3- spotit weiter
 
 wie muesste eigentlich spotit ablaufen???
 damit ich testen kann ob spotit functioniert!

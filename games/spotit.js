@@ -142,14 +142,15 @@ function ensure_score(plname) {
 	let sc=0;
 	if (isdef(Z.playerdata)){
 		let pldata = firstCond(Z.playerdata, x => x.name == plname);
-		sc = pldata.score;
+		console.log('state for player',pldata.name,pldata.state);
+		sc = pldata.state.score;
 	}
 	lookupSet(Z.fen, ['players', plname, 'score'], sc);  
 }
 function get_player_score(plname) { ensure_score(plname); return Z.fen.players[plname].score; }
 function inc_player_score(plname) { ensure_score(plname); return Z.fen.players[plname].score += 1; }
 
-//#endregion
+//#_endregion
 
 
 
@@ -401,6 +402,36 @@ function spotit_interact(ev, key) {
 	}
 }
 function spotit_move(uplayer, success) {
+	//console.log('g',g,'uname',uname,'success',success)
+	if (success) {
+		//console.log('success!',jsCopy(g.expected));
+		inc_player_score(uplayer);
+		//integrate all playerdata into fen!
+
+		for(const pldata of Z.playerdata){
+			let plname = pldata.name;
+			let state = pldata.state;
+			let score = !isEmpty(state)?state.score:0;
+			let fenscore = lookupSet(Z.fen,['players',plname,'score'],score);
+			console.log('fenscore')
+			Z.fen.players[plname].score = Math.max(fenscore,score);
+		}
+
+		Z.action = { stage: 'move', step: Z.options.zen_mode == 'yes' ? '*' : Z.step };
+		for (const plname in Z.expected) { Z.expected[plname].step += 1 }
+		Z.step += 1; Z.round += 1;
+		//console.log('sending',jsCopy(g.expected));
+		Z.fen.items = spotit_item_fen(Z.options);
+		//console.log('sending notes:',Z.notes[uplayer]);
+		//Clientdata.iwin = true;
+		sendmove(uplayer, Z.friendly, Z.fen, Z.action, Z.expected, Z.phase, Z.round, Z.step, Z.stage, Z.notes)
+	} else {
+		let d = mShield(dTable, { bg: '#000000aa', fg: 'red', fz: 60, align: 'center' });
+		d.innerHTML = 'NOPE!!! try again!';
+		TO.spotit_penalty = setTimeout(() => d.remove(), 2000);
+	}
+}
+function _spotit_move(uplayer, success) {
 	//console.log('g',g,'uname',uname,'success',success)
 	if (success) {
 		//console.log('success!',jsCopy(g.expected));
