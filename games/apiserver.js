@@ -1,6 +1,6 @@
 function check_collect(obj) {
 	//erwarte dass obj ein collect_complete und ein too_late hat!
-	console.log('notes', Z.notes)
+	//console.log('notes', Z.notes)
 	if (nundef(obj.collect_complete)) return false;
 	if (Z.mode != 'multi') { console.log('COLLECT NUR IN MULTI PLAYER MODE!!!!!!'); return false; }
 	if (!startsWith(Z.notes,'indiv') && Z.notes != 'lock') { console.log('!!!notes is NOT indiv or lock'); return false; }
@@ -8,12 +8,12 @@ function check_collect(obj) {
 
 	let collect_complete = obj.collect_complete;
 	let too_late = obj.too_late;
-	console.log('notes', Z.notes)
+	//console.log('notes', Z.notes)
 	//console.log('collect_open', collect_complete, 'too_late', too_late);
 
 	if (i_am_acting_host() && collect_complete) {
 
-		console.log('collect_open: i am host, collect_complete, was nun???');
+		//console.log('collect_open: i am host, collect_complete, was nun???');
 		assertion(obj.table.fen.turn.length == 1 && obj.table.fen.turn[0] == U.name && U.name == obj.table.fen.acting_host, 'collect_open: acting host is NOT the one in turn!');
 		assertion(isdef(Z.func.post_collect), 'post_collect not defined for game ' + obj.table.game);
 
@@ -24,7 +24,7 @@ function check_collect(obj) {
 			for (const p of Z.playerdata) {
 				if (isdef(p.state)) {
 					p.state = JSON.parse(p.state);
-					console.log('*** winning player is', p.name, p.state);
+					//console.log('*** winning player is', p.name, p.state);
 				}
 
 			}
@@ -92,7 +92,7 @@ function handle_result(result, cmd) {
 		case "table":
 		case "startgame":
 			update_table();
-			console.log('skip', Z.skip_presentation)
+			//console.log('skip', Z.skip_presentation)
 			let is_collect = check_collect(obj);
 
 			//console.log('haaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa1', is_collect);
@@ -153,13 +153,28 @@ function processServerdata(obj, cmd) {
 	//console.log('obj', obj);
 	if (isdef(Serverdata.table)) Serverdata.prevtable = jsCopy(Serverdata.table);
 
+	if (isdef(obj.playerdata)){
+		Serverdata.playerdata = obj.playerdata;
+		for(const o of Serverdata.playerdata){
+			//console.log('state', o.state, typeof o.state);
+			//console.log('isEmpty?',isEmpty(o.state),'isdef',isdef(o.state),'isString?',isString(o.state));
+			if (isEmpty(o.state)) o.state = ''; else  o.state = JSON.parse(o.state);
+		
+		}
+		//Serverdata.playerdata.map(x=>x.state = isEmpty(x.state) ? x.state : JSON.parse(x.state));
+		//console.log('playerdata processed:', Serverdata.playerdata);
+
+	}
+
 	for (const k in obj) {
 		if (k == 'tables') Serverdata.tables = obj.tables.map(x => unpack_table(x));
 		else if (k == 'table') { Serverdata.table = unpack_table(obj.table); } 
-		else if (k == 'table') { Serverdata.table = unpack_table(obj.table); } 
+		//else if (k == 'playerdata') { Serverdata.playerdata = obj.playerdata.map(x=>unpack_playerdata(obj.table); } 
 		else if (k == 'users') Serverdata[k] = obj[k];
+		else if (k == 'playerdata') continue;
 		else if (cmd != 'assets') Serverdata[k] = obj[k];
 	}
+
 
 	//if obj.table is defined, update that same table in Serverdata.tables
 	if (isdef(obj.table)) {
@@ -181,7 +196,7 @@ function unpack_table(table) {
 	//console.log('table has keys', Object.keys(table));
 	for (const k of ['players', 'fen', 'options', 'scoring']) {
 		let val = table[k];
-		console.log('k',k, 'val',val, table[k]);
+		//console.log('k',k, 'val',val, table[k]);
 		if (isdef(table[k])) table[k] = JSON.parse(table[k]); else table[k] = {};
 	}
 	if (isdef(table.modified)) { table.timestamp = new Date(Number(table.modified)); table.stime = stringBeforeLast(table.timestamp.toString(), 'G').trim(); }

@@ -13,14 +13,16 @@ function a_game() {
 		fen.num_decks = Math.ceil(cards_needed / 52); //console.log('num_decks', fen.num_decks);
 		fen.deck = create_fen_deck('n', fen.num_decks, 0);
 		shuffle(fen.deck);
-
+		let [i, n, diff] = [0, players.length, get_slot_diff(fen)];
 		for (const plname of players) {
 			let pl = fen.players[plname] = {
 				hand: deck_deal(fen.deck, options.handsize),
 				score: 0,
 				name: plname,
 				color: get_user_color(plname),
+				slot: diff * i,
 			};
+			i++;
 		}
 		[fen.phase, fen.stage, fen.step, fen.turn] = ['', 'click', 0, [starter]];
 		return fen;
@@ -28,20 +30,7 @@ function a_game() {
 	function present() { present_a_game(); } //console.log('present fen',Z.fen); }
 	function check_gameover() { return false; }
 	function activate_ui() {
-		if (Z.stage == 'click') {
-			show_MMM('back to normal!!!!');
-			mButton('single turn move', agmove_single, dTable, { margin: 20 });
-			mButton('clear players', agmove_clear_all, dTable, { margin: 20 });
-			mButton('clear first', agmove_clear_first, dTable, { margin: 20 });
-		} else if (Z.stage == 'clear') {
-			agmove_startmulti();
-		} else {
-			//mButton('start multi turn', agmove_startmulti, dTable, { margin: 20 });
-			console.log('stage', Z.stage);
-			mButton('indiv move', agmove_indiv, dTable, { margin: 20 });
-			//mButton('resolve', agmove_resolve, dTable, { margin: 20 });
-		}
-
+		activate_a_game();
 	}
 	function post_collect() { agmove_resolve(); } //console.log('YEAH!!!! post_collect',Z); ag_post_collect(); }
 	return { post_collect, state_info, setup, present, check_gameover, activate_ui };
@@ -52,21 +41,68 @@ function present_a_game() {
 
 	UI.hand = ui_type_hand(pl.hand, dTable, { margin: 20 });
 }
+function activate_a_game() {
+	if (Z.stage == 'click') {
+		show_MMM('back to normal!!!!');
+		mButton('single turn move', agmove_single, dTable, { margin: 20 });
+		mButton('clear players', agmove_clear_all, dTable, { margin: 20 });
+		mButton('clear first', agmove_clear_first, dTable, { margin: 20 });
+	} else if (Z.stage == 'clear') {
+		agmove_startmulti();
+	} else {
+		//mButton('start multi turn', agmove_startmulti, dTable, { margin: 20 });
+		//console.log('stage', Z.stage);
+		mButton('indiv move', agmove_indiv, dTable, { margin: 20 });
+		//mButton('resolve', agmove_resolve, dTable, { margin: 20 });
 
-function agmove_single() { console.log('hhhhhhhhhhhhhh'); if (Z.pl.hand.length > 2) removeInPlace(Z.pl.hand, Z.pl.hand[0]); Z.turn = [get_next_player(Z, Z.uplayer)]; take_turn_single(); }
+		//felix_sends_timed_move_at_mimi_slot();
+	}
+
+}
+
+function autosend(plname,slot){
+	Z.uplayer = plname;
+	take_turn_collect_open();
+}
+function felix_sends_timed_move_at_mimi_slot(){
+	let[fen, pl] = [Z.fen, Z.pl];
+	let slot = fen.players.mimi.slot;
+	slot = busy_wait_until_slot(slot);
+	//console.log('felix will be sending at time',slot, Date.now());
+}
+
+function agmove_single() {
+	if (Z.pl.hand.length > 2) removeInPlace(Z.pl.hand, Z.pl.hand[0]);
+	Z.turn = [get_next_player(Z, Z.uplayer)];
+	take_turn_single();
+}
 function agmove_clear_all() { Z.stage = 'clear'; Z.fen.endcond = 'all'; Z.fen.acting_host = Z.uplayer; Z.turn = [Z.uplayer]; take_turn_switch_to_host(); }
 function agmove_clear_first() { Z.stage = 'clear'; Z.fen.endcond = 'first'; Z.fen.acting_host = Z.uplayer; Z.turn = [Z.uplayer]; take_turn_switch_to_host(); }
 function agmove_startmulti() { Z.stage = 'multi'; Z.turn = Z.plorder;[Z.fen.stage_after_collect, Z.fen.turn_after_collect] = ['click', [rChoose(Z.plorder)]]; take_turn_start_multi(); }
-function agmove_indiv() { Z.state = {val:Z.pl.hand[0]}; take_turn_collect_open(); }
+function agmove_indiv(plname,slot) {
+	if (isDict(plname) && Z.uplayer != 'mimi') return; // only mimi can actually click button!!!
+
+	if (isString(plname)) Z.uplayer = plname;
+	console.log('sender:', Z.uplayer);
+
+	let pl = Z.fen.players[Z.uplayer];
+	Z.state = { val: pl.hand[0] };
+
+	if (nundef(slot)) slot = busy_wait_until_slot(pl.slot);
+	console.log('time sending:', slot, Date.now());
+
+	take_turn_collect_open();
+
+	if (plname != 'felix') agmove_indiv('felix',pl.slot);
+	//autosend('felix');
+}
 function agmove_resolve() {
 
 	console.log('---------------------- RESOLVE ----------------------');
 	assertion(isdef(Z.playerdata), 'no playerdata');
-	assertion(Z.uplayer == Z.fen.acting_host, 'wrong player resolves!!!!',Z.uplayer);
+	assertion(Z.uplayer == Z.fen.acting_host, 'wrong player resolves!!!!', Z.uplayer);
 
 	let [fen, uplayer, pl, pldata] = [Z.fen, Z.uplayer, Z.pl, Z.playerdata];
-	pldata = JSON.parse(pldata);
-	console.log('pldata', pldata);
 
 	//blablabl game specific code
 	fen.collection = [];

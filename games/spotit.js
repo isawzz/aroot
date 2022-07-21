@@ -44,6 +44,9 @@ function spotit_present(z, dParent, uplayer) {
 	let [fen, ui, stage] = [z.fen, UI, z.stage];
 	let [dOben, dOpenTable, dMiddle, dRechts] = tableLayoutMR(dParent, 1, 0); ///tableLayoutOMR(dParent, 5, 1);
 
+	let pldata = Z.playerdata;
+	
+
 	//fen.shield = true;
 	//clearTimeout(TO.main);// das koennt noch von vorigem bot gesetzt sein!!!
 
@@ -124,6 +127,32 @@ function spotit_state(dParent) {
 	dParent.innerHTML = `Round ${Z.round}:&nbsp;${msg} `;
 }
 
+//#region score
+//version 0:
+// function get_player_score(plname) {	return Z.fen.players[plname].score;}
+// function inc_player_score(plname) {	return Z.fen.players[plname].score+=1;}
+
+//version 1:
+// function ensure_score(plname) { lookupSet(Z, ['notes', 'akku'], true); lookupSet(Z, ['notes', plname, 'score'], 0); }
+// function get_player_score(plname) { ensure_score(plname); return Z.notes[plname].score; }
+// function inc_player_score(plname) { ensure_score(plname); return Z.notes[plname].score += 1; }
+
+//version 2:
+function ensure_score(plname) { 
+	let sc=0;
+	if (isdef(Z.playerdata)){
+		let pldata = firstCond(Z.playerdata, x => x.name == plname);
+		sc = pldata.score;
+	}
+	lookupSet(Z.fen, ['players', plname, 'score'], sc);  
+}
+function get_player_score(plname) { ensure_score(plname); return Z.fen.players[plname].score; }
+function inc_player_score(plname) { ensure_score(plname); return Z.fen.players[plname].score += 1; }
+
+//#endregion
+
+
+
 //#region internal
 function calc_syms(numSyms) {
 	//should return [rows,cols,colarr]
@@ -192,7 +221,6 @@ function cal_num_syms_adaptive() {
 	return nfinal;
 	//if (n + dn < 4) { dn = 4 - n; }
 }
-function ensure_score(plname) { lookupSet(Z, ['notes', 'akku'], true); lookupSet(Z, ['notes', plname, 'score'], 0); }
 function find_shared_keys(keylist, keylists) {
 	let shared = [];
 	for (const keylist2 of keylists) {
@@ -204,10 +232,6 @@ function find_shared_keys(keylist, keylists) {
 	}
 	return shared;
 }
-// function get_player_score(plname) {	return Z.fen.players[plname].score;}
-// function inc_player_score(plname) {	return Z.fen.players[plname].score+=1;}
-function get_player_score(plname) { ensure_score(plname); return Z.notes[plname].score; }
-function inc_player_score(plname) { ensure_score(plname); return Z.notes[plname].score += 1; }
 function modify_item_for_adaptive(item, items, n) {
 
 	let [uplayer, fen, notes] = [Z.uplayer, Z.fen, Z.notes];

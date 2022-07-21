@@ -2,7 +2,7 @@
 function take_turn_single() {
 	prep_move();
 	let o = { uname: Z.uplayer, friendly: Z.friendly, fen: Z.fen, write_fen:true }; 
-	console.log('sending', o);
+	//console.log('sending', o);
 	let cmd = 'table';
 	send_or_sim(o, cmd);
 }
@@ -25,6 +25,12 @@ function take_turn_resolve(notes) {
 	let cmd = 'table';
 	send_or_sim(o, cmd);
 }
+function take_turn_spotit() {
+	prep_move();
+	let o = { uname: Z.uplayer, friendly: Z.friendly, fen: Z.fen, state: Z.state, write_player: true, write_fen: true }; 
+	let cmd = 'table';
+	send_or_sim(o, cmd);
+}
 function query_status() {
 	prep_move();
 	let o = { uname: Z.uname, friendly: Z.friendly }; 
@@ -39,8 +45,6 @@ function prep_move() {
 	clear_timeouts();
 }
 function send_or_sim(o, cmd) { if (DA.simulate) phpPostSimulate(o, cmd); else phpPost(o, cmd); }
-
-
 
 
 

@@ -8826,9 +8826,119 @@ ok - fgu, A spazier?
 883: *5:33 PM 7/20/2022-6:07 AM 7/21/2022
 __________ do 21.7.22 =>100 ewew 0=fa,1ok,2+lu,3*co,-1~pa,-2-qu,-3!
 950: *6:07 AM 7/21/2022-6:09 AM 7/21/2022
-951: *6:09 AM 7/21/2022-
-2- pldata soll ein object sein!
-3- wo wird eigentlich state gesetzt?
+951: *6:09 AM 7/21/2022-6:10 AM 7/21/2022
+952: *6:10 AM 7/21/2022-6:15 AM 7/21/2022
+953: *6:16 AM 7/21/2022-6:19 AM 7/21/2022
+954: *6:19 AM 7/21/2022-6:24 AM 7/21/2022
+955: *6:25 AM 7/21/2022-6:26 AM 7/21/2022
+956: *6:26 AM 7/21/2022-6:31 AM 7/21/2022
+957: *6:31 AM 7/21/2022-6:32 AM 7/21/2022
+958: *6:32 AM 7/21/2022-6:33 AM 7/21/2022
+959: *6:33 AM 7/21/2022-6:36 AM 7/21/2022
+960: *6:36 AM 7/21/2022-6:39 AM 7/21/2022
+961: *6:39 AM 7/21/2022-6:41 AM 7/21/2022
+962: *6:41 AM 7/21/2022-6:43 AM 7/21/2022
+963: *6:43 AM 7/21/2022-6:44 AM 7/21/2022
+964: *6:44 AM 7/21/2022-6:44 AM 7/21/2022
+965: *6:44 AM 7/21/2022-6:45 AM 7/21/2022
+966: *6:45 AM 7/21/2022-6:59 AM 7/21/2022
+967: *6:59 AM 7/21/2022-7:00 AM 7/21/2022
+968: *7:00 AM 7/21/2022-7:03 AM 7/21/2022
+969: *7:03 AM 7/21/2022-7:20 AM 7/21/2022
+970: *7:20 AM 7/21/2022-7:22 AM 7/21/2022
+971: *7:24 AM 7/21/2022-7:24 AM 7/21/2022
+972: *7:24 AM 7/21/2022-7:26 AM 7/21/2022 1
+1- indiv
+2- get player slot
+3- goto setup a_game
+973: *7:26 AM 7/21/2022-7:55 AM 7/21/2022
+974: *7:56 AM 7/21/2022-7:57 AM 7/21/2022
+975: *8:01 AM 7/21/2022-8:08 AM 7/21/2022 2
+1- timed send multi move
+2- goto indiv
+3- use slot diff in setup!!!
+976: *8:08 AM 7/21/2022-8:12 AM 7/21/2022
+977: *8:12 AM 7/21/2022-8:22 AM 7/21/2022 3
+1- test
+2- kann ich felix_send, mimi_send machen???
+3- test indiv
+978: *8:22 AM 7/21/2022-8:25 AM 7/21/2022
+979: *8:25 AM 7/21/2022-8:27 AM 7/21/2022 4
+1- test
+2- ???
+3- bug 87!s
+980: *8:32 AM 7/21/2022-8:33 AM 7/21/2022
+- fgu,aufraeumen,kabel,abfahrt in 20'
+990: *10:00 AM 7/21/2022-10:01 AM 7/21/2022
+991: *10:02 AM 7/21/2022-10:05 AM 7/21/2022 5
+1- bei turn send erfrage player data und NICHT fen
+2- in present, werden sofort alle playerdata in fen integriert
+3- eine version die ueber playerdata anstatt fen geht!
+992: *10:05 AM 7/21/2022-10:06 AM 7/21/2022
+993: *10:14 AM 7/21/2022-10:14 AM 7/21/2022
+994: *10:14 AM 7/21/2022-
+1- spotit_move muss ganz anders werden!!!
+2- wie werden playerdata in fen integriert? state.score ==>pl.score
+3- present mit params is temporary!!!
+
+wie muesste eigentlich spotit ablaufen???
+damit ich testen kann ob spotit functioniert!
+3- ich brauch eine methods dass alle die ich will zugleich senden!
+
+
+
+
+- ang RTT=100ms
+- average round trip time for http post request 100ms
+- wenn timed send brauche, teile die timeslots ein 0..89
+- bear: click und sage zeit
+- mimi sendet nur bei 
+- ordne bei users jedem player einen time slot within 1 second zu
+- da brauch ich jetzt ein timed sesnd (bei client)
+
+- probier es einfach aus!
+- beschreibe spotit zen mode!
+1. all players have turn!
+2. all players poll
+3. wie unterscheide ich zwischen poll und turn?
+4. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+- wie kann ich es in spotit verwenden?
+ok so state muss jetzt ein object sein!
+-t est
+- goto resolve
+seir
+something else is relevant - 
+- goto process
+- rem cons
+- goto indiv
+- pldata soll ein object sein!
+- wo wird eigentlich state gesetzt?
 
 
 
