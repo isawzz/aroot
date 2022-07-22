@@ -1,5 +1,8 @@
 function ferro() {
-	function clear_ack() { if (Z.stage == 'buy_or_pass') ferro_change_to_turn_round(); }
+	function clear_ack() { 
+		if (Z.stage == 'buy_or_pass') ferro_change_to_turn_round(); 
+		else if(Z.stage == 'round_end') start_new_round_ferro(); 
+	}
 	function state_info(dParent) { ferro_state_new(dParent); }
 	function setup(players, options) {
 		let fen = { players: {}, plorder: jsCopy(players), history: [] };
@@ -26,6 +29,10 @@ function ferro() {
 				color: get_user_color(plname),
 			};
 			pl.goals = { 3: 0, 33: 0, 4: 0, 44: 0, 5: 0, 55: 0, '7R': 0 };
+
+			if(plname == starter){
+				pl.hand = ['AHn','AHn','AHn','AHn'];
+			}
 			//for(const goal of Config.games.ferro.options.goals) pl.goals[goal]=0;
 		}
 		fen.phase = ''; //TODO: king !!!!!!!
@@ -44,6 +51,7 @@ function ferro_pre_action() {
 	let [stage, A, fen, plorder, uplayer, deck] = [Z.stage, Z.A, Z.fen, Z.plorder, Z.uplayer, Z.deck];
 	//log_object(fen, 'fen', 'stage turn players');	//console.log('__________stage', stage, 'uplayer', uplayer, '\nDA', get_keys(DA));	//console.log('fen',fen,fen.players[uplayer]);
 	switch (stage) {
+		case 'round_end': console.log('should present BUTTON WEITER');break;
 		case 'buy_or_pass': select_add_items(ui_get_buy_or_pass_items(), ferro_ack_uplayer, 'may click top discard to buy or pass', 1, 1); break;
 		case 'card_selection': select_add_items(ui_get_ferro_items(uplayer), fp_card_selection, 'must select one or more cards', 1, 100); break;
 		default: console.log('stage is', stage); break;
@@ -95,7 +103,7 @@ function ferro_present_player_new(g, plname, d, ishidden = false) {
 	// no presorting!!! pl.hand = sort_cards(pl.hand, false, null, true, '23456789TJQKA*');
 	//if (!TESTING) pl.hand = sort_cards(pl.hand, false, null, true, '23456789TJQKA*');
 	// if (lookup(Clientdata['handsorting',plname])) pl.handsorting = lookup(Clientdata['handsorting',plname]);
-	if (isdef(Cliendata.handsorting)) pl.handsorting = Clientdata.handsorting;
+	if (isdef(Clientdata.handsorting)) pl.handsorting = Clientdata.handsorting;
 	if (isdef(pl.handsorting)) {
 		let bysuit = pl.handsorting.by == 'suit';
 		let [arr1, arr2] = arrSplitAtIndex(pl.hand, pl.handsorting.n - 1);
@@ -126,7 +134,7 @@ function ferro_activate_ui() {
 	let pl = fen.players[uplayer];
 
 	new_cards_animation();
-	round_change_animation();
+	//round_change_animation();
 
 	ferro_pre_action();
 }
@@ -278,8 +286,16 @@ function end_of_round_ferro() {
 	//score all players
 	calc_ferro_score(uplayer);
 	ari_history_list([`${uplayer} wins the round`], 'round');
-	Z.stage = 'card_selection';
 	fen.round_winner = uplayer;
+
+	[Z.stage, Z.turn] = ['round_end', jsCopy(plorder)];
+	take_turn_single();
+
+}
+function start_new_round_ferro() {
+	let [plorder, stage, A, fen, uplayer] = [Z.plorder, Z.stage, Z.A, Z.fen, Z.uplayer];
+	let pl = fen.players[uplayer];
+	Z.stage = 'card_selection';
 	fen.plorder = arrCycle(plorder, 1);
 	let starter = fen.plorder[0];
 	Z.turn = fen.turn = [starter];
@@ -713,7 +729,7 @@ function is_legal_if_7R(cards) {
 }
 function onclick_by_rank_ferro() {
 	let [plorder, stage, A, fen, uplayer, pl] = [Z.plorder, Z.stage, Z.A, Z.fen, Z.uplayer, Z.fen.players[Z.uplayer]];
-	console.log('sorting for',uplayer);
+	console.log('sorting for', uplayer);
 	let items = ui_get_hand_items(uplayer).map(x => x.o);
 	let h = UI.players[uplayer].hand;
 	pl.handsorting = { n: items.length, by: 'rank' };

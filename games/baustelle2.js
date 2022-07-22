@@ -45,6 +45,7 @@ function show_admin_ui(){
 	for (const id of ['bSpotitStart', 'bClearAck', 'bRandomMove', 'bSkipPlayer']) hide(id);
 	if (Z.game == 'spotit' && Z.uname == Z.host && Z.stage == 'init') show('bSpotitStart');
 	else if (Z.game == 'bluff' && Z.uname == Z.host && Z.stage == 1) show('bClearAck');
+	else if (Z.uname == Z.host && Z.stage == 'round_end') show('bClearAck');
 	else if (Z.game == 'ferro' && Z.uname == Z.host && Z.stage == 'buy_or_pass') show('bClearAck');
 
 	if (['ferro', 'bluff', 'aristo', 'a_game'].includes(Z.game) && (Z.role == 'active' || Z.mode == 'hotseat')) {

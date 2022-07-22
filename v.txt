@@ -8999,7 +8999,25 @@ ok - ok, copy all files from easy to games!
 3- was soll das take_turn_start_multi?????
 155: *9:59 AM 7/22/2022-9:59 AM 7/22/2022 2
 156: *9:59 AM 7/22/2022-10:00 AM 7/22/2022
-157: *10:00 AM 7/22/2022-
+157: *10:00 AM 7/22/2022-10:45 AM 7/22/2022
+158: *10:45 AM 7/22/2022-10:47 AM 7/22/2022
+159: *10:48 AM 7/22/2022-10:48 AM 7/22/2022
+160: *10:48 AM 7/22/2022-11:07 AM 7/22/2022
+161: *11:07 AM 7/22/2022-11:29 AM 7/22/2022
+162: *11:29 AM 7/22/2022-11:30 AM 7/22/2022
+163: *11:34 AM 7/22/2022-
+1- 
+2- test
+3- remove .roundchange alles
+
+psychologist anosognosia behavioral changes
+relevance of doctors and family / friend statements/advice
+
+returning to microsoft is NOT relevant for disability insurance
+
+
+
+
 - single
 - multi_async: spotit moves: 
 - multi_sync

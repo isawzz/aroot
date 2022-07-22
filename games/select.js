@@ -28,7 +28,7 @@ function phpPostSimulate(o, cmd) {
 	if (nundef(o.options) && isdef(Z)) {
 		//console.log('_____________', cmd, o, Z, '\nturn', o.turn, Z.turn);
 		o.turn = Z.turn;
-		o.expected = Z.expected;
+		o.game = Z.game;
 		o.options = Z.options;
 	}
 	switch (cmd) {
@@ -40,7 +40,7 @@ function phpPostSimulate(o, cmd) {
 			//console.log('t', t);
 
 			let t1 = JSON.parse(t);
-			//console.log('t1', t1);
+			console.log('t1', t1);
 
 			handle_result(t, cmd); break;
 		default: break; //console.log('unknown command', cmd); break;
