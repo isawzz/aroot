@@ -1,4 +1,22 @@
 
+function old_ensure_buttons_visible_ferro() {
+	if (isdef(mBy('dbPlayer'))) return;
+	let [plorder, stage, A, fen, uplayer, pl] = [Z.plorder, Z.stage, Z.A, Z.fen, Z.uplayer, Z.fen.players[Z.uplayer]];
+	if (fen.players[uplayer].hand.length <= 1) return; // only display for hand size > 1
+	let d = iDiv(UI.players[uplayer]);
+	mStyle(d, { position: 'relative' })
+	//console.log('d', d);
+	let dbPlayer = mDiv(d, { position: 'absolute', bottom: 2, left: 100, height: 25 }, 'dbPlayer');
+	let styles = { rounding: 6, bg: 'silver', fg: 'black', border: 0, maleft: 10 };
+	let bByRank = mButton('by rank', onclick_by_rank_ferro, dbPlayer, styles, 'enabled');
+	let bBySuit = mButton('by suit', onclick_by_suit_ferro, dbPlayer, styles, 'enabled');
+	if (Z.game == 'ferro') {
+		let b = mButton('clear selection', onclick_clear_selection_ferro, dbPlayer, styles, 'enabled', 'bClearSelection'); //isEmpty(A.selected)?'disabled':'enabled');
+		if (isEmpty(A.selected)) hide(b);
+	}
+
+}
+
 function handle_result(result, cmd) {
 	//if (verbose) console.log('cmd', cmd, '\nresult', result); //return;
 	if (result.trim() == "") return;

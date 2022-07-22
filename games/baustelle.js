@@ -6,13 +6,12 @@ function take_turn_single() {
 	let cmd = 'table';
 	send_or_sim(o, cmd);
 }
-function take_turn_switch_to_host() {
+function take_turn_clear() {
 	prep_move();
 	let o = { uname: Z.uplayer, friendly: Z.friendly, fen: Z.fen, players: Z.playerlist }; 
 	let cmd = 'clear';
 	send_or_sim(o, cmd);
 }
-function take_turn_start_multi() { take_turn_single(); }
 function take_turn_collect_open() {
 	prep_move();
 	let o = { uname: Z.uplayer, friendly: Z.friendly, fen: Z.fen, state: Z.state, write_player: true }; 
@@ -27,6 +26,7 @@ function take_turn_resolve(notes) {
 }
 function take_turn_spotit() {
 	prep_move();
+	//console.log('take_turn_spotit','should be writing',Z.state,'for',Z.uplayer);
 	let o = { uname: Z.uplayer, friendly: Z.friendly, fen: Z.fen, state: Z.state, write_player: true, write_fen: true }; 
 	let cmd = 'table';
 	send_or_sim(o, cmd);

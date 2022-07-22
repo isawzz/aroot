@@ -1,57 +1,4 @@
-function check_collect(obj) {
-	//erwarte dass obj ein collect_complete und ein too_late hat!
-	//console.log('notes', Z.notes)
-	if (nundef(obj.collect_complete)) return false;
-	if (Z.mode != 'multi') { console.log('COLLECT NUR IN MULTI PLAYER MODE!!!!!!'); return false; }
-	if (!startsWith(Z.notes,'indiv') && Z.notes != 'lock') { console.log('!!!notes is NOT indiv or lock'); return false; }
-	assertion(isdef(obj.playerdata), 'no playerdata but collect_complete');
-
-	let collect_complete = obj.collect_complete;
-	let too_late = obj.too_late;
-	//console.log('notes', Z.notes)
-	//console.log('collect_open', collect_complete, 'too_late', too_late);
-
-	if (i_am_acting_host() && collect_complete) {
-
-		//console.log('collect_open: i am host, collect_complete, was nun???');
-		assertion(obj.table.fen.turn.length == 1 && obj.table.fen.turn[0] == U.name && U.name == obj.table.fen.acting_host, 'collect_open: acting host is NOT the one in turn!');
-		assertion(isdef(Z.func.post_collect), 'post_collect not defined for game ' + obj.table.game);
-
-		//Z.playerdata = obj.playerdata;
-		//console.log('playerdata vorher', Z.playerdata);
-		if (Z.fen.end_cond == 'all') for (const p of Z.playerdata) { p.state = JSON.parse(p.state); }
-		else if (Z.fen.end_cond == 'first') {
-			for (const p of Z.playerdata) {
-				if (isdef(p.state)) {
-					p.state = JSON.parse(p.state);
-					//console.log('*** winning player is', p.name, p.state);
-				}
-
-			}
-			//console.log('playerdata nachher', Z.playerdata);
-		}
-		Z.func.post_collect();
-
-
-	} else if (collect_complete && (Z.turn.length > 1 || Z.turn[0] != Z.fen.acting_host)) {
-		Z.turn = [Z.fen.acting_host];
-		take_turn_single();
-		//console.log('collect_open: collect_complete, bin aber nicht der host! was nun???');
-
-	} else if (i_am_acting_host()) {
-		//console.log('collect_open: i am host, bin aber nicht collect_complete, was nun???');
-		//autopoll();
-		return false;
-
-	} else {
-		//console.log('collect_open: bin nicht der host, bin nicht collect_complete, was nun???');
-		//autopoll();
-		return false;
-
-	}
-	return true;
-
-}
+let verbose = false;
 function handle_result(result, cmd) {
 	if (verbose) console.log('cmd', cmd, '\nresult', result); //return;
 	if (result.trim() == "") return;
@@ -115,6 +62,60 @@ function handle_result(result, cmd) {
 }
 
 //#region helpers
+function check_collect(obj) {
+	//erwarte dass obj ein collect_complete und ein too_late hat!
+	//console.log('notes', Z.notes)
+	if (nundef(obj.collect_complete)) return false;
+	if (Z.mode != 'multi') { console.log('COLLECT NUR IN MULTI PLAYER MODE!!!!!!'); return false; }
+	if (!startsWith(Z.notes,'indiv') && Z.notes != 'lock') { return false; } //console.log('!!!notes is NOT indiv or lock'); return false; }
+	assertion(isdef(obj.playerdata), 'no playerdata but collect_complete');
+
+	let collect_complete = obj.collect_complete;
+	let too_late = obj.too_late;
+	//console.log('notes', Z.notes)
+	//console.log('collect_open', collect_complete, 'too_late', too_late);
+
+	if (i_am_acting_host() && collect_complete) {
+
+		//console.log('collect_open: i am host, collect_complete, was nun???');
+		assertion(obj.table.fen.turn.length == 1 && obj.table.fen.turn[0] == U.name && U.name == obj.table.fen.acting_host, 'collect_open: acting host is NOT the one in turn!');
+		assertion(isdef(Z.func.post_collect), 'post_collect not defined for game ' + obj.table.game);
+
+		//Z.playerdata = obj.playerdata;
+		//console.log('playerdata vorher', Z.playerdata);
+		if (Z.fen.end_cond == 'all') for (const p of Z.playerdata) { p.state = JSON.parse(p.state); }
+		else if (Z.fen.end_cond == 'first') {
+			for (const p of Z.playerdata) {
+				if (isdef(p.state)) {
+					p.state = JSON.parse(p.state);
+					//console.log('*** winning player is', p.name, p.state);
+				}
+
+			}
+			//console.log('playerdata nachher', Z.playerdata);
+		}
+		Z.func.post_collect();
+
+
+	} else if (collect_complete && (Z.turn.length > 1 || Z.turn[0] != Z.fen.acting_host)) {
+		Z.turn = [Z.fen.acting_host];
+		take_turn_single();
+		//console.log('collect_open: collect_complete, bin aber nicht der host! was nun???');
+
+	} else if (i_am_acting_host()) {
+		//console.log('collect_open: i am host, bin aber nicht collect_complete, was nun???');
+		//autopoll();
+		return false;
+
+	} else {
+		//console.log('collect_open: bin nicht der host, bin nicht collect_complete, was nun???');
+		//autopoll();
+		return false;
+
+	}
+	return true;
+
+}
 function load_assets(obj) {
 	Config = jsyaml.load(obj.config);
 	Syms = jsyaml.load(obj.syms);
@@ -163,7 +164,7 @@ function processServerdata(obj, cmd) {
 		}
 		//Serverdata.playerdata.map(x=>x.state = isEmpty(x.state) ? x.state : JSON.parse(x.state));
 		//console.log('playerdata processed:', Serverdata.playerdata);
-
+		//console.log('playerdata processed:', Serverdata.playerdata);
 	}
 
 	for (const k in obj) {

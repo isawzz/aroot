@@ -14,7 +14,7 @@ if ($cmd == 'table'){
 	$result->status = "reloaded table $friendly";
 
 	//collecting individual data
-	if (str_starts_with($notes, 'indiv') && isset($data->state)){
+	if (isset($data->write_fen) && isset($data->state)){
 		$uname = $data->uname;
 		$result->too_late = false;
 		$result->turn = $data->fen->turn;
@@ -39,7 +39,7 @@ if ($cmd == 'table'){
 			}
 		}else if (str_ends_with($notes, 'first')){
 			$done = true;
-		}
+		}else $done = false;
 		$result->collect_complete = $done;
 		if ($done) {
 			$data->fen->turn = array($data->fen->acting_host); //array($table['host']);

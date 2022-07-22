@@ -76,9 +76,9 @@ function agmove_single() {
 	Z.turn = [get_next_player(Z, Z.uplayer)];
 	take_turn_single();
 }
-function agmove_clear_all() { Z.stage = 'clear'; Z.fen.endcond = 'all'; Z.fen.acting_host = Z.uplayer; Z.turn = [Z.uplayer]; take_turn_switch_to_host(); }
-function agmove_clear_first() { Z.stage = 'clear'; Z.fen.endcond = 'first'; Z.fen.acting_host = Z.uplayer; Z.turn = [Z.uplayer]; take_turn_switch_to_host(); }
-function agmove_startmulti() { Z.stage = 'multi'; Z.turn = Z.plorder;[Z.fen.stage_after_collect, Z.fen.turn_after_collect] = ['click', [rChoose(Z.plorder)]]; take_turn_start_multi(); }
+function agmove_clear_all() { Z.stage = 'clear'; Z.fen.endcond = 'all'; Z.fen.acting_host = Z.uplayer; Z.turn = [Z.uplayer]; take_turn_clear(); }
+function agmove_clear_first() { Z.stage = 'clear'; Z.fen.endcond = 'first'; Z.fen.acting_host = Z.uplayer; Z.turn = [Z.uplayer]; take_turn_clear(); }
+function agmove_startmulti() { Z.stage = 'multi'; Z.turn = Z.plorder;[Z.fen.stage_after_collect, Z.fen.turn_after_collect] = ['click', [rChoose(Z.plorder)]]; take_turn_single(); }
 function agmove_indiv(plname,slot) {
 	if (isDict(plname) && Z.uplayer != 'mimi') return; // only mimi can actually click button!!!
 

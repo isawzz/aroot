@@ -46,7 +46,8 @@ function show_admin_ui(){
 	if (Z.game == 'spotit' && Z.uname == Z.host && Z.stage == 'init') show('bSpotitStart');
 	else if (Z.game == 'bluff' && Z.uname == Z.host && Z.stage == 1) show('bClearAck');
 	else if (Z.game == 'ferro' && Z.uname == Z.host && Z.stage == 'buy_or_pass') show('bClearAck');
-	else if (['ferro', 'bluff', 'aristo', 'a_game'].includes(Z.game)) {
+
+	if (['ferro', 'bluff', 'aristo', 'a_game'].includes(Z.game) && (Z.role == 'active' || Z.mode == 'hotseat')) {
 		//console.log('random should show because game is', Z.game)
 		show('bRandomMove');
 	}

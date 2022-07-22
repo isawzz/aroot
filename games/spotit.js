@@ -44,8 +44,9 @@ function spotit_present(z, dParent, uplayer) {
 	let [fen, ui, stage] = [z.fen, UI, z.stage];
 	let [dOben, dOpenTable, dMiddle, dRechts] = tableLayoutMR(dParent, 1, 0); ///tableLayoutOMR(dParent, 5, 1);
 
-	let pldata = Z.playerdata;
-	
+	//let pldata = Z.playerdata;
+	spotit_read_all_scores();
+
 
 	//fen.shield = true;
 	//clearTimeout(TO.main);// das koennt noch von vorigem bot gesetzt sein!!!
@@ -138,14 +139,15 @@ function spotit_state(dParent) {
 // function inc_player_score(plname) { ensure_score(plname); return Z.notes[plname].score += 1; }
 
 //version 2:
-function ensure_score(plname) { 
-	let sc=0;
-	if (isdef(Z.playerdata)){
-		let pldata = firstCond(Z.playerdata, x => x.name == plname);
-		console.log('state for player',pldata.name,pldata.state);
+function ensure_score(plname) {
+	let sc = 0;
+	//console.log('ensure_score',Z.playerdata)
+	if (isdef(Z.playerdata)) {
+		let pldata = valf(firstCond(Z.playerdata, x => x.name == plname),{name:plname,state:{score:0}});
+		//console.log('state for player', pldata.name, pldata.state);
 		sc = pldata.state.score;
-	}
-	lookupSet(Z.fen, ['players', plname, 'score'], sc);  
+	}else Z.playerdata=[];
+	lookupSet(Z.fen, ['players', plname, 'score'], sc);
 }
 function get_player_score(plname) { ensure_score(plname); return Z.fen.players[plname].score; }
 function inc_player_score(plname) { ensure_score(plname); return Z.fen.players[plname].score += 1; }
@@ -158,16 +160,16 @@ function inc_player_score(plname) { ensure_score(plname); return Z.fen.players[p
 function calc_syms(numSyms) {
 	//should return [rows,cols,colarr]
 	let n = numSyms, rows, realrows, colarr;
-	if (n == 3) { rows = 2; realrows = 1; colarr = [1,2];}
-	else if (n == 4) { rows = 2; realrows = 2; colarr = [2,2];}
-	else if (n == 5) { rows = 3; realrows = 3; colarr = [1,3,1];}
-	else if (n == 6) { rows = 3.3; realrows = 3; colarr = [2,3,1];}
-	else if (n == 7) { rows = 3; realrows = 3; colarr = [2,3,2];} //default
-	else if (n == 8) { rows = 3.8; realrows = 4; colarr = [1,3,3,1];}
-	else if (n == 9) { rows = 4; realrows = 4; colarr = [2, 3, 3, 1];}
-	else if (n == 10) { rows = 4; realrows = 4; colarr = [2, 3, 3, 2];}
+	if (n == 3) { rows = 2; realrows = 1; colarr = [1, 2]; }
+	else if (n == 4) { rows = 2; realrows = 2; colarr = [2, 2]; }
+	else if (n == 5) { rows = 3; realrows = 3; colarr = [1, 3, 1]; }
+	else if (n == 6) { rows = 3.3; realrows = 3; colarr = [2, 3, 1]; }
+	else if (n == 7) { rows = 3; realrows = 3; colarr = [2, 3, 2]; } //default
+	else if (n == 8) { rows = 3.8; realrows = 4; colarr = [1, 3, 3, 1]; }
+	else if (n == 9) { rows = 4; realrows = 4; colarr = [2, 3, 3, 1]; }
+	else if (n == 10) { rows = 4; realrows = 4; colarr = [2, 3, 3, 2]; }
 	else if (n == 11) { rows = 4.5; realrows = 4; colarr = [2, 3, 4, 2]; }
-	else if (n == 12) { rows = 5; realrows = 5; colarr = [1, 3, 4, 3, 1]; } 
+	else if (n == 12) { rows = 5; realrows = 5; colarr = [1, 3, 4, 3, 1]; }
 	else if (n == 13) { rows = 5; realrows = 5; colarr = [2, 3, 4, 3, 1]; }
 	else if (n == 14) { rows = 5; realrows = 5; colarr = [2, 3, 4, 3, 2]; }
 	else if (n == 15) { rows = 5.5; realrows = 5; colarr = [2, 3, 5, 3, 2]; }
@@ -218,7 +220,7 @@ function cal_num_syms_adaptive() {
 	let n = Z.options.num_symbols;
 
 	//n+dn should be at least 4 and at most 14
-	let nfinal = Math.max(4,Math.min(14,dn+n));
+	let nfinal = Math.max(4, Math.min(14, dn + n));
 	return nfinal;
 	//if (n + dn < 4) { dn = 4 - n; }
 }
@@ -364,7 +366,7 @@ function spotit_find_shared(z, card, keyClicked) {
 function spotit_item_fen(options) {
 	let o = {
 		num_cards: valf(options.num_cards, 2),
-		num_symbols: options.adaptive == 'yes'?14:valf(options.num_symbols, 7),
+		num_symbols: options.adaptive == 'yes' ? 14 : valf(options.num_symbols, 7),
 		vocab: valf(options.vocab, 'lifePlus'),
 		lang: 'E',
 		min_scale: valf(options.min_scale, 0.75),
@@ -408,28 +410,38 @@ function spotit_move(uplayer, success) {
 		inc_player_score(uplayer);
 		//integrate all playerdata into fen!
 
-		for(const pldata of Z.playerdata){
-			let plname = pldata.name;
-			let state = pldata.state;
-			let score = !isEmpty(state)?state.score:0;
-			let fenscore = lookupSet(Z.fen,['players',plname,'score'],score);
-			console.log('fenscore')
-			Z.fen.players[plname].score = Math.max(fenscore,score);
-		}
+		//fen score von diesem player sollte jetzt 1 sein
+		assertion(get_player_score(uplayer) >= 1, 'player score should be >= 1');
 
-		Z.action = { stage: 'move', step: Z.options.zen_mode == 'yes' ? '*' : Z.step };
-		for (const plname in Z.expected) { Z.expected[plname].step += 1 }
-		Z.step += 1; Z.round += 1;
-		//console.log('sending',jsCopy(g.expected));
 		Z.fen.items = spotit_item_fen(Z.options);
-		//console.log('sending notes:',Z.notes[uplayer]);
-		//Clientdata.iwin = true;
-		sendmove(uplayer, Z.friendly, Z.fen, Z.action, Z.expected, Z.phase, Z.round, Z.step, Z.stage, Z.notes)
+		Z.state = {score:get_player_score(uplayer)};
+		take_turn_spotit();
+
 	} else {
 		let d = mShield(dTable, { bg: '#000000aa', fg: 'red', fz: 60, align: 'center' });
 		d.innerHTML = 'NOPE!!! try again!';
 		TO.spotit_penalty = setTimeout(() => d.remove(), 2000);
 	}
+}
+function spotit_read_all_scores(){
+	if (nundef(Z.playerdata)){
+		Z.playerdata = [];
+		for(const pl in Z.fen.players){
+			Z.playerdata.push({
+				name:pl,
+				state:{score:0},
+			});
+		}
+	}
+	for (const pldata of Z.playerdata) {
+		let plname = pldata.name;
+		let state = pldata.state;
+		let score = !isEmpty(state) ? state.score : 0;
+		let fenscore = lookupSet(Z.fen, ['players', plname, 'score'], score);
+		//console.log('fenscore',fenscore,'pldata',pldata);
+		Z.fen.players[plname].score = Math.max(fenscore, score);
+	}
+
 }
 function _spotit_move(uplayer, success) {
 	//console.log('g',g,'uname',uname,'success',success)

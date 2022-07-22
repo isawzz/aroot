@@ -8881,9 +8881,255 @@ __________ do 21.7.22 =>100 ewew 0=fa,1ok,2+lu,3*co,-1~pa,-2-qu,-3!
 2- wie werden playerdata in fen integriert? state.score ==>pl.score
 3- present mit params is temporary!!!
 995: *10:48 AM 7/21/2022-10:57 AM 7/21/2022
-996: *10:57 AM 7/21/2022-
+996: *10:57 AM 7/21/2022-2:14 PM 7/21/2022
+1- spotit weiter!
 2- spotit weiter
 3- spotit weiter
+997: *2:18 PM 7/21/2022-2:23 PM 7/21/2022
+998: *2:23 PM 7/21/2022-2:30 PM 7/21/2022 7
+1- rem cons
+3- woher nehm ich die spotit playerdata???
+2- test
+999: *2:30 PM 7/21/2022-2:32 PM 7/21/2022
+1000: *2:32 PM 7/21/2022-2:33 PM 7/21/2022
+1: *2:33 PM 7/21/2022-2:34 PM 7/21/2022 8
+1- schau playerdata von allen an!
+2- ausprobieren!
+3- schau ob ich die playerdata rauskriege 
+2: *2:34 PM 7/21/2022-2:46 PM 7/21/2022
+3: *2:46 PM 7/21/2022-2:48 PM 7/21/2022
+4: *2:48 PM 7/21/2022-2:49 PM 7/21/2022
+5: *2:49 PM 7/21/2022-2:56 PM 7/21/2022 9
+1- activate edge
+2- was schreibt der???
+3- kann ich nicht einfach write_player machen ohne das indiv?
+6: *2:56 PM 7/21/2022-2:59 PM 7/21/2022
+7: *2:59 PM 7/21/2022-3:00 PM 7/21/2022 10
+1- was ist mit spotit los??? warum ist immer ein spieler felix da drin???
+2- wieso hat der bot am anfang 2???
+3- test was passiert wenn bot nehme!
+ok - er muss einfach am anfang player scores updaten!!!
+8: *3:04 PM 7/21/2022-3:07 PM 7/21/2022
+9: *3:07 PM 7/21/2022-3:09 PM 7/21/2022
+10: *3:09 PM 7/21/2022-3:11 PM 7/21/2022 11
+1- also: wenn ich auf castle gehe und dann auf ein andere table gehe hat er immer noch all die players drin?!!!! koennte was mit playerdata zu tun haben!
+2- ja auch mit reg players!!!
+3- da ist ein scheusslicher fehler!!! hat das was mit den bots zu tun??? oder ist es auch wenn 2 verschiedene spotit spiele sind?
+11: *3:11 PM 7/21/2022-3:12 PM 7/21/2022
+12: *3:13 PM 7/21/2022-3:14 PM 7/21/2022
+1- test again mit spotit!!!
+2- eins ist sicher wenn ich stopgame mache muss ich auch playerdata killen! und auch Serverdata.table killen!!! und friendly killen!!!
+3- mach denselben versuch mit bluff!!!
+13: *3:35 PM 7/21/2022-3:36 PM 7/21/2022
+14: *3:36 PM 7/21/2022-3:36 PM 7/21/2022
+15: *3:36 PM 7/21/2022-3:37 PM 7/21/2022
+16: *3:38 PM 7/21/2022-3:40 PM 7/21/2022
+17: *3:40 PM 7/21/2022-3:42 PM 7/21/2022
+1- test zen mode false
+2- finde heraus ob er in spotit pollt nein, nicht im zen mode!
+3- rem cons!
+18: *3:42 PM 7/21/2022-3:44 PM 7/21/2022 12
+19: *3:45 PM 7/21/2022-3:45 PM 7/21/2022
+20: *3:47 PM 7/21/2022-3:51 PM 7/21/2022 13
+1- problem: random button shows but not on turn!!!
+2- jetzt teste ob aristo multi geht!
+3- das geht!
+21: *3:51 PM 7/21/2022-3:52 PM 7/21/2022
+22: *3:52 PM 7/21/2022-7:22 PM 7/21/2022
+23: *7:22 PM 7/21/2022-8:05 PM 7/21/2022 14
+1- und jetzt was?
+2- check gu / oben / A
+3- upload zum testen!
+__________ fr 22.7.22 =>100 ewew 0=fa,1ok,2+lu,3*co,-1~pa,-2-qu,-3!
+120: *8:06 PM 7/21/2022-7:09 AM 7/22/2022
+121: *7:09 AM 7/22/2022-7:14 AM 7/22/2022
+122: *7:14 AM 7/22/2022-7:16 AM 7/22/2022
+123: *7:16 AM 7/22/2022-7:16 AM 7/22/2022
+124: *7:16 AM 7/22/2022-7:20 AM 7/22/2022
+125: *7:20 AM 7/22/2022-7:22 AM 7/22/2022
+126: *7:22 AM 7/22/2022-7:24 AM 7/22/2022
+127: *7:24 AM 7/22/2022-7:25 AM 7/22/2022
+128: *7:25 AM 7/22/2022-7:27 AM 7/22/2022
+129: *7:27 AM 7/22/2022-7:34 AM 7/22/2022
+130: *7:35 AM 7/22/2022-7:36 AM 7/22/2022
+132: *7:36 AM 7/22/2022-7:36 AM 7/22/2022
+133: *7:36 AM 7/22/2022-7:39 AM 7/22/2022
+ok - suche Clientdata
+134: *7:39 AM 7/22/2022-7:40 AM 7/22/2022
+ok - stopgame: Clientdata weg!!!
+135: *7:40 AM 7/22/2022-7:43 AM 7/22/2022
+136: *7:43 AM 7/22/2022-7:44 AM 7/22/2022
+137: *7:44 AM 7/22/2022-7:46 AM 7/22/2022
+138: *7:46 AM 7/22/2022-7:55 AM 7/22/2022
+139: *7:55 AM 7/22/2022-7:55 AM 7/22/2022
+140: *7:55 AM 7/22/2022-7:56 AM 7/22/2022
+141: *7:56 AM 7/22/2022-7:59 AM 7/22/2022
+ok - revert to Clientdata.handsorting
+ok - ne wart mal: eigentlich soll das handsorting beim hotseat player sowieso fuer alle gleich sein!!! sonst muss man es ja 3x setzen!!!
+ok - historylayout ist auch per player!!!
+ok - ja, uplayer ist der der gezeigt wird! also der richtige auch wenn er nicht active ist!
+ok - achtung: Clientdata bei hotseat muss ich dictionary per player haben!!!!
+ok - fuer wen wird ueberhaupt sortiert???
+ok - wo clickt fuer handsorting?
+ok - sort order out of turn ferro!!! Clientdata
+ok - schreibe auf: eine agenda!
+ok - find gamestep
+ok - kein random button bei hotseat: your turn for felix!
+ok - test
+ok - brauch ich ueberhaupt legacy? JA
+ok - ok, copy all files from easy to games!
+142: *7:59 AM 7/22/2022-8:00 AM 7/22/2022
+143: *8:00 AM 7/22/2022-8:00 AM 7/22/2022
+144: *8:00 AM 7/22/2022-8:03 AM 7/22/2022
+145: *8:03 AM 7/22/2022-8:07 AM 7/22/2022
+146: *8:07 AM 7/22/2022-8:07 AM 7/22/2022
+147: *8:07 AM 7/22/2022-8:09 AM 7/22/2022
+148: *8:09 AM 7/22/2022-9:10 AM 7/22/2022
+149: *9:10 AM 7/22/2022-9:13 AM 7/22/2022
+150: *9:13 AM 7/22/2022-9:15 AM 7/22/2022
+151: *9:15 AM 7/22/2022-9:17 AM 7/22/2022 1
+1- was ist das clear? 
+2- schau welche es gibt und ordne sie zu
+3- auch wie sie heissen sollen
+152: *9:17 AM 7/22/2022-9:52 AM 7/22/2022
+153: *9:52 AM 7/22/2022-9:53 AM 7/22/2022
+154: *9:53 AM 7/22/2022-9:56 AM 7/22/2022
+1- take_turn heisst: player initiates (contrast to auto_turn)
+2- baustelle
+3- was soll das take_turn_start_multi?????
+155: *9:59 AM 7/22/2022-9:59 AM 7/22/2022 2
+156: *9:59 AM 7/22/2022-10:00 AM 7/22/2022
+157: *10:00 AM 7/22/2022-
+- single
+- multi_async: spotit moves: 
+- multi_sync
+- multi_sync_init
+- multi_sync_resolve
+
+
+- acting_host sollte heissen: sync_multi
+
+
+1. single turn ohne polling: take_turn_single
+2. single turn mit polling???
+3. multi turn ohne polling
+4. multi turn mit polling nur fuer gameover
+5. multi turn mit polling fuer ack (host) und gameover
+6. multi turn mit polling fuer table change
+7. multi turn mit polling fuer ANY change (gametable,indiv)
+8. multi turn mit acting_host: clear
+9. multi turn ohne acting_host
+
+- list ALL interaction variants and specify ablauf
+
+
+
+- das ist ein subvariant mit ACK moeglichkeit fuer host!
+?- wie geht nochmal das collect?
+
+
+
+?- wie soll eine end of round view ablaufen?
+stage: round ends brauch ich
+Z.stage=round_end (koennte auch sagen: multi_roundend)
+Z.turn=jsCopy(plorder)
+fen.stage_after_multi = ... (per game)
+fen.turn_after_multi = ... (per game)
+... (+ sonstige dinge die behalten muss)
+
+
+
+
+take_turn_clear()
+
+
+
+
+
+
+
+
+- end of round view!
+
+- baustelle integrate
+- copy all games to games
+- ferro ack!
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 wie muesste eigentlich spotit ablaufen???
 damit ich testen kann ob spotit functioniert!

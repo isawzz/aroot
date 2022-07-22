@@ -222,7 +222,7 @@ function stopgame() {
 
 	pollStop();
 	//clear_table();
-	Z = null;
+	Z = null;delete Serverdata.table;delete Serverdata.playerdata;Clientdata={};
 }
 
 function sendgameover(plname, friendly, fen, scoring) {
