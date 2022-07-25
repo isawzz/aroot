@@ -9005,297 +9005,298 @@ ok - ok, copy all files from easy to games!
 160: *10:48 AM 7/22/2022-11:07 AM 7/22/2022
 161: *11:07 AM 7/22/2022-11:29 AM 7/22/2022
 162: *11:29 AM 7/22/2022-11:30 AM 7/22/2022
-163: *11:34 AM 7/22/2022-
-1- 
-2- test
-3- remove .roundchange alles
-
-psychologist anosognosia behavioral changes
-relevance of doctors and family / friend statements/advice
-
-returning to microsoft is NOT relevant for disability insurance
-
-
-
-
-- single
-- multi_async: spotit moves: 
-- multi_sync
-- multi_sync_init
-- multi_sync_resolve
-
-
-- acting_host sollte heissen: sync_multi
-
-
-1. single turn ohne polling: take_turn_single
-2. single turn mit polling???
-3. multi turn ohne polling
-4. multi turn mit polling nur fuer gameover
-5. multi turn mit polling fuer ack (host) und gameover
-6. multi turn mit polling fuer table change
-7. multi turn mit polling fuer ANY change (gametable,indiv)
-8. multi turn mit acting_host: clear
-9. multi turn ohne acting_host
-
-- list ALL interaction variants and specify ablauf
-
-
-
-- das ist ein subvariant mit ACK moeglichkeit fuer host!
-?- wie geht nochmal das collect?
-
-
-
-?- wie soll eine end of round view ablaufen?
-stage: round ends brauch ich
-Z.stage=round_end (koennte auch sagen: multi_roundend)
-Z.turn=jsCopy(plorder)
-fen.stage_after_multi = ... (per game)
-fen.turn_after_multi = ... (per game)
-... (+ sonstige dinge die behalten muss)
-
-
-
-
-take_turn_clear()
-
-
-
-
-
-
-
-
-- end of round view!
-
-- baustelle integrate
-- copy all games to games
-- ferro ack!
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-wie muesste eigentlich spotit ablaufen???
-damit ich testen kann ob spotit functioniert!
-3- ich brauch eine methods dass alle die ich will zugleich senden!
-
-
-
-
-- ang RTT=100ms
-- average round trip time for http post request 100ms
-- wenn timed send brauche, teile die timeslots ein 0..89
-- bear: click und sage zeit
-- mimi sendet nur bei 
-- ordne bei users jedem player einen time slot within 1 second zu
-- da brauch ich jetzt ein timed sesnd (bei client)
-
-- probier es einfach aus!
-- beschreibe spotit zen mode!
-1. all players have turn!
-2. all players poll
-3. wie unterscheide ich zwischen poll und turn?
-4. 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-- wie kann ich es in spotit verwenden?
-ok so state muss jetzt ein object sein!
--t est
-- goto resolve
-seir
-something else is relevant - 
-- goto process
-- rem cons
-- goto indiv
-- pldata soll ein object sein!
-- wo wird eigentlich state gesetzt?
-
-
-
-
-
-
-vielleicht uebergehen zu timed?
-
-- ich glaub es geht jetzt
-- wieso muss ich in single turn pollen???
-- ha weg!
-- notes muessen irgendwann wieder von indiv weggegeben werden!
-- am besten dann wenn complete! am server
-wieder falsch! wenn complete ist aber noch nicht resolved dann soll ich einfach in gamestep gehen!
-1- in clear setze notes='indiv'
-2- multi wird automatisch eingeleitet
-3- jetzt ist indiv on bei poll! ui aendert sich oder nicht ja nach spiel
-4- override und timer wiird bei CLIENT entschieden!!!!
-5- wenn complete (alle haben data) geht wieder zu acting_host und wird auf lock gesetzt!
-
-- muss notes indiv schreiben!!! sobald auf multi gehe!
-- was ist wenn ich doch notes verrwende?
-wenn ich write_fen mache (=single player turn) schreibe notes='single'
-click clear: notes='clear'
-set to multi: notes=indiv,... da kann es mehr geben
-server locks as soon as complete
-resolve: notes=single
-
-
-
-- verify dass IMMER fen gesendet wird!
-- wo brauch ich das isindiv???? 
-- geh dahin im code!
-?- wo / wann wird fen.isindiv gesetzt? dort wo jetzt stage multi gesetzt wird!
-- collect info in die fen hineinziehen fen.isindiv
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-- sollte kein autopoll in update_table machen!!!
-- muss doch pollStop machen??? warum???
+163: *11:34 AM 7/22/2022-6:29 PM 7/22/2022
+__________ sa 23.7.22 =>100 ewew 0=fa,1ok,2+lu,3*co,-1~pa,-2-qu,-3!
+200: *8:04 PM 7/22/2022-8:12 PM 7/22/2022
+201: *6:02 AM 7/23/2022-6:05 AM 7/23/2022
+202: *6:05 AM 7/23/2022-6:07 AM 7/23/2022
+203: *6:07 AM 7/23/2022-6:11 AM 7/23/2022
+204: *6:12 AM 7/23/2022-6:13 AM 7/23/2022
+205: *6:13 AM 7/23/2022-6:17 AM 7/23/2022
+206: *6:17 AM 7/23/2022-6:18 AM 7/23/2022
+207: *6:18 AM 7/23/2022-6:26 AM 7/23/2022
+208: *6:27 AM 7/23/2022-6:27 AM 7/23/2022
+209: *6:27 AM 7/23/2022-6:32 AM 7/23/2022
+210: *6:33 AM 7/23/2022-6:38 AM 7/23/2022
+211: *6:38 AM 7/23/2022-6:44 AM 7/23/2022
+212: *6:44 AM 7/23/2022-6:46 AM 7/23/2022
+213: *6:46 AM 7/23/2022-6:51 AM 7/23/2022
+214: *6:51 AM 7/23/2022-6:53 AM 7/23/2022
+215: *6:53 AM 7/23/2022-6:55 AM 7/23/2022
+216: *6:57 AM 7/23/2022-6:59 AM 7/23/2022
+ok - cleanup v!
+217: *6:59 AM 7/23/2022-7:01 AM 7/23/2022
+218: *7:01 AM 7/23/2022-7:01 AM 7/23/2022
+219: *7:02 AM 7/23/2022-7:02 AM 7/23/2022
+220: *7:02 AM 7/23/2022-7:03 AM 7/23/2022
+221: *7:03 AM 7/23/2022-7:04 AM 7/23/2022
+222: *7:05 AM 7/23/2022-7:06 AM 7/23/2022
+223: *7:06 AM 7/23/2022-7:54 AM 7/23/2022
+224: *7:54 AM 7/23/2022-8:38 AM 7/23/2022
+225: *8:38 AM 7/23/2022-8:42 AM 7/23/2022
+226: *8:45 AM 7/23/2022-8:45 AM 7/23/2022
+1- sending turn bleibt noch in baustelle!
+2- weiter cleanup baustelle2
+3- goto buy or pass
+227: *8:46 AM 7/23/2022-8:46 AM 7/23/2022 1
+228: *8:46 AM 7/23/2022-9:29 AM 7/23/2022
+229: *9:29 AM 7/23/2022-9:31 AM 7/23/2022
+230: *9:31 AM 7/23/2022-9:35 AM 7/23/2022
+1- find turn_send_move_update
+2- start_indiv_ack_round
+3- goto code change to turn ack
+231: *9:35 AM 7/23/2022-9:38 AM 7/23/2022 2
+232: *9:38 AM 7/23/2022-1:18 PM 7/23/2022
+234: *1:18 PM 7/23/2022-6:33 PM 7/23/2022
+es ist vollkommen sinnlos was ich mache!
+ab sofort mach einfach palma style: 1h mittag + spiel
+anschliessend schlafen
+dann kaffee =>neuer tag bis spazier und dann schlafengehen
+das ist die beste methode!
+check gu / brot hinein!
+=>strictly: NIE laenger U als 2h und IMMER 3210 aufrecht erhalten!
+=>ich MUSS einfach diszipliniert sein
+__________ so 24.7.22 =>100 ewew 0=fa,1ok,2+lu,3*co,-1~pa,-2-qu,-3!
+280: *8:33 PM 7/23/2022-5:54 AM 7/24/2022
+281: *5:54 AM 7/24/2022-5:55 AM 7/24/2022
+ok - ferro: check dass nur kaufen kann wen geld hat: JA
+282: *5:55 AM 7/24/2022-5:59 AM 7/24/2022
+283: *5:59 AM 7/24/2022-6:00 AM 7/24/2022
+284: *6:00 AM 7/24/2022-6:03 AM 7/24/2022
+285: *6:03 AM 7/24/2022-6:04 AM 7/24/2022
+286: *6:04 AM 7/24/2022-6:08 AM 7/24/2022
+287: *6:08 AM 7/24/2022-6:09 AM 7/24/2022
+288: *6:09 AM 7/24/2022-6:21 AM 7/24/2022
+289: *6:21 AM 7/24/2022-6:22 AM 7/24/2022
+290: *6:23 AM 7/24/2022-6:24 AM 7/24/2022
+291: *6:24 AM 7/24/2022-6:26 AM 7/24/2022
+292: *6:26 AM 7/24/2022-6:27 AM 7/24/2022
+293: *6:27 AM 7/24/2022-6:28 AM 7/24/2022
+294: *6:28 AM 7/24/2022-6:30 AM 7/24/2022
+295: *6:30 AM 7/24/2022-6:35 AM 7/24/2022
+296: *6:35 AM 7/24/2022-6:38 AM 7/24/2022
+297: *6:38 AM 7/24/2022-6:47 AM 7/24/2022
+298: *6:47 AM 7/24/2022-6:48 AM 7/24/2022
+299: *6:48 AM 7/24/2022-6:56 AM 7/24/2022
+300: *6:56 AM 7/24/2022-6:56 AM 7/24/2022
+301: *6:56 AM 7/24/2022-6:57 AM 7/24/2022
+302: *6:58 AM 7/24/2022-7:11 AM 7/24/2022
+303: *7:11 AM 7/24/2022-8:14 AM 7/24/2022
+304: *8:14 AM 7/24/2022-8:15 AM 7/24/2022
+305: *8:15 AM 7/24/2022-8:20 AM 7/24/2022 1
+1- o fuer turn
+2- code: ferro_change_to_buy_pass:
+3- UC ferro buy_pass players A B C(no coins) D E
+306: *8:26 AM 7/24/2022-8:27 AM 7/24/2022
+307: *8:27 AM 7/24/2022-8:27 AM 7/24/2022
+308: *8:28 AM 7/24/2022-8:31 AM 7/24/2022 2
+1- open old api.php to table and clear
+2- update vs code
+3- table in api.php NEW!
+309: *8:31 AM 7/24/2022-8:36 AM 7/24/2022
+310: *8:36 AM 7/24/2022-9:09 AM 7/24/2022
+311: *9:09 AM 7/24/2022-9:10 AM 7/24/2022 3
+1- weiter?
+2- checkA
+3- wird das table cmd ever ohne uname aufgerufen??? NEIN nicht in games
+312: *9:10 AM 7/24/2022-10:12 AM 7/24/2022
+313: *10:13 AM 7/24/2022-10:15 AM 7/24/2022
+314: *10:15 AM 7/24/2022-10:15 AM 7/24/2022 4
+1- brauch ich das endcond noch??? ist doch in notes!
+2- wann soll playerdata von server kommen? 
+===>koennt noch ein read_players und ein read_player machen falls noetig!!!
+3- add teil fuer write_notes in api.php
+315: *10:15 AM 7/24/2022-10:16 AM 7/24/2022
+316: *10:16 AM 7/24/2022-10:18 AM 7/24/2022 5
+1- spotit: apiserverr 69
+2- clear wurde removed! test spotit!
+3- api.php elim endcond!
+317: *10:20 AM 7/24/2022-12:12 PM 7/24/2022
+318: *12:13 PM 7/24/2022-12:14 PM 7/24/2022
+319: *12:14 PM 7/24/2022-12:17 PM 7/24/2022 6
+1- startgame muss auch uname haben!
+2- start 2 person ferro
+3- goto ferro
+320: *12:17 PM 7/24/2022-12:28 PM 7/24/2022
+321: *12:29 PM 7/24/2022-12:29 PM 7/24/2022
+322: *12:29 PM 7/24/2022-12:30 PM 7/24/2022 7
+1- goto baustelle2
+2- ferro_state_new??? turn_after_ack not set!
+3- next ist: start a game, schau was bei buy_or_pass passiert!
+323: *12:30 PM 7/24/2022-12:34 PM 7/24/2022
+324: *12:36 PM 7/24/2022-12:36 PM 7/24/2022
+325: *12:36 PM 7/24/2022-12:40 PM 7/24/2022 8
+1- goto resolve in a+game
+2- sieht so aus dass das callbackname_after_ack das resolve ist!
+3- callbackname_after_ack ??? geht auch stage_after_ack???
+326: *12:41 PM 7/24/2022-12:46 PM 7/24/2022
+327: *12:46 PM 7/24/2022-12:52 PM 7/24/2022
+328: *12:52 PM 7/24/2022-12:53 PM 7/24/2022 9
+1- vorher war es bei ack_player aber jetzt muss es sein bei resolve stage
+2- wann wird callbackname_after_ack aufgerufen???
+3- choices for resolve_function:
+choices:
+==>1. kann den func name in fen schreiben
+sehr flexibel
+2. kann func name standardizen: `resolve_${Z.stage}`
+simpler aber muss fuer jede transition eine func schreiben und stage kann keine spaces containen!
+3. kann eine transition table machen
+flexibel aber muss diese structure verwalten
+329: *12:53 PM 7/24/2022-12:54 PM 7/24/2022
+1- clear stage wird entfernt!
+2- elim check_collect!
+3- jetzt mach ich einen resolve stage anstatt das collect_complete
+330: *12:55 PM 7/24/2022-12:56 PM 7/24/2022 10
+331: *12:56 PM 7/24/2022-12:57 PM 7/24/2022
+332: *12:57 PM 7/24/2022-12:58 PM 7/24/2022
+1- wait: set turn to trigger, set stage to resolve
+2- eigentlich ist resolve ja so aehnlich wie ari_pre_action
+3- resolve stage muss implementiert werden (game dependent oder nicht?)
+333: *12:58 PM 7/24/2022-2:35 PM 7/24/2022 11
+334: *2:36 PM 7/24/2022-2:40 PM 7/24/2022
+335: *2:40 PM 7/24/2022-2:41 PM 7/24/2022
+336: *2:41 PM 7/24/2022-2:41 PM 7/24/2022 12
+337: *2:41 PM 7/24/2022-2:43 PM 7/24/2022
+1- was passiert nach dem senden? sollte in stage resolve gehen!
+2- wie sende mit write_player?
+3- statt ack_player soll er was andres machen!!!
+338: *2:43 PM 7/24/2022-4:36 PM 7/24/2022
+339: *4:37 PM 7/24/2022-4:39 PM 7/24/2022
+340: *4:39 PM 7/24/2022-4:42 PM 7/24/2022 13
+1- wo muss ich Clientdata.playerdata_set loeschen?
+2- noch simpler: wenn Clientdata.playerdata_set ist, dann nicht mehr
+die UI zeigen
+3- in diesem fall ist es ja collect 1: so wenn playerdata schon gesetzt soll NICHT mehr in den buy_or_pass activated select stage gehen!!!
+341: *4:43 PM 7/24/2022-4:44 PM 7/24/2022
+342: *4:44 PM 7/24/2022-4:49 PM 7/24/2022
+343: *4:49 PM 7/24/2022-4:53 PM 7/24/2022 14
+1- was passiert wenn ich pass clicke?
+2- soll ich dann sowas schreiben wie waiting for other players to buy or pass... oder nicht? Test!
+3- wenn buy or pass gesetzt ist, setze es nicht mehr, tue garnichts
+344: *4:53 PM 7/24/2022-4:57 PM 7/24/2022
+345: *4:58 PM 7/24/2022-5:02 PM 7/24/2022
+346: *5:04 PM 7/24/2022-5:04 PM 7/24/2022 15
+1- output turn! output collect_complete
+2- wart: wieso??? er sollte immer noch in turn sein!!!
+3- fehler api 50
+347: *5:04 PM 7/24/2022-5:16 PM 7/24/2022
+348: *5:16 PM 7/24/2022-5:19 PM 7/24/2022
+349: *5:19 PM 7/24/2022-5:22 PM 7/24/2022 16
+1- doch: write_notes wurde geschrieben
+2- geh nochmal zu change to buy or pass
+3- vielleicht ist es weil es keine clear runde gibt und notes nicht gesetzt wird???
+350: *5:22 PM 7/24/2022-5:25 PM 7/24/2022
+351: *5:25 PM 7/24/2022-5:26 PM 7/24/2022
+352: *5:26 PM 7/24/2022-5:37 PM 7/24/2022 17
+1- status auch ausgeben!
+2- ich versteh es nicht!!!
+3- try something else: notes ausgeben!!!
+353: *5:37 PM 7/24/2022-5:40 PM 7/24/2022
+354: *5:42 PM 7/24/2022-5:43 PM 7/24/2022
+355: *5:43 PM 7/24/2022-5:49 PM 7/24/2022 18
 - test
-- best: output stage
+1- muss ich notes clearen??? glaub eher nicht!
+2- schau was jetzt machen muss?
+3- resolve goto code in baustelle2?
+356: *5:49 PM 7/24/2022-5:53 PM 7/24/2022 19
+357: *5:53 PM 7/24/2022-5:57 PM 7/24/2022
+358: *6:51 PM 7/24/2022-6:52 PM 7/24/2022 
+1- wie kann ich das machen?
+2- ich muss es irgendwie machen dass er nach dem change stoppt polling! damit ich alles anschauen kann! mit reload kann ich polling wieder starten!
+3- sieht so aus als muesste ich doch notes clearen??? wieso???
+359: *6:52 PM 7/24/2022-6:56 PM 7/24/2022 20
+360: *6:57 PM 7/24/2022-6:57 PM 7/24/2022
+361: *6:58 PM 7/24/2022-6:59 PM 7/24/2022
+362: *6:59 PM 7/24/2022-7:02 PM 7/24/2022 21
+1- wie waers wenn ich nur bei apiserver 42 ausgaben mache!!!
+2- schreib RESOLVE in ferro_call_resolve!
+3- remcons baustelle2 87
+363: *7:02 PM 7/24/2022-7:32 PM 7/24/2022 +100 =>460
+__________ mo 25.7.22 =>100 ewew
+460: *7:32 PM 7/24/2022-7:53 PM 7/24/2022
+461: *7:53 PM 7/24/2022-9:02 PM 7/24/2022
+- warum?
+
+
+client:
+1. A discards:
+ferro_change_to_buy_pass:
+
+
+in diesem fall muss ich es doch mit individual turns und timer loesen!
+weil ja jeder vom vorigen abhaengt!
+
+ferro choices:
+1. 
+1a. ich setze beim ausloser (discarder) einen timer und warte genau so lange oder bis alle responded haben (dh acting host ist eine von cand aber er wird auf jeden fall 'dont buy' sagen und zwar by timeout
+1b. endcond = turn
+1c. dann resolve bei acting host: buy in order bekommt es
+
+was ist jetzt wenn einer buy sagt?
+es kriegt doch eh jeder immer alle bereits vorhandenen player data
+ich muss ja nur chacken ob ich schon weiss dass alle anderen
+vor mir gepasst haben
+
+
+kann auch wenn ich passe schauen ob eine sequence von playerdata existiert: pass,pass,...,buy
+
+2. ich setze timer
+
+
+
+
+ne das ist noch viel trickier als ich dachte!!!!
+
+first buy soll abbrechen (aber nicht zeitlich sondern zB
+players nasi,mac,felix,amanda,mimi
+nasi discards,
+[mac,felix,amanda,mimi] sind die buyers in dieser reihenfolge
+
+am client:
+amanda clicks buy:
+jetzt soll am host gecheckt werden ob mac,felix schon pass gesagt haben
+wenn ja, dann soll immediately nextstage ausgeloest werden!
+mimi hat keine gelegenheit zu buy mehr!
+
+endcond ist also: first_in_turn mit state:buy
+oder: turn
+
+endcond kann sehr tricky sein!!!!
+kann endcond vom game abhaengen??? ja, durchaus!
+es koennt ja sowas sein wie: first player who picks a certain good depending on some other good
+
+das heisst: endcond kann eigentlich nur bei players resolved werden!
+
+
+
+check am host:
+
+
+
+
+
+turn complete soll abbrechen
+
+
+
+versuch all diese beispiele mit host sync!
+
+UC1: ferro buy_or_pass
+
+==>ACHTUNG! self wird buy false am ende von timing und damit ende ausloesen!
+
+1. player A: discards
+mach ein fen.multi mit:
+- determine potential buyer list =>turn:= buyers+self
+- set =>stage_after:= card_selection
+- set =>turn_after:= next (player B)
+- set =>endcond:= turn
+send take_turn mit params:
+- write_turn: buyers
+- write_fen: true
+- fen
+- clear_players: buyers+self
 - 
-- wann kann ich was outputten?
-- assertion: if write_player ohne state, HAVE to notes==lock!!!
-- collect ist indiv hat state und write_player
-- verify: in resolve wird notes=null gesetzt! NEIN ist auch nicht notwendig!
-- verify: state wird ignoriert wenn table[notes] = lock JA!
-- nein das ist NICHT ausreichend! solang ich in collect bin muss ALLES was sende mit write_player sein!
-wenn complete bin wird write_player sowieso ignoriert!
-- der letzte macht resolve: ist das safe??? NEIN!
-- derzeit wird resolve nur gemacht wenn es der host ist!
-
-- playerdata ist ok!
-- test run
-- playerdata sollten bei unpack table schon gemacht werden!!!
 
 
 
@@ -9304,39 +9305,170 @@ wenn complete bin wird write_player sowieso ignoriert!
 
 
 
-- bei collect_open am server:
-1. schreibe player state (state)
-2. check ob alle player states geschrieben sind
-(in dem fall waere dieser player der letzte der seinen state schreibt!)
-
-reihenfolge fuer collect turn:
-
-1. clear/host: alle players clearen, turn still at host JEDER player kann clear ausloesen!
-
-2. host kann jetzt multi ausloesen: (soll automatisch sein! das heisst, multi players werden schon in clear determined!)
-
-3. ein collect move wird durch 'indiv' ausgeloest mit dem command 'collect_open' (can rename to collect!)
-
-
-?- wann wird clear gesetzt? anytime multi stage is imminent
-- bei clear passiert folgendes:
-1- write table: turn=[host],stage=clear
-2- clear ALL player entries for this table
-
-- bei multi passiert am server nix besonderes, es setzt im wesentlichen player list und startet collection process
 
 
 
-- genuegt es wenn der erste der complete bekommt resolved?
-- was passiert wenn collect fertig ist? in welchen mode soll er dann gehen? resolve_collect
 
-- collect_open
-=>brauche ein collect mit ueberschreiben und eines ohne!
-- der server updated den player state
-- dann holt er sich alle player states zusammen
-- checkt ob alle in turn einen non empty state haben
-- if so, returns 
-- wenn ich im multi turn was mache dann geht die info zu dem player state!!! und was wird returned oder was macht der server?
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+UC2: ferro_round_end
+UC3: spotit
+UC4: aristo pass commissions
+UC5: aristo pass rumors
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+brauch nicht mal ein clear command
+es kann auch sein:
+
+table: 
+clear_players=list of players to be cleared, 
+write_player=true if should write to uname
+write_fen=true dann schreibt er fen
+write_notes=notes (ein string)
+write_turn=list of players to give turn to
+
+,
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+- 
+- api.php saven: mache api.php versions
+
+dann muss ich eigentlich garnicht stage clear nennen!
+ich geh gleich in den stage buy_or_pass
+loese clear command aus
+was ich aber brauche ist:
+
+warum nicht gleich fen.multi machen????
+darin gibt es:
+acting_host
+players
+
+
+fen.multi_turn
+fen.multi_endstage
+fen.multi_endturn
+fen.multi_endcond
+
+
+
+ich koennte es vereinfachen!
+
+acting_host (=ausloeser) setzt alles in before hand
+server setzt fen.turn, fen.stagemulti (basically macht alles was jetzt in agmove_startmulti gemacht wird!
+weil all die anderen sowieso staendig pollen
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+- brauch ich auch ein stage_after_clear? NEIN, kommt ja zurueck zu acting_host bei clear setz ich dann 
+- ferro repl turn_after_ack
+- repl turn_after_collect
+- nenne es turn_after_multi, stage_after_multi, callback_after_multi
+- naming! stage:clear,fen.endcond,fen.
+also: wenn ein spiel einen stage hat der multi_sync ausloest,
+dann muss in activate ein if A.stage == clear drin sein!
+- wo wird agmove_startmulti aufgerufen? ist das immer auto? JA activate_a_game wenn stage == clear ist!
+- fen.endcond setzen in clear baustelle
+- wo wird notes gesetzt? in clear von fen.endcond
+- indiv_turn in api.php
+- muss ich jetzt clear machen?
+- 
+
+
+
+
+- buy or pass mit timer! und write_playerdata
+- config buy_or_pass time to think
+- buy_or_pass first of buyers
+
+===>ferro updates:
+- race condition: alle die kaufen wollen muessen clicken
+- am ende kauft der der als erstes ist.
+DONE - confirmation round!
+DONE - sorting 
+DONE - player order nach round win ueberpruefen: sollte gehen!
+DONE - soll sortiert bleiben auch wenn man out of turn sortiert
+DONE ==> ClientData stored sorting order!!!!!
 
 bei jedem der folgenden fragt es sich: who is updating fen?
 
@@ -9378,36 +9510,6 @@ variants:
 
 
 
-
-
-
-
-
-- das heisst, nachladen muss ich ab da nur die VERAENDERTEN daten
-=>Z.friendly (die current table) oder ev messages die der server von anderem player erhaelt und stored!!!
-- das heisst ich habe mit start ALLE daten vom server bei client!
-- assets cmd ladet sogar die tables!
-- ab wann hab ich die users? JA
-- change title to games
-- mit startgame startet alles
-- jeder player bekommt eine verschiedene zeit within 1 second
-- according to his spot in table.players
-- in _poll kann ich Z.mytime anschauen und warten bis meine zeit gekommen ist
-
-
-
-
-
-
-
-- pollStop ist ok: es macht nur clearTimeout fuerr autopoll
-- super simpel heisst: ?
-- mach ein super simples spiel das ALLE mechanisms contained!
-- probier das mal!
-polling synchronisieren sodass keine race cond entstehen!
-- kann onclicks in polling elim, noshow elim
-
-
 => immersive experience!!!
 
 
@@ -9443,18 +9545,6 @@ polling synchronisieren sodass keine race cond entstehen!
 
 
 
-- als erstes muss ich das polling richtig machen!
-- php assets bleibt so
-- wie kann ich am besten NICHTS machen?
-- get gamehelpers
-- ein cleanes stopgame!
-- almost continuous polling
-exception ist: wenn man drankommt und es ein clean single move ist
-ich brauche:
-- einen timer der mir praezise um eine zeit ein command zum server sendet
-- einen server der data collecten kann
-- Clientdata 
-- simplify data
 
 
 
@@ -9479,24 +9569,6 @@ ich brauche:
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-- race condition: alle die kaufen wollen muessen clicken
-- am ende kauft der der als erstes ist.
-- confirmation round!
-- sorting 
-- player order nach round win ueberpruefen
-- soll sortiert bleiben auch wenn man out of turn sortiert
-==> ClientData stored sorting order!!!!!
 
 
 1- check ob wenn die cards in legal group sind owner weggeht!!!

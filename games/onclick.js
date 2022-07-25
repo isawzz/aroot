@@ -2,7 +2,7 @@ function onclick_ack() {
 	if (nundef(Z) || nundef(Z.func.clear_ack)) return;
 
 	Z.func.clear_ack();
-	turn_send_move_update(true);
+	take_turn_single(true);
 }
 function onclick_cancelmenu() { hide('dMenu'); }
 function onclick_game_menu_item(ev) {
@@ -30,7 +30,7 @@ function onclick_game_menu_item(ev) {
 	let params = [gamename, DA.playerlist];
 	let funcs = [style_not_playing, style_playing_as_human, style_playing_as_bot];
 	for (const u of Serverdata.users) {
-		if (['ally','bob','leo'].includes(u.name)) continue;
+		if (['ally', 'bob', 'leo'].includes(u.name)) continue;
 		let d = get_user_pic_and_name(u.name, dParent, 40); mStyle(d, { w: 60 })
 		let item = { uname: u.name, div: d, state: 0, inlist: false, isSelected: false };
 
@@ -77,10 +77,10 @@ function onclick_reload() {
 		if (Z.game == 'fritz' && nundef(Z.fen.winners)) {
 			console.log(Z);
 			Z.fen.players[Z.uplayer].time_left = stop_timer();
-			turn_send_move_update();
+			take_turn_single();
 
 		} else {
-			FORCE_REDRAW = true; phpPost({ friendly: Z.friendly }, 'table');
+			FORCE_REDRAW = true; phpPost({ friendly: Z.friendly, uname: Z.uplayer }, 'table');
 		}
 
 	} else if (U) { onclick_tables(); }
@@ -122,13 +122,13 @@ function onclick_restart() {
 	let i = 0; playernames.map(x => fen.players[x].playmode = playermodes[i++]); //restore playmode
 	if (Z.game == 'spotit') spotit_clear_score();
 	//console.log('neue fen',Z.fen.plorder.map(x=>fen.players[x].time_left))
-	turn_send_move_update(true);
+	take_turn_single(true);
 }
 function onclick_restart_move() {
 	if (isdef(Clientdata.snapshot)) {
 		Z.fen = Clientdata.snapshot;
 		clear_transaction();
-		turn_send_move_update();
+		take_turn_single();
 	} else {
 		onclick_reload();
 	}
@@ -151,20 +151,21 @@ function onclick_skip() {
 		let plskip = Z.turn[0];
 		Z.turn = [get_next_player(Z, plskip)];
 		Z.uplayer = plskip;
-		turn_send_move_update();
+		take_turn_single();
 	}
 }
 function onclick_start_spotit() {
 	let [game, fen, uplayer, turn, stage] = [Z.game, Z.fen, Z.uplayer, Z.turn, Z.stage];
 	Z.stage = 'move';
 	Z.turn = jsCopy(Z.plorder);
-	turn_send_move_update();
+	take_turn_single();
 
 }
+function onclick_status() { query_status(); }
 function onclick_table(tablename) {
 	//console.log('onclick_table', tablename);
 	ensure_polling();
-	phpPost({ friendly: tablename }, 'table');
+	phpPost({ friendly: tablename, uname: U.name }, 'table');
 }
 function onclick_user(uname) {
 	//console.log('onclick_user',uname);
@@ -178,14 +179,14 @@ function onclick_user(uname) {
 
 }
 function onclick_tables() { phpPost({ app: 'simple' }, 'tables'); }
-function onclick_tide_all() {	
+function onclick_tide_all() {
 
 	//each player must get tides={val:x};
 	let [game, fen, uplayer, turn, stage] = [Z.game, Z.fen, Z.uplayer, Z.turn, Z.stage];
-	for(const plname in fen.players) {
+	for (const plname in fen.players) {
 		let pl = fen.players[plname];
 		if (isdef(pl.tides)) { continue; }
-		pl.tides = { val: rNumber(8,10) };
+		pl.tides = { val: rNumber(8, 10) };
 	}
 
 	proceed_to_newcards_selection();

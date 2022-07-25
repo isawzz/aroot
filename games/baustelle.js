@@ -6,6 +6,10 @@ function take_turn_single() {
 	let cmd = 'table';
 	send_or_sim(o, cmd);
 }
+function agmove_clear_all() { Z.stage = 'clear'; Z.fen.endcond = 'all'; Z.fen.acting_host = Z.uplayer; Z.turn = [Z.uplayer]; take_turn_clear(); }
+function agmove_clear_first() { Z.stage = 'clear'; Z.fen.endcond = 'first'; Z.fen.acting_host = Z.uplayer; Z.turn = [Z.uplayer]; take_turn_clear(); }
+function agmove_clear_turn() { Z.stage = 'clear'; Z.fen.endcond = 'turn'; Z.fen.acting_host = Z.uplayer; Z.turn = [Z.uplayer]; take_turn_clear(); }
+
 function take_turn_clear() {
 	prep_move();
 	let o = { uname: Z.uplayer, friendly: Z.friendly, fen: Z.fen, players: Z.playerlist }; 

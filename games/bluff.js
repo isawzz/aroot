@@ -186,7 +186,7 @@ function bluff_activate_stage1() {
 	mPulse(ui.dHandsize, 2000);
 	mButton('WEITER', () => {
 		bluff_ack_uplayer();
-		if (isEmpty(Z.turn) || Z.mode == 'hotseat') { bluff_change_to_turn_round(); turn_send_move_update(); }
+		if (isEmpty(Z.turn) || Z.mode == 'hotseat') { bluff_change_to_turn_round(); take_turn_single(); }
 
 	}, dt, { fz: 22 }, ['donebutton']);
 }
@@ -377,7 +377,7 @@ function handle_gehtHoch() {
 
 	bluff_change_to_ack_round(fen, nextplayer);
 
-	turn_send_move_update();
+	take_turn_single();
 }
 function handle_bid() {
 	let [z, A, fen, uplayer, ui] = [Z, Z.A, Z.fen, Z.uplayer, UI];
@@ -425,7 +425,7 @@ function handle_bid() {
 		fen.lastbidder = uplayer;
 		delete fen.oldbid; delete fen.newbid;
 		Z.turn = [get_next_player(Z, uplayer)];
-		turn_send_move_update();
+		take_turn_single();
 		//next person's turn
 	}
 }

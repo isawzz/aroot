@@ -8,21 +8,27 @@ $cmd = $o->cmd;
 $result = (object)[];
 if ($cmd == 'table'){ 
 	$friendly = $data->friendly;
+	$uname = $data->uname;
 	$qr="SELECT * FROM gametable WHERE `friendly` = '$friendly' limit 1";
 	$table = db_read($qr)[0]; 
 	$notes = $table['notes'];
 	$result->status = "reloaded table $friendly";
-
-	//collecting individual data
-	if (isset($data->write_fen) && isset($data->state)){
-		$uname = $data->uname;
+	$result->players = array();
+	if (isset($data->clear_players)){
+		foreach ($data->clear_players as $player) {
+			$result->players[] = $player;
+			$q="UPDATE `indiv` SET `state`='' WHERE `friendly` = '$friendly' and `name` = '$player'";
+			$res=db_write($q);
+		}
+		$result->status .= " and cleared players";
+	} else if (isset($data->write_player) && isset($data->state)){
 		$result->too_late = false;
-		$result->turn = $data->fen->turn;
 		$state = json_encode($data->state);
 		$modified = get_now();
 		$qw = "UPDATE `indiv` SET `state`='$state',checked=$modified WHERE `friendly` = '$friendly' and `name` = '$uname'";
-		$qr = "SELECT * FROM indiv WHERE `friendly` = '$friendly'"; // and `name` = '$uname' limit 1";
+		$qr = "SELECT * FROM indiv WHERE `friendly` = '$friendly'"; 
 		$res=db_write_read($qw,$qr);
+
 		// now check if all players have non-empty state
 		$qr = "SELECT * FROM indiv WHERE `friendly` = '$friendly'";
 		$res=db_read($qr);
@@ -39,43 +45,49 @@ if ($cmd == 'table'){
 			}
 		}else if (str_ends_with($notes, 'first')){
 			$done = true;
+		}else if (str_ends_with($notes, 'turn')){
+			foreach ($res as $player){
+				//if array $data->fen->turn contains player.name, continue
+				if (in_array($player['name'], $data->fen->turn)){
+					continue;
+				}
+				if ($player['state'] == ''){
+					$done = false;
+					break;
+				}
+			}
 		}else $done = false;
 		$result->collect_complete = $done;
 		if ($done) {
-			$data->fen->turn = array($data->fen->acting_host); //array($table['host']);
+			$data->fen->turn = array($data->fen->multi->trigger); // array($data->fen->acting_host); //array($table['host']);
+			$data->fen->stage = 'resolve';
 			$fen = json_encode($data->fen);
 			$qw = "UPDATE `gametable` SET `notes`='lock',`modified`=$modified,`fen`='$fen' WHERE `friendly` = '$friendly'";
 			$res=db_write($qw);
 		}
-		$result->status = "player $uname updated!"; 
+		$result->status .= " and player $uname updated!"; 
 	} else if ($notes == 'lock') {
-		$result->collect_complete = true;
-		$result->too_late = true;
+		// $result->collect_complete = true;
+		// $result->too_late = true;
 		$qr = "SELECT * FROM indiv WHERE `friendly` = '$friendly'";
-		$result->playerdata=db_read($qr);
-		$result->status = "table already locked - collect complete!";
+		$result->playerdata = db_read($qr);
+		$result->status .= " and table already locked";
 	} 
-
+	
 	if (isset($data->write_notes)) {$notes = $data->write_notes;}
 	if (isset($data->write_fen)){
-		//echo "HALLO";
 		$fen = json_encode($data->fen);
 		$modified = get_now();
-		// $qw = "UPDATE gametable SET `fen`='$fen',modified=$modified,`notes`='indiv' WHERE `friendly` = '$friendly'"; //ok
 		$qw = "UPDATE gametable SET `fen`='$fen',modified=$modified,`notes`='$notes' WHERE `friendly` = '$friendly'"; //ok
 		$qr="SELECT * FROM gametable WHERE `friendly` = '$friendly' limit 1";
 		$res=db_write_read($qw,$qr);
 		$result->table = $res;
-		// $qw="INSERT INTO `gametable` (`friendly`,`game`,`host`,`players`,`fen`,`options`,`modified`) VALUES ('$friendly','$game','$host','$players','$fen','$options',$modified)";
-		// $qr="SELECT * FROM gametable WHERE `friendly` = '$friendly' limit 1";
-		// $res=db_write_read($qw,$qr);
-		// $qw = "UPDATE gametable SET `fen`='$fen','modified'=$modified WHERE `friendly` = '$friendly'"; //ok
-		// $res=db_write($qw);
 	} else {
 		$qr="SELECT * FROM gametable WHERE `friendly` = '$friendly' limit 1";
 		$table = db_read($qr)[0]; 
 		$result->table = $table;
 	}
+
 
 }else if ($cmd == "assets") {
 	$path = '../base/assets/';
@@ -95,25 +107,6 @@ if ($cmd == 'table'){
 }else if ($cmd == 'tables'){ 
   $result->tables = get_tables();
 	$result->status = "reloaded tables";
-}else if ($cmd == 'clear'){ 
-	$uname = $data->uname;
-	$friendly = $data->friendly;
-	$result->turn = $data->fen->turn;
-	$endcond = $data->fen->endcond; // first | all | last | N
-	$notes = "indiv_".$endcond;
-	$fen = json_encode($data->fen);
-	$modified = get_now();
-	$qw = "UPDATE gametable SET `fen`='$fen',modified=$modified,`notes`='$notes' WHERE `friendly` = '$friendly'"; //ok
-	$qr="SELECT * FROM gametable WHERE `friendly` = '$friendly' limit 1";
-	$res=db_write_read($qw,$qr);
-	$result->table = $res;
-	$result->status = "players updated!"; 
-	$result->players = array();
-	foreach ($data->players as $player) {
-		$result->players[] = $player;
-		$q="UPDATE `indiv` SET `state`='' WHERE `friendly` = '$friendly' and `name` = '$player'";
-		$res=db_write($q);
-	}
 }else if ($cmd == 'collect_status'){ 
 	$uname = $data->uname;
 	$friendly = $data->friendly;

@@ -6,7 +6,6 @@ function start_with_assets() {
 	show_home_logo();
 	if (nundef(U)) { show_users(); return; } show_username();
 
-	//if (FirstLoad) setTimeout(() => { phpPost({ friendly: 'duel of Banjul' }, 'table'); FirstLoad = false; }, 800);
 	//startgame('ferro'); 
 	//#region TESTING
 	//test11_cardcoloring();
@@ -64,6 +63,39 @@ function startgame(game, players, options = {}) {
 	ensure_polling(); // macht einfach nur Pollmode = 'auto'
 	phpPost(o, 'startgame');
 }
+function gamestep() {
+
+	show_admin_ui();
+
+	DA.running = true; clear_screen();
+	dTable = mBy('dTable'); mFall(dTable); mClass('dTexture', 'wood');
+
+	shield_off();
+	show_title();
+	show_role();
+	Z.func.present(Z, dTable, Z.uplayer);	// *** Z.uname und Z.uplayer ist IMMER da! ***
+
+	//console.log('_____uname:'+Z.uname,'role:'+Z.role,'player:'+Z.uplayer,'host:'+Z.host,'curplayer:'+Z.turn[0],'bot?',is_current_player_bot()?'YES':'no');
+	if (isdef(Z.scoring.winners)) { show_winners(); }
+	else if (Z.func.check_gameover(Z)) {
+		let winners = show_winners();
+		Z.scoring = { winners: winners }
+		sendgameover(winners[0], Z.friendly, Z.fen, Z.scoring);
+	} else if (is_shield_mode()) {
+		if (!DA.no_shield == true) { hide('bRestartMove'); shield_on(); } //mShield(dTable.firstChild.childNodes[1])} //if (isdef(Z.fen.shield)) mShield(dTable);  }
+		autopoll();
+	} else {
+		Z.A = { level: 0, di: {}, ll: [], items: [], selected: [], tree: null, breadcrumbs: [], sib: [], command: null, autosubmit: Config.autosubmit };
+		copyKeys(jsCopy(Z.fen), Z);
+		copyKeys(UI, Z);
+		activate_ui(Z); //console.log('uiActivated',uiActivated?'true':'false');
+		Z.func.activate_ui();
+		if (Z.options.zen_mode != 'yes' && Z.mode != 'hotseat' && Z.turn.length > 1) autopoll();
+	}
+
+	//landing();
+
+}
 
 //#region ack
 function start_simple_ack_round(ackstage, ack_players, nextplayer, callbackname_after_ack, keeppolling = false) {
@@ -94,7 +126,7 @@ function ack_player(plname) {
 		Z.turn = [get_next_in_list(plname, fen.ack_players)];
 	}
 	//console.log('ack_player','plname',plname,'uplayer',uplayer,'pl',pl,'Z.turn',Z.turn,'Z.stage',Z.stage);
-	turn_send_move_update();
+	take_turn_single();
 }
 function clear_ack_variables() {
 	let [fen, uplayer, pl] = [Z.fen, Z.uplayer, Z.fen.players[Z.uplayer]];
@@ -248,12 +280,12 @@ function turn_send_move_update(action_star = false) {
 	[fen.stage, fen.phase, fen.turn] = [Z.stage, Z.phase, Z.turn];
 
 	//ACHTUNG!!!!
-	assertion(!isEmpty(fen.turn), 'ACHTUNG!!!!!!!!!!! TURN IST EMPTY in turn_send_move_update!!!!!!!!!!!!!', Z.turn);
+	assertion(!isEmpty(fen.turn), 'ACHTUNG!!!!!!!!!!! TURN IST EMPTY in take_turn_single!!!!!!!!!!!!!', Z.turn);
 	//if (isEmpty(fen.turn)) { fen.turn = Z.turn = [Z.host]; console.log('SETTING HOST TURN BECAUSE TURN EMPTY AT SEND!!!!!!!') }
 
 	let action = action_star ? { stage: '*', step: '*' } : Z.expected[uplayer];
 	let expected = {}; fen.turn.map(x => expected[x] = { stage: fen.stage, step: Z.step });
-	//console.log(':::turn_send_move_update: action', action, 'expected', expected, 'Z.step', Z.step, 'Z.turn', Z.turn);
+	//console.log(':::take_turn_single: action', action, 'expected', expected, 'Z.step', Z.step, 'Z.turn', Z.turn);
 
 	//console.log('in',getFunctionsNameThatCalledThisFunction(),'fen.turn', fen.turn);
 	sendmove(Z.uplayer, Z.friendly, Z.fen, action, expected, Z.phase, Z.round, Z.step, Z.stage, Z.notes, Z.scoring);

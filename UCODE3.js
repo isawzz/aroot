@@ -1,4 +1,20 @@
 
+function start_indiv_ack_round(ackstage, ack_players, nextplayer, callbackname_after_ack) {
+
+	let fen = Z.fen;
+	//each player except uplayer will get opportunity to buy top discard - nextplayer will draw if passing
+	fen.acting_host = Z.uplayer;
+	fen.ack_players = ack_players;
+	fen.lastplayer = arrLast(ack_players);
+	fen.nextplayer = nextplayer; //next player after ack!
+	fen.turn_after_ack = [nextplayer];
+	fen.callbackname_after_ack = callbackname_after_ack;
+
+	Z.stage = ackstage;
+	Z.turn = jsCopy(ack_players);
+
+}
+
 function old_ensure_buttons_visible_ferro() {
 	if (isdef(mBy('dbPlayer'))) return;
 	let [plorder, stage, A, fen, uplayer, pl] = [Z.plorder, Z.stage, Z.A, Z.fen, Z.uplayer, Z.fen.players[Z.uplayer]];

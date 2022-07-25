@@ -81,6 +81,7 @@ games:
       handsize: '3,5,11'
       maxrounds: '5,1,2,7'
       phase_order: 'fixed,choice'
+      thinking_time: '3,5,10,20'
       # allow_sequences: 'yes,no'
       # allow_exchange: 'yes,no'
       jokers_per_group: '3,2,1'

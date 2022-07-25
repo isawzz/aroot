@@ -186,6 +186,8 @@ function get_user_pic_and_name(uname, dParent, sz = 50, border = 'solid medium w
 	return elem;
 }
 function get_texture(name) { return `url(../base/assets/images/textures/${name}.png)`; }
+function i_am_host(){return U.name == Z.host;}
+function i_am_acting_host(){return U.name == Z.fen.acting_host;}
 function is_advanced_user() {
 	let advancedUsers = ['mimi', 'bob', 'buddy', 'minnow', 'nimble', 'leo', 'guest', 'felix'];
 	//console.log('U',isdef(U)?U.name:'undefined!!!');
@@ -285,6 +287,20 @@ function shield_on(){
 function shield_off(){
 	mStyle('dAdmin',{bg:'white'});
 
+}
+function show_admin_ui(){
+	//game specific buttons hide or show
+	for (const id of ['bSpotitStart', 'bClearAck', 'bRandomMove', 'bSkipPlayer']) hide(id);
+	if (Z.game == 'spotit' && Z.uname == Z.host && Z.stage == 'init') show('bSpotitStart');
+	else if (Z.game == 'bluff' && Z.uname == Z.host && Z.stage == 1) show('bClearAck');
+	else if (Z.uname == Z.host && Z.stage == 'round_end') show('bClearAck');
+	else if (Z.game == 'ferro' && Z.uname == Z.host && Z.stage == 'buy_or_pass') show('bClearAck');
+
+	if (['ferro', 'bluff', 'aristo', 'a_game'].includes(Z.game) && (Z.role == 'active' || Z.mode == 'hotseat')) {
+		//console.log('random should show because game is', Z.game)
+		show('bRandomMove');
+	}
+	if (Z.uname == Z.host) show('dHostButtons'); else hide('dHostButtons');
 }
 function show_fleeting_message(s, dParent, styles, id, ms = 2000) {
 	let d = mDiv(dParent, styles, id, s);
@@ -557,6 +573,12 @@ function show_users(ms = 300) {
 		mStyle(d, { cursor: 'pointer' });
 	}
 	mFall(dParent, ms);
+}
+function show_waiting_for_ack_message(){
+	let dInstruction = mBy('dSelections0');
+	mClass(dInstruction, 'instruction');
+	mCenterCenterFlex(dInstruction);
+	mBy('dSelections0').innerHTML = 'waiting for next round to start...'; //.remove();
 }
 function show_winners() {
 	let winners = Z.fen.winners;

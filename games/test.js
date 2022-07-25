@@ -536,7 +536,7 @@ function ltest32_select_error() {
 
 	DA.magnify_on_select = true; // *** NEW! ***
 	TESTING = true; DA.testing = true; DA.test = { mods: [small_hands, give_other_jolly_group, o => o.round = 4], iter: 0, maxiter: 200, running: false, step: true, suiteRunning: false, number: 0, list: [0] };
-	DA.test.end = () => ferro_transaction_error(['44', '5', '55', '7R'], ['jolly', 'anlegen'], 'turn_send_move_update');
+	DA.test.end = () => ferro_transaction_error(['44', '5', '55', '7R'], ['jolly', 'anlegen'], 'take_turn_single');
 	// DA.test.end = () => {
 
 	// 	let goals = DA.min_goals = ['44', '5', '55', '7R'];
@@ -787,13 +787,13 @@ function fentest7_gameover() {
 	if (game == 'aristo') fentest6_endgame();
 	else if (game == 'spotit') {
 		for (const plname in fen.players) { fen.players[plname].score = Z.options.winning_score - 1; }
-		turn_send_move_update();
+		take_turn_single();
 		//fen.players[uplayer].score = Z.options.winning_score - 1;
 	} else if (game == 'bluff') {
 		let pl = fen.players[uplayer];
 		while (pl.handsize < Z.options.max_handsize) inc_handsize(fen, uplayer); //.handsize = Z.options.max_handsize; }
 		deck_add(fen.deck, 1, pl.hand);
-		turn_send_move_update();
+		take_turn_single();
 	}
 }
 function fentest6_endgame() {
@@ -821,13 +821,13 @@ function fentest6_endgame() {
 	//test_skip_to_actions();
 	Z.stage = 10;
 	Z.phase = 'king';
-	turn_send_move_update(true);
+	take_turn_single(true);
 
 }
 function fentest5_market_opens() {
 	Z.stage = 3;
 	Z.phase = 'king';
-	turn_send_move_update();
+	take_turn_single();
 
 }
 function fentest4_visit() {
@@ -843,7 +843,7 @@ function fentest4_visit() {
 	//test_skip_to_actions();
 	Z.stage = 5;
 	Z.phase = 'queen';
-	turn_send_move_update();
+	take_turn_single();
 
 }
 function fentest2_build() {
@@ -851,13 +851,13 @@ function fentest2_build() {
 	Z.phase = 'king';
 	ensure_stall(Z.fen, Z.uplayer, 4);
 	ensure_actions(Z.fen);
-	turn_send_move_update();
+	take_turn_single();
 }
 function fentest1_auction() {
 	Z.stage = 12;
 	Z.phase = 'jack';
 	ensure_market(Z.fen, 3);
-	turn_send_move_update();
+	take_turn_single();
 }
 function fentest0_min_items() {
 	let [A, fen, uplayer] = [Z.A, Z.fen, Z.uplayer];
@@ -866,7 +866,7 @@ function fentest0_min_items() {
 
 	ensure_actions(fen);
 
-	turn_send_move_update();
+	take_turn_single();
 
 }
 //#endregion
@@ -1194,7 +1194,7 @@ function test7_add_hand_card() {
 	let [A, fen, uplayer] = [Z.A, Z.fen, Z.uplayer];
 	let card = prompt('enter card (eg. 8H');
 	fen.players[uplayer].hand.push(card + 'n');
-	turn_send_move_update();
+	take_turn_single();
 }
 function test4_direct_login_onclick_user() {
 	show_users();

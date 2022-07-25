@@ -590,7 +590,7 @@ function ari_next_action() {
 	} else {
 		Z.stage = 5;
 	}
-	turn_send_move_update();
+	take_turn_single();
 
 }
 //#endregion
@@ -621,7 +621,7 @@ function process_auction() {
 			Z.stage = 4;
 			Z.turn = [fen.plorder[0]];
 			//ari_next_action();
-			turn_send_move_update(); //wenn send mache muss ich die ui nicht korrigieren!
+			take_turn_single(); //wenn send mache muss ich die ui nicht korrigieren!
 			return;
 		}
 
@@ -637,7 +637,7 @@ function process_auction() {
 		Z.turn = [fen.plorder[iturn]];
 	}
 	//console.log('next player is', Z.turn[0]);
-	turn_send_move_update(); //wenn send mache muss ich die ui nicht korrigieren!
+	take_turn_single(); //wenn send mache muss ich die ui nicht korrigieren!
 }
 function post_auction() {
 	console.assert(Z.stage == 13, 'WRONG STAGE IN POST AUCTION ' + Z.stage);
@@ -650,7 +650,7 @@ function post_auction() {
 		if (!lookup(fen, ['buy', plname])) {
 			//let iturn = fen.plorder.indexOf(uplayer);
 			Z.turn = [plname]; //fen.plorder[iturn];
-			turn_send_move_update(); //wenn send mache muss ich die ui nicht korrigieren!
+			take_turn_single(); //wenn send mache muss ich die ui nicht korrigieren!
 			return;
 		}
 	}
@@ -692,7 +692,7 @@ function post_auction() {
 	Z.stage = 4;
 	Z.turn = [fen.plorder[0]];
 	//ari_next_action();
-	turn_send_move_update(); //wenn send mache muss ich die ui nicht korrigieren!
+	take_turn_single(); //wenn send mache muss ich die ui nicht korrigieren!
 
 
 }
@@ -762,7 +762,7 @@ function post_ball() {
 	Z.turn = [fen.plorder[iturn]];
 	//console.log('turn', Z.turn);
 	ari_history_list([`${uplayer} added ${keys.length} card${plural(keys.length)} to ball!`], 'ball');
-	turn_send_move_update(); //wenn send mache muss ich die ui nicht korrigieren!
+	take_turn_single(); //wenn send mache muss ich die ui nicht korrigieren!
 
 
 }
@@ -895,13 +895,13 @@ function post_church() {
 		let plorder = fen.plorder = jsCopy(fen.heraldorder);
 		Z.turn = [plorder[0]];
 		//church ends here!!!
-		turn_send_move_update();
+		take_turn_single();
 
 		//ari_start_action_stage(); NEIN! zuerst kommt ein complementing_market stage!
 
 	} else {
 		Z.turn = [get_next_in_list(uplayer, fen.selorder)];
-		turn_send_move_update();
+		take_turn_single();
 	}
 
 }
@@ -996,7 +996,7 @@ function post_tide() {
 		Z.turn = [next];
 
 	}
-	turn_send_move_update();
+	take_turn_single();
 
 
 }
@@ -1049,7 +1049,7 @@ function post_complementing_market_after_church() {
 		ari_start_action_stage();
 	} else {
 		Z.turn = [next];
-		turn_send_move_update();
+		take_turn_single();
 	}
 }
 function proceed_to_newcards_selection() {
@@ -1063,7 +1063,7 @@ function proceed_to_newcards_selection() {
 	fen.plorder = selorder;
 	Z.turn = [selorder[0]];
 	Z.stage = 19;
-	turn_send_move_update();
+	take_turn_single();
 
 
 }
@@ -1226,7 +1226,7 @@ function process_comm_setup() {
 	} else {
 		Z.turn = [next];
 	}
-	turn_send_move_update();
+	take_turn_single();
 
 }
 
@@ -1333,7 +1333,7 @@ function post_endgame() {
 		let all_winners = sorted.filter(x => x.score == max_score);
 		fen.winners = all_winners.map(x => x.name);
 		console.log('winners:', fen.winners)
-		turn_send_move_update();
+		take_turn_single();
 
 	} else {
 		// *** this potential winners chose go on! ***
@@ -1343,11 +1343,11 @@ function post_endgame() {
 			Z.turn = [fen.plorder[0]];
 			Z.phase = 'queen';
 			[Z.stage, Z.turn] = set_journey_or_stall_stage(fen, Z.options, Z.phase);
-			turn_send_move_update();
+			take_turn_single();
 
 		} else {
 			Z.turn = [fen.pl_gameover[iturn]];
-			turn_send_move_update();
+			take_turn_single();
 		}
 	}
 
@@ -2147,7 +2147,7 @@ function process_journey() {
 	if (isEmpty(A.selected)) {
 		if (nundef(fen.passed)) fen.passed = []; fen.passed.push(uplayer);
 		[Z.stage, Z.turn] = set_journey_or_stall_stage(fen, Z.options, Z.phase); //set_nextplayer_after_journey();
-		turn_send_move_update();
+		take_turn_single();
 		return;
 	}
 
@@ -2168,7 +2168,7 @@ function post_new_journey() {
 	arrReplace(fen.players[uplayer].hand, A.jlegal, deck_deal(fen.deck_luxury, A.jlegal.length));
 	ari_history_list([`${uplayer} added journey`], 'journey');
 	[Z.stage, Z.turn] = set_journey_or_stall_stage(fen, Z.options, Z.phase);
-	turn_send_move_update();
+	take_turn_single();
 }
 function check_correct_journey(A, fen, uplayer) {
 	let items = A.selected.map(x => A.items[x]);
@@ -2275,7 +2275,7 @@ function post_luxury_or_journey_cards() {
 	fen.players[owner].journeys.splice(Number(parts[3]), 1, A.jlegal);
 	[Z.stage, Z.turn] = set_journey_or_stall_stage(fen, Z.options, Z.phase); //set_nextplayer_after_journey();
 	ari_history_list([`${uplayer} added to existing journey and takes ${luxury_selected ? 'luxury cards' : 'journey cards'}`], 'journey');
-	turn_send_move_update();
+	take_turn_single();
 }
 
 
@@ -2358,7 +2358,7 @@ function post_stall_selected() {
 		if (check_if_church()) ari_start_church_stage(); else ari_start_action_stage();
 	} else {
 		Z.turn = [get_next_player(Z, uplayer)];
-		turn_send_move_update();
+		take_turn_single();
 	}
 }
 
@@ -2368,7 +2368,7 @@ function ari_start_action_stage() {
 	//console.assert(next, 'NOBODY PUT UP A STALL!!!!!!!');
 
 	if (!next) { ari_next_phase(); }
-	turn_send_move_update();
+	take_turn_single();
 
 }
 function ari_start_church_stage() {
@@ -2379,7 +2379,7 @@ function ari_start_church_stage() {
 
 	ari_history_list([`inquisition starts!`], 'church');
 
-	turn_send_move_update();
+	take_turn_single();
 }
 //#endregion
 
@@ -2434,7 +2434,7 @@ function post_pickup() {
 	let item = A.items[A.selected[0]];
 	//move elem item.a from mimi.stall to mimi.hand
 	elem_from_to(item.key, fen.players[uplayer].stall, fen.players[uplayer].hand);
-	//turn_send_move_update();
+	//take_turn_single();
 	ari_history_list([`${uplayer} picks up ${item.key}`], 'pickup');
 	ari_next_action();
 }
@@ -2589,7 +2589,7 @@ function process_rumors_setup() {
 		delete fen.rumor_setup_receivers;
 		Z.turn = [next];
 	}
-	turn_send_move_update();
+	take_turn_single();
 }
 function post_rumor_both() {
 	let [stage, A, fen, uplayer] = [Z.stage, Z.A, Z.fen, Z.uplayer];
@@ -2723,7 +2723,7 @@ function process_blackmail() {
 
 	ari_history_list([`${uplayer} is blackmailing ${building_owner}`], 'blackmail');
 	[Z.stage, Z.turn] = [33, [building_owner]];
-	turn_send_move_update();
+	take_turn_single();
 
 }
 function being_blackmailed() {
@@ -2761,7 +2761,7 @@ function post_accept_blackmail() {
 
 	//turn goes back to blackmailer
 	[Z.stage, Z.turn] = [35, [blackmailer]];
-	turn_send_move_update();
+	take_turn_single();
 
 }
 function post_defend_blackmail() {
@@ -2792,7 +2792,7 @@ function post_defend_blackmail() {
 
 	//turn goes back to blackmailer
 	[Z.stage, Z.turn] = [35, [blackmailer]];
-	turn_send_move_update();
+	take_turn_single();
 
 }
 function post_reject_blackmail() {
@@ -2829,7 +2829,7 @@ function post_reject_blackmail() {
 
 	//turn goes back to blackmailer
 	[Z.stage, Z.turn] = [35, [blackmailer]];
-	turn_send_move_update();
+	take_turn_single();
 
 }
 function post_blackmail() {
@@ -2937,7 +2937,7 @@ function post_tax() {
 		Z.turn = [plnext];
 	}
 
-	turn_send_move_update(fen, uplayer);
+	take_turn_single(fen, uplayer);
 
 }
 function get_tax_history(tax) {

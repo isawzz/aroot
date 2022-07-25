@@ -35,15 +35,20 @@ function handle_result(result, cmd) {
 			break;
 		//************************* table *************************** */
 		case "gameover":
-		case "clear":
+		//case "clear":
 		case "table":
 		case "startgame":
 			update_table();
-			//console.log('skip', Z.skip_presentation)
-			let is_collect = check_collect(obj);
+			console.log('_________ apiserver cmd',cmd);
+			console.log('turn', Z.turn, 'collect_complete', obj.collect_complete, 'notes', Z.notes, '\nstatus', obj.status);
+			console.log('===>stage', Z.stage);
+			console.log('fen.multi', Z.fen.multi); //return;
 
-			//console.log('haaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa1', is_collect);
-			if (is_collect) { return; }
+			// //console.log('skip', Z.skip_presentation)
+			// let is_collect = check_collect(obj);
+
+			// //console.log('haaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa1', is_collect);
+			// if (is_collect) { return; }
 
 			//console.log('haaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa2')
 			if (Z.skip_presentation) { autopoll(); return; }
@@ -56,6 +61,7 @@ function handle_result(result, cmd) {
 
 			clear_timeouts();
 			gamestep();
+			stopPolling();
 			break;
 
 	}
@@ -67,7 +73,7 @@ function check_collect(obj) {
 	//console.log('notes', Z.notes)
 	if (nundef(obj.collect_complete)) return false;
 	if (Z.mode != 'multi') { console.log('COLLECT NUR IN MULTI PLAYER MODE!!!!!!'); return false; }
-	if (!startsWith(Z.notes,'indiv') && Z.notes != 'lock') { return false; } //console.log('!!!notes is NOT indiv or lock'); return false; }
+	if (!startsWith(Z.notes, 'indiv') && Z.notes != 'lock') { return false; } //console.log('!!!notes is NOT indiv or lock'); return false; }
 	assertion(isdef(obj.playerdata), 'no playerdata but collect_complete');
 
 	let collect_complete = obj.collect_complete;
@@ -154,13 +160,13 @@ function processServerdata(obj, cmd) {
 	//console.log('obj', obj);
 	if (isdef(Serverdata.table)) Serverdata.prevtable = jsCopy(Serverdata.table);
 
-	if (isdef(obj.playerdata)){
+	if (isdef(obj.playerdata)) {
 		Serverdata.playerdata = obj.playerdata;
-		for(const o of Serverdata.playerdata){
+		for (const o of Serverdata.playerdata) {
 			//console.log('state', o.state, typeof o.state);
 			//console.log('isEmpty?',isEmpty(o.state),'isdef',isdef(o.state),'isString?',isString(o.state));
-			if (isEmpty(o.state)) o.state = ''; else  o.state = JSON.parse(o.state);
-		
+			if (isEmpty(o.state)) o.state = ''; else o.state = JSON.parse(o.state);
+
 		}
 		//Serverdata.playerdata.map(x=>x.state = isEmpty(x.state) ? x.state : JSON.parse(x.state));
 		//console.log('playerdata processed:', Serverdata.playerdata);
@@ -169,7 +175,7 @@ function processServerdata(obj, cmd) {
 
 	for (const k in obj) {
 		if (k == 'tables') Serverdata.tables = obj.tables.map(x => unpack_table(x));
-		else if (k == 'table') { Serverdata.table = unpack_table(obj.table); } 
+		else if (k == 'table') { Serverdata.table = unpack_table(obj.table); }
 		//else if (k == 'playerdata') { Serverdata.playerdata = obj.playerdata.map(x=>unpack_playerdata(obj.table); } 
 		else if (k == 'users') Serverdata[k] = obj[k];
 		else if (k == 'playerdata') continue;
@@ -262,11 +268,12 @@ function update_table() {
 
 function autopoll(ms) { TO.poll = setTimeout(_poll, valf(ms, 2000)); }
 function pollStop() { clearTimeout(TO.poll); }
+function stopPolling() { pollStop(); }
 function ensure_polling() { }
 function _poll() {
 	if (nundef(U) || nundef(Z) || nundef(Z.friendly)) { console.log('poll without U or Z!!!', U, Z); return; }
 	//console.log('polling...');
-	phpPost({ friendly: Z.friendly }, 'table');
+	phpPost({ friendly: Z.friendly, uname: Z.uplayer }, 'table');
 }
 
 
