@@ -1,51 +1,21 @@
 
 function take_turn_single() {
 	prep_move();
-	let o = { uname: Z.uplayer, friendly: Z.friendly, fen: Z.fen, write_fen:true }; 
+	let o = { uname: Z.uplayer, friendly: Z.friendly, fen: Z.fen, write_fen: true };
 	//console.log('sending', o);
-	let cmd = 'table';
-	send_or_sim(o, cmd);
-}
-function agmove_clear_all() { Z.stage = 'clear'; Z.fen.endcond = 'all'; Z.fen.acting_host = Z.uplayer; Z.turn = [Z.uplayer]; take_turn_clear(); }
-function agmove_clear_first() { Z.stage = 'clear'; Z.fen.endcond = 'first'; Z.fen.acting_host = Z.uplayer; Z.turn = [Z.uplayer]; take_turn_clear(); }
-function agmove_clear_turn() { Z.stage = 'clear'; Z.fen.endcond = 'turn'; Z.fen.acting_host = Z.uplayer; Z.turn = [Z.uplayer]; take_turn_clear(); }
-
-function take_turn_clear() {
-	prep_move();
-	let o = { uname: Z.uplayer, friendly: Z.friendly, fen: Z.fen, players: Z.playerlist }; 
-	let cmd = 'clear';
-	send_or_sim(o, cmd);
-}
-function take_turn_collect_open() {
-	prep_move();
-	let o = { uname: Z.uplayer, friendly: Z.friendly, fen: Z.fen, state: Z.state, write_player: true }; 
-	let cmd = 'table';
-	send_or_sim(o, cmd);
-}
-function take_turn_resolve(notes) {
-	prep_move();
-	let o = { uname: Z.uplayer, friendly: Z.friendly, fen: Z.fen, write_fen:true, write_notes:notes }; 
 	let cmd = 'table';
 	send_or_sim(o, cmd);
 }
 function take_turn_spotit() {
 	prep_move();
-	//console.log('take_turn_spotit','should be writing',Z.state,'for',Z.uplayer);
-	let o = { uname: Z.uplayer, friendly: Z.friendly, fen: Z.fen, state: Z.state, write_player: true, write_fen: true }; 
-	let cmd = 'table';
-	send_or_sim(o, cmd);
-}
-function take_turn_ack() {
-	prep_move();
-	//console.log('take_turn_spotit','should be writing',Z.state,'for',Z.uplayer);
-	let o = { uname: Z.uplayer, friendly: Z.friendly, fen: Z.fen, state: {ack:true}, write_player: true }; 
+	let o = { uname: Z.uplayer, friendly: Z.friendly, fen: Z.fen, state: Z.state, write_player: true, write_fen: true };
 	let cmd = 'table';
 	send_or_sim(o, cmd);
 }
 
 function query_status() {
 	prep_move();
-	let o = { uname: Z.uname, friendly: Z.friendly }; 
+	let o = { uname: Z.uname, friendly: Z.friendly };
 	let cmd = 'collect_status';
 	send_or_sim(o, cmd);
 }
@@ -55,7 +25,21 @@ function prep_move() {
 	deactivate_ui();
 	clear_timeouts();
 }
-function send_or_sim(o, cmd) { if (DA.simulate) phpPostSimulate(o, cmd); else phpPost(o, cmd); }
+function send_or_sim(o, cmd) {
+	Counter.server += 1;
+	//console.log(`send_or_sim ${Counter.server} apiserver`, getFunctionsNameThatCalledThisFunction(), o);
+
+	if (isdef(Z)) {
+		assertion(isdef(Z.fen) && isdef(Z.uplayer), 'send_or_sim: fen and uplayer must be defined');
+		if (lookup(Z.fen, ['multi', 'trigger']) == Z.uplayer) {
+			//console.log('YEAHHHHHHHHHHHHHHHHHHHHH');
+			o.read_players = true;
+		}
+	}
+
+
+	if (DA.simulate) phpPostSimulate(o, cmd); else phpPost(o, cmd);
+}
 
 
 

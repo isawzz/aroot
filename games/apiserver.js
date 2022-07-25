@@ -39,19 +39,54 @@ function handle_result(result, cmd) {
 		case "table":
 		case "startgame":
 			update_table();
-			console.log('_________ apiserver cmd',cmd);
-			console.log('turn', Z.turn, 'collect_complete', obj.collect_complete, 'notes', Z.notes, '\nstatus', obj.status);
+			console.log(`_________ ${Counter.server} apiserver cmd`,cmd,Z.turn);
+			console.log('<===request', obj.status);
+			//console.log('turn', Z.turn, 'collect_complete', obj.collect_complete, 'notes', Z.notes, '\nstatus', obj.status);
 			console.log('===>stage', Z.stage);
-			console.log('fen.multi', Z.fen.multi); //return;
+			console.log('===>notes', Z.notes);
+			console.log('===>fen.multi', Z.fen.multi); //return;
+			console.log('===>playerdata', Z.playerdata); //return;
 
 			// //console.log('skip', Z.skip_presentation)
 			// let is_collect = check_collect(obj);
+			
+			
+			//trigger_check();//!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+			if (isdef(Z.playerdata) && Z.game == 'ferro' && Z.stage == 'buy_or_pass' && Z.uplayer == lookup(Z.fen,['multi','trigger'])) {
+				//console.log('HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHAAAAAAAAAAAAALLLLLLLLLLLLOOOOOOOOOOOOO')
+				let pldata = Z.playerdata;
+				//console.log('..............pldata', pldata);
 
+				let multi = Z.fen.multi;
+				let turn = Z.turn;
+				let done = true;let buyer = null;
+				for(const plname of turn){
+					let pldata = firstCond(Z.playerdata,x=>x.name== plname);
+					assertion(isdef(pldata), 'no pldata for', plname);
+					let state = pldata.state;
+					if (!isEmpty(state)) {
+						if (state.buy == true) {buyer = plname; break;}
+						
+					}else{done = false;}
+				}
+				console.log('buy process done?',done,'buyer',buyer);
+				if (done) {
+					ferro_call_resolve();
+				} 
+				// else {
+				// 	pollStop(); 
+				// 	console.log('============================================')
+				// 	return;
+				// }
+		
+			}
+			console.log('============================================')
 			// //console.log('haaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa1', is_collect);
 			// if (is_collect) { return; }
 
 			//console.log('haaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa2')
 			if (Z.skip_presentation) { autopoll(); return; }
+			//if (Z.skip_presentation) { autopoll(); return; }
 
 
 			//console.log('haaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa3')
@@ -61,7 +96,7 @@ function handle_result(result, cmd) {
 
 			clear_timeouts();
 			gamestep();
-			stopPolling();
+			//stopPolling();
 			break;
 
 	}
@@ -273,7 +308,8 @@ function ensure_polling() { }
 function _poll() {
 	if (nundef(U) || nundef(Z) || nundef(Z.friendly)) { console.log('poll without U or Z!!!', U, Z); return; }
 	//console.log('polling...');
-	phpPost({ friendly: Z.friendly, uname: Z.uplayer }, 'table');
+
+	send_or_sim({ friendly: Z.friendly, uname: Z.uplayer }, 'table');
 }
 
 

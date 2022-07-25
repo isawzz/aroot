@@ -4756,7 +4756,7 @@ function onclick_player_in_gametable(uname, tablename, rid) {
 
 	stopgame();
 	U = firstCond(Serverdata.users, x => x.name == uname);
-	phpPost({ friendly: tablename, uname: U.name,  }, 'table');
+	send_or_sim({ friendly: tablename, uname: U.name,  }, 'table');
 }
 function onclick_pause_continue() {
 

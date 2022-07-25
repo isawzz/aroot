@@ -9215,7 +9215,171 @@ die UI zeigen
 __________ mo 25.7.22 =>100 ewew
 460: *7:32 PM 7/24/2022-7:53 PM 7/24/2022
 461: *7:53 PM 7/24/2022-9:02 PM 7/24/2022
-- warum?
+462: *5:23 AM 7/25/2022-5:24 AM 7/25/2022
+463: *5:24 AM 7/25/2022-5:25 AM 7/25/2022
+464: *5:25 AM 7/25/2022-5:26 AM 7/25/2022
+465: *5:26 AM 7/25/2022-5:30 AM 7/25/2022
+466: *5:30 AM 7/25/2022-5:34 AM 7/25/2022
+467: *5:34 AM 7/25/2022-5:34 AM 7/25/2022
+468: *5:34 AM 7/25/2022-5:41 AM 7/25/2022
+469: *5:41 AM 7/25/2022-5:43 AM 7/25/2022
+470: *5:43 AM 7/25/2022-5:43 AM 7/25/2022
+471: *5:43 AM 7/25/2022-5:47 AM 7/25/2022
+472: *5:52 AM 7/25/2022-5:52 AM 7/25/2022
+473: *5:52 AM 7/25/2022-5:55 AM 7/25/2022
+474: *5:56 AM 7/25/2022-6:00 AM 7/25/2022
+475: *6:00 AM 7/25/2022-6:02 AM 7/25/2022
+476: *6:02 AM 7/25/2022-6:07 AM 7/25/2022
+477: *6:07 AM 7/25/2022-6:08 AM 7/25/2022
+478: *6:08 AM 7/25/2022-6:10 AM 7/25/2022
+479: *6:10 AM 7/25/2022-6:19 AM 7/25/2022
+480: *6:19 AM 7/25/2022-6:20 AM 7/25/2022
+481: *6:20 AM 7/25/2022-6:20 AM 7/25/2022
+482: *6:20 AM 7/25/2022-6:23 AM 7/25/2022
+483: *6:23 AM 7/25/2022-6:24 AM 7/25/2022
+484: *6:24 AM 7/25/2022-6:24 AM 7/25/2022
+485: *6:24 AM 7/25/2022-6:27 AM 7/25/2022
+486: *6:27 AM 7/25/2022-6:27 AM 7/25/2022
+487: *6:28 AM 7/25/2022-6:29 AM 7/25/2022
+488: *6:29 AM 7/25/2022-6:30 AM 7/25/2022
+489: *6:30 AM 7/25/2022-6:34 AM 7/25/2022
+490: *6:34 AM 7/25/2022-6:35 AM 7/25/2022
+491: *6:35 AM 7/25/2022-6:38 AM 7/25/2022
+492: *6:38 AM 7/25/2022-6:43 AM 7/25/2022
+493: *6:44 AM 7/25/2022-6:47 AM 7/25/2022
+494: *6:47 AM 7/25/2022-7:17 AM 7/25/2022
+495: *7:17 AM 7/25/2022-7:45 AM 7/25/2022
+496: *7:45 AM 7/25/2022-7:48 AM 7/25/2022
+497: *7:49 AM 7/25/2022-7:56 AM 7/25/2022
+498: *7:56 AM 7/25/2022-7:56 AM 7/25/2022
+1- run
+2- WTF?!?!?!?!?
+3- test
+499: *7:56 AM 7/25/2022-7:57 AM 7/25/2022 1
+500: *7:57 AM 7/25/2022-8:00 AM 7/25/2022
+501: *8:00 AM 7/25/2022-8:02 AM 7/25/2022
+1- run
+2- run
+3- wo faengt es an???
+502: *8:03 AM 7/25/2022-8:03 AM 7/25/2022 2
+503: *8:03 AM 7/25/2022-8:04 AM 7/25/2022
+504: *8:04 AM 7/25/2022-8:06 AM 7/25/2022
+505: *8:06 AM 7/25/2022-8:10 AM 7/25/2022 3
+1- test mit 3 people!
+2- schau ins heft!
+3- run again!
+506: *8:10 AM 7/25/2022-8:18 AM 7/25/2022
+507: *8:18 AM 7/25/2022-8:21 AM 7/25/2022
+508: *8:21 AM 7/25/2022-8:22 AM 7/25/2022 4
+1- test
+2- select_timer fuer ALLE on turn, die items nur fuer die candidates!
+3- jetzt ueberlege: will ich
+a) trigger has turn and a timer find ich besser!
+b) trigger does NOT have a turn
+509: *8:22 AM 7/25/2022-8:24 AM 7/25/2022
+510: *8:24 AM 7/25/2022-8:26 AM 7/25/2022 5
+1- schau zu resolve!
+2- goto handle
+3- kriegt den timer NUR wenn !Clientdata.playerstate!
+511: *8:27 AM 7/25/2022-8:29 AM 7/25/2022
+512: *8:29 AM 7/25/2022-8:30 AM 7/25/2022
+513: *8:32 AM 7/25/2022-8:32 AM 7/25/2022 6
+1- mach 3 nebeneinander!!!
+2- run
+3- sag force_resolve
+514: *8:32 AM 7/25/2022-8:33 AM 7/25/2022
+515: *8:33 AM 7/25/2022-8:37 AM 7/25/2022 7
+1- jetzt muss ich ein code cleanup machen!!!
+2- hat funktioniert!!!
+3- noch 1 test!
+516: *8:37 AM 7/25/2022-8:38 AM 7/25/2022
+517: *8:38 AM 7/25/2022-8:40 AM 7/25/2022
+518: *8:40 AM 7/25/2022-8:43 AM 7/25/2022 8
+1- wie sieht es mit ferro end of round aus???
+2- code cleanup
+3- check ob bei resolve das multi removed wird! JA
+519: *8:43 AM 7/25/2022-8:44 AM 7/25/2022
+520: *8:44 AM 7/25/2022-8:45 AM 7/25/2022
+521: *8:46 AM 7/25/2022-8:49 AM 7/25/2022 9
+1- hack!
+2- test force resolve by ack button
+3- soll clear_ack in buy_or_pass resolven???? JA why not
+522: *8:49 AM 7/25/2022-8:55 AM 7/25/2022
+523: *8:55 AM 7/25/2022-8:58 AM 7/25/2022
+524: *8:59 AM 7/25/2022-9:00 AM 7/25/2022 10
+1- keine ahnung was da falsch ist!!!
+2- er laesst ploetzlich den felix nicht mehr kaufen!
+3- test
+525: *9:00 AM 7/25/2022-9:03 AM 7/25/2022
+526: *9:03 AM 7/25/2022-9:04 AM 7/25/2022
+1- ?
+2- ueberlege mir die variante wo trigger zuerst and host uebergibt! waer eine moeglichkeit um clear_ack zu erlauben!!!
+3- clear ack in buy or pass ist nur erlaubt wenn ich der trigger bin!!!!!
+
+2>>abwicklung von lock after buy_or_pass:
+der trigger muss in buy_or_pass stage bei autopoll das folgended machen:
+
+
+
+
+1>>abwicklung von lock after buy_or_pass:
+der trigger autopollt
+er schaut bei jedem poll ob notes=lock ist
+wenn ja, dann weiss er er hat die playerdata
+=>FAIL weil er will ja playerdata IMMER erhalten!
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+- was muss der trigger typ machen??? auf jeden fall die player data abfragen!!!
+- kann er get stuck in buy_or_pass?????
+- oh doch: waiting statement muss gezeigt werden!!!
+- restore autopoll!!
+- 
+- resolve sollte notes raushauen!
+- redo!
+- new game
+gut, ich glaub ich hab es gefunden!!!!!
+- run analyze
+- new table
+- notes ausgeben!
+- run
+test: new game
+=>process discard hat send_or_sim wenn nicht end_of_round!!!
+- run analyze
+- run / analyze
+- strich drunter!!!
+- table post NUR ueber send_or_sim!!!!!!!
+- test
+setze es so dass nicht last eval macht!
+- open basemin.js
+- mach wieder einen message counter!!!
+- schau mal was in players state steht!!!
+- mod output
+- test
+- describe req
+- warum schickt er es 2x?
+- output was er schickt!
+- sobald 1 buy macht kann alle danach auf pass setzen!
+- warum geht er schon nach 1 player clickt buy in lock ueber?
 
 
 client:

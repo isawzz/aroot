@@ -80,7 +80,7 @@ function onclick_reload() {
 			take_turn_single();
 
 		} else {
-			FORCE_REDRAW = true; phpPost({ friendly: Z.friendly, uname: Z.uplayer }, 'table');
+			FORCE_REDRAW = true; send_or_sim({ friendly: Z.friendly, uname: Z.uplayer }, 'table');
 		}
 
 	} else if (U) { onclick_tables(); }
@@ -165,7 +165,7 @@ function onclick_status() { query_status(); }
 function onclick_table(tablename) {
 	//console.log('onclick_table', tablename);
 	ensure_polling();
-	phpPost({ friendly: tablename, uname: U.name }, 'table');
+	send_or_sim({ friendly: tablename, uname: U.name }, 'table');
 }
 function onclick_user(uname) {
 	//console.log('onclick_user',uname);

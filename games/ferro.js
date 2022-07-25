@@ -1,6 +1,9 @@
 function ferro() {
 	function clear_ack() {
-		if (Z.stage == 'buy_or_pass') ferro_change_to_turn_round();
+		if (Z.stage == 'buy_or_pass') {
+			//ferro_change_to_turn_round();
+			if (isList(Z.playerdata) && lookup(Z.fen, ['multi', 'trigger']) == Z.uplayer) ferro_force_resolve(true);
+		}
 		else if (Z.stage == 'round_end') start_new_round_ferro();
 	}
 	function state_info(dParent) { ferro_state_new(dParent); }
@@ -53,7 +56,7 @@ function ferro_pre_action() {
 	switch (stage) {
 		// case 'round_end': console.log('should present BUTTON WEITER');break;
 		//case 'round_end': show_waiting_for_ack_message(); break; //select_add_items(ui_get_string_items(['weiter']),ferro_round_end_ack_player,`may click to continue`,0,1);select_timer(10000,ferro_round_end_ack_player);break;
-		case 'buy_or_pass': if (nundef(Clientdata.playerdata_set)) select_add_items(ui_get_buy_or_pass_items(), ferro_ack_uplayer, 'may click top discard to buy or pass', 1, 1); break;
+		case 'buy_or_pass': ferro_handle_buy_or_pass(); break;
 		case 'resolve': ferro_call_resolve(); break;
 		case 'card_selection': ferro_clear_playerdata(); select_add_items(ui_get_ferro_items(uplayer), fp_card_selection, 'must select one or more cards', 1, 100); break;
 		default: console.log('stage is', stage); break;
@@ -138,6 +141,7 @@ function ferro_activate_ui() {
 	let [stage, A, fen, plorder, uplayer, deck] = [Z.stage, Z.A, Z.fen, Z.plorder, Z.uplayer, Z.deck];
 	let pl = fen.players[uplayer];
 
+	//console.log('activate!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
 	new_cards_animation();
 	//round_change_animation();
 
@@ -186,59 +190,6 @@ function ferro_stats_new(z, dParent) {
 		if (fen.turn.includes(plname)) { show_hourglass(plname, d, 30, { left: -3, top: 0 }); }
 	}
 }
-
-//#region ack NEW!
-function ferro_change_to_ack_round() {
-	let [plorder, stage, A, fen, uplayer] = [Z.plorder, Z.stage, Z.A, Z.fen, Z.uplayer];
-	let nextplayer = get_next_player(Z, uplayer); //player after buy_or_pass round
-
-	//newturn is list of players starting with nextplayer
-	let newturn = jsCopy(plorder); while (newturn[0] != nextplayer) { newturn = arrCycle(newturn, 1); } //console.log('newturn', newturn);
-	let buyerlist = fen.canbuy = []; //fen.canbuy list ist angeordnet nach reihenfolge der frage
-	for (const plname of newturn) {
-		let pl = fen.players[plname];
-		if (plname == uplayer) { pl.buy = false; continue; }
-		else if (pl.coins > 0) { pl.buy = false; buyerlist.push(plname); }
-	}
-	//log_object(fen, 'buyers', 'nextplayer canbuy');
-
-	start_simple_ack_round('buy_or_pass', buyerlist, nextplayer, 'ferro_change_to_turn_round');
-}
-function ferro_change_to_turn_round() {
-	//console.log('ferro_change_to_turn_round_', getFunctionsNameThatCalledThisFunction()); 
-	let [z, A, fen, stage, uplayer, ui] = [Z, Z.A, Z.fen, Z.stage, Z.uplayer, UI];
-	assertion(stage != 'card_selection', "ALREADY IN TURN ROUND!!!!!!!!!!!!!!!!!!!!!!");
-
-	for (const plname of fen.canbuy) {
-		let pl = fen.players[plname];
-		if (pl.buy == true) {
-			let card = fen.deck_discard.shift();
-			pl.hand.push(card);
-			deck_deal_safe_ferro(fen, plname, 1);
-			pl.coins -= 1; //pay
-			ari_history_list([`${plname} bought ${card}`], 'buy');
-			break;
-		}
-	}
-	deck_deal_safe_ferro(fen, fen.nextplayer, 1); //nextplayer draws
-
-	console.log('multi',fen.multi);
-	Z.turn = fen.multi.turn_after_ack;
-	Z.stage = 'card_selection';
-
-	clear_ack_variables();
-	for (const k of ['canbuy']) delete fen[k];
-	for (const plname of fen.plorder) { delete fen.players[plname].buy; }
-	clear_transaction();
-}
-function _ferro_ack_uplayer() {
-	let [A, fen, stage, uplayer] = [Z.A, Z.fen, Z.stage, Z.uplayer];
-	fen.players[uplayer].buy = A.selected[0] == 0;
-
-	ack_player(uplayer);
-}
-
-//#endregion
 
 // ferro helpers
 function calc_ferro_score(roundwinner) {
@@ -355,7 +306,7 @@ function fp_card_selection() {
 			clear_transaction();
 			if (legal) {
 				ferro_process_discard(); //discard selected card
-				take_turn_single();
+				//take_turn_single();
 			} else {
 				rollback();
 				ferro_transaction_error(DA.min_goals, DA.transactionlist, 'take_turn_single');
@@ -364,7 +315,7 @@ function fp_card_selection() {
 		} else {
 			//console.log('should process discard!!!')
 			ferro_process_discard(); //discard selected card
-			take_turn_single();
+			//take_turn_single();
 		}
 	} else if (cmd == 'jolly') {
 
@@ -858,7 +809,7 @@ function verify_min_req() {
 
 
 //#region NOT USED
-function ferro_round_end_ack_player(){
+function ferro_round_end_ack_player() {
 	//let [z, A, fen, stage, uplayer, ui] = [Z, Z.A, Z.fen, Z.stage, Z.uplayer, UI];
 	Clientdata.acked = true;
 	mBy('dSelections0').innerHTML = 'waiting for next round to start...'; //.remove();

@@ -24,7 +24,7 @@ function ferro_change_to_buy_pass() {
 	};
 	[Z.stage, Z.turn] = ['buy_or_pass', buyerlist];
 	prep_move();
-	let o = { uname: Z.uplayer, friendly: Z.friendly, clear_players: buyerlist, write_notes:'indiv_turn', fen: Z.fen, write_fen:true };  
+	let o = { uname: Z.uplayer, friendly: Z.friendly, clear_players: buyerlist, write_notes: 'indiv_turn', fen: Z.fen, write_fen: true };
 	//console.log('sending to server', o);
 	let cmd = 'table';
 	send_or_sim(o, cmd);
@@ -36,36 +36,72 @@ function ferro_change_to_buy_pass() {
 }
 function ferro_ack_uplayer() {
 	let [A, fen, stage, uplayer] = [Z.A, Z.fen, Z.stage, Z.uplayer];
-	Z.state = Clientdata.playerstate = {buy:A.selected[0] == 0};
+	console.log('A.selected', A.selected)
+	Z.state = Clientdata.playerstate = { buy: A.selected[0] == 0 };
 	Clientdata.playerdata_set = true;
 	FORCE_REDRAW = true;
-	
-	console.log('write_player',Z.state)
+
+	console.log('<===write_player', Z.state)
 	prep_move();
-	let o = { uname: Z.uplayer, friendly: Z.friendly, fen: Z.fen, state: Z.state, write_player: true }; 
+	let o = { uname: Z.uplayer, friendly: Z.friendly, fen: Z.fen, state: Z.state, write_player: true };
 	let cmd = 'table';
 	send_or_sim(o, cmd);
 }
-function ferro_clear_playerdata(){
+function ferro_clear_playerdata() {
 	if (isdef(Clientdata.playerdata_set)) {
 		delete Clientdata.playerdata_set;
 	}
 }
-function ferro_call_resolve(){
+function ferro_handle_buy_or_pass() {
+	let [fen, stage, uplayer] = [Z.fen, Z.stage, Z.uplayer];
+	// if (uplayer == fen.multi.trigger) {
+	// 	//hier muss der trigger checken fuer early break up von buy_or_pass
+	// 	console.log('HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHAAAAAAAAAAAAALLLLLLLLLLLLOOOOOOOOOOOOO')
+	// 	let pldata = Z.playerdata;
+	// 	console.log('..............pldata', pldata);
+	// }else	
+	if (uplayer == lookup(fen, ['multi', 'trigger'])) {
+		select_timer(6000, ferro_force_resolve);
+	} else if (nundef(Clientdata.playerdata_set)) {
+		select_add_items(ui_get_buy_or_pass_items(), ferro_ack_uplayer, 'may click top discard to buy or pass', 1, 1);
+		select_timer(5000, ferro_call_resolve);
+	}
+}
+function ferro_force_resolve(by_ack_button = false) {
+	assertion(isdef(Z.playerdata) || by_ack_button, 'no playerdata in force_resolve by trigger!!!!');
+	// for(const data of Z.playerdata){
+	// 	let pl = fen.players[data.name];
+	// 	if (isEmpty(data.state)) pl.buy = false; else	pl.buy = data.state.buy;
+	// }
+	ferro_call_resolve();
+
+}
+function ferro_call_resolve() {
 	//expects a function fen.multi.callbackname_after_ack
+
+	assertion(Z.stage == 'buy_or_pass', 'no buy_or_pass in call_resolve');
+
 	let [fen, stage, uplayer] = [Z.fen, Z.stage, Z.uplayer];
 	let callbackname = fen.multi.callbackname_after_ack;
 	// console.log('===>RESOLVE',Z.uplayer); 
 	// console.log('fen.multi', fen.multi); //return;
+
+	for (const data of Z.playerdata) {
+		let pl = fen.players[data.name];
+		if (isEmpty(data.state)) pl.buy = false; else pl.buy = data.state.buy;
+	}
+
 	if (isdef(callbackname)) {
 		let f = window[callbackname];
 		if (isdef(f)) {
 			f();
 		}
 	}
-	take_turn_single();
+	prep_move();
+	let o = { uname: Z.uplayer, friendly: Z.friendly, fen: Z.fen, write_fen: true, write_notes: '' };
+	let cmd = 'table';
+	send_or_sim(o, cmd);
 }
-
 function ferro_change_to_card_selection() {
 	//console.log('ferro_change_to_turn_round_', getFunctionsNameThatCalledThisFunction()); 
 	let [z, fen, stage, uplayer, ui] = [Z, Z.fen, Z.stage, Z.uplayer, UI];

@@ -12,7 +12,7 @@ if ($cmd == 'table'){
 	$qr="SELECT * FROM gametable WHERE `friendly` = '$friendly' limit 1";
 	$table = db_read($qr)[0]; 
 	$notes = $table['notes'];
-	$result->status = "reloaded table $friendly";
+	$result->status = "";
 	$result->players = array();
 	if (isset($data->clear_players)){
 		foreach ($data->clear_players as $player) {
@@ -20,7 +20,7 @@ if ($cmd == 'table'){
 			$q="UPDATE `indiv` SET `state`='' WHERE `friendly` = '$friendly' and `name` = '$player'";
 			$res=db_write($q);
 		}
-		$result->status .= " and cleared players";
+		$result->status .= " clear_players";
 	} else if (isset($data->write_player) && isset($data->state)){
 		$result->too_late = false;
 		$state = json_encode($data->state);
@@ -48,7 +48,7 @@ if ($cmd == 'table'){
 		}else if (str_ends_with($notes, 'turn')){
 			foreach ($res as $player){
 				//if array $data->fen->turn contains player.name, continue
-				if (in_array($player['name'], $data->fen->turn)){
+				if (!in_array($player['name'], $data->fen->turn)){
 					continue;
 				}
 				if ($player['state'] == ''){
@@ -65,16 +65,23 @@ if ($cmd == 'table'){
 			$qw = "UPDATE `gametable` SET `notes`='lock',`modified`=$modified,`fen`='$fen' WHERE `friendly` = '$friendly'";
 			$res=db_write($qw);
 		}
-		$result->status .= " and player $uname updated!"; 
+		$result->status .= " write_player"; 
 	} else if ($notes == 'lock') {
 		// $result->collect_complete = true;
 		// $result->too_late = true;
 		$qr = "SELECT * FROM indiv WHERE `friendly` = '$friendly'";
 		$result->playerdata = db_read($qr);
-		$result->status .= " and table already locked";
-	} 
+		$result->status .= " (already locked)";
+	} else 	if (isset($data->read_players)){
+		$qr = "SELECT * FROM indiv WHERE `friendly` = '$friendly'";
+		$result->playerdata = db_read($qr);
+		$result->status .= " read_players";
+	}
 	
-	if (isset($data->write_notes)) {$notes = $data->write_notes;}
+	if (isset($data->write_notes)) {
+		$notes = $data->write_notes;
+		$result->status .= " write_notes:$notes";
+	}
 	if (isset($data->write_fen)){
 		$fen = json_encode($data->fen);
 		$modified = get_now();
@@ -82,6 +89,7 @@ if ($cmd == 'table'){
 		$qr="SELECT * FROM gametable WHERE `friendly` = '$friendly' limit 1";
 		$res=db_write_read($qw,$qr);
 		$result->table = $res;
+		$result->status .= " write_fen";
 	} else {
 		$qr="SELECT * FROM gametable WHERE `friendly` = '$friendly' limit 1";
 		$table = db_read($qr)[0]; 

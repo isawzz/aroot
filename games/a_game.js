@@ -60,12 +60,12 @@ function activate_a_game() {
 
 }
 
-function autosend(plname,slot){
+function autosend(plname, slot) {
 	Z.uplayer = plname;
 	take_turn_collect_open();
 }
-function felix_sends_timed_move_at_mimi_slot(){
-	let[fen, pl] = [Z.fen, Z.pl];
+function felix_sends_timed_move_at_mimi_slot() {
+	let [fen, pl] = [Z.fen, Z.pl];
 	let slot = fen.players.mimi.slot;
 	slot = busy_wait_until_slot(slot);
 	//console.log('felix will be sending at time',slot, Date.now());
@@ -77,7 +77,7 @@ function agmove_single() {
 	take_turn_single();
 }
 function agmove_startmulti() { Z.stage = 'multi'; Z.turn = Z.plorder;[Z.fen.stage_after_multi, Z.fen.turn_after_multi] = ['click', [rChoose(Z.plorder)]]; take_turn_single(); }
-function agmove_indiv(plname,slot) {
+function agmove_indiv(plname, slot) {
 	if (isDict(plname) && Z.uplayer != 'mimi') return; // only mimi can actually click button!!!
 
 	if (isString(plname)) Z.uplayer = plname;
@@ -91,7 +91,7 @@ function agmove_indiv(plname,slot) {
 
 	take_turn_collect_open();
 
-	if (plname != 'felix') agmove_indiv('felix',pl.slot);
+	if (plname != 'felix') agmove_indiv('felix', pl.slot);
 	//autosend('felix');
 }
 function agmove_resolve() {
@@ -114,7 +114,7 @@ function agmove_resolve() {
 	take_turn_resolve('single');
 }
 
-function busy_wait_until_slot(slot){
+function busy_wait_until_slot(slot) {
 	let diff = get_slot_diff(Z.fen);
 	let dd;
 	do {
@@ -124,16 +124,45 @@ function busy_wait_until_slot(slot){
 	} while (true);
 	return dd;
 }
-function last_n_digits(number,n=2) {
-		return number % Math.pow(10,n);
+function last_n_digits(number, n = 2) {
+	return number % Math.pow(10, n);
 }
 function get_now_milliseconds() {
 	return Date.now();
 }
-function get_slot_diff(fen){return Math.floor(100/fen.plorder.length);}
+function get_slot_diff(fen) { return Math.floor(100 / fen.plorder.length); }
 
 
 
+//#region removed from necessity!!!!!!!!
+function agmove_clear_all() { Z.stage = 'clear'; Z.fen.endcond = 'all'; Z.fen.acting_host = Z.uplayer; Z.turn = [Z.uplayer]; take_turn_clear(); }
+function agmove_clear_first() { Z.stage = 'clear'; Z.fen.endcond = 'first'; Z.fen.acting_host = Z.uplayer; Z.turn = [Z.uplayer]; take_turn_clear(); }
+function agmove_clear_turn() { Z.stage = 'clear'; Z.fen.endcond = 'turn'; Z.fen.acting_host = Z.uplayer; Z.turn = [Z.uplayer]; take_turn_clear(); }
+
+function take_turn_clear() {
+	prep_move();
+	let o = { uname: Z.uplayer, friendly: Z.friendly, fen: Z.fen, players: Z.playerlist };
+	let cmd = 'clear';
+	send_or_sim(o, cmd);
+}
+function take_turn_collect_open() {
+	prep_move();
+	let o = { uname: Z.uplayer, friendly: Z.friendly, fen: Z.fen, state: Z.state, write_player: true };
+	let cmd = 'table';
+	send_or_sim(o, cmd);
+}
+function take_turn_resolve(notes) {
+	prep_move();
+	let o = { uname: Z.uplayer, friendly: Z.friendly, fen: Z.fen, write_fen: true, write_notes: notes };
+	let cmd = 'table';
+	send_or_sim(o, cmd);
+}
+function take_turn_ack() {
+	prep_move();
+	let o = { uname: Z.uplayer, friendly: Z.friendly, fen: Z.fen, state: { ack: true }, write_player: true };
+	let cmd = 'table';
+	send_or_sim(o, cmd);
+}
 
 
 
