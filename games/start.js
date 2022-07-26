@@ -97,6 +97,20 @@ function gamestep() {
 
 }
 
+//#region basemin NEW HELPERS!!!!!
+function object2string(o,props=[],except_props=[]){
+	let s='';
+	if (isString(o)) return o;
+	for(const k in o){
+		if (!isEmpty(props) && props.includes(k) || !except_props.includes(k))	{
+			let val = isList(o[k])? o[k].join(',') : isDict(o[k])? object2string(o[k].props,except_props) : o[k];
+			let key_part = isEmpty(s)? '':`, ${k}:`;
+			s+=val;
+		}
+	}
+	return s;
+}
+
 //#region ack
 function start_simple_ack_round(ackstage, ack_players, nextplayer, callbackname_after_ack, keeppolling = false) {
 

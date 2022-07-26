@@ -1,3 +1,159 @@
+function check_collect(obj) {
+	//erwarte dass obj ein collect_complete und ein too_late hat!
+	//console.log('notes', Z.notes)
+	if (nundef(obj.collect_complete)) return false;
+	if (Z.mode != 'multi') { console.log('COLLECT NUR IN MULTI PLAYER MODE!!!!!!'); return false; }
+	if (!startsWith(Z.notes, 'indiv') && Z.notes != 'lock') { return false; } //console.log('!!!notes is NOT indiv or lock'); return false; }
+	assertion(isdef(obj.playerdata), 'no playerdata but collect_complete');
+
+	let collect_complete = obj.collect_complete;
+	let too_late = obj.too_late;
+	//console.log('notes', Z.notes)
+	//console.log('collect_open', collect_complete, 'too_late', too_late);
+
+	if (i_am_acting_host() && collect_complete) {
+
+		//console.log('collect_open: i am host, collect_complete, was nun???');
+		assertion(obj.table.fen.turn.length == 1 && obj.table.fen.turn[0] == U.name && U.name == obj.table.fen.acting_host, 'collect_open: acting host is NOT the one in turn!');
+		assertion(isdef(Z.func.post_collect), 'post_collect not defined for game ' + obj.table.game);
+
+		//Z.playerdata = obj.playerdata;
+		//console.log('playerdata vorher', Z.playerdata);
+		if (Z.fen.end_cond == 'all') for (const p of Z.playerdata) { p.state = JSON.parse(p.state); }
+		else if (Z.fen.end_cond == 'first') {
+			for (const p of Z.playerdata) {
+				if (isdef(p.state)) {
+					p.state = JSON.parse(p.state);
+					//console.log('*** winning player is', p.name, p.state);
+				}
+
+			}
+			//console.log('playerdata nachher', Z.playerdata);
+		}
+		Z.func.post_collect();
+
+
+	} else if (collect_complete && (Z.turn.length > 1 || Z.turn[0] != Z.fen.acting_host)) {
+		Z.turn = [Z.fen.acting_host];
+		take_turn_single();
+		//console.log('collect_open: collect_complete, bin aber nicht der host! was nun???');
+
+	} else if (i_am_acting_host()) {
+		//console.log('collect_open: i am host, bin aber nicht collect_complete, was nun???');
+		//autopoll();
+		return false;
+
+	} else {
+		//console.log('collect_open: bin nicht der host, bin nicht collect_complete, was nun???');
+		//autopoll();
+		return false;
+
+	}
+	return true;
+
+}
+
+function MUELL(){
+	if (Z.stage == 'can_resolve'){
+		assertion(trigger, 'no trigger and can_resolve!!!');
+	}
+
+	//first check if resolve condition is met!
+	let resolve = Z.func.check_resolve();
+
+	if (Z.stage == 'can_resolve' && uplayer == trigger) {
+		//das ist der der resolven koennte! NUR trigger kann fen aendern!!!!!!
+		//es wird resolved!
+	} else if (resolve) {
+		[Z.turn, Z.stage] = [[trigger], 'can_resolve'];
+
+	} else return false;
+
+	//das ist nur prototyping!!!!!!!!!!!!!!!!!
+	if (Z.game == 'ferro' && Z.stage == 'buy_or_pass') {
+		let [pldata, multi, turn, done, buyer] = [Z.playerdata, Z.fen.multi, Z.turn, true, null];
+		console.log(':::trigger check!', turn);
+		//console.log('..............pldata', pldata);
+
+		for (const plname of turn) {
+			let data = firstCond(Z.playerdata, x => x.name == plname);
+			assertion(isdef(data), 'no pldata for', plname);
+			let state = data.state;
+
+			console.log('state', plname, state);
+			if (isEmpty(state)) done = false;
+			else if (state.buy == true) buyer = plname;
+			else continue;
+
+			break;
+		}
+		if (done) {
+			console.log('buy process done, buyer', buyer);
+			ferro_change_to_card_selection();
+			prep_move();
+			let o = { uname: Z.uplayer, friendly: Z.friendly, fen: Z.fen, write_fen: true, write_notes: '' };
+			let cmd = 'table';
+			send_or_sim(o, cmd);
+
+			return true;
+		}
+	}
+	return false;
+
+}
+
+function ferro_force_resolve(by_ack_button = false) {
+	assertion(isdef(Z.playerdata) || by_ack_button, 'no playerdata in force_resolve by trigger!!!!');
+	// for(const data of Z.playerdata){
+	// 	let pl = fen.players[data.name];
+	// 	if (isEmpty(data.state)) pl.buy = false; else	pl.buy = data.state.buy;
+	// }
+	ferro_call_resolve();
+
+}
+function ferro_call_resolve() {
+	//expects a function fen.multi.callbackname_after_ack
+
+	assertion(Z.stage == 'buy_or_pass', 'no buy_or_pass in call_resolve');
+
+	let [fen, stage, uplayer] = [Z.fen, Z.stage, Z.uplayer];
+	let callbackname = fen.multi.callbackname_after_ack;
+	// console.log('===>RESOLVE',Z.uplayer); 
+	// console.log('fen.multi', fen.multi); //return;
+
+	for (const data of Z.playerdata) {
+		let pl = fen.players[data.name];
+		if (isEmpty(data.state)) pl.buy = false; else pl.buy = data.state.buy;
+	}
+
+	if (isdef(callbackname)) {
+		let f = window[callbackname];
+		if (isdef(f)) {
+			f();
+		}
+	}
+	prep_move();
+	let o = { uname: Z.uplayer, friendly: Z.friendly, fen: Z.fen, write_fen: true, write_notes: '' };
+	let cmd = 'table';
+	send_or_sim(o, cmd);
+}
+function ferro_clear_playerdata() { if (isdef(Clientdata._playerdata_set)) { delete Clientdata._playerdata_set; } }
+
+function ferro_handle_buy_or_pass() {
+	let [fen, stage, uplayer] = [Z.fen, Z.stage, Z.uplayer];
+	// if (uplayer == fen.multi.trigger) {
+	// 	//hier muss der trigger checken fuer early break up von buy_or_pass
+	// 	console.log('HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHAAAAAAAAAAAAALLLLLLLLLLLLOOOOOOOOOOOOO')
+	// 	let pldata = Z.playerdata;
+	// 	console.log('..............pldata', pldata);
+	// }else	
+	if (uplayer == lookup(fen, ['multi', 'trigger'])) {
+		//select_timer(6000, ferro_force_resolve);
+	} else if (nundef(Clientdata.playerdata_set)) {
+		select_add_items(ui_get_buy_or_pass_items(), ferro_ack_uplayer, 'may click top discard to buy or pass', 1, 1);
+		//select_timer(5000, ferro_ack_uplayer);
+	}
+}
 
 
 

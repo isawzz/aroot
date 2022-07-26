@@ -3,6 +3,14 @@ function ferro() {
 		if (Z.stage == 'buy_or_pass') {
 			//ferro_change_to_turn_round();
 			if (isList(Z.playerdata) && lookup(Z.fen, ['multi', 'trigger']) == Z.uplayer) ferro_force_resolve(true);
+			else {
+				ferro_change_to_card_selection();
+				prep_move();
+				let o = { uname: Z.uplayer, friendly: Z.friendly, fen: Z.fen, write_fen: true, write_notes: '' };
+				let cmd = 'table';
+				send_or_sim(o, cmd);
+
+			}
 		}
 		else if (Z.stage == 'round_end') start_new_round_ferro();
 	}
@@ -47,8 +55,11 @@ function ferro() {
 	function check_gameover() { return isdef(Z.fen.winners) ? Z.fen.winners : false; }
 	function stats(Z, dParent) { ferro_stats_new(dParent); }
 	function activate_ui() { ferro_activate_ui(); }
-	return { clear_ack, state_info, setup, present, present_player, check_gameover, stats, activate_ui };
+	function check_resolve(){return ferro_check_resolve();}
+	function resolve(){ferro_resolve();}
+	return { check_resolve, resolve, clear_ack, state_info, setup, present, present_player, check_gameover, stats, activate_ui };
 }
+
 
 function ferro_pre_action() {
 	let [stage, A, fen, plorder, uplayer, deck] = [Z.stage, Z.A, Z.fen, Z.plorder, Z.uplayer, Z.deck];
@@ -56,9 +67,11 @@ function ferro_pre_action() {
 	switch (stage) {
 		// case 'round_end': console.log('should present BUTTON WEITER');break;
 		//case 'round_end': show_waiting_for_ack_message(); break; //select_add_items(ui_get_string_items(['weiter']),ferro_round_end_ack_player,`may click to continue`,0,1);select_timer(10000,ferro_round_end_ack_player);break;
-		case 'buy_or_pass': ferro_handle_buy_or_pass(); break;
-		case 'resolve': ferro_call_resolve(); break;
-		case 'card_selection': ferro_clear_playerdata(); select_add_items(ui_get_ferro_items(uplayer), fp_card_selection, 'must select one or more cards', 1, 100); break;
+
+		//case 'buy_or_pass': ferro_handle_buy_or_pass(); break;
+		// case 'buy_or_pass': if (nundef(Clientdata._playerdata_set)) { select_add_items(ui_get_buy_or_pass_items(), ferro_ack_uplayer, 'may click top discard to buy or pass', 1, 1); } break;
+		case 'buy_or_pass': if (!is_playerdata_set(uplayer)) { select_add_items(ui_get_buy_or_pass_items(), ferro_ack_uplayer, 'may click top discard to buy or pass', 1, 1); } break;
+		case 'card_selection': select_add_items(ui_get_ferro_items(uplayer), fp_card_selection, 'must select one or more cards', 1, 100); break;
 		default: console.log('stage is', stage); break;
 	}
 	ensure_buttons_visible_ferro();
@@ -98,6 +111,12 @@ function ferro_present_new(z, dParent, uplayer) {
 	}
 
 	if (Z.stage == 'round_end') show_waiting_for_ack_message();
+	else if (Z.stage == 'buy_or_pass' && (Z.role != 'active' || is_playerdata_set(uplayer))) {
+		//get players in turn that have not yet set playerdata
+		assertion(isdef(Z.playerdata), 'playerdata is not defined in buy_or_pass (present ferro)');
+		let pl_not_done = Z.playerdata.filter(x=>Z.turn.includes(x.name) && isEmpty(x.state)).map(x=>x.name);
+		show_waiting_message(`waiting for ${pl_not_done.join(', ')} to make buy decision`);
+	}
 
 
 }
@@ -148,6 +167,30 @@ function ferro_activate_ui() {
 	ferro_pre_action();
 }
 function ferro_state_new(dParent) {
+
+	//testing output
+	let html = `${Z.stage} ${Z.notes}`;
+	if (isdef(Z.playerdata)) {
+
+		let trigger = lookup(Z.fen,['multi','trigger']);
+		if (trigger) html += ` trigger:${trigger}`;
+
+		for (const data of Z.playerdata) {
+			if (!Z.turn.includes(data.name)) continue;
+			let name = data.name;
+			let state = data.state;
+			//console.log('state', name, state, typeof(state));
+			let s_state = object2string(state);
+			html += ` ${name}:'${s_state}' (${typeof state})`;
+			//let buys=!isEmpty(data.state)?data.state.buy:'_';
+			//html += ` ${name}:${buys}`;
+		}
+		dParent.innerHTML += ` ${Z.playerdata.map(x => x.name)}`;
+	}
+
+	dParent.innerHTML = html;
+	return;
+
 	if (Z.stage == 'round_end') {
 		dParent.innerHTML = `Round ${Z.round} ended by &nbsp;${get_user_pic_html(Z.fen.round_winner, 30)}`;
 	} else if (is_fixed_goal()) {

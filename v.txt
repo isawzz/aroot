@@ -9311,10 +9311,316 @@ b) trigger does NOT have a turn
 2- er laesst ploetzlich den felix nicht mehr kaufen!
 3- test
 525: *9:00 AM 7/25/2022-9:03 AM 7/25/2022
-526: *9:03 AM 7/25/2022-9:04 AM 7/25/2022
-1- ?
+526: *9:03 AM 7/25/2022-9:04 AM 7/25/2022 11
+1- ?ja, versuch in ferro_change_to_buy_pass trigger = Z.host!
 2- ueberlege mir die variante wo trigger zuerst and host uebergibt! waer eine moeglichkeit um clear_ack zu erlauben!!!
 3- clear ack in buy or pass ist nur erlaubt wenn ich der trigger bin!!!!!
+527: *10:51 AM 7/25/2022-10:53 AM 7/25/2022
+528: *10:54 AM 7/25/2022-10:57 AM 7/25/2022
+529: *10:57 AM 7/25/2022-11:00 AM 7/25/2022 12
+ok - upload ferro
+1- rem cons
+2- wenn timeout bei non-trigger: NICHT ferro_call_resolve!!!!
+3- run
+530: *11:00 AM 7/25/2022-11:01 AM 7/25/2022
+531: *11:01 AM 7/25/2022-11:03 AM 7/25/2022
+532: *11:03 AM 7/25/2022-5:28 PM 7/25/2022 13
+1- wie kann ich das loesen??????? mach doch wieder den trigger
+2- jetzt geht es nicht mehr weil der host nicht mehr kaufen kann!!!
+3- alles ist falsch!!!
+533: *5:28 PM 7/25/2022-5:32 PM 7/25/2022
+534: *5:32 PM 7/25/2022-5:33 PM 7/25/2022
+535: *5:33 PM 7/25/2022-5:42 PM 7/25/2022 14
+1- kaufen geht noch immer nicht, aber warum???
+2- next round!
+3- restart test
+536: *5:42 PM 7/25/2022-5:44 PM 7/25/2022
+537: *5:44 PM 7/25/2022-5:44 PM 7/25/2022 15
+1- wo muss button machen?
+2- button fuer startgame mimi.felix.lauren
+3- copy apiserver1
+538: *5:53 PM 7/25/2022-6:02 PM 7/25/2022
+__________ di 26.7.22 =>100 ewew
+600: *9:10 PM 7/25/2022-6:14 AM 7/26/2022
+601: *6:14 AM 7/26/2022-6:16 AM 7/26/2022
+602: *6:16 AM 7/26/2022-6:21 AM 7/26/2022
+603: *6:21 AM 7/26/2022-6:23 AM 7/26/2022
+604: *6:23 AM 7/26/2022-6:24 AM 7/26/2022
+605: *6:24 AM 7/26/2022-6:30 AM 7/26/2022
+606: *6:30 AM 7/26/2022-6:30 AM 7/26/2022
+607: *6:30 AM 7/26/2022-6:31 AM 7/26/2022
+608: *6:31 AM 7/26/2022-6:32 AM 7/26/2022
+609: *6:32 AM 7/26/2022-6:33 AM 7/26/2022
+610: *6:33 AM 7/26/2022-6:34 AM 7/26/2022
+611: *6:34 AM 7/26/2022-6:35 AM 7/26/2022
+612: *6:35 AM 7/26/2022-6:36 AM 7/26/2022
+613: *6:36 AM 7/26/2022-6:38 AM 7/26/2022
+614: *6:38 AM 7/26/2022-6:41 AM 7/26/2022
+615: *6:41 AM 7/26/2022-6:48 AM 7/26/2022
+616: *6:49 AM 7/26/2022-6:49 AM 7/26/2022
+617: *6:49 AM 7/26/2022-6:55 AM 7/26/2022
+618: *6:55 AM 7/26/2022-6:57 AM 7/26/2022
+619: *6:57 AM 7/26/2022-6:58 AM 7/26/2022
+620: *6:58 AM 7/26/2022-6:59 AM 7/26/2022
+621: *6:59 AM 7/26/2022-7:00 AM 7/26/2022
+622: *7:01 AM 7/26/2022-7:02 AM 7/26/2022
+623: *7:02 AM 7/26/2022-7:07 AM 7/26/2022
+624: *7:07 AM 7/26/2022-7:08 AM 7/26/2022
+625: *7:08 AM 7/26/2022-7:10 AM 7/26/2022
+626: *7:10 AM 7/26/2022-7:12 AM 7/26/2022
+627: *7:12 AM 7/26/2022-7:19 AM 7/26/2022
+628: *7:19 AM 7/26/2022-7:20 AM 7/26/2022
+629: *7:21 AM 7/26/2022-7:29 AM 7/26/2022
+630: *7:29 AM 7/26/2022-7:35 AM 7/26/2022
+631: *7:35 AM 7/26/2022-7:37 AM 7/26/2022
+632: *7:37 AM 7/26/2022-7:39 AM 7/26/2022
+633: *7:39 AM 7/26/2022-7:39 AM 7/26/2022
+634: *7:39 AM 7/26/2022-7:40 AM 7/26/2022
+635: *7:40 AM 7/26/2022-7:43 AM 7/26/2022
+636: *7:43 AM 7/26/2022-7:51 AM 7/26/2022
+637: *7:51 AM 7/26/2022-8:33 AM 7/26/2022
+638: *8:33 AM 7/26/2022-8:35 AM 7/26/2022
+639: *8:35 AM 7/26/2022-8:46 AM 7/26/2022
+640: *8:46 AM 7/26/2022-8:46 AM 7/26/2022 1
+1- geht noch besser!!!!!
+2- alle koennen trigger check performen! aber wie?
+3- ich koennte feedback geben wenn einer kaufen will:
+641: *8:46 AM 7/26/2022-9:41 AM 7/26/2022
+642: *9:43 AM 7/26/2022-9:43 AM 7/26/2022
+643: *9:43 AM 7/26/2022-9:46 AM 7/26/2022 2
+1- was muss ich jetzt machen???
+2- nenne es trigger_check_is_sending
+3- fall 1: multi und trigger und can_resolve
+644: *9:47 AM 7/26/2022-9:50 AM 7/26/2022
+645: *9:53 AM 7/26/2022-9:53 AM 7/26/2022
+646: *9:53 AM 7/26/2022-9:55 AM 7/26/2022 3
+1- can_resolve is one way street! das heisst ich kann es ruhig machen! =>goto 'can_resolve' state	
+2- weiter!
+3- wie checkt jeder einzelne ob can_resolve true ist?
+647: *9:55 AM 7/26/2022-9:56 AM 7/26/2022
+648: *9:56 AM 7/26/2022-9:57 AM 7/26/2022
+649: *9:57 AM 7/26/2022-9:58 AM 7/26/2022 4
+1- do it!
+2- case 3: stage == 'can_resolve' && uplayer is trigger:
+3- case 2: stage != canresolve and cannot resolve: return false
+650: *9:58 AM 7/26/2022-9:59 AM 7/26/2022 
+651: *10:12 AM 7/26/2022-10:16 AM 7/26/2022 5
+- next step?
+1- test: der geht ja nicht aufs internet! also wie soll es slow downen?????
+2- muell weg!
+3- can_resolve but I am not trigger: return false!
+652: *10:16 AM 7/26/2022-10:18 AM 7/26/2022
+653: *10:18 AM 7/26/2022-10:21 AM 7/26/2022
+654: *10:21 AM 7/26/2022-10:27 AM 7/26/2022 6
+1- wo ist dieses 'resolve'
+2- resolve state ist mist!!!!! wo kommt das her?
+3- new game!
+655: *10:27 AM 7/26/2022-10:30 AM 7/26/2022
+656: *11:24 AM 7/26/2022-11:35 AM 7/26/2022 7
+1- immer noch keine playerdata!
+2- als erstes muss ich ein lamperl machen damit ich sehe wenn er pollt! show_polling_signal()
+3- schon wieder das!!!!!!!!!!!
+657: *11:36 AM 7/26/2022-11:40 AM 7/26/2022
+658: *11:40 AM 7/26/2022-11:41 AM 7/26/2022
+659: *11:41 AM 7/26/2022-12:09 PM 7/26/2022 8
+1- goto api.php
+2- muss ich am server machen: wenn turn.length > 1 automatisch read_players!!!!!
+3- wo war das wo ich read_players geadded habe?
+660: *12:09 PM 7/26/2022-12:56 PM 7/26/2022 9
+1- b
+2- obj.a
+3- geh zu dem alten api.php wo mit table was gemacht habe!!!
+661: *12:59 PM 7/26/2022-2:15 PM 7/26/2022
+662: *2:18 PM 7/26/2022-2:18 PM 7/26/2022
+1- ich muss den ablauf beschreiben! das ist super schwer aber bleibtm mir nicht erspart!!!
+2- hab ja keine pldata! schon wieder!!!
+3- schau ob es jetzt geht!
+663: *2:18 PM 7/26/2022-2:19 PM 7/26/2022 10
+664: *2:20 PM 7/26/2022-2:23 PM 7/26/2022
+665: *2:23 PM 7/26/2022-2:25 PM 7/26/2022 11
+1- hier gibt es schon einen fehler: bei lauren ist der turn=['lauren'] statt alle buyers!!!!!!!!!!!!!!!!!!!!!!!
+UND WARUM???????????????????????
+2- turn alle buyers, lauren ist trigger
+3- turn lauren
+666: *2:27 PM 7/26/2022-2:28 PM 7/26/2022
+667: *2:29 PM 7/26/2022-2:30 PM 7/26/2022 12
+1- remedy: wenn discard abschicke mach read players!
+2- BUG: hab die playerdata nicht obwohl buy_or_pass ist!
+3- restart
+668: *2:34 PM 7/26/2022-3:00 PM 7/26/2022
+669: *3:00 PM 7/26/2022-
+2- how to start 
+3- BUG apiserver 108!!!!!!!!!
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+- object2string ausprobieren: ferro state!!!!!!!
+- is_playerdata_set und object2string raus!!!
+- goto code ferro state
+- state: trigger!
+- reihenfolge?lauren mimi felix, trigger:felix
+- hol send_or_sim
+WAY SHORTER!!!!
+WAY SHORTER!!!!!!!!!!!!!!!!!!!
+- elim Clientdata.playerdata_set weil es nicht robust ist!!!
+SHORTER!!!
+- wie hab ich das gemacht mit der buy decision???
+- alle wissen dass buy_or_pass ein triggerstate ist!
+- in present bei triggerstate soll drinstehen auf was gewartet wird
+- besser gesagt: auf WEN gewartet wird!
+- bei denen wo pldata schon vorhanden soll ein message sein: waiting for ... to make buying decision
+
+
+?-wieso kann ich den trigger check nicht in ferro selbst machen???
+1. das einzige das sich bei indiv aendert sind die playerdata
+=>der resolver muss checken ob playerdata complete!
+=>die anderen sind unconcerned!
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+===>shorter!!!!
+- wo wird resolve aufgerufen??? in apiserver beim trigger (not in turn) ist egal ob in turn oder nicht!
+raus mit ferro_handle_buy_or_pass
+- integrate handle_buy_pass in ferro_pre_action
+=>moechte bei resolve alle buy werte ausgeben!
+=>moechte timeout als wert haben
+- rem cons ferro 167
+- test
+- geh nochmal zu state
+- change_to_buy_or_pass: viele haben jetzt turn!
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+- ok dann mach es auch bei nundef(Z)
+?- ist bei send_or_sim IMMER Z existent? NEIN not at first load!
+- das kann ich auch beim client automatisch machen mit adding read_players weenn turn > 1
+=>beim api.php, wenn turn>1 schicke alle playerdata mit!!!
+?- haben die players in buy_or_pass ALLE playerdata??? NEIN!
+- wenn nicht, dann aendere das!!!
+PREDICT!
+2. click on discard
+soll:
+- 
+VERIFY! YES!
+PREDICT!
+1. click auf as click auf discard
+soll: 
+- card goes to discard pile, 
+- stage goes to buy_or_pass
+- all players reload
+
+
+
+
+
+- new game!
+- die art wie die player ihre cards bekommen ist schlecht!!!!
+- geh zu dem clearAck
+- kann ich das clearAck trotzdem machen?
+- gib den select_timer weg!
+- output stage,turn,pldata,notes
+- output besser!
+
 
 2>>abwicklung von lock after buy_or_pass:
 der trigger muss in buy_or_pass stage bei autopoll das folgended machen:
@@ -9862,48 +10168,6 @@ brauche:
 
 
 
-
-germknoedl vegam:
-250 g	Dinkelmehl Type 630
-½ Würfel	Frischhefe
-125 ml	Sojadrink, lauwarm
-50 g	Rohrzucker
-2 EL	Sonnenblumenöl
-
-OR
-
-200 ml Hafermilch
-20 g frische Hefe
-2 EL Zucker
-400 g Dinkelnmehl, Type 630
-¼ TL Salz
-50 g pflanzliche Butter, weich
-
-tips damit nicht zusammenfallen:
-1. loecher reinstechen
-2. tuck zwischen knoedl und deckel geben
-3. laenger daempfen!
-
-veganer mohnzopf:
-Zutaten
-Hefeteig
-20 g frische Hefe oder 1 Päckchen Trockenhefe
-250 ml lauwarme Hafermilch, evtl. etwas mehr
-30 g Zucker
-500 g Mehl
-100 g weiche Butter
-1 TL Salz
-Mohnfüllung
-250 ml Milch
-Abrieb von ½ Bio Zitrone
-50 g Zucker
-1 Prise Salz
-50 g Weichweizengrieß
-75 g gemahlener Mohn
-Glasur
-100 g Puderzucker
-1 EL Zitronensaft
-Kastenform 23 cm
 
 - brauche button fuer tide all
 - goto code post_tide

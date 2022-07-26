@@ -1,3 +1,12 @@
+function test_start_ferro() {
+	let game = 'ferro';
+	let playernames = ['mimi', 'felix', 'lauren'];
+	let playermodes = ['human', 'human', 'human'];
+	let i = 0; let players = playernames.map(x => ({ name: x, playmode: playermodes[i++] }));
+	let options = {};
+	startgame(game, players, options);
+}
+
 function onclick_ack() {
 	if (nundef(Z) || nundef(Z.func.clear_ack)) return;
 

@@ -11,15 +11,31 @@ if ($cmd == 'table'){
 	$uname = $data->uname;
 	$qr="SELECT * FROM gametable WHERE `friendly` = '$friendly' limit 1";
 	$table = db_read($qr)[0]; 
+
+	$fen = json_decode($table['fen']);
+	$result->fen = $fen;
+	$turn = $fen->turn;
+	$result->turn = $turn;
+
+	//let $a be type of $turn
+	$result->a = gettype($turn);
+
+	//calculate array length of $turn
+	$turn_count = count($turn);
 	$notes = $table['notes'];
 	$result->status = "";
-	$result->players = array();
-	if (isset($data->clear_players)){
-		foreach ($data->clear_players as $player) {
-			$result->players[] = $player;
-			$q="UPDATE `indiv` SET `state`='' WHERE `friendly` = '$friendly' and `name` = '$player'";
-			$res=db_write($q);
-		}
+
+	if (isset ($data->clear_players)){
+		$modified = get_now();
+		$qw = "UPDATE `indiv` SET `state`='',checked=$modified WHERE `friendly` = '$friendly'";
+		$qr = "SELECT * FROM indiv WHERE `friendly` = '$friendly'"; 
+		$res = db_write_read($qw,$qr);
+		$result->playerdata = $res;
+		// foreach ($data->clear_players as $player) {
+		// 	$result->players[] = $player;
+		// 	$q="UPDATE `indiv` SET `state`='' WHERE `friendly` = '$friendly' and `name` = '$player'";
+		// 	$res=db_write($q);
+		// }
 		$result->status .= " clear_players";
 	} else if (isset($data->write_player) && isset($data->state)){
 		$result->too_late = false;
@@ -60,7 +76,7 @@ if ($cmd == 'table'){
 		$result->collect_complete = $done;
 		if ($done) {
 			$data->fen->turn = array($data->fen->multi->trigger); // array($data->fen->acting_host); //array($table['host']);
-			$data->fen->stage = 'resolve';
+			$data->fen->stage = 'can_resolve';
 			$fen = json_encode($data->fen);
 			$qw = "UPDATE `gametable` SET `notes`='lock',`modified`=$modified,`fen`='$fen' WHERE `friendly` = '$friendly'";
 			$res=db_write($qw);
@@ -76,6 +92,9 @@ if ($cmd == 'table'){
 		$qr = "SELECT * FROM indiv WHERE `friendly` = '$friendly'";
 		$result->playerdata = db_read($qr);
 		$result->status .= " read_players";
+	} else if (isset($data->fen) && count($data->fen->turn) > 1 || $turn_count > 1){
+		$qr = "SELECT * FROM indiv WHERE `friendly` = '$friendly'";
+		$result->playerdata = db_read($qr);
 	}
 	
 	if (isset($data->write_notes)) {

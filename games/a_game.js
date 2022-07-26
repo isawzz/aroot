@@ -53,7 +53,6 @@ function activate_a_game() {
 		//mButton('start multi turn', agmove_startmulti, dTable, { margin: 20 });
 		//console.log('stage', Z.stage);
 		mButton('indiv move', agmove_indiv, dTable, { margin: 20 });
-		//mButton('resolve', agmove_resolve, dTable, { margin: 20 });
 
 		//felix_sends_timed_move_at_mimi_slot();
 	}

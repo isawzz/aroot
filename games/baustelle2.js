@@ -8,14 +8,14 @@ function ferro_change_to_buy_pass() {
 	let buyerlist = fen.canbuy = []; //fen.canbuy list ist angeordnet nach reihenfolge der frage
 	for (const plname of newturn) {
 		let pl = fen.players[plname];
-		if (plname == uplayer) { pl.buy = false; buyerlist.push(plname); }
-		else if (pl.coins > 0) { pl.buy = false; buyerlist.push(plname); }
+		if (plname != uplayer && pl.coins > 0) { pl.buy = false; buyerlist.push(plname); }
+		//if (plname == uplayer) { pl.buy = false; buyerlist.push(plname); } else if (pl.coins > 0) { pl.buy = false; buyerlist.push(plname); }
 	}
 
 	fen.multi = {
 		//turn: buyerlist,
 		//stage: 'buy_or_pass',
-		trigger: uplayer,
+		trigger: uplayer,  //Z.host, //uplayer, host geht nicht weil der ja dann nicht buy or pass kann!!!
 		endcond: 'turn',
 		turn_after_ack: [nextplayer],
 		callbackname_after_ack: 'ferro_change_to_card_selection',
@@ -36,69 +36,15 @@ function ferro_change_to_buy_pass() {
 }
 function ferro_ack_uplayer() {
 	let [A, fen, stage, uplayer] = [Z.A, Z.fen, Z.stage, Z.uplayer];
-	console.log('A.selected', A.selected)
-	Z.state = Clientdata.playerstate = { buy: A.selected[0] == 0 };
-	Clientdata.playerdata_set = true;
+	//console.log('A.selected', A.selected)
+	Z.state = { buy: !isEmpty(A.selected) && A.selected[0] == 0 };
+	//Z.state = Clientdata.playerstate = { buy: !isEmpty(A.selected) && A.selected[0] == 0 };
+	//Clientdata._playerdata_set = true;
 	FORCE_REDRAW = true;
 
-	console.log('<===write_player', Z.state)
+	console.log('<===write_player', uplayer, Z.state)
 	prep_move();
 	let o = { uname: Z.uplayer, friendly: Z.friendly, fen: Z.fen, state: Z.state, write_player: true };
-	let cmd = 'table';
-	send_or_sim(o, cmd);
-}
-function ferro_clear_playerdata() {
-	if (isdef(Clientdata.playerdata_set)) {
-		delete Clientdata.playerdata_set;
-	}
-}
-function ferro_handle_buy_or_pass() {
-	let [fen, stage, uplayer] = [Z.fen, Z.stage, Z.uplayer];
-	// if (uplayer == fen.multi.trigger) {
-	// 	//hier muss der trigger checken fuer early break up von buy_or_pass
-	// 	console.log('HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHAAAAAAAAAAAAALLLLLLLLLLLLOOOOOOOOOOOOO')
-	// 	let pldata = Z.playerdata;
-	// 	console.log('..............pldata', pldata);
-	// }else	
-	if (uplayer == lookup(fen, ['multi', 'trigger'])) {
-		select_timer(6000, ferro_force_resolve);
-	} else if (nundef(Clientdata.playerdata_set)) {
-		select_add_items(ui_get_buy_or_pass_items(), ferro_ack_uplayer, 'may click top discard to buy or pass', 1, 1);
-		select_timer(5000, ferro_call_resolve);
-	}
-}
-function ferro_force_resolve(by_ack_button = false) {
-	assertion(isdef(Z.playerdata) || by_ack_button, 'no playerdata in force_resolve by trigger!!!!');
-	// for(const data of Z.playerdata){
-	// 	let pl = fen.players[data.name];
-	// 	if (isEmpty(data.state)) pl.buy = false; else	pl.buy = data.state.buy;
-	// }
-	ferro_call_resolve();
-
-}
-function ferro_call_resolve() {
-	//expects a function fen.multi.callbackname_after_ack
-
-	assertion(Z.stage == 'buy_or_pass', 'no buy_or_pass in call_resolve');
-
-	let [fen, stage, uplayer] = [Z.fen, Z.stage, Z.uplayer];
-	let callbackname = fen.multi.callbackname_after_ack;
-	// console.log('===>RESOLVE',Z.uplayer); 
-	// console.log('fen.multi', fen.multi); //return;
-
-	for (const data of Z.playerdata) {
-		let pl = fen.players[data.name];
-		if (isEmpty(data.state)) pl.buy = false; else pl.buy = data.state.buy;
-	}
-
-	if (isdef(callbackname)) {
-		let f = window[callbackname];
-		if (isdef(f)) {
-			f();
-		}
-	}
-	prep_move();
-	let o = { uname: Z.uplayer, friendly: Z.friendly, fen: Z.fen, write_fen: true, write_notes: '' };
 	let cmd = 'table';
 	send_or_sim(o, cmd);
 }
@@ -132,7 +78,33 @@ function ferro_change_to_card_selection() {
 	for (const plname of fen.plorder) { delete fen.players[plname].buy; }
 	clear_transaction();
 }
+function ferro_check_resolve() {
+	let [pldata, stage, A, fen, plorder, uplayer, deck, turn] = [Z.playerdata, Z.stage, Z.A, Z.fen, Z.plorder, Z.uplayer, Z.deck, Z.turn];
+	let pl = fen.players[uplayer];
 
+	if (stage != 'buy_or_pass') return false;
+	for (const plname of turn) {
+		let data = firstCond(pldata, x => x.name == plname);
+		assertion(isdef(data), 'no pldata for', plname);
+		let state = data.state;
+
+		console.log('state', plname, state);
+		if (isEmpty(state)) done = false;
+		else if (state.buy == true) buyer = plname;
+		else continue;
+
+		break;
+	}
+	return done;
+}
+function ferro_resolve() {
+	console.log('buy process done, buyer', buyer);
+	ferro_change_to_card_selection();
+	prep_move();
+	let o = { uname: Z.uplayer, friendly: Z.friendly, fen: Z.fen, write_fen: true, write_notes: '' };
+	let cmd = 'table';
+	send_or_sim(o, cmd);
+}
 
 
 

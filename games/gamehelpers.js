@@ -197,6 +197,7 @@ function is_collect_mode() { return Z.turn.length > 1; }
 function is_just_my_turn() {
 	return isEmpty(Z.turn.filter(x => x != Z.uplayer));
 }
+function is_playerdata_set(plname){return isdef(Z.playerdata) && !isEmpty(Z.playerdata.find(x=>x.name == plname).state);}
 function is_playing(pl,fen){
 	//returns true is pl is in fen.plorder or in fen.roundorder
 	return isList(fen.plorder) && fen.plorder.includes(pl) || isList(fen.roundorder) && fen.roundorder.includes(pl);
@@ -482,6 +483,11 @@ function show_history_popup() {
 
 	
 }
+function show_polling_signal(){
+	let d = document.body;
+	let d1=mDiv(d,{position:'fixed',top:10,left:10,width:20,height:20,bg:'green',rounding:10,border:'white',borderWidth:1,borderStyle:'solid'});
+	mFadeRemove(d1,1000);
+}
 function show_settings(dParent) {
 	let [options, fen, uplayer] = [Z.options, Z.fen, Z.uplayer];
 	clearElement(dParent);
@@ -504,7 +510,6 @@ function show_settings(dParent) {
 
 	//dHistoryButton.onmouseleave = hide_options_popup;
 }
-
 function show_stage() {
 	if (isdef(Z.fen.progress)) {
 		let d = mBy('dTitleLeft');
@@ -579,6 +584,12 @@ function show_waiting_for_ack_message(){
 	mClass(dInstruction, 'instruction');
 	mCenterCenterFlex(dInstruction);
 	mBy('dSelections0').innerHTML = 'waiting for next round to start...'; //.remove();
+}
+function show_waiting_message(msg){
+	let dInstruction = mBy('dSelections0');
+	mClass(dInstruction, 'instruction');
+	mCenterCenterFlex(dInstruction);
+	mBy('dSelections0').innerHTML = msg;
 }
 function show_winners() {
 	let winners = Z.fen.winners;

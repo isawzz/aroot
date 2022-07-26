@@ -1,5 +1,8 @@
 let verbose = false;
 function handle_result(result, cmd) {
+
+	//if (cmd == 'table') {console.log('result', result); } //return;}
+
 	if (verbose) console.log('cmd', cmd, '\nresult', result); //return;
 	if (result.trim() == "") return;
 	let obj;
@@ -7,6 +10,9 @@ function handle_result(result, cmd) {
 
 	if (verbose) console.log('HANDLERESULT bekommt', jsCopy(obj));
 	processServerdata(obj, cmd);
+
+	// console.log('obj.fen', obj.fen,'obj.turn', obj.turn, 'obj.a', obj.a, 'obj.b', obj.b);
+	//console.log('obj.fen', obj.fen,'obj.turn', obj.turn, 'obj.a', obj.a, 'obj.b', obj.b);
 
 	switch (cmd) {
 		case "assets": load_assets(obj); start_with_assets(); break;
@@ -39,124 +45,28 @@ function handle_result(result, cmd) {
 		case "table":
 		case "startgame":
 			update_table();
-			console.log(`_________ ${Counter.server} apiserver cmd`,cmd,Z.turn);
-			console.log('<===request', obj.status);
-			//console.log('turn', Z.turn, 'collect_complete', obj.collect_complete, 'notes', Z.notes, '\nstatus', obj.status);
-			console.log('===>stage', Z.stage);
-			console.log('===>notes', Z.notes);
-			console.log('===>fen.multi', Z.fen.multi); //return;
-			console.log('===>playerdata', Z.playerdata); //return;
 
-			// //console.log('skip', Z.skip_presentation)
-			// let is_collect = check_collect(obj);
-			
-			
-			//trigger_check();//!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-			if (isdef(Z.playerdata) && Z.game == 'ferro' && Z.stage == 'buy_or_pass' && Z.uplayer == lookup(Z.fen,['multi','trigger'])) {
-				//console.log('HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHAAAAAAAAAAAAALLLLLLLLLLLLOOOOOOOOOOOOO')
-				let pldata = Z.playerdata;
-				//console.log('..............pldata', pldata);
+			console.log('===>turn', Z.turn);
+			// console.log(`_________ ${Counter.server} apiserver cmd`,cmd,Z.turn);
+			// console.log('<===request', obj.status);
+			// console.log('===>stage', Z.stage);
+			// console.log('===>notes', Z.notes);
+			// console.log('===>fen.multi', Z.fen.multi); //return;
+			// console.log('===>playerdata', Z.playerdata); //return;
 
-				let multi = Z.fen.multi;
-				let turn = Z.turn;
-				let done = true;let buyer = null;
-				for(const plname of turn){
-					let pldata = firstCond(Z.playerdata,x=>x.name== plname);
-					assertion(isdef(pldata), 'no pldata for', plname);
-					let state = pldata.state;
-					if (!isEmpty(state)) {
-						if (state.buy == true) {buyer = plname; break;}
-						
-					}else{done = false;}
-				}
-				console.log('buy process done?',done,'buyer',buyer);
-				if (done) {
-					ferro_call_resolve();
-				} 
-				// else {
-				// 	pollStop(); 
-				// 	console.log('============================================')
-				// 	return;
-				// }
-		
-			}
-			console.log('============================================')
-			// //console.log('haaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa1', is_collect);
-			// if (is_collect) { return; }
+			//trigger_check:
+			//let trigger = lookup(Z, ['fen', 'multi', 'trigger']); if (trigger && trigger_check_is_sending(trigger)) return;
 
-			//console.log('haaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa2')
 			if (Z.skip_presentation) { autopoll(); return; }
-			//if (Z.skip_presentation) { autopoll(); return; }
-
-
-			//console.log('haaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa3')
-
-			//console.log('WILL PRESENT! obj has keys', Object.keys(obj));
-			//for (const k in obj) { if (['table', 'tables', 'users'].includes(k)) continue; console.log('k', k, typeof obj[k], obj[k]); }
 
 			clear_timeouts();
 			gamestep();
-			//stopPolling();
 			break;
 
 	}
 }
 
 //#region helpers
-function check_collect(obj) {
-	//erwarte dass obj ein collect_complete und ein too_late hat!
-	//console.log('notes', Z.notes)
-	if (nundef(obj.collect_complete)) return false;
-	if (Z.mode != 'multi') { console.log('COLLECT NUR IN MULTI PLAYER MODE!!!!!!'); return false; }
-	if (!startsWith(Z.notes, 'indiv') && Z.notes != 'lock') { return false; } //console.log('!!!notes is NOT indiv or lock'); return false; }
-	assertion(isdef(obj.playerdata), 'no playerdata but collect_complete');
-
-	let collect_complete = obj.collect_complete;
-	let too_late = obj.too_late;
-	//console.log('notes', Z.notes)
-	//console.log('collect_open', collect_complete, 'too_late', too_late);
-
-	if (i_am_acting_host() && collect_complete) {
-
-		//console.log('collect_open: i am host, collect_complete, was nun???');
-		assertion(obj.table.fen.turn.length == 1 && obj.table.fen.turn[0] == U.name && U.name == obj.table.fen.acting_host, 'collect_open: acting host is NOT the one in turn!');
-		assertion(isdef(Z.func.post_collect), 'post_collect not defined for game ' + obj.table.game);
-
-		//Z.playerdata = obj.playerdata;
-		//console.log('playerdata vorher', Z.playerdata);
-		if (Z.fen.end_cond == 'all') for (const p of Z.playerdata) { p.state = JSON.parse(p.state); }
-		else if (Z.fen.end_cond == 'first') {
-			for (const p of Z.playerdata) {
-				if (isdef(p.state)) {
-					p.state = JSON.parse(p.state);
-					//console.log('*** winning player is', p.name, p.state);
-				}
-
-			}
-			//console.log('playerdata nachher', Z.playerdata);
-		}
-		Z.func.post_collect();
-
-
-	} else if (collect_complete && (Z.turn.length > 1 || Z.turn[0] != Z.fen.acting_host)) {
-		Z.turn = [Z.fen.acting_host];
-		take_turn_single();
-		//console.log('collect_open: collect_complete, bin aber nicht der host! was nun???');
-
-	} else if (i_am_acting_host()) {
-		//console.log('collect_open: i am host, bin aber nicht collect_complete, was nun???');
-		//autopoll();
-		return false;
-
-	} else {
-		//console.log('collect_open: bin nicht der host, bin nicht collect_complete, was nun???');
-		//autopoll();
-		return false;
-
-	}
-	return true;
-
-}
 function load_assets(obj) {
 	Config = jsyaml.load(obj.config);
 	Syms = jsyaml.load(obj.syms);
@@ -301,7 +211,7 @@ function update_table() {
 
 }
 
-function autopoll(ms) { TO.poll = setTimeout(_poll, valf(ms, 2000)); }
+function autopoll(ms) { TO.poll = setTimeout(_poll, valf(ms, 3000)); }
 function pollStop() { clearTimeout(TO.poll); }
 function stopPolling() { pollStop(); }
 function ensure_polling() { }
@@ -309,6 +219,7 @@ function _poll() {
 	if (nundef(U) || nundef(Z) || nundef(Z.friendly)) { console.log('poll without U or Z!!!', U, Z); return; }
 	//console.log('polling...');
 
+	show_polling_signal();
 	send_or_sim({ friendly: Z.friendly, uname: Z.uplayer }, 'table');
 }
 
