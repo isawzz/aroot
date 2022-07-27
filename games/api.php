@@ -29,7 +29,8 @@ if ($cmd == 'table'){
 		$modified = get_now();
 		$qw = "UPDATE `indiv` SET `state`='',checked=$modified WHERE `friendly` = '$friendly'";
 		$qr = "SELECT * FROM indiv WHERE `friendly` = '$friendly'"; 
-		$res = db_write_read($qw,$qr);
+		$res = db_write($qw);
+		$res = db_read($qr);
 		$result->playerdata = $res;
 		// foreach ($data->clear_players as $player) {
 		// 	$result->players[] = $player;

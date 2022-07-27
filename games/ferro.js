@@ -25,7 +25,7 @@ function ferro() {
 		let deck = fen.deck = create_fen_deck('n', num_decks, 4 * num_decks);
 		let deck_discard = fen.deck_discard = [];
 		shuffle(deck);
-		shuffle(fen.plorder);
+		if (DA.TEST0 != true) shuffle(fen.plorder);
 		let starter = fen.plorder[0];
 		//console.log('options', options);
 		let handsize = valf(Number(options.handsize), 11);

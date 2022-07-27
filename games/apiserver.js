@@ -46,7 +46,7 @@ function handle_result(result, cmd) {
 		case "startgame":
 			update_table();
 
-			console.log('===>turn', Z.turn);
+			//console.log('===>turn', Z.turn);
 			// console.log(`_________ ${Counter.server} apiserver cmd`,cmd,Z.turn);
 			// console.log('<===request', obj.status);
 			// console.log('===>stage', Z.stage);
@@ -58,7 +58,8 @@ function handle_result(result, cmd) {
 			//let trigger = lookup(Z, ['fen', 'multi', 'trigger']); if (trigger && trigger_check_is_sending(trigger)) return;
 
 			if (Z.skip_presentation) { autopoll(); return; }
-
+			console.log('===>turn', Z.turn);
+			
 			clear_timeouts();
 			gamestep();
 			break;

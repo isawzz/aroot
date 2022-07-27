@@ -9448,11 +9448,22 @@ UND WARUM???????????????????????
 2- BUG: hab die playerdata nicht obwohl buy_or_pass ist!
 3- restart
 668: *2:34 PM 7/26/2022-3:00 PM 7/26/2022
-669: *3:00 PM 7/26/2022-
+669: *3:00 PM 7/26/2022-3:40 PM 7/26/2022
+670: *3:40 PM 7/26/2022-3:41 PM 7/26/2022
+671: *3:41 PM 7/26/2022-4:39 PM 7/26/2022
+672: *4:40 PM 7/26/2022-4:40 PM 7/26/2022 13
+- neu starten!
+- goto code onclick
+1- wollt machen dass bei restart mimi starts
 2- how to start 
 3- BUG apiserver 108!!!!!!!!!
-
-
+673: *4:41 PM 7/26/2022-4:44 PM 7/26/2022
+674: *4:44 PM 7/26/2022-4:46 PM 7/26/2022 14
+1- wenn ich discard clicke muesste doch turn felix,lauren sein???
+2- nochmal
+3- wie kann ich beim test mimi als erstes machen?
+675: *4:50 PM 7/26/2022-
+3- 
 
 
 

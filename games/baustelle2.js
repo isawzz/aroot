@@ -12,6 +12,7 @@ function ferro_change_to_buy_pass() {
 		//if (plname == uplayer) { pl.buy = false; buyerlist.push(plname); } else if (pl.coins > 0) { pl.buy = false; buyerlist.push(plname); }
 	}
 
+	
 	fen.multi = {
 		//turn: buyerlist,
 		//stage: 'buy_or_pass',
@@ -23,6 +24,7 @@ function ferro_change_to_buy_pass() {
 
 	};
 	[Z.stage, Z.turn] = ['buy_or_pass', buyerlist];
+	console.log('sending turn', Z.turn);
 	prep_move();
 	let o = { uname: Z.uplayer, friendly: Z.friendly, clear_players: buyerlist, write_notes: 'indiv_turn', fen: Z.fen, write_fen: true };
 	//console.log('sending to server', o);
