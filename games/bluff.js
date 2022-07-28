@@ -1,5 +1,5 @@
 function bluff() {
-	function bluff_clear_ack() { if (Z.stage == 1) bluff_change_to_turn_round(); }
+	function bluff_clear_ack() { if (Z.stage == 1) {bluff_change_to_turn_round();take_turn_single(); } }
 	function bluff_check_gameover(Z) { let pls = get_keys(Z.fen.players); if (pls.length < 2) Z.fen.winners = pls; return valf(Z.fen.winners, false); }
 	function bluff_setup(players, options) {
 		let fen = { players: {}, plorder: jsCopy(players), history: {}, stage: 'move', phase: '' };

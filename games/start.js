@@ -91,7 +91,7 @@ function gamestep() {
 		copyKeys(UI, Z);
 		activate_ui(Z); //console.log('uiActivated',uiActivated?'true':'false');
 		Z.func.activate_ui();
-		if (Z.options.zen_mode != 'yes' && Z.mode != 'hotseat' && Z.turn.length > 1) autopoll();
+		if (Z.options.zen_mode != 'yes' && Z.mode != 'hotseat' && Z.turn.length > 1 || Z.stage == 'can_resolve' && get_multi_trigger()!='mimi') autopoll();
 	}
 
 	//landing();
@@ -101,8 +101,11 @@ function gamestep() {
 //#region basemin NEW HELPERS!!!!!
 function object2string(o,props=[],except_props=[]){
 	let s='';
+	if (nundef(o)) return s;
 	if (isString(o)) return o;
-	for(const k in o){
+	let keys = Object.keys(o).sort();
+	//console.log('keys',keys);
+	for(const k of keys){
 		if (!isEmpty(props) && props.includes(k) || !except_props.includes(k))	{
 			let val = isList(o[k])? o[k].join(',') : isDict(o[k])? object2string(o[k].props,except_props) : o[k];
 			let key_part = isEmpty(s)? '':`, ${k}:`;
@@ -111,8 +114,36 @@ function object2string(o,props=[],except_props=[]){
 	}
 	return s;
 }
+function simpleCompare(o1,o2){
+	let s1=object2string(o1);
+	let s2=object2string(o2);
+	return s1==s2;
+}
+function complexCompare(obj1, obj2) {
+	const obj1Keys = Object.keys(obj1);
+	const obj2Keys = Object.keys(obj2);
 
-//#region ack
+	if(obj1Keys.length !== obj2Keys.length) {
+			return false;
+	}
+
+	for (let objKey of obj1Keys) {
+			if (obj1[objKey] !== obj2[objKey]) {
+					if(typeof obj1[objKey] == "object" && typeof obj2[objKey] == "object") {
+							if(!isEqual(obj1[objKey], obj2[objKey])) {
+									return false;
+							}
+					} 
+					else {
+							return false;
+					}
+			}
+	}
+
+	return true;
+}
+
+//#region ack::: rem cons nach bluff check!!!!!!!!!!!!!
 function start_simple_ack_round(ackstage, ack_players, nextplayer, callbackname_after_ack, keeppolling = false) {
 
 	let fen = Z.fen;

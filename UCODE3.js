@@ -1,3 +1,355 @@
+
+function handle_result(result, cmd) {
+
+	//if (cmd == 'table') {console.log('result', result); } //return;}
+
+	if (verbose) console.log('cmd', cmd, '\nresult', result); //return;
+	if (result.trim() == "") return;
+	let obj;
+	try { obj = JSON.parse(result); } catch { console.log('ERROR:', result); }
+
+	if (verbose) console.log('HANDLERESULT bekommt', jsCopy(obj));
+	processServerdata(obj, cmd);
+
+	// console.log('obj.fen', obj.fen,'obj.turn', obj.turn, 'obj.a', obj.a, 'obj.b', obj.b);
+	//console.log('obj.fen', obj.fen,'obj.turn', obj.turn, 'obj.a', obj.a, 'obj.b', obj.b);
+
+	switch (cmd) {
+		case "assets": load_assets(obj); start_with_assets(); break;
+		case "users": show_users(); break;
+		case "tables": show_tables(); break;
+		case "delete_table":
+		case "delete_tables": show_tables(); break;
+		//************************* table *************************** */
+		case "gameover":
+		//case "clear":
+		case "table":
+		case "startgame":
+			update_table();
+
+			//console.log('===>turn', Z.turn);
+			// console.log(`_________ ${Counter.server} apiserver cmd`,cmd,Z.turn);
+			// console.log('<===request', obj.status);
+			// console.log('===>stage', Z.stage);
+			// console.log('===>notes', Z.notes);
+			// console.log('===>fen.multi', Z.fen.multi); //return;
+			// console.log('===>playerdata', Z.playerdata); //return;
+
+			//handle multi stage
+			if (is_multi_stage()) {
+				//check if is already in can_resolve stage
+				if (Z.stage == 'can_resolve') {
+					//trigger soll jetzt mal manually ACK clicken
+					//console.log('triggering manual ACK to resolve');
+					if (is_multi_trigger(Z.uplayer)) {
+						//for now do NOT goto gamestep but just show Clear Ack button
+						show('bClearAck');
+						Z.func.state_info(mBy('dTitleLeft'));
+						return;
+					}
+				}
+
+				assertion(Z.stage != 'can_resolve', "WTF!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");	//I am NOT in can_resolve stage yet!!!!
+
+				//check if can be resolved
+				let can_resolve = Z.func.check_resolve();
+				if (can_resolve) {
+					[Z.turn, Z.stage] = [[get_multi_trigger()], 'can_resolve'];
+					Z.func.state_info(mBy('dTitleLeft'));
+					take_turn_lock_multi();
+					//return;
+				} else if (is_multi_trigger()) {
+					//update turn to only those players with empty playerdata
+				}
+			}
+
+			if (Z.skip_presentation) { Z.func.state_info(mBy('dTitleLeft')); autopoll(); return; }
+			console.log('===>turn', Z.turn);
+			clear_timeouts();
+			gamestep();
+			break;
+
+	}
+}
+
+// ferro vor change of clear_ack
+function clear_ack() {
+	if (Z.stage == 'buy_or_pass') {
+		//ferro_change_to_turn_round();
+		if (isList(Z.playerdata) && lookup(Z.fen, ['multi', 'trigger']) == Z.uplayer) ferro_force_resolve(true);
+		else {
+			ferro_change_to_card_selection();
+			prep_move();
+			let o = { uname: Z.uplayer, friendly: Z.friendly, fen: Z.fen, write_fen: true, write_notes: '' };
+			let cmd = 'table';
+			send_or_sim(o, cmd);
+
+		}
+	}
+	else if (Z.stage == 'round_end') start_new_round_ferro();
+}
+
+function ferro() {
+	function clear_ack() {
+		if (Z.stage == 'buy_or_pass') {
+			//ferro_change_to_turn_round();
+			if (isList(Z.playerdata) && lookup(Z.fen, ['multi', 'trigger']) == Z.uplayer) ferro_force_resolve(true);
+			else {
+				ferro_change_to_card_selection();
+				prep_move();
+				let o = { uname: Z.uplayer, friendly: Z.friendly, fen: Z.fen, write_fen: true, write_notes: '' };
+				let cmd = 'table';
+				send_or_sim(o, cmd);
+
+			}
+		}
+		else if (Z.stage == 'round_end') start_new_round_ferro();
+	}
+	function state_info(dParent) { ferro_state_new(dParent); }
+	function setup(players, options) {
+		let fen = { players: {}, plorder: jsCopy(players), history: [] };
+
+		//calc how many decks are needed (basically 1 suit per person, plus 1 for the deck)
+		let n = players.length;
+		let num_decks = fen.num_decks = 2 + (n >= 9 ? 2 : n >= 7 ? 1 : 0); // 2 + (n > 5 ? Math.ceil((n - 5) / 2) : 0); //<=5?2:Math.max(2,Math.ceil(players.length/3));
+		//console.log('num_decks', num_decks);
+		let deck = fen.deck = create_fen_deck('n', num_decks, 4 * num_decks);
+		let deck_discard = fen.deck_discard = [];
+		shuffle(deck);
+		if (DA.TEST0 != true) shuffle(fen.plorder);
+		let starter = fen.plorder[0];
+		//console.log('options', options);
+		let handsize = valf(Number(options.handsize), 11);
+		for (const plname of players) {
+			let pl = fen.players[plname] = {
+				hand: deck_deal(deck, plname == starter ? handsize + 1 : handsize),
+				journeys: [],
+				coins: 10,
+				vps: 0,
+				score: 0,
+				name: plname,
+				color: get_user_color(plname),
+			};
+			pl.goals = { 3: 0, 33: 0, 4: 0, 44: 0, 5: 0, 55: 0, '7R': 0 };
+
+			if (plname == starter) {
+				pl.hand = ['AHn', 'AHn', 'AHn', 'AHn'];
+			}
+			//for(const goal of Config.games.ferro.options.goals) pl.goals[goal]=0;
+		}
+		fen.phase = ''; //TODO: king !!!!!!!
+		[fen.stage, fen.turn] = ['card_selection', [starter]];
+		return fen;
+	}
+	function present(z, dParent, uplayer) { ferro_present_new(z, dParent, uplayer); }
+	function present_player(g, plname, d, ishidden = false) { ferro_present_player_new(g, plname, d, ishidden = false) }
+	function check_gameover() { return isdef(Z.fen.winners) ? Z.fen.winners : false; }
+	function stats(Z, dParent) { ferro_stats_new(dParent); }
+	function activate_ui() { ferro_activate_ui(); }
+	function check_resolve(){return ferro_check_resolve();}
+	function resolve(){ferro_resolve();}
+	return { check_resolve, resolve, clear_ack, state_info, setup, present, present_player, check_gameover, stats, activate_ui };
+}
+
+function playerstate_check() {
+	//returns true if automessage has been sent by trigger
+	//this function sends a write_fen message and return true if playerdata can be resolved!
+	//otherwise returns false (will result in Z.skip_presentation if not resolve)
+
+	//is this a turn that collects individual playerdata?
+	//how to handle spotit this time?
+	let trigger = lookup(Z, ['fen', 'multi', 'trigger']);
+	if (!trigger) return false;
+	let [uplayer, fen, stage, pldata] = [Z.uplayer, Z.fen, Z.stage, Z.playerdata];
+
+	//case1: stage != can_resolve
+	if (stage != 'can_resolve') {
+		let can_resolve = Z.func.check_resolve();	
+		if (can_resolve) {
+			[Z.turn, Z.stage] = [[trigger], 'can_resolve'];
+			take_turn_lock_multi();
+			return true;
+		} else return false;
+	}else if (uplayer == trigger){
+		//case2: uplayer == trigger
+		//das ist der der resolven koennte! NUR trigger kann fen aendern!!!!!!
+		//es wird resolved!
+		Z.func.resolve();	
+		// console.log('buy process done ... resolving');
+		// ferro_change_to_card_selection(); //das soll durch resolve ersetzt werden
+		// prep_move();
+		// let o = { uname: Z.uplayer, friendly: Z.friendly, fen: Z.fen, write_fen: true, write_notes: '' };
+		// let cmd = 'table';
+		// send_or_sim(o, cmd);
+
+		return true;
+	} else return false;
+
+}
+
+
+//#region ferro last version vor standard take_turn!
+function ferro_change_to_buy_pass() {
+	let [plorder, stage, A, fen, uplayer] = [Z.plorder, Z.stage, Z.A, Z.fen, Z.uplayer];
+	let nextplayer = get_next_player(Z, uplayer); //player after buy_or_pass round
+
+	//newturn is list of players starting with nextplayer
+	let newturn = jsCopy(plorder); while (newturn[0] != nextplayer) { newturn = arrCycle(newturn, 1); } //console.log('newturn', newturn);
+	let buyerlist = fen.canbuy = []; //fen.canbuy list ist angeordnet nach reihenfolge der frage
+	for (const plname of newturn) {
+		let pl = fen.players[plname];
+		if (plname != uplayer && pl.coins > 0) { pl.buy = false; buyerlist.push(plname); }
+		//if (plname == uplayer) { pl.buy = false; buyerlist.push(plname); } else if (pl.coins > 0) { pl.buy = false; buyerlist.push(plname); }
+	}
+
+	
+	fen.multi = {
+		//turn: buyerlist,
+		//stage: 'buy_or_pass',
+		trigger: uplayer,  //Z.host, //uplayer, host geht nicht weil der ja dann nicht buy or pass kann!!!
+		endcond: 'turn',
+		turn_after_ack: [nextplayer],
+		callbackname_after_ack: 'ferro_change_to_card_selection',
+		next_stage: 'card_selection',
+
+	};
+	[Z.stage, Z.turn] = ['buy_or_pass', buyerlist];
+	console.log('sending turn', Z.turn);
+	//take_turn_init_multi('turn');
+	prep_move();
+	let o = { uname: Z.uplayer, friendly: Z.friendly, clear_players: buyerlist, write_notes: 'indiv_turn', fen: Z.fen, write_fen: true };
+	//console.log('sending to server', o);
+	let cmd = 'table';
+	send_or_sim(o, cmd);
+
+	//log_object(fen, 'buyers', 'nextplayer canbuy');
+
+	//start_indiv_ack_round('buy_or_pass', buyerlist, nextplayer, 'ferro_change_to_turn_round');
+
+}
+function ferro_ack_uplayer() {
+	let [A, fen, stage, uplayer] = [Z.A, Z.fen, Z.stage, Z.uplayer];
+	//console.log('A.selected', A.selected)
+	Z.state = { buy: !isEmpty(A.selected) && A.selected[0] == 0 };
+	//Z.state = Clientdata.playerstate = { buy: !isEmpty(A.selected) && A.selected[0] == 0 };
+	//Clientdata._playerdata_set = true;
+	FORCE_REDRAW = true;
+
+	console.log('<===write_player', uplayer, Z.state)
+	prep_move();
+	let o = { uname: Z.uplayer, friendly: Z.friendly, fen: Z.fen, state: Z.state, write_player: true };
+	let cmd = 'table';
+	send_or_sim(o, cmd);
+}
+function ferro_change_to_card_selection() {
+	//console.log('ferro_change_to_turn_round_', getFunctionsNameThatCalledThisFunction()); 
+	let [z, fen, stage, uplayer, ui] = [Z, Z.fen, Z.stage, Z.uplayer, UI];
+	assertion(stage != 'card_selection', "ALREADY IN TURN ROUND!!!!!!!!!!!!!!!!!!!!!!");
+
+	for (const plname of fen.canbuy) {
+		let pl = fen.players[plname];
+		if (pl.buy == true) {
+			let card = fen.deck_discard.shift();
+			pl.hand.push(card);
+			deck_deal_safe_ferro(fen, plname, 1);
+			pl.coins -= 1; //pay
+			ari_history_list([`${plname} bought ${card}`], 'buy');
+			break;
+		}
+	}
+	let nextplayer = fen.multi.turn_after_ack[0];
+	deck_deal_safe_ferro(fen, nextplayer, 1); //nextplayer draws
+
+	//console.log('multi',fen.multi);
+	Z.turn = fen.multi.turn_after_ack;
+	Z.stage = 'card_selection';
+
+	clear_ack_variables();
+	delete fen.multi;
+
+	for (const k of ['canbuy']) delete fen[k];
+	for (const plname of fen.plorder) { delete fen.players[plname].buy; }
+	clear_transaction();
+}
+function ferro_check_resolve() {
+	let [pldata, stage, A, fen, plorder, uplayer, deck, turn] = [Z.playerdata, Z.stage, Z.A, Z.fen, Z.plorder, Z.uplayer, Z.deck, Z.turn];
+	let pl = fen.players[uplayer];
+
+	if (stage != 'buy_or_pass') return false;
+	for (const plname of turn) {
+		let data = firstCond(pldata, x => x.name == plname);
+		assertion(isdef(data), 'no pldata for', plname);
+		let state = data.state;
+
+		console.log('state', plname, state);
+		if (isEmpty(state)) done = false;
+		else if (state.buy == true) buyer = plname;
+		else continue;
+
+		break;
+	}
+	return done;
+}
+function ferro_resolve() {
+	console.log('buy process done, buyer', buyer);
+	ferro_change_to_card_selection();
+	prep_move();
+	let o = { uname: Z.uplayer, friendly: Z.friendly, fen: Z.fen, write_fen: true, write_notes: '' };
+	let cmd = 'table';
+	send_or_sim(o, cmd);
+}
+//#endregion ===========================
+
+function take_turn_spotit() {
+	prep_move();
+	let o = { uname: Z.uplayer, friendly: Z.friendly, fen: Z.fen, state: Z.state, write_player: true, write_fen: true };
+	let cmd = 'table';
+	send_or_sim(o, cmd);
+}
+
+function query_status() {
+	prep_move();
+	let o = { uname: Z.uname, friendly: Z.friendly };
+	let cmd = 'collect_status';
+	send_or_sim(o, cmd);
+}
+
+function trigger_check_is_sending(trigger) {
+	//this function seends a write_fen message and return true if playerdata can be resolved!
+	//otherwise returns false (will result in Z.skip_presentation if not resolve)
+
+	if (!trigger) return false;
+	let [uplayer, fen, stage, pldata] = [Z.uplayer, Z.fen, Z.stage, Z.playerdata];
+
+	//case1: stage != can_resolve
+	if (stage != 'can_resolve') {
+		let can_resolve = Z.func.check_resolve();	
+		if (can_resolve) {
+			[Z.turn, Z.stage] = [[trigger], 'can_resolve'];
+			prep_move();
+			let o = { uname: Z.uplayer, friendly: Z.friendly, fen: Z.fen, write_fen: true, write_notes: 'lock' };
+			let cmd = 'table';
+			send_or_sim(o, cmd);
+
+			return true;
+		} else return false;
+	}else if (uplayer == trigger){
+		//case2: uplayer == trigger
+		//das ist der der resolven koennte! NUR trigger kann fen aendern!!!!!!
+		//es wird resolved!
+		Z.func.resolve();	
+		// console.log('buy process done ... resolving');
+		// ferro_change_to_card_selection(); //das soll durch resolve ersetzt werden
+		// prep_move();
+		// let o = { uname: Z.uplayer, friendly: Z.friendly, fen: Z.fen, write_fen: true, write_notes: '' };
+		// let cmd = 'table';
+		// send_or_sim(o, cmd);
+
+		return true;
+	} else return false;
+
+}
+
 function check_collect(obj) {
 	//erwarte dass obj ein collect_complete und ein too_late hat!
 	//console.log('notes', Z.notes)

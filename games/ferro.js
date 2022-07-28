@@ -1,18 +1,7 @@
 function ferro() {
 	function clear_ack() {
-		if (Z.stage == 'buy_or_pass') {
-			//ferro_change_to_turn_round();
-			if (isList(Z.playerdata) && lookup(Z.fen, ['multi', 'trigger']) == Z.uplayer) ferro_force_resolve(true);
-			else {
-				ferro_change_to_card_selection();
-				prep_move();
-				let o = { uname: Z.uplayer, friendly: Z.friendly, fen: Z.fen, write_fen: true, write_notes: '' };
-				let cmd = 'table';
-				send_or_sim(o, cmd);
-
-			}
-		}
-		else if (Z.stage == 'round_end') start_new_round_ferro();
+		if (Z.stage == 'can_resolve') { ferro_change_to_card_selection(); }
+		else if (Z.stage == 'round_end') {start_new_round_ferro(); take_turn_single(); }
 	}
 	function state_info(dParent) { ferro_state_new(dParent); }
 	function setup(players, options) {
@@ -55,13 +44,13 @@ function ferro() {
 	function check_gameover() { return isdef(Z.fen.winners) ? Z.fen.winners : false; }
 	function stats(Z, dParent) { ferro_stats_new(dParent); }
 	function activate_ui() { ferro_activate_ui(); }
-	function check_resolve(){return ferro_check_resolve();}
-	function resolve(){ferro_resolve();}
-	return { check_resolve, resolve, clear_ack, state_info, setup, present, present_player, check_gameover, stats, activate_ui };
+	return { clear_ack, state_info, setup, present, present_player, check_gameover, stats, activate_ui };
 }
 
 
 function ferro_pre_action() {
+
+	console.log('pre_action!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
 	let [stage, A, fen, plorder, uplayer, deck] = [Z.stage, Z.A, Z.fen, Z.plorder, Z.uplayer, Z.deck];
 	//log_object(fen, 'fen', 'stage turn players');	//console.log('__________stage', stage, 'uplayer', uplayer, '\nDA', get_keys(DA));	//console.log('fen',fen,fen.players[uplayer]);
 	switch (stage) {
@@ -70,6 +59,7 @@ function ferro_pre_action() {
 
 		//case 'buy_or_pass': ferro_handle_buy_or_pass(); break;
 		// case 'buy_or_pass': if (nundef(Clientdata._playerdata_set)) { select_add_items(ui_get_buy_or_pass_items(), ferro_ack_uplayer, 'may click top discard to buy or pass', 1, 1); } break;
+		case 'can_resolve': select_add_items(ui_get_string_items(['weiter']), ferro_change_to_card_selection, 'may click to continue', 1, 1, true); break;
 		case 'buy_or_pass': if (!is_playerdata_set(uplayer)) { select_add_items(ui_get_buy_or_pass_items(), ferro_ack_uplayer, 'may click top discard to buy or pass', 1, 1); } break;
 		case 'card_selection': select_add_items(ui_get_ferro_items(uplayer), fp_card_selection, 'must select one or more cards', 1, 100); break;
 		default: console.log('stage is', stage); break;
@@ -114,9 +104,11 @@ function ferro_present_new(z, dParent, uplayer) {
 	else if (Z.stage == 'buy_or_pass' && (Z.role != 'active' || is_playerdata_set(uplayer))) {
 		//get players in turn that have not yet set playerdata
 		assertion(isdef(Z.playerdata), 'playerdata is not defined in buy_or_pass (present ferro)');
-		let pl_not_done = Z.playerdata.filter(x=>Z.turn.includes(x.name) && isEmpty(x.state)).map(x=>x.name);
+		let pl_not_done = Z.playerdata.filter(x => Z.turn.includes(x.name) && isEmpty(x.state)).map(x => x.name);
 		show_waiting_message(`waiting for ${pl_not_done.join(', ')} to make buy decision`);
 	}
+
+	new_cards_animation();
 
 
 }
@@ -161,7 +153,7 @@ function ferro_activate_ui() {
 	let pl = fen.players[uplayer];
 
 	//console.log('activate!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
-	new_cards_animation();
+	//new_cards_animation();
 	//round_change_animation();
 
 	ferro_pre_action();
@@ -172,11 +164,11 @@ function ferro_state_new(dParent) {
 	let html = `${Z.stage} ${Z.notes}`;
 	if (isdef(Z.playerdata)) {
 
-		let trigger = lookup(Z.fen,['multi','trigger']);
+		let trigger = get_multi_trigger();
 		if (trigger) html += ` trigger:${trigger}`;
 
 		for (const data of Z.playerdata) {
-			if (!Z.turn.includes(data.name)) continue;
+			if (data.name == trigger) continue;
 			let name = data.name;
 			let state = data.state;
 			//console.log('state', name, state, typeof(state));

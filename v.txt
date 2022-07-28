@@ -9462,8 +9462,345 @@ UND WARUM???????????????????????
 1- wenn ich discard clicke muesste doch turn felix,lauren sein???
 2- nochmal
 3- wie kann ich beim test mimi als erstes machen?
-675: *4:50 PM 7/26/2022-
-3- 
+675: *4:50 PM 7/26/2022-5:43 PM 7/26/2022
+676: *5:43 PM 7/26/2022-8:33 PM 7/26/2022 +100
+__________ mi 27.7.22 =>100 ewew MUELL!
+770: *8:33 PM 7/26/2022-6:27 AM 7/27/2022
+771: *6:27 AM 7/27/2022-6:28 AM 7/27/2022
+772: *6:28 AM 7/27/2022-6:28 AM 7/27/2022
+773: *6:28 AM 7/27/2022-6:29 AM 7/27/2022
+774: *6:29 AM 7/27/2022-6:30 AM 7/27/2022
+775: *6:30 AM 7/27/2022-6:31 AM 7/27/2022
+776: *6:31 AM 7/27/2022-6:36 AM 7/27/2022
+777: *6:36 AM 7/27/2022-6:37 AM 7/27/2022
+778: *6:37 AM 7/27/2022-6:38 AM 7/27/2022
+779: *6:38 AM 7/27/2022-6:40 AM 7/27/2022
+780: *6:40 AM 7/27/2022-6:43 AM 7/27/2022
+781: *6:44 AM 7/27/2022-6:51 AM 7/27/2022
+782: *6:51 AM 7/27/2022-6:53 AM 7/27/2022
+783: *6:53 AM 7/27/2022-7:00 AM 7/27/2022
+784: *7:00 AM 7/27/2022-7:08 AM 7/27/2022
+785: *7:08 AM 7/27/2022-7:21 AM 7/27/2022
+786: *7:21 AM 7/27/2022-7:23 AM 7/27/2022
+787: *7:23 AM 7/27/2022-7:25 AM 7/27/2022
+788: *7:25 AM 7/27/2022-7:25 AM 7/27/2022
+789: *7:26 AM 7/27/2022-7:28 AM 7/27/2022
+790: *7:28 AM 7/27/2022-7:30 AM 7/27/2022
+791: *7:30 AM 7/27/2022-7:31 AM 7/27/2022
+792: *7:31 AM 7/27/2022-7:34 AM 7/27/2022
+793: *7:34 AM 7/27/2022-7:36 AM 7/27/2022
+794: *7:36 AM 7/27/2022-7:38 AM 7/27/2022
+795: *7:38 AM 7/27/2022-7:39 AM 7/27/2022
+796: *7:39 AM 7/27/2022-7:41 AM 7/27/2022
+797: *7:41 AM 7/27/2022-7:43 AM 7/27/2022
+798: *7:43 AM 7/27/2022-7:44 AM 7/27/2022
+799: *7:44 AM 7/27/2022-7:45 AM 7/27/2022
+800: *7:45 AM 7/27/2022-7:50 AM 7/27/2022
+801: *7:50 AM 7/27/2022-7:50 AM 7/27/2022
+802: *7:50 AM 7/27/2022-7:52 AM 7/27/2022
+803: *7:52 AM 7/27/2022-7:55 AM 7/27/2022
+804: *7:55 AM 7/27/2022-7:56 AM 7/27/2022
+805: *7:56 AM 7/27/2022-7:57 AM 7/27/2022
+806: *7:57 AM 7/27/2022-8:03 AM 7/27/2022
+807: *8:03 AM 7/27/2022-8:16 AM 7/27/2022
+808: *8:16 AM 7/27/2022-8:25 AM 7/27/2022
+809: *8:25 AM 7/27/2022-8:28 AM 7/27/2022
+810: *8:28 AM 7/27/2022-8:29 AM 7/27/2022
+811: *8:29 AM 7/27/2022-8:30 AM 7/27/2022
+812: *8:30 AM 7/27/2022-8:32 AM 7/27/2022
+813: *8:32 AM 7/27/2022-12:04 PM 7/27/2022
+814: *12:29 PM 7/27/2022-12:34 PM 7/27/2022
+815: *12:35 PM 7/27/2022-12:36 PM 7/27/2022
+816: *12:36 PM 7/27/2022-12:38 PM 7/27/2022 1
+1- immer noch lock! =>need to unlock???
+2- how to supress submit? 1,1,true
+3- resolve?
+817: *12:38 PM 7/27/2022-12:49 PM 7/27/2022
+818: *12:49 PM 7/27/2022-12:50 PM 7/27/2022
+819: *12:51 PM 7/27/2022-12:52 PM 7/27/2022 2
+1- wie kann ich auch bei einem player der nicht active ist updaten? >>muss das newcards in present machen!
+2- wie serden newcards berechnet
+3- check was genau passiert bei buy? wenn resolved
+820: *12:52 PM 7/27/2022-12:57 PM 7/27/2022
+821: *1:01 PM 7/27/2022-1:01 PM 7/27/2022
+822: *1:01 PM 7/27/2022-1:03 PM 7/27/2022 3
+1- wo ist das???
+2- newcards_aniamtions
+3- newcards
+823: *1:03 PM 7/27/2022-1:51 PM 7/27/2022
+824: *1:51 PM 7/27/2022-1:58 PM 7/27/2022
+825: *2:02 PM 7/27/2022-2:02 PM 7/27/2022 4
+1- komplett falsch!!! kann nicht kaufen!
+2- permanent sagt er playerdata changed!!!
+3- wieso macht er dauernd redraw!!! hab !isEMpty statt isEmpty bei Z.skip... gemacht!!!
+826: *2:03 PM 7/27/2022-2:03 PM 7/27/2022
+827: *2:04 PM 7/27/2022-3:04 PM 7/27/2022 5
+1- rem cons!, dann ueberlege was ausgeben will!!
+2- was sollte passieren wenn felix buy clickt?
+3- komplett falsch! restart,discard,felix buy
+828: *3:04 PM 7/27/2022-3:05 PM 7/27/2022
+829: *3:05 PM 7/27/2022-3:06 PM 7/27/2022 6
+1- wo wuerde ich auf can_resolve gehen?
+2- warum bemerkt man nicht bei buy felix dass buy felix gemacht wird?
+3- kann es gehen dass in multi runde mimi fen aendert?
+830: *3:09 PM 7/27/2022-3:18 PM 7/27/2022 7
+831: *3:18 PM 7/27/2022-3:22 PM 7/27/2022
+832: *3:22 PM 7/27/2022-3:23 PM 7/27/2022
+1- new game!!!!
+2- aber felix hat NICHT gekauft!!!!!!!
+3- bei ackplayer kann sich was aendern!
+833: *3:23 PM 7/27/2022-3:24 PM 7/27/2022 8
+1- check nochmal ob es nicht doch geht!
+2- kann ich einen test machen??? der nicht mit api geht? ich muss eigentlich nur test can_resolve berechnung!
+3- can_resolve wird nicht richtig berechnet!!!
+834: *3:26 PM 7/27/2022-3:27 PM 7/27/2022
+2- ist es ok die pldata zu  updaten? ja schon denk ich mal!
+3- der fehler ist ich schau nur pldata an und pldata ist nicht updated worden! ich sollte den check auch mit den neuen data machen!!!
+835: *3:31 PM 7/27/2022-3:32 PM 7/27/2022
+836: *3:32 PM 7/27/2022-3:32 PM 7/27/2022
+837: *7:08 PM 7/27/2022-7:14 PM 7/27/2022
+838: *7:14 PM 7/27/2022-7:22 PM 7/27/2022 9
+1- baustelle2. 112
+2- output: fen.buyer!!!!!
+3- es wird nicht gekauft!!!!
+__________ do 28.7.22 =>100 ewew MUELL!
+900: *5:04 AM 7/28/2022-5:05 AM 7/28/2022
+ok - baustelle2 115
+901: *5:05 AM 7/28/2022-5:08 AM 7/28/2022
+902: *5:08 AM 7/28/2022-5:13 AM 7/28/2022
+903: *5:13 AM 7/28/2022-5:14 AM 7/28/2022
+904: *5:14 AM 7/28/2022-5:17 AM 7/28/2022
+905: *5:17 AM 7/28/2022-5:18 AM 7/28/2022
+906: *5:18 AM 7/28/2022-5:22 AM 7/28/2022
+907: *5:22 AM 7/28/2022-5:25 AM 7/28/2022
+908: *5:25 AM 7/28/2022-5:26 AM 7/28/2022
+909: *5:27 AM 7/28/2022-5:28 AM 7/28/2022
+910: *5:28 AM 7/28/2022-5:28 AM 7/28/2022
+ok - verify that! OK!
+ok - wann soll check_resolve aufgeruden werde? 
+1. gleich bei ackplayer (new playerdata)
+2. ? eh nie
+=>eliminated ferr.check_resolve!!!
+911: *5:28 AM 7/28/2022-5:31 AM 7/28/2022
+912: *5:31 AM 7/28/2022-5:32 AM 7/28/2022
+913: *5:32 AM 7/28/2022-5:37 AM 7/28/2022
+914: *5:37 AM 7/28/2022-5:38 AM 7/28/2022
+915: *5:38 AM 7/28/2022-5:42 AM 7/28/2022
+916: *5:42 AM 7/28/2022-5:44 AM 7/28/2022
+917: *5:44 AM 7/28/2022-5:46 AM 7/28/2022
+918: *5:46 AM 7/28/2022-5:55 AM 7/28/2022
+919: *5:55 AM 7/28/2022-5:56 AM 7/28/2022
+920: *5:56 AM 7/28/2022-5:57 AM 7/28/2022
+921: *5:57 AM 7/28/2022-5:58 AM 7/28/2022
+922: *5:58 AM 7/28/2022-6:00 AM 7/28/2022
+923: *6:00 AM 7/28/2022-6:01 AM 7/28/2022
+924: *6:02 AM 7/28/2022-6:04 AM 7/28/2022
+925: *6:04 AM 7/28/2022-6:04 AM 7/28/2022
+926: *6:04 AM 7/28/2022-6:05 AM 7/28/2022
+927: *6:05 AM 7/28/2022-6:06 AM 7/28/2022
+928: *6:06 AM 7/28/2022-6:06 AM 7/28/2022
+929: *6:07 AM 7/28/2022-6:08 AM 7/28/2022
+930: *6:08 AM 7/28/2022-6:12 AM 7/28/2022
+931: *6:12 AM 7/28/2022-6:13 AM 7/28/2022
+932: *6:13 AM 7/28/2022-6:26 AM 7/28/2022
+933: *6:26 AM 7/28/2022-6:29 AM 7/28/2022
+934: *6:31 AM 7/28/2022-6:31 AM 7/28/2022
+935: *6:31 AM 7/28/2022-6:32 AM 7/28/2022 1
+1- api.php 79
+2- bug apiserver 77
+3- weiter
+936: *6:32 AM 7/28/2022-6:33 AM 7/28/2022
+ok - alles abdrehen / zumachen!!!
+937: *6:33 AM 7/28/2022-6:45 AM 7/28/2022
+938: *6:45 AM 7/28/2022-6:50 AM 7/28/2022 2
+1- output soll sein: canbuy typen! nicht turn!!!!
+2- ueberlege was passieren soll wenn bei felix buy click!
+3- test
+lookout ridge runde!
+939: *6:51 AM 7/28/2022-7:47 AM 7/28/2022
+940: *7:50 AM 7/28/2022-7:50 AM 7/28/2022
+941: *7:50 AM 7/28/2022-7:53 AM 7/28/2022 3
+1- wenn beide passen stimmt es nicht!!!
+2- wo?
+3- wo war ich???
+942: *7:54 AM 7/28/2022-7:54 AM 7/28/2022
+943: *7:55 AM 7/28/2022-7:55 AM 7/28/2022 4
+944: *7:55 AM 7/28/2022-7:56 AM 7/28/2022
+1- jetzt sollte der jolly liegen bleiben und lauren 1 new card becomen
+2- pass pass
+3- pass 10: schreibe alle cards auf!
+M F L
+3 11 11
+3 11 12
+945: *7:56 AM 7/28/2022-7:58 AM 7/28/2022
+946: *7:58 AM 7/28/2022-7:59 AM 7/28/2022 5
+1- pass 8: NOT in order buyy buy
+2- show outcome! 3 11 11
+3- pass 9: pass pass NOT in order!
+947: *8:00 AM 7/28/2022-8:00 AM 7/28/2022
+948: *8:01 AM 7/28/2022-8:02 AM 7/28/2022
+949: *8:02 AM 7/28/2022-8:03 AM 7/28/2022 6
+1- pass 6: in order pass BUY
+2- pass 7: in order buy buy
+3- resolve: felix sollte Herz As + 2 cards bekommen!
+950: *8:03 AM 7/28/2022-8:04 AM 7/28/2022
+951: *8:04 AM 7/28/2022-8:05 AM 7/28/2022
+952: *8:05 AM 7/28/2022-8:06 AM 7/28/2022 7
+1- pass 4: mach felix first player! in TEST FERRO
+2- pass 5: NOT in order pass buy
+3- resolve: lauren sollte AH+1 card bekommen, fe 1 card,turn
+953: *8:07 AM 7/28/2022-8:07 AM 7/28/2022
+954: *8:07 AM 7/28/2022-8:08 AM 7/28/2022 8
+1- goto show_admin_ui
+2- CLEAR ACK buttton soll IMMER bei mimi auch auftreten!!!
+3- in order buy
+955: *8:09 AM 7/28/2022-8:11 AM 7/28/2022
+956: *8:17 AM 7/28/2022-8:17 AM 7/28/2022
+957: *8:17 AM 7/28/2022-8:19 AM 7/28/2022 9
+1- ueberlege das show_admin_ui wieder wegzugeben!!!
+2- wieso bekommt die mimi keinen clear ack???
+3- restart
+958: *8:19 AM 7/28/2022-8:24 AM 7/28/2022
+959: *8:24 AM 7/28/2022-8:26 AM 7/28/2022
+960: *8:26 AM 7/28/2022-8:32 AM 7/28/2022 10
+1- wieso ist immer noch lock??????
+2- restart schau ob resolve diesmal bei felix durchgeht!
+3- in can_resolve muss auch der single player pollen wenn er nicht mimi ist!!!
+961: *8:32 AM 7/28/2022-8:33 AM 7/28/2022
+962: *8:39 AM 7/28/2022-8:39 AM 7/28/2022 11
+1- wenn was ankommt nach Clientdata.lastsent! dann soll completely disregarden!
+2- wenn auf ackplayer (buy or pass) clicke, DARF nicht falsch reloaden!!!!!!!!!!!!! macht er kein stopPolling????
+3- test run
+963: *8:39 AM 7/28/2022-8:42 AM 7/28/2022 
+964: *8:51 AM 7/28/2022-8:51 AM 7/28/2022
+965: *8:51 AM 7/28/2022-8:51 AM 7/28/2022
+966: *8:52 AM 7/28/2022-11:23 AM 7/28/2022 12
+1- upload
+2- interval back to 2secs
+3- ueberlege ein beispiel ob das machbar ist!
+967: *11:23 AM 7/28/2022-
+3- teste auf dem anderen!
+was ich meine ist: 
+-jedesmal wenn sende, bekommt unique id die er einfach bounced back
+-wenn ich nach sende empfange MUSS es unique id sein!
+-autopoll bekommt KEINE unique id sondern auto
+-wenn sende soll Clientdata.lockreceive bis eigene daten empfange!
+
+
+
+
+
+
+
+
+
+- langsam wird das sitzen zu lange!!!
+- brauch doch das player state update!!!
+- gibt status aus!!!
+- jetzt teste ob send_or_sim geht
+- zuerst teste ob isdef geht bei empty string: sollte gehen!
+- schau warum er nicht empty string in write_notes reinschreibt!!!
+- richtig!!!
+- check myadmin
+==>da soll ein cleanup statt finden mit write_notes und clear_pldata!!!
+- WIESO ist nach resolve immer noch felix pldata buy:true und notes lock????????? =>phpmyadmin
+- ACK button not shown in can_resolve!!!!
+- ferro 62
+- click buy
+- new game!
+WAYYYYYYYYYYYY SHORTER!!!!!!!!!!!!!!!!!!!!!!!
+- schau ob irgendwo noch pl.buy setze!!!
+==>rem cons clear_ackvariables!!!
+WAY SHORTER!!!!!
+===>buyer, canbuy, nextturn, trigger, pldata list
+- sollte force redraw nicht mehr brauchen weil ja jetzt playerdata changed for nicht empty!!!!
+- wo soll resolve aufgerufen werden? NUR wenn ack clicke und in can_resolve bin! =>can eliminate ferro.resolve as well!!!
+- jetzt kommt resolve manually von trigger!!!
+Z.playerstate list, 
+fen: canbuy, trigger, buyer, nextturn
+
+- code
+= goto change1
+fen.canbuy ... all that can buy
+fen.trigger ... multi trigger
+fen.buyer ... null or name
+fen.nextturn ... next turn in card_selection
+
+- all die buy_and_pass daten rausschreiben
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+- compare json objects
+- es gibt noch eine moeglichkeit: wenn der turn sich aendert!
+
+?-wie stell ich fest ob playerdata sich geaendert haben???
+- ganz neue idee: ich skip die presentation nur wenn sich nix an table UND nix an playerdata geaendert hat!
+- sonst geh ich peinhart in die presentation hinein!
+- die anderen pollen nicht mehr!!!
+- discard
+- RESTART TEST
+- back to api_server!
+- SUPER BUG!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+- TEST start new game!
+- was ist wenn multistage bin aber nicht can_resolve
+dann ist es einfach ein collect stage! also passiert nichts!
+- mach ein is_multi_stage
+- get_multi_trigger
+- was ist wenn finde can_resolve???
+- shorter! alle koennen checken can resolve, make sure dass Z.playerdata habe!!!
+- was soll bei non-trigger in can_resolve passieren??? GARNICHTS
+- shorter!
+- ferro clear_ack elim!!!
+- impl clear ack fuer can_resolve stage in ferro
+- shorter! 
+- shorter! is_multi_trigger
+- WAY SHORTER!!!!!!!!!!!!!!!!
+- was ist bei can_resolve???
+- im moment werden immer ALLE players gecleared!!!
+- alle send_or_sim finden! not in a_game!
+- coffee break!
+- gen take turn!
+- mach version before removing query_status
+- kann ich statt query status einfach take turn mit readplayers machn?
+- spotit braucht das ganze zeug nicht!
+- schau mal zu spotit
+- coffee break!
+- ok jetzt bin ich stuck in can_resolve stage!
+- Z.func.state_info(mBy('dTitleLeft'));
+- goto gamestep
+- gibt es ein show_state? NEIN!
+- klar, das update geht nicht wenn skip_presentation ist!
 
 
 

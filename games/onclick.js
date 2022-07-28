@@ -1,6 +1,6 @@
 function test_start_ferro() {
 	let game = 'ferro';
-	let playernames = ['mimi', 'felix', 'lauren'];
+	let playernames = ['felix', 'lauren', 'mimi'];
 	let playermodes = ['human', 'human', 'human'];
 	let i = 0; let players = playernames.map(x => ({ name: x, playmode: playermodes[i++] }));
 	let options = {};
@@ -11,7 +11,7 @@ function onclick_ack() {
 	if (nundef(Z) || nundef(Z.func.clear_ack)) return;
 
 	Z.func.clear_ack();
-	take_turn_single(true);
+	//if (!is_sending) take_turn_single();
 }
 function onclick_cancelmenu() { hide('dMenu'); }
 function onclick_game_menu_item(ev) {

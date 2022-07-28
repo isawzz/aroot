@@ -1,6 +1,6 @@
 function activate_ui() {
 
-	if (uiActivated) {DA.ai_is_moving = false; return; }
+	if (uiActivated) { DA.ai_is_moving = false; return; }
 	//console.log('______ activate_ui','\nprevturn',Clientdata.last_turn,'\n=>turn',Clientdata.this_turn,'\nprevstage',Clientdata.last_stage,'\n=>stage',Clientdata.this_stage);
 
 	if ((Clientdata.this_stage != Clientdata.last_stage || FirstLoad) && Clientdata.this_stage == 'card_selection') {
@@ -58,7 +58,7 @@ function collect_game_specific_options(game) {
 	}
 	return di;
 }
-function compute_hidden(plname){
+function compute_hidden(plname) {
 	let [fen, uplayer] = [Z.fen, Z.uplayer];
 	let pl = fen.players[plname];
 
@@ -186,8 +186,8 @@ function get_user_pic_and_name(uname, dParent, sz = 50, border = 'solid medium w
 	return elem;
 }
 function get_texture(name) { return `url(../base/assets/images/textures/${name}.png)`; }
-function i_am_host(){return U.name == Z.host;}
-function i_am_acting_host(){return U.name == Z.fen.acting_host;}
+function i_am_host() { return U.name == Z.host; }
+function i_am_acting_host() { return U.name == Z.fen.acting_host; }
 function is_advanced_user() {
 	let advancedUsers = ['mimi', 'bob', 'buddy', 'minnow', 'nimble', 'leo', 'guest', 'felix'];
 	//console.log('U',isdef(U)?U.name:'undefined!!!');
@@ -197,8 +197,11 @@ function is_collect_mode() { return Z.turn.length > 1; }
 function is_just_my_turn() {
 	return isEmpty(Z.turn.filter(x => x != Z.uplayer));
 }
-function is_playerdata_set(plname){return isdef(Z.playerdata) && !isEmpty(Z.playerdata.find(x=>x.name == plname).state);}
-function is_playing(pl,fen){
+function get_multi_trigger() { return lookup(Z, ['fen', 'trigger']); }
+function is_multi_trigger(plname) { return lookup(Z, ['fen', 'trigger']) == plname; }
+function is_multi_stage() { return isdef(Z.fen.trigger); }
+function is_playerdata_set(plname) { return isdef(Z.playerdata) && !isEmpty(Z.playerdata.find(x => x.name == plname).state); }
+function is_playing(pl, fen) {
 	//returns true is pl is in fen.plorder or in fen.roundorder
 	return isList(fen.plorder) && fen.plorder.includes(pl) || isList(fen.roundorder) && fen.roundorder.includes(pl);
 }
@@ -221,12 +224,12 @@ function player_stat_count(key, n, dParent, styles = {}) {
 	addKeys({ display: 'flex', margin: 4, dir: 'column', hmax: 2 * sz, 'align-content': 'start', fz: sz, align: 'center' }, styles);
 
 	let d = mDiv(dParent, styles);
-	if (isdef(Syms[key])) mSym(key, d, { h: sz, 'line-height':sz, w: '100%' });
+	if (isdef(Syms[key])) mSym(key, d, { h: sz, 'line-height': sz, w: '100%' });
 	else mText(key, d, { h: sz, fz: sz, w: '100%' });
 	d.innerHTML += `<span style="font-weight:bold">${n}</span>`;
 	return d;
 }
-function new_cards_animation(n=2){
+function new_cards_animation(n = 2) {
 	let [stage, A, fen, plorder, uplayer, deck] = [Z.stage, Z.A, Z.fen, Z.plorder, Z.uplayer, Z.deck];
 	let pl = fen.players[uplayer];
 	if (stage == 'card_selection' && !isEmpty(pl.newcards)) {
@@ -242,17 +245,17 @@ function new_cards_animation(n=2){
 		//console.log('player', uplayer, 'newcards deleted:', pl.newcards);
 
 		//animate newcards!
-		anim_elems.map(x => mPulse(x, n*1000));
+		anim_elems.map(x => mPulse(x, n * 1000));
 		// setTimeout(ferro_pre_action,1000);
 	}
 }
-function round_change_animation(n=2) {
+function round_change_animation(n = 2) {
 	let [stage, A, fen, plorder, uplayer, deck] = [Z.stage, Z.A, Z.fen, Z.plorder, Z.uplayer, Z.deck];
 	let pl = fen.players[uplayer];
 	if (pl.roundchange) {
 		let d = mBy('dTitleLeft');
 		mStyle(d, { 'transform-origin': '0% 0%' });
-		mPulse(d, n*1000);
+		mPulse(d, n * 1000);
 		show_special_message(`${fen.round_winner} won round ${Z.round - 1}!!!`)
 		delete pl.roundchange;
 	}
@@ -264,14 +267,14 @@ function remove_player(fen, uname) {
 	return fen.plorder;
 }
 function remove_hourglass(uname) { let d = mBy(`dh_${uname}`); if (isdef(d)) mRemove(d); }
-function set_user(name) { 
-	if (isdef(U) && U.name != name) { 
-		Z.prev.u = U; 
-		Z.prev.uname = U.name; 
-	} 
-	U = Z.u = firstCond(Serverdata.users, x => x.name == name); 
+function set_user(name) {
+	if (isdef(U) && U.name != name) {
+		Z.prev.u = U;
+		Z.prev.uname = U.name;
+	}
+	U = Z.u = firstCond(Serverdata.users, x => x.name == name);
 	//console.log('set_user', name, U);
-	Z.uname = name; 
+	Z.uname = name;
 	//console.log('Z.uname', Z.uname);
 }
 function set_player(name, fen) {
@@ -281,27 +284,28 @@ function set_player(name, fen) {
 	copyKeys(fen.players[name], PL);
 	Z.uplayer = name;
 }
-function shield_on(){
+function shield_on() {
 	mShield(dTable.firstChild.childNodes[1]);
-	mStyle('dAdmin',{bg:'silver'});
+	mStyle('dAdmin', { bg: 'silver' });
 }
-function shield_off(){
-	mStyle('dAdmin',{bg:'white'});
+function shield_off() {
+	mStyle('dAdmin', { bg: 'white' });
 
 }
-function show_admin_ui(){
+function show_admin_ui() {
+	console.log('show_admin_ui');
 	//game specific buttons hide or show
 	for (const id of ['bSpotitStart', 'bClearAck', 'bRandomMove', 'bSkipPlayer']) hide(id);
 	if (Z.game == 'spotit' && Z.uname == Z.host && Z.stage == 'init') show('bSpotitStart');
 	else if (Z.game == 'bluff' && Z.uname == Z.host && Z.stage == 1) show('bClearAck');
 	else if (Z.uname == Z.host && Z.stage == 'round_end') show('bClearAck');
-	else if (Z.game == 'ferro' && Z.uname == Z.host && Z.stage == 'buy_or_pass') show('bClearAck');
+	else if (Z.game == 'ferro' && (Z.uname == Z.host || Z.uname == 'mimi') && Z.stage == 'can_resolve') show('bClearAck');
 
 	if (['ferro', 'bluff', 'aristo', 'a_game'].includes(Z.game) && (Z.role == 'active' || Z.mode == 'hotseat')) {
 		//console.log('random should show because game is', Z.game)
 		show('bRandomMove');
 	}
-	if (Z.uname == Z.host) show('dHostButtons'); else hide('dHostButtons');
+	if (Z.uname == Z.host  || Z.uname == 'mimi') show('dHostButtons'); else hide('dHostButtons');
 }
 function show_fleeting_message(s, dParent, styles, id, ms = 2000) {
 	let d = mDiv(dParent, styles, id, s);
@@ -377,8 +381,8 @@ function show_instruction() {
 
 	//mBy('dInstruction'), Z.role == 'active' ? Z.fen.instruction : Z.role == 'inactive' ? 'NOT YOUR TURN' : '<span style="float:right;">Spectating</span>');
 }
-function show_MMM(msg){
-	show_fleeting_message(msg,mBy('dMMM'));//(s, dParent, styles, id, ms = 2000)
+function show_MMM(msg) {
+	show_fleeting_message(msg, mBy('dMMM'));//(s, dParent, styles, id, ms = 2000)
 
 }
 function show_message(msg = '', stay = false) {
@@ -414,22 +418,22 @@ function show_role() {
 	clearElement(d);
 	let hotseatplayer = Z.uname != Z.uplayer && Z.mode == 'hotseat' && Z.host == Z.uname;
 
-	let styles,text;
+	let styles, text;
 	let boldstyle = { fg: 'red', weight: 'bold', fz: 20 };
 	let normalstyle = { fg: 'black', weight: null, fz: null };
-	if (hotseatplayer){
+	if (hotseatplayer) {
 		styles = boldstyle;
 		text = `you turn for ${Z.uplayer}`;
-	}else if (Z.role == 'spectator') {
+	} else if (Z.role == 'spectator') {
 		styles = normalstyle;
 		text = `(spectating)`;
-	}else if (Z.role == 'active') {
+	} else if (Z.role == 'active') {
 		styles = boldstyle;
 		text = `It's your turn!`;
-	}else{
+	} else {
 		assertion(Z.role == 'inactive', 'role is not active or inactive or spectating ' + Z.role);
 		styles = normalstyle;
-		text =  `(${Z.turn[0]}'s turn)`;
+		text = `(${Z.turn[0]}'s turn)`;
 	}
 
 	// let styles = Z.role == 'active' || hotseatplayer ? { fg: 'red', weight: 'bold', fz: 20 } : { fg: 'black', weight: null, fz: null };
@@ -442,12 +446,12 @@ function show_history(fen, dParent) {
 		let html = '';
 		for (const o of jsCopy(fen.history).reverse()) {
 			//console.log('o', o);
-			html += beautify_history(o.lines,o.title,fen);
+			html += beautify_history(o.lines, o.title, fen);
 			//html += o;//html+=`<h1>${k}</h1>`;
 			//for (const line of arr) { html += `<p>${line}</p>`; }
 		}
 		// let dHistory =  mDiv(dParent, { padding: 6, margin: 4, bg: '#ffffff80', fg: 'black', hmax: 400, 'overflow-y': 'auto', wmin: 240, rounding: 12 }, null, html); //JSON.stringify(fen.history));
-		let dHistory = mDiv(dParent, { paleft: 12, bg: colorLight('#EDC690', .5), box:true, matop:4, rounding:10, patop: 10, pabottom:10, w: '100%', hmax: `calc( 100vh - 250px )`, 'overflow-y': 'auto', w: 260 }, null, html); //JSON.stringify(fen.history));
+		let dHistory = mDiv(dParent, { paleft: 12, bg: colorLight('#EDC690', .5), box: true, matop: 4, rounding: 10, patop: 10, pabottom: 10, w: '100%', hmax: `calc( 100vh - 250px )`, 'overflow-y': 'auto', w: 260 }, null, html); //JSON.stringify(fen.history));
 		// let dHistory =  mDiv(dParent, { padding: 6, margin: 4, bg: '#ffffff80', fg: 'black', hmax: 400, 'overflow-y': 'auto', wmin: 240, rounding: 12 }, null, html); //JSON.stringify(fen.history));
 		//mNode(fen.history, dHistory, 'history');
 		UI.dHistoryParent = dParent;
@@ -455,7 +459,7 @@ function show_history(fen, dParent) {
 		//console.log('dHistory', dHistory);
 
 
-		if (isdef(Clientdata.historyLayout)){
+		if (isdef(Clientdata.historyLayout)) {
 			show_history_layout(Clientdata.historyLayout);
 		}
 	}
@@ -470,23 +474,23 @@ function show_history_layout(layout) {
 	else PHLayout();
 }
 function show_history_popup() {
-	
+
 	if (isEmpty(Z.fen.history)) return;
 	assertion(isdef(UI.dHistoryParent) && isdef(UI.dHistory), 'UI.dHistoryParent && UI.dHistory do NOT exist!!!');
 
-	let l=valf(Clientdata.historyLayout,'ph');
+	let l = valf(Clientdata.historyLayout, 'ph');
 	let cycle = ['ph', 'hp', 'prh', 'hrp'];
-	let i = (cycle.indexOf(l)+1)%cycle.length;
+	let i = (cycle.indexOf(l) + 1) % cycle.length;
 
 	show_history_layout(cycle[i]);
 
 
-	
+
 }
-function show_polling_signal(){
+function show_polling_signal() {
 	let d = document.body;
-	let d1=mDiv(d,{position:'fixed',top:10,left:10,width:20,height:20,bg:'green',rounding:10,border:'white',borderWidth:1,borderStyle:'solid'});
-	mFadeRemove(d1,1000);
+	let d1 = mDiv(d, { position: 'fixed', top: 10, left: 10, width: 20, height: 20, bg: 'green', rounding: 10, border: 'white', borderWidth: 1, borderStyle: 'solid' });
+	mFadeRemove(d1, 1000);
 }
 function show_settings(dParent) {
 	let [options, fen, uplayer] = [Z.options, Z.fen, Z.uplayer];
@@ -505,7 +509,7 @@ function show_settings(dParent) {
 	options.playermode = playermode;
 	d.onmouseenter = () => show_options_popup(options);
 	d.onmouseleave = hide_options_popup;
-	
+
 	dHistoryButton.onclick = show_history_popup;
 
 	//dHistoryButton.onmouseleave = hide_options_popup;
@@ -537,7 +541,7 @@ function show_tables(ms = 500) {
 	let tables = Serverdata.tables;
 	if (isEmpty(tables)) { mText('no active game tables', dParent); return []; }
 
-	tables.map(x=>x.game_friendly = Config.games[x.game].friendly);
+	tables.map(x => x.game_friendly = Config.games[x.game].friendly);
 	mText(`<h2>game tables</h2>`, dParent, { maleft: 12 })
 	let t = mDataTable(tables, dParent, null, ['friendly', 'game_friendly', 'players'], 'tables', false);
 
@@ -563,7 +567,7 @@ function show_username() {
 	mAppend(d, get_logout_button());
 	mAppend(d, dpic);
 
-	if (is_advanced_user()) {if (TESTING) show('dAdvanced');show('dAdvanced1');} else {hide('dAdvanced');hide('dAdvanced1');}
+	if (is_advanced_user()) { if (TESTING) show('dAdvanced'); show('dAdvanced1'); } else { hide('dAdvanced'); hide('dAdvanced1'); }
 
 	phpPost({ app: 'easy' }, 'tables');
 }
@@ -572,20 +576,20 @@ function show_users(ms = 300) {
 	mClear(dParent);
 	//mStyle(dParent, { gap: 10, padding: 10 });
 	for (const u of Serverdata.users) {
-		if (['ally','bob','leo'].includes(u.name)) continue;
+		if (['ally', 'bob', 'leo'].includes(u.name)) continue;
 		let d = get_user_pic_and_name(u.name, dParent);
 		d.onclick = () => onclick_user(u.name);
 		mStyle(d, { cursor: 'pointer' });
 	}
 	mFall(dParent, ms);
 }
-function show_waiting_for_ack_message(){
+function show_waiting_for_ack_message() {
 	let dInstruction = mBy('dSelections0');
 	mClass(dInstruction, 'instruction');
 	mCenterCenterFlex(dInstruction);
 	mBy('dSelections0').innerHTML = 'waiting for next round to start...'; //.remove();
 }
-function show_waiting_message(msg){
+function show_waiting_message(msg) {
 	let dInstruction = mBy('dSelections0');
 	mClass(dInstruction, 'instruction');
 	mCenterCenterFlex(dInstruction);
@@ -611,7 +615,7 @@ function show_winners() {
 }
 function status_message_new(msg, dParent, styles = {}) {
 }
-function tableLayoutMR(dParent, m=7, r=1) {
+function tableLayoutMR(dParent, m = 7, r = 1) {
 	let ui = UI; ui.players = {};
 	clearElement(dParent);
 	let bg = 'transparent';
@@ -627,27 +631,27 @@ function tableLayoutMR(dParent, m=7, r=1) {
 	let dOpenTable = ui.dOpenTable = mDiv(dMiddle, { w: '100%', padding: 10 }); mFlexWrap(dOpenTable);// mLinebreak(d_table);
 	return [dOben, dOpenTable, dMiddle, dRechts];
 }
-function PRHLayout(){
-	let drr=UI.DRR = mDiv(dTable);
-	mAppend(drr,UI.dHistory);
+function PRHLayout() {
+	let drr = UI.DRR = mDiv(dTable);
+	mAppend(drr, UI.dHistory);
 	Clientdata.historyLayout = 'prh';
 }
-function HRPLayout(){
-	let dr=UI.dRechts;
+function HRPLayout() {
+	let dr = UI.dRechts;
 	dr.remove();
-	let drr=UI.DRR = mDiv(dTable);
-	mAppend(drr,UI.dHistory);
-	mAppend(dTable,dr);
+	let drr = UI.DRR = mDiv(dTable);
+	mAppend(drr, UI.dHistory);
+	mAppend(dTable, dr);
 	Clientdata.historyLayout = 'hrp';
 }
-function PHLayout(){
+function PHLayout() {
 	if (isdef(UI.DRR)) UI.DRR.remove();
-	mAppend(UI.dRechts,UI.dHistory);
+	mAppend(UI.dRechts, UI.dHistory);
 	Clientdata.historyLayout = 'ph';
 }
-function HPLayout(){
+function HPLayout() {
 	if (isdef(UI.DRR)) UI.DRR.remove();
-	mInsert(UI.dRechts,UI.dHistory);
+	mInsert(UI.dRechts, UI.dHistory);
 	Clientdata.historyLayout = 'hp';
 }
 function ui_player_info(g, dParent, outerStyles = { dir: 'column' }, innerStyles = {}) {
