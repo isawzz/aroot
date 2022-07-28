@@ -37,6 +37,7 @@ function prep_move() {
 }
 function send_or_sim(o, cmd) {
 	Counter.server += 1;
+	if (nundef(Z) || is_multi_stage()) o.read_players = true;
 	if (DA.simulate) phpPostSimulate(o, cmd); else phpPost(o, cmd);
 }
 

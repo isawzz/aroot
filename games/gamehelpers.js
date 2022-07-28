@@ -293,7 +293,7 @@ function shield_off() {
 
 }
 function show_admin_ui() {
-	console.log('show_admin_ui');
+	//console.log('show_admin_ui');
 	//game specific buttons hide or show
 	for (const id of ['bSpotitStart', 'bClearAck', 'bRandomMove', 'bSkipPlayer']) hide(id);
 	if (Z.game == 'spotit' && Z.uname == Z.host && Z.stage == 'init') show('bSpotitStart');

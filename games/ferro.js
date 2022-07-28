@@ -50,7 +50,7 @@ function ferro() {
 
 function ferro_pre_action() {
 
-	console.log('pre_action!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+	//console.log('pre_action!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
 	let [stage, A, fen, plorder, uplayer, deck] = [Z.stage, Z.A, Z.fen, Z.plorder, Z.uplayer, Z.deck];
 	//log_object(fen, 'fen', 'stage turn players');	//console.log('__________stage', stage, 'uplayer', uplayer, '\nDA', get_keys(DA));	//console.log('fen',fen,fen.players[uplayer]);
 	switch (stage) {

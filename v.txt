@@ -9678,13 +9678,39 @@ M F L
 1- upload
 2- interval back to 2secs
 3- ueberlege ein beispiel ob das machbar ist!
-967: *11:23 AM 7/28/2022-
+967: *11:23 AM 7/28/2022-11:41 AM 7/28/2022
+968: *11:43 AM 7/28/2022-11:46 AM 7/28/2022 13
+1- ack_player baustelle2 25
+2- test mit 2 players!!!
 3- teste auf dem anderen!
+969: *11:47 AM 7/28/2022-11:53 AM 7/28/2022
+970: *11:53 AM 7/28/2022-11:55 AM 7/28/2022
+971: *11:55 AM 7/28/2022-11:57 AM 7/28/2022 14
+1- wo sind die playerdata???? jetzt mach ich TEST_FERRO mit 2
+2- mit 2 players geht es garnicht! er bringt keine playerdata!!!
+3- warum hab ich in buy_or_pass keine playerdata???? und keinen trigger!!!
+972: *11:57 AM 7/28/2022-12:00 PM 7/28/2022
+973: *12:08 PM 7/28/2022-12:20 PM 7/28/2022 15
+1- WTF?????????????????
+2- ja das ist weil ich dann nur 1 player habe!!! 
+3- wieso gibt es bei 2 players keine playerdata???
+974: *12:20 PM 7/28/2022-12:21 PM 7/28/2022
+975: *12:28 PM 7/28/2022-12:28 PM 7/28/2022
 was ich meine ist: 
 -jedesmal wenn sende, bekommt unique id die er einfach bounced back
 -wenn ich nach sende empfange MUSS es unique id sein!
 -autopoll bekommt KEINE unique id sondern auto
 -wenn sende soll Clientdata.lockreceive bis eigene daten empfange!
+976: *12:28 PM 7/28/2022-12:28 PM 7/28/2022
+1- HALLO!!!!
+2- wie soll ich wissen dass ich die playerdata brauche? fen.trigger exists
+3- when reloading, mach er kein read_data!!!
+977: *12:28 PM 7/28/2022-12:31 PM 7/28/2022
+978: *12:31 PM 7/28/2022-
+2- upload
+3- test neu
+
+
 
 
 

@@ -28,6 +28,8 @@ function handle_result(result, cmd) {
 		case "table":
 		case "startgame":
 			update_table();
+
+			//console.log('...playerdata',Z.playerdata,`turn:${Z.turn}`)
 			if (Z.skip_presentation) { Z.func.state_info(mBy('dTitleLeft')); autopoll(); return; }
 			//console.log('===>turn', Z.turn);
 			clear_timeouts();
@@ -215,6 +217,7 @@ function _poll() {
 	//console.log('polling...');
 
 	show_polling_signal();
+
 	send_or_sim({ friendly: Z.friendly, uname: Z.uplayer, auto: true }, 'table');
 }
 

@@ -43,6 +43,11 @@ function db_write_read($qw,$qr){
 	$res = db_read($qr)[0];
 	return $res;
 }
+function db_write_read_all($qw,$qr){
+	db_write($qw);
+	$res = db_read($qr);
+	return $res;
+}
 function get_now(){
 	return number_format(microtime(true)*1000,0,'.','');
 }

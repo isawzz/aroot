@@ -12,6 +12,7 @@ function ferro_change_to_buy_pass() {
 	fen.buyer = null;
 	fen.nextturn = [nextplayer];
 
+	console.log('fen.canbuy', fen.canbuy);
 	[Z.stage, Z.turn] = ['buy_or_pass', fen.canbuy];
 	take_turn_init_multi('turn');
 }
@@ -25,7 +26,7 @@ function ferro_ack_uplayer() {
 	let o_pldata = Z.playerdata.find(x => x.name == uplayer);
 	Z.state = o_pldata.state = { buy: !isEmpty(A.selected) && A.selected[0] == 0 };
 
-	console.log('playerdata', Z.playerdata);
+	console.log('====>ack_player:playerdata', Z.playerdata);
 
 	//NEIN!FORCE_REDRAW = true; //brauch ich damit ui fuer diesen player weggeht
 

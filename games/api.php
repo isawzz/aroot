@@ -27,17 +27,14 @@ if ($cmd == 'table'){
 	$result->status = "";
 
 	if (isset ($data->clear_players)){
-		$modified = get_now();
-		$qw = "UPDATE `indiv` SET `state`='',checked=$modified WHERE `friendly` = '$friendly'";
-		$qr = "SELECT * FROM indiv WHERE `friendly` = '$friendly'"; 
-		$res = db_write($qw);
-		$res = db_read($qr);
-		$result->playerdata = $res;
-		// foreach ($data->clear_players as $player) {
-		// 	$result->players[] = $player;
-		// 	$q="UPDATE `indiv` SET `state`='' WHERE `friendly` = '$friendly' and `name` = '$player'";
-		// 	$res=db_write($q);
-		// }
+
+		$qr = "SELECT * FROM indiv WHERE `friendly` = '$friendly'";
+		$result->playerdata = db_read($qr);
+
+		// $modified = get_now();
+		// $qw = "UPDATE `indiv` SET `state`='',checked=$modified WHERE `friendly` = '$friendly'";
+		// $qr = "SELECT * FROM indiv WHERE `friendly` = '$friendly'"; 
+		// $res=db_write_read_all($qw,$qr);
 		$result->status .= " clear_players";
 	} else if (isset($data->write_player) && isset($data->state)){
 		$result->too_late = false;
