@@ -200,7 +200,9 @@ function is_just_my_turn() {
 function get_multi_trigger() { return lookup(Z, ['fen', 'trigger']); }
 function is_multi_trigger(plname) { return lookup(Z, ['fen', 'trigger']) == plname; }
 function is_multi_stage() { return isdef(Z.fen.trigger); }
-function is_playerdata_set(plname) { return isdef(Z.playerdata) && !isEmpty(Z.playerdata.find(x => x.name == plname).state); }
+function is_playerdata_set(plname) { 
+	return isdef(Z.playerdata) && !isEmpty(Z.playerdata) && !isEmpty(Z.playerdata.find(x => x.name == plname).state); 
+}
 function is_playing(pl, fen) {
 	//returns true is pl is in fen.plorder or in fen.roundorder
 	return isList(fen.plorder) && fen.plorder.includes(pl) || isList(fen.roundorder) && fen.roundorder.includes(pl);

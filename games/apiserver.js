@@ -29,6 +29,9 @@ function handle_result(result, cmd) {
 		case "startgame":
 			update_table();
 
+			console.log('status:',Z.status)
+			//console.log('Z.playerdata', Z.playerdata,'Z.table', Z.table);
+
 			//console.log('...playerdata',Z.playerdata,`turn:${Z.turn}`)
 			if (Z.skip_presentation) { Z.func.state_info(mBy('dTitleLeft')); autopoll(); return; }
 			//console.log('===>turn', Z.turn);

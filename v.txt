@@ -9706,10 +9706,49 @@ was ich meine ist:
 2- wie soll ich wissen dass ich die playerdata brauche? fen.trigger exists
 3- when reloading, mach er kein read_data!!!
 977: *12:28 PM 7/28/2022-12:31 PM 7/28/2022
-978: *12:31 PM 7/28/2022-
+978: *12:31 PM 7/28/2022-1:57 PM 7/28/2022
+979: *1:57 PM 7/28/2022-1:58 PM 7/28/2022
+980: *1:59 PM 7/28/2022-2:07 PM 7/28/2022 16
+1- setze es auf shuffle, upload!
 2- upload
 3- test neu
-
+981: *2:08 PM 7/28/2022-2:09 PM 7/28/2022 17
+982: *2:11 PM 7/28/2022-2:24 PM 7/28/2022
+1- WARUM???????????
+2- der bekommt immer noch keine
+3- nochmal upload!
+983: *2:55 PM 7/28/2022-2:59 PM 7/28/2022 18
+984: *2:59 PM 7/28/2022-3:14 PM 7/28/2022
+985: *3:14 PM 7/28/2022-3:16 PM 7/28/2022
+986: *3:16 PM 7/28/2022-3:22 PM 7/28/2022
+1- weiter
+2- WAAAAAAAAAAAYYYYYYYYYYYYY SHORTER!!!!!!!!!!!!!!!!!!!!
+3- how about: ich liefere einfach IMMER die playerdata mit!
+987: *3:22 PM 7/28/2022-3:22 PM 7/28/2022 19
+988: *3:35 PM 7/28/2022-3:35 PM 7/28/2022
+989: *3:35 PM 7/28/2022-3:35 PM 7/28/2022
+990: *3:36 PM 7/28/2022-3:37 PM 7/28/2022 20
+1- sende trigger mit wenn ich playerdata will!
+2- es ist immer dasselbe: du musst es akzeptireen  dass das ego nervt
+3- upload!
+991: *3:37 PM 7/28/2022-3:44 PM 7/28/2022
+992: *3:44 PM 7/28/2022-3:49 PM 7/28/2022
+993: *3:49 PM 7/28/2022-3:59 PM 7/28/2022
+1- it does not feel like this is something it feel more like abbau
+2- die indiv db war einfach nicht da!
+3- rename!
+994: *3:59 PM 7/28/2022-3:59 PM 7/28/2022 21
+995: *3:59 PM 7/28/2022-4:01 PM 7/28/2022
+996: *4:01 PM 7/28/2022-4:04 PM 7/28/2022
+1- wieso bekomm ich bei startgame keine playerdata?
+2- warum gibt es keine playerdata?
+3- WIESO????????????????
+997: *4:05 PM 7/28/2022-4:08 PM 7/28/2022 22
+998: *4:09 PM 7/28/2022-4:10 PM 7/28/2022
+999: *4:10 PM 7/28/2022-4:11 PM 7/28/2022
+1- upload!
+2- status ausgeben!
+3- upload
 
 
 
