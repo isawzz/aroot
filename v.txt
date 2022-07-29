@@ -9749,7 +9749,142 @@ was ich meine ist:
 2- status ausgeben!
 3- upload
 999: *4:10 PM 7/28/2022-4:11 PM 7/28/2022 23
-1000: *4:15 PM 7/28/2022-
+1000: *4:15 PM 7/28/2022-7:42 PM 7/28/2022
+__________ fr 29.7.22 
+100: *7:42 PM 7/28/2022-7:57 PM 7/28/2022
+101: *7:57 PM 7/28/2022-8:01 PM 7/28/2022
+102: *8:01 PM 7/28/2022-8:27 PM 7/28/2022
+103: *8:27 PM 7/28/2022-8:32 PM 7/28/2022
+104: *8:32 PM 7/28/2022-5:55 AM 7/29/2022
+105: *5:56 AM 7/29/2022-6:00 AM 7/29/2022
+106: *6:00 AM 7/29/2022-6:01 AM 7/29/2022
+107: *6:01 AM 7/29/2022-6:03 AM 7/29/2022
+108: *6:03 AM 7/29/2022-6:04 AM 7/29/2022
+109: *6:04 AM 7/29/2022-6:07 AM 7/29/2022
+110: *6:07 AM 7/29/2022-6:12 AM 7/29/2022
+111: *6:12 AM 7/29/2022-6:12 AM 7/29/2022
+112: *6:13 AM 7/29/2022-6:15 AM 7/29/2022
+113: *6:15 AM 7/29/2022-6:18 AM 7/29/2022
+114: *6:18 AM 7/29/2022-6:25 AM 7/29/2022
+115: *6:26 AM 7/29/2022-6:26 AM 7/29/2022
+116: *6:26 AM 7/29/2022-6:29 AM 7/29/2022
+117: *6:29 AM 7/29/2022-6:31 AM 7/29/2022
+118: *6:31 AM 7/29/2022-6:34 AM 7/29/2022
+119: *6:34 AM 7/29/2022-6:38 AM 7/29/2022
+120: *6:38 AM 7/29/2022-6:43 AM 7/29/2022
+121: *6:43 AM 7/29/2022-6:43 AM 7/29/2022
+122: *6:43 AM 7/29/2022-6:50 AM 7/29/2022
+123: *6:50 AM 7/29/2022-6:51 AM 7/29/2022
+124: *6:51 AM 7/29/2022-6:53 AM 7/29/2022
+125: *6:53 AM 7/29/2022-6:54 AM 7/29/2022
+126: *6:54 AM 7/29/2022-6:55 AM 7/29/2022
+127: *6:55 AM 7/29/2022-6:57 AM 7/29/2022
+128: *6:57 AM 7/29/2022-6:59 AM 7/29/2022
+129: *6:59 AM 7/29/2022-7:03 AM 7/29/2022
+130: *7:03 AM 7/29/2022-7:28 AM 7/29/2022
+131: *7:28 AM 7/29/2022-7:30 AM 7/29/2022
+132: *7:30 AM 7/29/2022-7:37 AM 7/29/2022
+133: *7:37 AM 7/29/2022-7:40 AM 7/29/2022
+134: *7:40 AM 7/29/2022-7:44 AM 7/29/2022
+135: *7:44 AM 7/29/2022-7:45 AM 7/29/2022
+136: *7:45 AM 7/29/2022-7:48 AM 7/29/2022
+137: *7:49 AM 7/29/2022-7:49 AM 7/29/2022
+138: *7:49 AM 7/29/2022-7:51 AM 7/29/2022
+139: *7:51 AM 7/29/2022-7:54 AM 7/29/2022
+140: *7:54 AM 7/29/2022-7:54 AM 7/29/2022
+141: *7:54 AM 7/29/2022-8:09 AM 7/29/2022
+142: *8:09 AM 7/29/2022-8:18 AM 7/29/2022
+143: *8:55 AM 7/29/2022-8:57 AM 7/29/2022
+144: *8:57 AM 7/29/2022-8:57 AM 7/29/2022 1
+1- upload
+2- test
+3- upload
+145: *8:57 AM 7/29/2022-8:58 AM 7/29/2022
+146: *8:59 AM 7/29/2022-9:02 AM 7/29/2022
+147: *9:02 AM 7/29/2022-
+1- upload!
+2- hat kein writeplayer gemacht!
+3- test
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+- es wird heiss!!!
+- also fritz geht auf telecave!!!
+- versuch einen telecave test mit hotseat
+- was ist jetzt schon wieder los?!?!?!?!?!?!?!?!?
+- mach einen localhost test!
+- schon wieder ein 500 error!!!
+- upload!
+- das mit den 3 Assen am anfang muss auch weg!!! DA.TEST0
+- state aendern auf if DA.TEST0
+- jetzt noch ein 3er spiel!
+- mach solo mode jetzt!
+- scheint zu gehen!
+- was wenn ich gleich zu immediate resolve gehe in hotseat mode???
+- didnt catch buyer!!!
+- ack plname
+- index.html
+- mach einen button TESTHOTSEAT
+WAY SHORTER!!! lastplayer?
+
+- schau ob ich den trigger habe!!! JA
+SHORTER!!! ack_uplayer_hotseat
+SHORTER!!! save old version von ack_player
+
+- wo sind die 4 variables?
+=>schau was involviert ist! start_simple_ack_round
+- so geht es nicht!
+- ich koennt reverten zu original code fuer gesamten turn!
+SHORTER
+WAY SHORTER!!!!
+choices:
+1. take_turn_single using fen.players[plname].buy
+2. mach ein take_turn_write_player
+=>3. mach es genauso nur setze turn anders!
+
+- wie fang ich an???
+- im hotseat mode mach ein extra hotseat_turn???
+- fix hotseat!!! mach ein hotseat game
+- wann wird gepollt? goto gamestep in start
+
+- show_polling!
+- weg mit dem state typeof
+- 
+- start new test!
 
 
 

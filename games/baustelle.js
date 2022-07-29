@@ -19,7 +19,7 @@ function take_turn(write_fen = true, write_player = false, read_players = false,
 	let o = { uname: Z.uplayer, friendly: Z.friendly };
 	if (isdef(Z.fen)) o.fen = Z.fen;
 	if (write_fen) o.write_fen = true;
-	if (isdef(write_notes)) { o.write_notes = write_notes;console.log('JA');}
+	if (isdef(write_notes)) { o.write_notes = write_notes; } //console.log('JA');}
 	if (write_player) { o.write_player = true; o.state = Z.state; }
 	if (read_players) o.read_players = true;
 	if (clear_players) o.clear_players = true;

@@ -1,7 +1,7 @@
 function ferro() {
 	function clear_ack() {
 		if (Z.stage == 'can_resolve') { ferro_change_to_card_selection(); }
-		else if (Z.stage == 'round_end') {start_new_round_ferro(); take_turn_single(); }
+		else if (Z.stage == 'round_end') { start_new_round_ferro(); take_turn_single(); }
 	}
 	function state_info(dParent) { ferro_state_new(dParent); }
 	function setup(players, options) {
@@ -30,10 +30,7 @@ function ferro() {
 			};
 			pl.goals = { 3: 0, 33: 0, 4: 0, 44: 0, 5: 0, 55: 0, '7R': 0 };
 
-			if (plname == starter) {
-				pl.hand = ['AHn', 'AHn', 'AHn', 'AHn'];
-			}
-			//for(const goal of Config.games.ferro.options.goals) pl.goals[goal]=0;
+			if (DA.TEST0 && plname == starter) { pl.hand = ['AHn', 'AHn', 'AHn', 'AHn']; }
 		}
 		fen.phase = ''; //TODO: king !!!!!!!
 		[fen.stage, fen.turn] = ['card_selection', [starter]];
@@ -47,19 +44,10 @@ function ferro() {
 	return { clear_ack, state_info, setup, present, present_player, check_gameover, stats, activate_ui };
 }
 
-
 function ferro_pre_action() {
-
-	//console.log('pre_action!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
 	let [stage, A, fen, plorder, uplayer, deck] = [Z.stage, Z.A, Z.fen, Z.plorder, Z.uplayer, Z.deck];
-	//log_object(fen, 'fen', 'stage turn players');	//console.log('__________stage', stage, 'uplayer', uplayer, '\nDA', get_keys(DA));	//console.log('fen',fen,fen.players[uplayer]);
 	switch (stage) {
-		// case 'round_end': console.log('should present BUTTON WEITER');break;
-		//case 'round_end': show_waiting_for_ack_message(); break; //select_add_items(ui_get_string_items(['weiter']),ferro_round_end_ack_player,`may click to continue`,0,1);select_timer(10000,ferro_round_end_ack_player);break;
-
-		//case 'buy_or_pass': ferro_handle_buy_or_pass(); break;
-		// case 'buy_or_pass': if (nundef(Clientdata._playerdata_set)) { select_add_items(ui_get_buy_or_pass_items(), ferro_ack_uplayer, 'may click top discard to buy or pass', 1, 1); } break;
-		case 'can_resolve': select_add_items(ui_get_string_items(['weiter']), ferro_change_to_card_selection, 'may click to continue', 1, 1, true); break;
+		case 'can_resolve': select_add_items(ui_get_string_items(['weiter']), ferro_change_to_card_selection, 'may click to continue', 1, 1, Z.mode == 'multi'); break;
 		case 'buy_or_pass': if (!is_playerdata_set(uplayer)) { select_add_items(ui_get_buy_or_pass_items(), ferro_ack_uplayer, 'may click top discard to buy or pass', 1, 1); } break;
 		case 'card_selection': select_add_items(ui_get_ferro_items(uplayer), fp_card_selection, 'must select one or more cards', 1, 100); break;
 		default: console.log('stage is', stage); break;
@@ -160,28 +148,30 @@ function ferro_activate_ui() {
 }
 function ferro_state_new(dParent) {
 
-	//testing output
-	let html = `${Z.stage} ${Z.notes}`;
-	if (isdef(Z.playerdata)) {
+	if (DA.TEST0) {
+		//testing output
+		let html = `${Z.stage} ${Z.notes}`;
+		if (isdef(Z.playerdata)) {
 
-		let trigger = get_multi_trigger();
-		if (trigger) html += ` trigger:${trigger}`;
+			let trigger = get_multi_trigger();
+			if (trigger) html += ` trigger:${trigger}`;
 
-		for (const data of Z.playerdata) {
-			if (data.name == trigger) continue;
-			let name = data.name;
-			let state = data.state;
-			//console.log('state', name, state, typeof(state));
-			let s_state = object2string(state);
-			html += ` ${name}:'${s_state}' (${typeof state})`;
-			//let buys=!isEmpty(data.state)?data.state.buy:'_';
-			//html += ` ${name}:${buys}`;
+			for (const data of Z.playerdata) {
+				if (data.name == trigger) continue;
+				let name = data.name;
+				let state = data.state;
+				//console.log('state', name, state, typeof(state));
+				let s_state = object2string(state);
+				html += ` ${name}:'${s_state}'`; // (${typeof state})`;
+				//let buys=!isEmpty(data.state)?data.state.buy:'_';
+				//html += ` ${name}:${buys}`;
+			}
+			dParent.innerHTML += ` ${Z.playerdata.map(x => x.name)}`;
 		}
-		dParent.innerHTML += ` ${Z.playerdata.map(x => x.name)}`;
-	}
 
-	dParent.innerHTML = html;
-	return;
+		dParent.innerHTML = html;
+		return;
+	}
 
 	if (Z.stage == 'round_end') {
 		dParent.innerHTML = `Round ${Z.round} ended by &nbsp;${get_user_pic_html(Z.fen.round_winner, 30)}`;
@@ -191,7 +181,7 @@ function ferro_state_new(dParent) {
 		let goal_html = `<div style="font-weight:bold;border-radius:50%;background:white;color:red;line-height:100%;padding:4px 8px">${goal}</div>`;
 		dParent.innerHTML = `Round ${Z.round}:&nbsp;&nbsp;minimum:&nbsp;${goal_html}`;
 	} else {
-		let user_html = get_user_pic_html(Z.stage == 'buy_or_pass' ? Z.fen.multi.turn_after_ack[0] : Z.turn[0], 30);
+		let user_html = get_user_pic_html(Z.stage == 'buy_or_pass' ? Z.fen.nextturn[0] : Z.turn[0], 30);
 		// dParent.innerHTML = `Round ${Z.round}:&nbsp;player: ${user_html} `;
 		dParent.innerHTML = `Round ${Z.round}:&nbsp;${Z.stage == 'buy_or_pass' ? 'next ' : ''}turn: ${user_html} `;
 	}

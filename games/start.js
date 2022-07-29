@@ -1,5 +1,5 @@
 onload = start; var FirstLoad = true;
-DA.TEST0=false;
+DA.TEST0 = true; DA.TEST1 = true; DA.TEST1Counter = 0;
 function start() { let uname = localStorage.getItem('uname'); if (isdef(uname)) U = { name: uname }; phpPost({ app: 'simple' }, 'assets'); }
 //function start() { let uname = null; if (isdef(uname)) U = { name: uname }; phpPost({ app: 'simple' }, 'assets'); }
 function start_with_assets() {
@@ -91,7 +91,7 @@ function gamestep() {
 		copyKeys(UI, Z);
 		activate_ui(Z); //console.log('uiActivated',uiActivated?'true':'false');
 		Z.func.activate_ui();
-		if (Z.options.zen_mode != 'yes' && Z.mode != 'hotseat' && Z.turn.length > 1 || Z.stage == 'can_resolve' && get_multi_trigger()!='mimi') autopoll();
+		if (Z.options.zen_mode != 'yes' && Z.mode != 'hotseat' && Z.turn.length > 1 || Z.stage == 'can_resolve' && get_multi_trigger() != 'mimi') autopoll();
 	}
 
 	//landing();
@@ -99,45 +99,45 @@ function gamestep() {
 }
 
 //#region basemin NEW HELPERS!!!!!
-function object2string(o,props=[],except_props=[]){
-	let s='';
+function object2string(o, props = [], except_props = []) {
+	let s = '';
 	if (nundef(o)) return s;
 	if (isString(o)) return o;
 	let keys = Object.keys(o).sort();
 	//console.log('keys',keys);
-	for(const k of keys){
-		if (!isEmpty(props) && props.includes(k) || !except_props.includes(k))	{
-			let val = isList(o[k])? o[k].join(',') : isDict(o[k])? object2string(o[k].props,except_props) : o[k];
-			let key_part = isEmpty(s)? '':`, ${k}:`;
-			s+=val;
+	for (const k of keys) {
+		if (!isEmpty(props) && props.includes(k) || !except_props.includes(k)) {
+			let val = isList(o[k]) ? o[k].join(',') : isDict(o[k]) ? object2string(o[k].props, except_props) : o[k];
+			let key_part = isEmpty(s) ? '' : `, ${k}:`;
+			s += val;
 		}
 	}
 	return s;
 }
-function simpleCompare(o1,o2){
-	let s1=object2string(o1);
-	let s2=object2string(o2);
-	return s1==s2;
+function simpleCompare(o1, o2) {
+	let s1 = object2string(o1);
+	let s2 = object2string(o2);
+	return s1 == s2;
 }
 function complexCompare(obj1, obj2) {
 	const obj1Keys = Object.keys(obj1);
 	const obj2Keys = Object.keys(obj2);
 
-	if(obj1Keys.length !== obj2Keys.length) {
-			return false;
+	if (obj1Keys.length !== obj2Keys.length) {
+		return false;
 	}
 
 	for (let objKey of obj1Keys) {
-			if (obj1[objKey] !== obj2[objKey]) {
-					if(typeof obj1[objKey] == "object" && typeof obj2[objKey] == "object") {
-							if(!isEqual(obj1[objKey], obj2[objKey])) {
-									return false;
-							}
-					} 
-					else {
-							return false;
-					}
+		if (obj1[objKey] !== obj2[objKey]) {
+			if (typeof obj1[objKey] == "object" && typeof obj2[objKey] == "object") {
+				if (!isEqual(obj1[objKey], obj2[objKey])) {
+					return false;
+				}
 			}
+			else {
+				return false;
+			}
+		}
 	}
 
 	return true;
@@ -204,11 +204,10 @@ function ai_move(ms = 100) {
 			let i2 = firstCond(A.items, x => x.key == 'discard');
 			selitems = [i1, i2];
 
-		} else {
+		} else if (Z.stage == 'buy_or_pass') {
 			selitems = [A.items[1]]; //waehlt immer pass
-		}
+		} else selitems = [A.items[0]];
 		//console.log('A', A)
-
 	} else if (Z.game == 'bluff') {
 		//weil impl manual (no use of select!), fake selection
 		//geht hoch available?
@@ -300,7 +299,7 @@ function stopgame() {
 
 	pollStop();
 	//clear_table();
-	Z = null;delete Serverdata.table;delete Serverdata.playerdata;Clientdata={};
+	Z = null; delete Serverdata.table; delete Serverdata.playerdata; Clientdata = {};
 }
 
 function sendgameover(plname, friendly, fen, scoring) {
@@ -317,7 +316,7 @@ function sendmove(plname, friendly, fen, action, expected, phase, round, step, s
 	//console.log(`sendmove: simulated: ${DA.simulate}`);
 	if (DA.simulate) phpPostSimulate(o, 'move'); else phpPost(o, 'move');
 }
-function turn_send_move_update(action_star = false) { 
+function turn_send_move_update(action_star = false) {
 	take_turn_single(); return;
 	let [fen, uplayer] = [Z.fen, Z.uplayer];	//console.log('sending move:Z',Z); //return;
 

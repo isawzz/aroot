@@ -308,6 +308,7 @@ function show_admin_ui() {
 		show('bRandomMove');
 	}
 	if (Z.uname == Z.host  || Z.uname == 'mimi') show('dHostButtons'); else hide('dHostButtons');
+	if (DA.TEST0) show('dTestButtons'); else hide('dTestButtons');
 }
 function show_fleeting_message(s, dParent, styles, id, ms = 2000) {
 	let d = mDiv(dParent, styles, id, s);
@@ -491,7 +492,7 @@ function show_history_popup() {
 }
 function show_polling_signal() {
 	let d = document.body;
-	let d1 = mDiv(d, { position: 'fixed', top: 10, left: 10, width: 20, height: 20, bg: 'green', rounding: 10, border: 'white', borderWidth: 1, borderStyle: 'solid' });
+	let d1 = mDiv(d, { position: 'fixed', top: 10, left: 73, width: 20, height: 20, bg: 'green', rounding: 10});
 	mFadeRemove(d1, 1000);
 }
 function show_settings(dParent) {

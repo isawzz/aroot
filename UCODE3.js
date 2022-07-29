@@ -1,4 +1,55 @@
 
+function ferro_ack_uplayer_lean() {
+	let [A, uplayer] = [Z.A, Z.uplayer];
+	stopPolling();
+	let o_pldata = Z.playerdata.find(x => x.name == uplayer);
+	Z.state = o_pldata.state = { buy: !isEmpty(A.selected) && A.selected[0] == 0 };
+	let can_resolve = ferro_check_resolve();
+	if (can_resolve) {
+		assertion(Z.stage == 'buy_or_pass', 'stage is not buy_or_pass when checking can_resolve!');
+		Z.stage = 'can_resolve';
+		[Z.turn, Z.stage] = [[get_multi_trigger()], 'can_resolve'];
+		take_turn_multi_plus_lock();
+	} else { take_turn_multi(); }
+}
+
+function ferro_ack_uplayer() {
+	let [A, fen, stage, uplayer] = [Z.A, Z.fen, Z.stage, Z.uplayer];
+	//console.log('A.selected', A.selected)
+
+	stopPolling();
+
+	// update Z.playerstate (fuer resolve check!) and set Z.state
+	let o_pldata = Z.playerdata.find(x => x.name == uplayer);
+	Z.state = o_pldata.state = { buy: !isEmpty(A.selected) && A.selected[0] == 0 };
+
+	//console.log('====>ack_player:playerdata', Z.playerdata);
+
+	//NEIN!FORCE_REDRAW = true; //brauch ich damit ui fuer diesen player weggeht
+
+	//console.log('<===write_player', uplayer, Z.state);
+
+	//hier muss ich checken ob eh schon genug info habe fuer can_resolve!
+	let can_resolve = ferro_check_resolve();
+	//console.log('===>can_resolve', can_resolve);
+	if (can_resolve) {
+		assertion(Z.stage == 'buy_or_pass', 'stage is not buy_or_pass when checking can_resolve!');
+		//console.log('====>buyer found!', fen.buyer);
+		Z.stage = 'can_resolve';
+		[Z.turn, Z.stage] = [[get_multi_trigger()], 'can_resolve'];
+		take_turn_multi_plus_lock();
+	} else {
+		// if (Z.mode == 'hotseat') {
+		// 	let next = get_next_in_list(fen.canbuy, uplayer);
+		// 	assertion(next != fen.canbuy[0], 'sollte schon laengst can_resolve sein!!!!!!!!!!!!!!!!!')
+		// 	Z.turn = [next];
+		// }
+		take_turn_multi();
+	}
+	//Z.func.state_info(mBy('dTitleLeft')); //rem cons
+}
+
+
 function handle_result(result, cmd) {
 
 	//if (cmd == 'table') {console.log('result', result); } //return;}
@@ -146,8 +197,8 @@ function ferro() {
 	function check_gameover() { return isdef(Z.fen.winners) ? Z.fen.winners : false; }
 	function stats(Z, dParent) { ferro_stats_new(dParent); }
 	function activate_ui() { ferro_activate_ui(); }
-	function check_resolve(){return ferro_check_resolve();}
-	function resolve(){ferro_resolve();}
+	function check_resolve() { return ferro_check_resolve(); }
+	function resolve() { ferro_resolve(); }
 	return { check_resolve, resolve, clear_ack, state_info, setup, present, present_player, check_gameover, stats, activate_ui };
 }
 
@@ -164,17 +215,17 @@ function playerstate_check() {
 
 	//case1: stage != can_resolve
 	if (stage != 'can_resolve') {
-		let can_resolve = Z.func.check_resolve();	
+		let can_resolve = Z.func.check_resolve();
 		if (can_resolve) {
 			[Z.turn, Z.stage] = [[trigger], 'can_resolve'];
 			take_turn_lock_multi();
 			return true;
 		} else return false;
-	}else if (uplayer == trigger){
+	} else if (uplayer == trigger) {
 		//case2: uplayer == trigger
 		//das ist der der resolven koennte! NUR trigger kann fen aendern!!!!!!
 		//es wird resolved!
-		Z.func.resolve();	
+		Z.func.resolve();
 		// console.log('buy process done ... resolving');
 		// ferro_change_to_card_selection(); //das soll durch resolve ersetzt werden
 		// prep_move();
@@ -202,7 +253,7 @@ function ferro_change_to_buy_pass() {
 		//if (plname == uplayer) { pl.buy = false; buyerlist.push(plname); } else if (pl.coins > 0) { pl.buy = false; buyerlist.push(plname); }
 	}
 
-	
+
 	fen.multi = {
 		//turn: buyerlist,
 		//stage: 'buy_or_pass',
@@ -323,7 +374,7 @@ function trigger_check_is_sending(trigger) {
 
 	//case1: stage != can_resolve
 	if (stage != 'can_resolve') {
-		let can_resolve = Z.func.check_resolve();	
+		let can_resolve = Z.func.check_resolve();
 		if (can_resolve) {
 			[Z.turn, Z.stage] = [[trigger], 'can_resolve'];
 			prep_move();
@@ -333,11 +384,11 @@ function trigger_check_is_sending(trigger) {
 
 			return true;
 		} else return false;
-	}else if (uplayer == trigger){
+	} else if (uplayer == trigger) {
 		//case2: uplayer == trigger
 		//das ist der der resolven koennte! NUR trigger kann fen aendern!!!!!!
 		//es wird resolved!
-		Z.func.resolve();	
+		Z.func.resolve();
 		// console.log('buy process done ... resolving');
 		// ferro_change_to_card_selection(); //das soll durch resolve ersetzt werden
 		// prep_move();
@@ -405,8 +456,8 @@ function check_collect(obj) {
 
 }
 
-function MUELL(){
-	if (Z.stage == 'can_resolve'){
+function MUELL() {
+	if (Z.stage == 'can_resolve') {
 		assertion(trigger, 'no trigger and can_resolve!!!');
 	}
 
@@ -544,7 +595,7 @@ function ferro_change_to_turn_round() {
 	}
 	deck_deal_safe_ferro(fen, fen.nextplayer, 1); //nextplayer draws
 
-	console.log('multi',fen.multi);
+	console.log('multi', fen.multi);
 	Z.turn = fen.multi.turn_after_ack;
 	Z.stage = 'card_selection';
 
@@ -713,10 +764,10 @@ function handle_result(result, cmd) {
 			if (is_collect) { pollStop(); console.log('WAS NUN?????'); return; }
 
 			if (Z.skip_presentation) { pollStop(); console.log('not presenting!'); return; }
-			
+
 			console.log('WILL PRESENT! obj has keys', Object.keys(obj));
 			//for (const k in obj) { if (['table', 'tables', 'users'].includes(k)) continue; console.log('k', k, typeof obj[k], obj[k]); }
-			
+
 			gamestep(); break;
 
 		// case "table":
@@ -742,7 +793,7 @@ function _show_history(fen, dParent) {
 			//for (const line of arr) { html += `<p>${line}</p>`; }
 		}
 		// let dHistory =  mDiv(dParent, { padding: 6, margin: 4, bg: '#ffffff80', fg: 'black', hmax: 400, 'overflow-y': 'auto', wmin: 240, rounding: 12 }, null, html); //JSON.stringify(fen.history));
-		let dHistory = mDiv(dParent, { paleft: 12, bg: colorLight('#EDC690', .5), box:true, matop: 10, patop: 10, w: '100%', hmax: `calc( 100vh - 250px )`, 'overflow-y': 'auto', wmin: 260 }, null, html); //JSON.stringify(fen.history));
+		let dHistory = mDiv(dParent, { paleft: 12, bg: colorLight('#EDC690', .5), box: true, matop: 10, patop: 10, w: '100%', hmax: `calc( 100vh - 250px )`, 'overflow-y': 'auto', wmin: 260 }, null, html); //JSON.stringify(fen.history));
 		// let dHistory =  mDiv(dParent, { padding: 6, margin: 4, bg: '#ffffff80', fg: 'black', hmax: 400, 'overflow-y': 'auto', wmin: 240, rounding: 12 }, null, html); //JSON.stringify(fen.history));
 		//mNode(fen.history, dHistory, 'history');
 		UI.dHistoryParent = dParent;
@@ -840,7 +891,7 @@ function path2fen(path) {
 	//console.log('res',res);
 	return res;
 }
-function mStamp(d1,text) {
+function mStamp(d1, text) {
 	mStyle(d1, { position: 'relative' });
 	//let stamp = mDiv(d1, { family:'tahoma', fz:16, weight:'bold', position:'absolute', top:'25%',left:'10%',transform:'rotate(35deg)', w: '80%', h: 24 },null,`blackmail!`,'rubberstamp');
 	//let stamp = mDiv(d1, { position:'absolute',top:30,left:0,transform:'rotate( 35deg )' },null,`blackmail!`,'rubberp');
@@ -848,20 +899,20 @@ function mStamp(d1,text) {
 	// mDiv(d1,{position:'absolute',top:30,left:0,},null,`<span class="stamp1">BLACKMAIL!</span>`);
 	//mDiv(d1, { position: 'absolute', top: 25, left: 5, weight: 700, fg: 'black', border: '2px solid black', padding: 2 }, null, `BLACKMAIL`, 'stamp1');
 
-	let r=getRect(d1);
-	let [w,h]=[r.w,r.h];
-	let sz = r.h/7;
-	console.log('r',r, 'sz', sz);
+	let r = getRect(d1);
+	let [w, h] = [r.w, r.h];
+	let sz = r.h / 7;
+	console.log('r', r, 'sz', sz);
 	//let [border,rounding,angle]=[sz*.08,sz/3,-14];
-	let [padding,border,rounding,angle]=[sz/10,sz/6,sz/8,rNumber(-25,25)];
+	let [padding, border, rounding, angle] = [sz / 10, sz / 6, sz / 8, rNumber(-25, 25)];
 	mDiv(d1, {
 		opacity: 0.9,
 		position: 'absolute', top: 25, left: 5, //weight: 700, fg: 'black', border: '2px solid black', padding: 2,
 		transform: `rotate(${angle}deg)`,
-		fz:sz,
+		fz: sz,
 		//'line-height':sz,
 		// border:`${border}px solid black`,
-		border:`${border}px solid black`,
+		border: `${border}px solid black`,
 		hpadding: 2, //padding,
 		vpadding: 0,
 		// vpadding: border,
@@ -884,10 +935,11 @@ function mStamp(d1,text) {
 		// '-webkit-mask-image': `url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/8399/grunge.png')`,
 
 		weight: 400, //700,
-		display:'inline-block',
-		'text-transform':'uppercase',
-		family:"black ops one", //'Courier', //'courier new',
-		'mix-blend-mode':'multiply'}, null, text);
+		display: 'inline-block',
+		'text-transform': 'uppercase',
+		family: "black ops one", //'Courier', //'courier new',
+		'mix-blend-mode': 'multiply'
+	}, null, text);
 
 }
 
@@ -958,7 +1010,7 @@ function post_rumor() {
 
 
 }
-function rest(){
+function rest() {
 
 	if (isdef(obuilding.schwein)) {
 
@@ -1050,18 +1102,18 @@ function ui_type_building(b, dParent, styles = {}, path = 'farm', title = '', ge
 
 //#region fritz
 
-function _show_special_message(msg,stay=false) {
-	let dParent = mBy('dBandMessage'); 
-	console.log('dBandMessage',mBy('dBandMessage'))
-	if (nundef(dParent)) dParent = mDiv(document.body,{},'dBandMessage');
-	console.log('dParent',dParent)
-	show(dParent); 
+function _show_special_message(msg, stay = false) {
+	let dParent = mBy('dBandMessage');
+	console.log('dBandMessage', mBy('dBandMessage'))
+	if (nundef(dParent)) dParent = mDiv(document.body, {}, 'dBandMessage');
+	console.log('dParent', dParent)
+	show(dParent);
 	clearElement(dParent);
-	mStyle(dParent, { position: 'absolute', top: 200, bg: 'green', wmin: '100vw'}); 
+	mStyle(dParent, { position: 'absolute', top: 200, bg: 'green', wmin: '100vw' });
 	let d = mDiv(dParent, { margin: 0 });
 	let styles = { classname: 'slow_gradient_blink', vpadding: 10, align: 'center', position: 'absolute', fg: 'white', fz: 24, w: '100vw' };
 	let dContent = mDiv(d, styles, null, msg);
-	mFadeClear(dParent, 3000 );
+	mFadeClear(dParent, 3000);
 }
 
 
@@ -1181,7 +1233,7 @@ function fritz_present_new(z, dParent, uplayer) {
 	mLinebreak(dOpenTable);
 
 
-	let ddarea = UI.ddarea = mDiv(dOpenTable, { border: 'dashed 1px black', bg: '#eeeeee80', box: true, wmin:245, padding: '5px 50px 5px 5px', margin: 5 });
+	let ddarea = UI.ddarea = mDiv(dOpenTable, { border: 'dashed 1px black', bg: '#eeeeee80', box: true, wmin: 245, padding: '5px 50px 5px 5px', margin: 5 });
 	mDroppable(ddarea, drop_card_fritz); ddarea.id = 'dOpenTable'; Items[ddarea.id] = ddarea;
 	mFlexWrap(ddarea)
 
@@ -1225,11 +1277,11 @@ function fritz_present_new(z, dParent, uplayer) {
 
 	//if ddarea is empty, write drag and drop hint
 	if (arrChildren(ddarea).length == 0) {
-		let d = mDiv(ddarea, {'pointer-events': 'none',maleft:45,align:'center',hmin:40,w:'100%',fz:12,fg:'dimgray'},'ddhint','drag and drop cards here');
+		let d = mDiv(ddarea, { 'pointer-events': 'none', maleft: 45, align: 'center', hmin: 40, w: '100%', fz: 12, fg: 'dimgray' }, 'ddhint', 'drag and drop cards here');
 		//setRect(ddarea)
 		//mPlace(d,'cc')
 
-	} 
+	}
 
 	ui.players = {};
 	let uname_plays = fen.plorder.includes(Z.uname);
@@ -1367,7 +1419,7 @@ function _boamain_start() {
 	mAppend(d1, createImage('boamain_header.png', { h: 111 }));
 
 	let d2 = mDiv(d);
-	let d3 = mDiv(d2, { display: 'flex', 'justify-content': 'center' },'dBoaMain');
+	let d3 = mDiv(d2, { display: 'flex', 'justify-content': 'center' }, 'dBoaMain');
 
 	let [wtotal, wleft, wright] = [972, 972 - 298, 292];
 	d = mDiv(d3, { w: wtotal, hmin: 500 });
@@ -1660,7 +1712,7 @@ function ui_get_bluff_inputs(strings) {
 }
 
 
-function ui_get_ferro_action_items(){
+function ui_get_ferro_action_items() {
 	let [plorder, stage, A, fen, uplayer, pl] = [Z.plorder, Z.stage, Z.A, Z.fen, Z.uplayer, Z.fen.players[Z.uplayer]];
 
 	let items = ui_get_hand_items(uplayer);
@@ -1669,21 +1721,21 @@ function ui_get_ferro_action_items(){
 	reindex_items(items);
 	return items;
 }
-function ferro_process_action(){
+function ferro_process_action() {
 	let [plorder, stage, A, fen, uplayer, pl] = [Z.plorder, Z.stage, Z.A, Z.fen, Z.uplayer, Z.fen.players[Z.uplayer]];
 
 	let selitems = A.selected.map(x => A.items[x]);
 	console.log('selitems:', selitems);
 	let cards = selitems.filter(x => x.itemtype == 'card');
 	let actions = selitems.filter(x => x.itemtype == 'string');
-	if (actions.length == 0) { select_error('select an action!'); selitems.map(x=>ari_make_unselected(x)); A.selected=[];return; }
-	let cmd=actions[0].a;
-	switch(cmd){
+	if (actions.length == 0) { select_error('select an action!'); selitems.map(x => ari_make_unselected(x)); A.selected = []; return; }
+	let cmd = actions[0].a;
+	switch (cmd) {
 		case 'discard': ferro_process_discard(); break;
 		case 'auflegen': ferro_process_group(); break;
 		case 'anlegen': ferro_process_anlegen(); break;
 		case 'jolly': ferro_process_jolly(); break;
-		default: console.log('unknown command: '+cmd);
+		default: console.log('unknown command: ' + cmd);
 	}
 }
 function ferro_process_action_() {
@@ -1697,19 +1749,19 @@ function ferro_process_action_() {
 	Z.stage = 'commands';
 	ferro_pre_action();
 }
-function ferro_process_command_(){
+function ferro_process_command_() {
 
 	let [plorder, stage, A, fen, uplayer, pl] = [Z.plorder, Z.stage, Z.A, Z.fen, Z.uplayer, Z.fen.players[Z.uplayer]];
 
 	//player has selected 1 card
 	let cmd = A.items[A.selected[0]].a;
-	switch(cmd){
+	switch (cmd) {
 		case 'discard': ferro_process_discard(); break;
 		case 'group': ferro_prep_group(); break;
-		default: console.log('unknown command: '+cmd);
+		default: console.log('unknown command: ' + cmd);
 	}
 }
-function ferro_prep_group(){
+function ferro_prep_group() {
 	let [plorder, stage, A, fen, uplayer] = [Z.plorder, Z.stage, Z.A, Z.fen, Z.uplayer];
 
 	A.command = 'group';
@@ -1747,19 +1799,19 @@ function ferro_check_action_available(a, fen, uplayer) {
 		let wildcard = hand.find(x => x[0] == '*');
 		//console.log('wildcard', wildcard?'yes':'no');
 		let n = group.length + (isdef(wildcard) ? 1 : 0);
-		console.log('can build group of',n)
+		console.log('can build group of', n)
 		return n >= 3;
 
 	} else return false;
 }
-function ui_get_group_items(){
+function ui_get_group_items() {
 	let [plorder, stage, A, fen, uplayer] = [Z.plorder, Z.stage, Z.A, Z.fen, Z.uplayer];
 	let rank = A.initialItem.o.rank;
 	let items = ui_get_hand_items(uplayer);
-	console.log('items',items,'rank',rank);
-	
-	items = items.filter(x=>x.key[0] == rank || x.key[0] == '*');
-	console.log('items',items);
+	console.log('items', items, 'rank', rank);
+
+	items = items.filter(x => x.key[0] == rank || x.key[0] == '*');
+	console.log('items', items);
 	reindex_items(items);
 	return items;
 }

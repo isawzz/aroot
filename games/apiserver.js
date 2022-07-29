@@ -22,6 +22,20 @@ function handle_result(result, cmd) {
 		case "tables": show_tables(); break;
 		case "delete_table":
 		case "delete_tables": show_tables(); break;
+
+		//************************* table *************************** */
+		case "table1":
+			update_table();
+
+			console.log('status:',Z.status)
+			console.log('Z.playerdata', Z.playerdata.map(x=>`${x.name}:${object2string(x.state)}`).join(', '));
+			console.log('Z.table', Z.table);
+			clear_timeouts();
+			gamestep();
+
+			break;
+
+
 		//************************* table *************************** */
 		case "gameover":
 		//case "clear":
@@ -29,8 +43,9 @@ function handle_result(result, cmd) {
 		case "startgame":
 			update_table();
 
-			console.log('status:',Z.status)
-			//console.log('Z.playerdata', Z.playerdata,'Z.table', Z.table);
+			//console.log('status:',Z.status)
+			console.log('Z.playerdata', Z.playerdata.map(x=>`${x.name}:${object2string(x.state)}`).join(', '));
+			//console.log('Z.table', Z.table);
 
 			//console.log('...playerdata',Z.playerdata,`turn:${Z.turn}`)
 			if (Z.skip_presentation) { Z.func.state_info(mBy('dTitleLeft')); autopoll(); return; }
@@ -58,6 +73,9 @@ function load_assets(obj) {
 
 }
 function phpPost(data, cmd) {
+
+	if (DA.TEST1 && cmd == 'table'){cmd='table1';}
+
 	clear_transaction();
 
 	pollStop();

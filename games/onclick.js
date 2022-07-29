@@ -1,10 +1,10 @@
-function test_start_ferro() {
+function test_start_ferro(mode='multi') {
 	let game = 'ferro';
 	// let playernames = ['felix', 'lauren', 'mimi'];
 	let playernames = ['mimi', 'felix'];
 	let playermodes = ['human', 'human', 'human'];
 	let i = 0; let players = playernames.map(x => ({ name: x, playmode: playermodes[i++] }));
-	let options = {};
+	let options = {mode:mode};
 	startgame(game, players, options);
 }
 

@@ -12,39 +12,27 @@ function ferro_change_to_buy_pass() {
 	fen.buyer = null;
 	fen.nextturn = [nextplayer];
 
-	console.log('fen.canbuy', fen.canbuy);
-	[Z.stage, Z.turn] = ['buy_or_pass', fen.canbuy];
-	take_turn_init_multi('turn');
+	if (Z.mode == 'multi') { [Z.stage, Z.turn] = ['buy_or_pass', fen.canbuy]; take_turn_init_multi('turn'); }
+	else {
+		fen.canbuy.map(x => fen.players[x].buy = 'unset');
+		fen.lastplayer = arrLast(fen.canbuy);
+		[Z.stage, Z.turn] = ['buy_or_pass', [fen.canbuy[0]]];
+		take_turn_single();
+	}
 }
-function ferro_ack_uplayer() {
-	let [A, fen, stage, uplayer] = [Z.A, Z.fen, Z.stage, Z.uplayer];
-	//console.log('A.selected', A.selected)
-
+function ferro_ack_uplayer() { if (Z.mode == 'multi') { ferro_ack_uplayer_multi(); } else { ferro_ack_uplayer_hotseat(); } }
+function ferro_ack_uplayer_multi() {
+	let [A, uplayer] = [Z.A, Z.uplayer];
 	stopPolling();
-
-	// update Z.playerstate (fuer resolve check!) and set Z.state
 	let o_pldata = Z.playerdata.find(x => x.name == uplayer);
 	Z.state = o_pldata.state = { buy: !isEmpty(A.selected) && A.selected[0] == 0 };
-
-	console.log('====>ack_player:playerdata', Z.playerdata);
-
-	//NEIN!FORCE_REDRAW = true; //brauch ich damit ui fuer diesen player weggeht
-
-	//console.log('<===write_player', uplayer, Z.state);
-
-	//hier muss ich checken ob eh schon genug info habe fuer can_resolve!
 	let can_resolve = ferro_check_resolve();
-	//console.log('===>can_resolve', can_resolve);
 	if (can_resolve) {
 		assertion(Z.stage == 'buy_or_pass', 'stage is not buy_or_pass when checking can_resolve!');
-		console.log('====>buyer found!', fen.buyer);
 		Z.stage = 'can_resolve';
 		[Z.turn, Z.stage] = [[get_multi_trigger()], 'can_resolve'];
 		take_turn_multi_plus_lock();
-	} else {
-		take_turn_multi();
-	}
-	//Z.func.state_info(mBy('dTitleLeft')); //rem cons
+	} else { take_turn_multi(); }
 }
 function ferro_check_resolve() {
 	let [pldata, stage, A, fen, plorder, uplayer, deck, turn] = [Z.playerdata, Z.stage, Z.A, Z.fen, Z.plorder, Z.uplayer, Z.deck, Z.turn];
@@ -68,9 +56,16 @@ function ferro_check_resolve() {
 	}
 	return done;
 }
+function ferro_ack_uplayer_hotseat() {
+	let [A, fen, uplayer] = [Z.A, Z.fen, Z.uplayer];
+	let buy = !isEmpty(A.selected) && A.selected[0] == 0;
+	if (buy) { fen.buyer = uplayer; [Z.turn, Z.stage] = [[get_multi_trigger()], 'can_resolve']; }
+	if (uplayer == fen.lastplayer) { [Z.turn, Z.stage] = [[get_multi_trigger()], 'can_resolve']; }
+	else { Z.turn = [get_next_in_list(uplayer, fen.canbuy)]; }
+	take_turn_single();
+}
 function ferro_change_to_card_selection() {
-	//console.log('ferro_change_to_turn_round_', getFunctionsNameThatCalledThisFunction()); 
-	let [pldata, z, fen, stage, uplayer, ui] = [Z.playerdata, Z, Z.fen, Z.stage, Z.uplayer, UI];
+	let [fen, stage] = [Z.fen, Z.stage];
 	assertion(stage != 'card_selection', "ALREADY IN TURN ROUND!!!!!!!!!!!!!!!!!!!!!!");
 	assertion(stage == 'can_resolve', "chenge to card_selection: NOT IN can_resolve stage!!!!!!!!!!!!!!!!!!!!!!");
 
@@ -80,26 +75,23 @@ function ferro_change_to_card_selection() {
 		let pl = fen.players[plname];
 		let card = fen.deck_discard.shift();
 		pl.hand.push(card);
-		console.log('buyer', plname, 'should get', card);
+		//console.log('buyer', plname, 'should get', card);
 		lookupAddToList(pl, ['newcards'], card);
 		deck_deal_safe_ferro(fen, plname, 1);
 		pl.coins -= 1; //pay
 		ari_history_list([`${plname} bought ${card}`], 'buy');
-	} else {
-		console.log('no buyer...');
-	}
+	} 
 
 	//nextplayer draws
-	let nextplayer = fen.nextturn[0];
-	deck_deal_safe_ferro(fen, nextplayer, 1);
+	let nextplayer = fen.nextturn[0];	deck_deal_safe_ferro(fen, nextplayer, 1);
 
 	Z.turn = fen.nextturn;
 	Z.stage = 'card_selection';
 
-	for (const k of ['buyer', 'canbuy', 'nextturn', 'trigger']) delete fen[k];//cleanup buy_or_pass multi-turn!!!!!!!!!!!!!
+	for (const k of ['buyer', 'canbuy', 'nextturn', 'trigger', 'lastplayer']) delete fen[k];//cleanup buy_or_pass multi-turn!!!!!!!!!!!!!
 
 	clear_transaction();
-	take_turn_end_multi();
+	if (Z.mode == 'multi') take_turn_end_multi(); else take_turn_single();
 }
 
 
