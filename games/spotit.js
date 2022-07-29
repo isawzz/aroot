@@ -129,16 +129,6 @@ function spotit_state(dParent) {
 }
 
 //#region score
-//version 0:
-// function get_player_score(plname) {	return Z.fen.players[plname].score;}
-// function inc_player_score(plname) {	return Z.fen.players[plname].score+=1;}
-
-//version 1:
-// function ensure_score(plname) { lookupSet(Z, ['notes', 'akku'], true); lookupSet(Z, ['notes', plname, 'score'], 0); }
-// function get_player_score(plname) { ensure_score(plname); return Z.notes[plname].score; }
-// function inc_player_score(plname) { ensure_score(plname); return Z.notes[plname].score += 1; }
-
-//version 2:
 function ensure_score(plname) {
 	let sc = 0;
 	//console.log('ensure_score',Z.playerdata)
@@ -193,13 +183,9 @@ function calc_syms(numSyms) {
 	return [rows, realrows, colarr];
 }
 function cal_num_syms_adaptive() {
-	let [uplayer, fen, notes] = [Z.uplayer, Z.fen, Z.notes];
+	let [uplayer, fen] = [Z.uplayer, Z.fen];
 	let pl = fen.players[uplayer];
 	pl.score = get_player_score(pl.name);
-
-	//console.log('receiving notes ====>',Z.notes[uplayer]);
-	//console.log('clientdata ====>', lookup(Clientdata, ['dn', uplayer])); // braucht alle players wegen hotseat mode!!!!
-	//console.log('notes', notes);
 
 	//sort players by score
 	let by_score = dict2list(fen.players);
@@ -236,9 +222,6 @@ function find_shared_keys(keylist, keylists) {
 	return shared;
 }
 function modify_item_for_adaptive(item, items, n) {
-
-	let [uplayer, fen, notes] = [Z.uplayer, Z.fen, Z.notes];
-	//console.log('num_symbols:', uplayer, n);
 
 	item.numSyms = n;
 	[item.rows, item.cols, item.colarr] = calc_syms(item.numSyms);
@@ -282,12 +265,6 @@ function spotit_card(info, dParent, cardStyles, onClickSym) {
 	}
 
 	return card;
-}
-function spotit_clear_score() {
-	assertion(isdef(Z.notes), 'Z.notes not defined');
-	Z.notes = {};
-	//ensure_score();
-	//for (const plname in Z.fen.players) { Z.notes[plname].score = 0; }
 }
 function spotit_create_sample(numCards, numSyms, vocab, lang, min_scale, max_scale) {
 	lang = valf(lang, 'E');
@@ -443,26 +420,6 @@ function spotit_read_all_scores(){
 	}
 
 }
-function _spotit_move(uplayer, success) {
-	//console.log('g',g,'uname',uname,'success',success)
-	if (success) {
-		//console.log('success!',jsCopy(g.expected));
-		inc_player_score(uplayer);
-		Z.action = { stage: 'move', step: Z.options.zen_mode == 'yes' ? '*' : Z.step };
-		for (const plname in Z.expected) { Z.expected[plname].step += 1 }
-		Z.step += 1; Z.round += 1;
-		//console.log('sending',jsCopy(g.expected));
-		Z.fen.items = spotit_item_fen(Z.options);
-		//console.log('sending notes:',Z.notes[uplayer]);
-		//Clientdata.iwin = true;
-		sendmove(uplayer, Z.friendly, Z.fen, Z.action, Z.expected, Z.phase, Z.round, Z.step, Z.stage, Z.notes)
-	} else {
-		let d = mShield(dTable, { bg: '#000000aa', fg: 'red', fz: 60, align: 'center' });
-		d.innerHTML = 'NOPE!!! try again!';
-		TO.spotit_penalty = setTimeout(() => d.remove(), 2000);
-	}
-}
-
 
 
 

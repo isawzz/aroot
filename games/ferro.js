@@ -1,7 +1,7 @@
 function ferro() {
 	function clear_ack() {
 		if (Z.stage == 'can_resolve') { ferro_change_to_card_selection(); }
-		else if (Z.stage == 'round_end') { start_new_round_ferro(); take_turn_single(); }
+		else if (Z.stage == 'round_end') { start_new_round_ferro(); take_turn_fen(); }
 	}
 	function state_info(dParent) { ferro_state_new(dParent); }
 	function setup(players, options) {
@@ -30,7 +30,7 @@ function ferro() {
 			};
 			pl.goals = { 3: 0, 33: 0, 4: 0, 44: 0, 5: 0, 55: 0, '7R': 0 };
 
-			if (DA.TEST0 && plname == starter) { pl.hand = ['AHn', 'AHn', 'AHn', 'AHn']; }
+			if (DA.TEST0 == true && plname == starter) { pl.hand = ['AHn', 'AHn', 'AHn', 'AHn']; }
 		}
 		fen.phase = ''; //TODO: king !!!!!!!
 		[fen.stage, fen.turn] = ['card_selection', [starter]];
@@ -148,9 +148,9 @@ function ferro_activate_ui() {
 }
 function ferro_state_new(dParent) {
 
-	if (DA.TEST0) {
+	if (DA.TEST0 == true) {
 		//testing output
-		let html = `${Z.stage} ${Z.notes}`;
+		let html = `${Z.stage}`;
 		if (isdef(Z.playerdata)) {
 
 			let trigger = get_multi_trigger();
@@ -273,7 +273,7 @@ function end_of_round_ferro() {
 	fen.round_winner = uplayer;
 
 	[Z.stage, Z.turn] = ['round_end', [Z.host]]; //jsCopy(plorder)];
-	take_turn_single();
+	take_turn_fen();
 
 }
 function start_new_round_ferro() {
@@ -358,7 +358,7 @@ function fp_card_selection() {
 		//if player has not yet played a set, simulate transaction!!!!
 		if (pl.journeys.length == 0) { add_transaction(cmd); }
 		ferro_process_jolly(key, j);
-		take_turn_single();
+		take_turn_fen();
 
 	} else if (cmd == 'auflegen') {
 
@@ -381,7 +381,7 @@ function fp_card_selection() {
 		if (pl.journeys.length == 0) { add_transaction(cmd); }
 		let keys = newset; //cards.map(x => x.key);
 		ferro_process_set(keys);
-		take_turn_single();
+		take_turn_fen();
 
 	} else if (cmd == 'anlegen') {
 
@@ -408,7 +408,7 @@ function fp_card_selection() {
 				for (const h of handcards) {
 					elem_from_to(h.key, fen.players[uplayer].hand, j);
 				}
-				take_turn_single();
+				take_turn_fen();
 				return;
 			} else {
 				select_error('hand cards do not match the group!');
@@ -446,7 +446,7 @@ function fp_card_selection() {
 				j.length = 0;
 				j.push(...seq);
 				for (const k of handkeys) { removeInPlace(fen.players[uplayer].hand, k); }
-				take_turn_single();
+				take_turn_fen();
 				//console.log('YES!');
 
 			} else {

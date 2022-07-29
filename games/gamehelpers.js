@@ -308,7 +308,7 @@ function show_admin_ui() {
 		show('bRandomMove');
 	}
 	if (Z.uname == Z.host  || Z.uname == 'mimi') show('dHostButtons'); else hide('dHostButtons');
-	if (DA.TEST0) show('dTestButtons'); else hide('dTestButtons');
+	if (DA.TEST0 ==true) show('dTestButtons'); else hide('dTestButtons');
 }
 function show_fleeting_message(s, dParent, styles, id, ms = 2000) {
 	let d = mDiv(dParent, styles, id, s);

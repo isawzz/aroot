@@ -87,7 +87,7 @@ function onclick_reload() {
 		if (Z.game == 'fritz' && nundef(Z.fen.winners)) {
 			console.log(Z);
 			Z.fen.players[Z.uplayer].time_left = stop_timer();
-			take_turn_single();
+			take_turn_fen();
 
 		} else {
 			FORCE_REDRAW = true; send_or_sim({ friendly: Z.friendly, uname: Z.uplayer }, 'table');
@@ -130,15 +130,15 @@ function onclick_restart() {
 	fen = Z.fen = Z.func.setup(playernames, Z.options);
 	[Z.stage, Z.turn, Z.round, Z.step, Z.phase] = [fen.stage, fen.turn, 1, 1, fen.phase];
 	let i = 0; playernames.map(x => fen.players[x].playmode = playermodes[i++]); //restore playmode
-	if (Z.game == 'spotit') spotit_clear_score();
+	//if (Z.game == 'spotit') spotit_clear_score();
 	//console.log('neue fen',Z.fen.plorder.map(x=>fen.players[x].time_left))
-	take_turn_single(true);
+	take_turn_fen(true);
 }
 function onclick_restart_move() {
 	if (isdef(Clientdata.snapshot)) {
 		Z.fen = Clientdata.snapshot;
 		clear_transaction();
-		take_turn_single();
+		take_turn_fen();
 	} else {
 		onclick_reload();
 	}
@@ -161,14 +161,14 @@ function onclick_skip() {
 		let plskip = Z.turn[0];
 		Z.turn = [get_next_player(Z, plskip)];
 		Z.uplayer = plskip;
-		take_turn_single();
+		take_turn_fen();
 	}
 }
 function onclick_start_spotit() {
 	let [game, fen, uplayer, turn, stage] = [Z.game, Z.fen, Z.uplayer, Z.turn, Z.stage];
 	Z.stage = 'move';
 	Z.turn = jsCopy(Z.plorder);
-	take_turn_single();
+	take_turn_fen();
 
 }
 function onclick_status() { query_status(); }

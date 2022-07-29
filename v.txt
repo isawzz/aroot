@@ -9801,12 +9801,30 @@ __________ fr 29.7.22
 3- upload
 145: *8:57 AM 7/29/2022-8:58 AM 7/29/2022
 146: *8:59 AM 7/29/2022-9:02 AM 7/29/2022
-147: *9:02 AM 7/29/2022-
+147: *9:02 AM 7/29/2022-9:04 AM 7/29/2022 2
 1- upload!
 2- hat kein writeplayer gemacht!
 3- test
-
-
+148: *9:04 AM 7/29/2022-9:06 AM 7/29/2022
+149: *9:06 AM 7/29/2022-9:07 AM 7/29/2022
+150: *9:07 AM 7/29/2022-9:12 AM 7/29/2022 3
+1- upload!
+2- output result all literals!
+3- php true false constants??? TRUE true alles geht!!!
+151: *9:13 AM 7/29/2022-9:19 AM 7/29/2022
+152: *9:19 AM 7/29/2022-9:19 AM 7/29/2022
+153: *9:19 AM 7/29/2022-9:21 AM 7/29/2022 4
+1- test
+2- upload!
+3- bisher kein problem!
+154: *9:21 AM 7/29/2022-9:24 AM 7/29/2022
+155: *9:24 AM 7/29/2022-9:30 AM 7/29/2022 5
+1- make table1 => table DA.TEST1 weg!
+2- variante table1 geht! ==>elim notes und server check!!!!
+3- test
+156: *9:30 AM 7/29/2022-
+===>ALLES NOCHMAL VON VORN! ohne serrver participation!
+3- 
 
 
 

@@ -1,3 +1,111 @@
+function take_turn_lock_multi() { take_turn(true, false, true, 'lock'); }
+function take_turn_end_multi() { take_turn(true, false, true); }
+
+
+
+//#region take_turn old mit notes...
+
+function take_turn_single() { take_turn(); }
+
+function take_turn_spotit() { take_turn(true, true); }
+
+function take_turn_init_multi(endcond = 'turn') { take_turn(true, false, false, `indiv_${endcond}`, true); }
+
+function take_turn_lock_multi() { take_turn(true, false, true, 'lock'); }
+
+function take_turn_multi_plus_lock() { take_turn(true, true, false, 'lock'); }
+
+function take_turn_end_multi() { take_turn(true, false, false, '', true); }
+
+function take_turn_multi() { if (isdef(Z.state)) take_turn(false, true); else take_turn(false, false, true); }
+
+
+function take_turn(write_fen = true, write_player = false, read_players = false, write_notes = null, clear_players = false) {
+	prep_move();
+	let o = { uname: Z.uplayer, friendly: Z.friendly };
+	if (isdef(Z.fen)) o.fen = Z.fen;
+	if (write_fen) o.write_fen = true;
+	if (isdef(write_notes)) { o.write_notes = write_notes; } //console.log('JA');}
+	if (write_player) { o.write_player = true; o.state = Z.state; }
+	if (read_players) o.read_players = true;
+	if (clear_players) o.clear_players = true;
+
+	//console.log('sending', o);
+	let cmd = 'table';
+	send_or_sim(o, cmd);
+}
+
+function prep_move() {
+	let [fen, uplayer, pl] = [Z.fen, Z.uplayer, Z.pl];
+	for (const k of ['round', 'phase', 'stage', 'step', 'turn']) { fen[k] = Z[k]; }
+	deactivate_ui();
+	clear_timeouts();
+}
+function send_or_sim(o, cmd) {
+	Counter.server += 1;
+	if (nundef(Z) || is_multi_stage()) o.read_players = true;
+	if (DA.simulate) phpPostSimulate(o, cmd); else phpPost(o, cmd);
+}
+
+//#endregion
+
+function sendmove(plname, friendly, fen, action, expected, phase, round, step, stage, notes, scoring = {}) {
+	deactivate_ui();
+	clear_timeouts();
+
+	let o = { uname: plname, friendly: friendly, fen: fen, action: action, expected: expected, phase: phase, round: round, step: step, stage: stage, notes: notes, scoring: scoring };
+	//console.log('sendmove: turn',fen.turn)
+
+	//console.log(`sendmove: simulated: ${DA.simulate}`);
+	if (DA.simulate) phpPostSimulate(o, 'move'); else phpPost(o, 'move');
+}
+
+function turn_send_move_update(action_star = false) {
+	take_turn_single(); return;
+	let [fen, uplayer] = [Z.fen, Z.uplayer];	//console.log('sending move:Z',Z); //return;
+
+	//console.log('uplayer', uplayer, 'action_star', action_star);
+
+	[fen.stage, fen.phase, fen.turn] = [Z.stage, Z.phase, Z.turn];
+
+	//ACHTUNG!!!!
+	assertion(!isEmpty(fen.turn), 'ACHTUNG!!!!!!!!!!! TURN IST EMPTY in take_turn_single!!!!!!!!!!!!!', Z.turn);
+	//if (isEmpty(fen.turn)) { fen.turn = Z.turn = [Z.host]; console.log('SETTING HOST TURN BECAUSE TURN EMPTY AT SEND!!!!!!!') }
+
+	let action = action_star ? { stage: '*', step: '*' } : Z.expected[uplayer];
+	let expected = {}; fen.turn.map(x => expected[x] = { stage: fen.stage, step: Z.step });
+	//console.log(':::take_turn_single: action', action, 'expected', expected, 'Z.step', Z.step, 'Z.turn', Z.turn);
+
+	//console.log('in',getFunctionsNameThatCalledThisFunction(),'fen.turn', fen.turn);
+	sendmove(Z.uplayer, Z.friendly, Z.fen, action, expected, Z.phase, Z.round, Z.step, Z.stage, Z.notes, Z.scoring);
+}
+
+
+function spotit_clear_score() {
+	assertion(isdef(Z.notes), 'Z.notes not defined');
+	Z.notes = {};
+	//ensure_score();
+	//for (const plname in Z.fen.players) { Z.notes[plname].score = 0; }
+}
+function _spotit_move(uplayer, success) {
+	//console.log('g',g,'uname',uname,'success',success)
+	if (success) {
+		//console.log('success!',jsCopy(g.expected));
+		inc_player_score(uplayer);
+		Z.action = { stage: 'move', step: Z.options.zen_mode == 'yes' ? '*' : Z.step };
+		for (const plname in Z.expected) { Z.expected[plname].step += 1 }
+		Z.step += 1; Z.round += 1;
+		//console.log('sending',jsCopy(g.expected));
+		Z.fen.items = spotit_item_fen(Z.options);
+		//Clientdata.iwin = true;
+		sendmove(uplayer, Z.friendly, Z.fen, Z.action, Z.expected, Z.phase, Z.round, Z.step, Z.stage, Z.notes)
+	} else {
+		let d = mShield(dTable, { bg: '#000000aa', fg: 'red', fz: 60, align: 'center' });
+		d.innerHTML = 'NOPE!!! try again!';
+		TO.spotit_penalty = setTimeout(() => d.remove(), 2000);
+	}
+}
+
 
 function ferro_ack_uplayer_lean() {
 	let [A, uplayer] = [Z.A, Z.uplayer];

@@ -8,7 +8,7 @@ function handle_result(result, cmd) {
 	let obj;
 	try { obj = JSON.parse(result); } catch { console.log('ERROR:', result); }
 
-	if (Clientdata.AUTORESET) { Clientdata.AUTORESET = false; if (result.auto == true) {console.log('message bounced');return; }}
+	if (Clientdata.AUTORESET) { Clientdata.AUTORESET = false; if (result.auto == true) { console.log('message bounced'); return; } }
 
 	if (verbose) console.log('HANDLERESULT bekommt', jsCopy(obj));
 	processServerdata(obj, cmd);
@@ -27,9 +27,12 @@ function handle_result(result, cmd) {
 		case "table1":
 			update_table();
 
-			console.log('status:',Z.status)
-			console.log('Z.playerdata', Z.playerdata.map(x=>`${x.name}:${object2string(x.state)}`).join(', '));
-			console.log('Z.table', Z.table);
+			//console.log('status:', Z.status)
+			//console.log('Z.playerdata', Z.playerdata.map(x => `${x.name}:${object2string(x.state)}`).join(', '));
+			//console.log('Z.table', Z.table);
+			console.log('cmd',cmd)
+			console.log('obj',obj)
+			for (const k in obj) { if (isLiteral(obj[k])) { console.log(k, obj[k]); } }
 			clear_timeouts();
 			gamestep();
 
@@ -44,7 +47,7 @@ function handle_result(result, cmd) {
 			update_table();
 
 			//console.log('status:',Z.status)
-			console.log('Z.playerdata', Z.playerdata.map(x=>`${x.name}:${object2string(x.state)}`).join(', '));
+			console.log('Z.playerdata', Z.playerdata.map(x => `${x.name}:${object2string(x.state)}`).join(', '));
 			//console.log('Z.table', Z.table);
 
 			//console.log('...playerdata',Z.playerdata,`turn:${Z.turn}`)
@@ -74,7 +77,7 @@ function load_assets(obj) {
 }
 function phpPost(data, cmd) {
 
-	if (DA.TEST1 && cmd == 'table'){cmd='table1';}
+	if (DA.TEST1 == true && cmd == 'table') { cmd = 'table1'; }
 
 	clear_transaction();
 
@@ -230,7 +233,7 @@ function update_table() {
 }
 
 function autopoll(ms) { TO.poll = setTimeout(_poll, valf(ms, 2000)); }
-function pollStop() { clearTimeout(TO.poll);Clientdata.AUTORESET=true; }
+function pollStop() { clearTimeout(TO.poll); Clientdata.AUTORESET = true; }
 function stopPolling() { pollStop(); }
 function ensure_polling() { }
 function _poll() {

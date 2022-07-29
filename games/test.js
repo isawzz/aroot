@@ -787,13 +787,13 @@ function fentest7_gameover() {
 	if (game == 'aristo') fentest6_endgame();
 	else if (game == 'spotit') {
 		for (const plname in fen.players) { fen.players[plname].score = Z.options.winning_score - 1; }
-		take_turn_single();
+		take_turn_fen();
 		//fen.players[uplayer].score = Z.options.winning_score - 1;
 	} else if (game == 'bluff') {
 		let pl = fen.players[uplayer];
 		while (pl.handsize < Z.options.max_handsize) inc_handsize(fen, uplayer); //.handsize = Z.options.max_handsize; }
 		deck_add(fen.deck, 1, pl.hand);
-		take_turn_single();
+		take_turn_fen();
 	}
 }
 function fentest6_endgame() {
@@ -821,13 +821,13 @@ function fentest6_endgame() {
 	//test_skip_to_actions();
 	Z.stage = 10;
 	Z.phase = 'king';
-	take_turn_single(true);
+	take_turn_fen(true);
 
 }
 function fentest5_market_opens() {
 	Z.stage = 3;
 	Z.phase = 'king';
-	take_turn_single();
+	take_turn_fen();
 
 }
 function fentest4_visit() {
@@ -843,7 +843,7 @@ function fentest4_visit() {
 	//test_skip_to_actions();
 	Z.stage = 5;
 	Z.phase = 'queen';
-	take_turn_single();
+	take_turn_fen();
 
 }
 function fentest2_build() {
@@ -851,13 +851,13 @@ function fentest2_build() {
 	Z.phase = 'king';
 	ensure_stall(Z.fen, Z.uplayer, 4);
 	ensure_actions(Z.fen);
-	take_turn_single();
+	take_turn_fen();
 }
 function fentest1_auction() {
 	Z.stage = 12;
 	Z.phase = 'jack';
 	ensure_market(Z.fen, 3);
-	take_turn_single();
+	take_turn_fen();
 }
 function fentest0_min_items() {
 	let [A, fen, uplayer] = [Z.A, Z.fen, Z.uplayer];
@@ -866,7 +866,7 @@ function fentest0_min_items() {
 
 	ensure_actions(fen);
 
-	take_turn_single();
+	take_turn_fen();
 
 }
 //#endregion
@@ -1194,7 +1194,7 @@ function test7_add_hand_card() {
 	let [A, fen, uplayer] = [Z.A, Z.fen, Z.uplayer];
 	let card = prompt('enter card (eg. 8H');
 	fen.players[uplayer].hand.push(card + 'n');
-	take_turn_single();
+	take_turn_fen();
 }
 function test4_direct_login_onclick_user() {
 	show_users();

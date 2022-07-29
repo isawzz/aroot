@@ -442,7 +442,7 @@ function end_of_turn_fritz() {
 	} else { Z.turn = [get_next_player(Z, uplayer)]; deck_deal_safe_fritz(fen, Z.turn[0]); }
 
 	//console.log('...plorder', fen.plorder, 'turn', Z.turn); output_scores();
-	take_turn_single();
+	take_turn_fen();
 
 }
 function frnew(card, ev) {

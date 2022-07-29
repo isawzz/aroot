@@ -12,12 +12,12 @@ function ferro_change_to_buy_pass() {
 	fen.buyer = null;
 	fen.nextturn = [nextplayer];
 
-	if (Z.mode == 'multi') { [Z.stage, Z.turn] = ['buy_or_pass', fen.canbuy]; take_turn_init_multi('turn'); }
+	if (Z.mode == 'multi') { [Z.stage, Z.turn] = ['buy_or_pass', fen.canbuy]; take_turn_fen_clear(); }
 	else {
 		fen.canbuy.map(x => fen.players[x].buy = 'unset');
 		fen.lastplayer = arrLast(fen.canbuy);
 		[Z.stage, Z.turn] = ['buy_or_pass', [fen.canbuy[0]]];
-		take_turn_single();
+		take_turn_fen();
 	}
 }
 function ferro_ack_uplayer() { if (Z.mode == 'multi') { ferro_ack_uplayer_multi(); } else { ferro_ack_uplayer_hotseat(); } }
@@ -31,7 +31,7 @@ function ferro_ack_uplayer_multi() {
 		assertion(Z.stage == 'buy_or_pass', 'stage is not buy_or_pass when checking can_resolve!');
 		Z.stage = 'can_resolve';
 		[Z.turn, Z.stage] = [[get_multi_trigger()], 'can_resolve'];
-		take_turn_multi_plus_lock();
+		take_turn_fen_write();
 	} else { take_turn_multi(); }
 }
 function ferro_check_resolve() {
@@ -62,7 +62,7 @@ function ferro_ack_uplayer_hotseat() {
 	if (buy) { fen.buyer = uplayer; [Z.turn, Z.stage] = [[get_multi_trigger()], 'can_resolve']; }
 	if (uplayer == fen.lastplayer) { [Z.turn, Z.stage] = [[get_multi_trigger()], 'can_resolve']; }
 	else { Z.turn = [get_next_in_list(uplayer, fen.canbuy)]; }
-	take_turn_single();
+	take_turn_fen();
 }
 function ferro_change_to_card_selection() {
 	let [fen, stage] = [Z.fen, Z.stage];
@@ -91,7 +91,7 @@ function ferro_change_to_card_selection() {
 	for (const k of ['buyer', 'canbuy', 'nextturn', 'trigger', 'lastplayer']) delete fen[k];//cleanup buy_or_pass multi-turn!!!!!!!!!!!!!
 
 	clear_transaction();
-	if (Z.mode == 'multi') take_turn_end_multi(); else take_turn_single();
+	take_turn_fen();
 }
 
 

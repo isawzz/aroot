@@ -1,5 +1,5 @@
 function bluff() {
-	function bluff_clear_ack() { if (Z.stage == 1) {bluff_change_to_turn_round();take_turn_single(); } }
+	function bluff_clear_ack() { if (Z.stage == 1) {bluff_change_to_turn_round();take_turn_fen(); } }
 	function bluff_check_gameover(Z) { let pls = get_keys(Z.fen.players); if (pls.length < 2) Z.fen.winners = pls; return valf(Z.fen.winners, false); }
 	function bluff_setup(players, options) {
 		let fen = { players: {}, plorder: jsCopy(players), history: {}, stage: 'move', phase: '' };
@@ -186,7 +186,7 @@ function bluff_activate_stage1() {
 	mPulse(ui.dHandsize, 2000);
 	mButton('WEITER', () => {
 		bluff_ack_uplayer();
-		if (isEmpty(Z.turn) || Z.mode == 'hotseat') { bluff_change_to_turn_round(); take_turn_single(); }
+		if (isEmpty(Z.turn) || Z.mode == 'hotseat') { bluff_change_to_turn_round(); take_turn_fen(); }
 
 	}, dt, { fz: 22 }, ['donebutton']);
 }
@@ -377,7 +377,7 @@ function handle_gehtHoch() {
 
 	bluff_change_to_ack_round(fen, nextplayer);
 
-	take_turn_single();
+	take_turn_fen();
 }
 function handle_bid() {
 	let [z, A, fen, uplayer, ui] = [Z, Z.A, Z.fen, Z.uplayer, UI];
@@ -425,7 +425,7 @@ function handle_bid() {
 		fen.lastbidder = uplayer;
 		delete fen.oldbid; delete fen.newbid;
 		Z.turn = [get_next_player(Z, uplayer)];
-		take_turn_single();
+		take_turn_fen();
 		//next person's turn
 	}
 }

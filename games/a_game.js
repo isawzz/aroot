@@ -73,9 +73,9 @@ function felix_sends_timed_move_at_mimi_slot() {
 function agmove_single() {
 	if (Z.pl.hand.length > 2) removeInPlace(Z.pl.hand, Z.pl.hand[0]);
 	Z.turn = [get_next_player(Z, Z.uplayer)];
-	take_turn_single();
+	take_turn_fen();
 }
-function agmove_startmulti() { Z.stage = 'multi'; Z.turn = Z.plorder;[Z.fen.stage_after_multi, Z.fen.turn_after_multi] = ['click', [rChoose(Z.plorder)]]; take_turn_single(); }
+function agmove_startmulti() { Z.stage = 'multi'; Z.turn = Z.plorder;[Z.fen.stage_after_multi, Z.fen.turn_after_multi] = ['click', [rChoose(Z.plorder)]]; take_turn_fen(); }
 function agmove_indiv(plname, slot) {
 	if (isDict(plname) && Z.uplayer != 'mimi') return; // only mimi can actually click button!!!
 

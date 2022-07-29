@@ -1,5 +1,5 @@
 onload = start; var FirstLoad = true;
-DA.TEST0 = true; DA.TEST1 = true; DA.TEST1Counter = 0;
+//DA.TEST0 = true; DA.TEST1 = true; DA.TEST1Counter = 0;
 function start() { let uname = localStorage.getItem('uname'); if (isdef(uname)) U = { name: uname }; phpPost({ app: 'simple' }, 'assets'); }
 //function start() { let uname = null; if (isdef(uname)) U = { name: uname }; phpPost({ app: 'simple' }, 'assets'); }
 function start_with_assets() {
@@ -172,7 +172,7 @@ function ack_player(plname) {
 		Z.turn = [get_next_in_list(plname, fen.ack_players)];
 	}
 	//console.log('ack_player','plname',plname,'uplayer',uplayer,'pl',pl,'Z.turn',Z.turn,'Z.stage',Z.stage);
-	take_turn_single();
+	take_turn_fen();
 }
 function clear_ack_variables() {
 	let [fen, uplayer, pl] = [Z.fen, Z.uplayer, Z.fen.players[Z.uplayer]];
@@ -306,34 +306,8 @@ function sendgameover(plname, friendly, fen, scoring) {
 	let o = { winners: plname, friendly: friendly, fen: fen, scoring: scoring };
 	phpPost(o, 'gameover');
 }
-function sendmove(plname, friendly, fen, action, expected, phase, round, step, stage, notes, scoring = {}) {
-	deactivate_ui();
-	clear_timeouts();
-
-	let o = { uname: plname, friendly: friendly, fen: fen, action: action, expected: expected, phase: phase, round: round, step: step, stage: stage, notes: notes, scoring: scoring };
-	//console.log('sendmove: turn',fen.turn)
-
-	//console.log(`sendmove: simulated: ${DA.simulate}`);
-	if (DA.simulate) phpPostSimulate(o, 'move'); else phpPost(o, 'move');
-}
 function turn_send_move_update(action_star = false) {
-	take_turn_single(); return;
-	let [fen, uplayer] = [Z.fen, Z.uplayer];	//console.log('sending move:Z',Z); //return;
-
-	//console.log('uplayer', uplayer, 'action_star', action_star);
-
-	[fen.stage, fen.phase, fen.turn] = [Z.stage, Z.phase, Z.turn];
-
-	//ACHTUNG!!!!
-	assertion(!isEmpty(fen.turn), 'ACHTUNG!!!!!!!!!!! TURN IST EMPTY in take_turn_single!!!!!!!!!!!!!', Z.turn);
-	//if (isEmpty(fen.turn)) { fen.turn = Z.turn = [Z.host]; console.log('SETTING HOST TURN BECAUSE TURN EMPTY AT SEND!!!!!!!') }
-
-	let action = action_star ? { stage: '*', step: '*' } : Z.expected[uplayer];
-	let expected = {}; fen.turn.map(x => expected[x] = { stage: fen.stage, step: Z.step });
-	//console.log(':::take_turn_single: action', action, 'expected', expected, 'Z.step', Z.step, 'Z.turn', Z.turn);
-
-	//console.log('in',getFunctionsNameThatCalledThisFunction(),'fen.turn', fen.turn);
-	sendmove(Z.uplayer, Z.friendly, Z.fen, action, expected, Z.phase, Z.round, Z.step, Z.stage, Z.notes, Z.scoring);
+	take_turn_fen(); 
 }
 
 

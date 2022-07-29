@@ -28,7 +28,7 @@ function ferro_simple_ack_player(plname) {
 		Z.turn = [get_next_in_list(plname, fen.ack_players)];
 	}
 	//console.log('ack_player','plname',plname,'uplayer',uplayer,'pl',pl,'Z.turn',Z.turn,'Z.stage',Z.stage);
-	take_turn_single();
+	take_turn_fen();
 }
 function ferro_clear_ack_variables() {
 	let [fen, uplayer, pl] = [Z.fen, Z.uplayer, Z.fen.players[Z.uplayer]];
