@@ -40,7 +40,7 @@ function phpPostSimulate(o, cmd) {
 			//console.log('t', t);
 
 			let t1 = JSON.parse(t);
-			console.log('t1', t1);
+			//console.log('t1', t1);
 
 			handle_result(t, cmd); break;
 		default: break; //console.log('unknown command', cmd); break;

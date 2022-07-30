@@ -81,6 +81,8 @@ function onclick_random() {
 	else if (!uiActivated) console.log('ui not activated...');
 	else if (DA.ai_is_moving) console.log('ai is moving...');
 }
+function onclick_reload_after_switching() { DA.pollCounter=0;DA.reloadColor=rColor(); onclick_reload(); }
+
 function onclick_reload() {
 	if (isdef(Z)) {
 		// bei einem timed game mit schachuhr, muss ich die zeit abziehen!!!
@@ -174,7 +176,7 @@ function onclick_start_spotit() {
 function onclick_status() { query_status(); }
 function onclick_table(tablename) {
 	//console.log('onclick_table', tablename);
-	ensure_polling();
+	//ensure_polling();
 	send_or_sim({ friendly: tablename, uname: U.name }, 'table');
 }
 function onclick_user(uname) {

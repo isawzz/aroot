@@ -16,6 +16,44 @@ function activate_ui() {
 
 	uiActivated = true; DA.ai_is_moving = false;
 }
+function animate_title() {
+	var rev = "fwd";
+	function titlebar(val) {
+		var msg = "Hallodi!";
+		var res = " ";
+		var speed = 100;
+		var pos = val;
+		msg = "   |-" + msg + "-|";
+		var le = msg.length;
+		if (rev == "fwd") {
+			if (pos < le) {
+				pos = pos + 1;
+				scroll = msg.substr(0, pos);
+				document.title = scroll;
+				timer = window.setTimeout("titlebar(" + pos + ")", speed);
+			}
+			else {
+				rev = "bwd";
+				timer = window.setTimeout("titlebar(" + pos + ")", speed);
+			}
+		}
+		else {
+			if (pos > 0) {
+				pos = pos - 1;
+				var ale = le - pos;
+				scrol = msg.substr(ale, le);
+				document.title = scrol;
+				timer = window.setTimeout("titlebar(" + pos + ")", speed);
+			}
+			else {
+				rev = "fwd";
+				timer = window.setTimeout("titlebar(" + pos + ")", speed);
+			}
+		}
+	}
+	titlebar(0);
+
+}
 function beautify_history(lines, title, fen, uplayer) {
 
 	//mach draus ein html
@@ -200,8 +238,8 @@ function is_just_my_turn() {
 function get_multi_trigger() { return lookup(Z, ['fen', 'trigger']); }
 function is_multi_trigger(plname) { return lookup(Z, ['fen', 'trigger']) == plname; }
 function is_multi_stage() { return isdef(Z.fen.trigger); }
-function is_playerdata_set(plname) { 
-	return isdef(Z.playerdata) && !isEmpty(Z.playerdata) && !isEmpty(Z.playerdata.find(x => x.name == plname).state); 
+function is_playerdata_set(plname) {
+	return isdef(Z.playerdata) && !isEmpty(Z.playerdata) && !isEmpty(Z.playerdata.find(x => x.name == plname).state);
 }
 function is_playing(pl, fen) {
 	//returns true is pl is in fen.plorder or in fen.roundorder
@@ -251,6 +289,7 @@ function new_cards_animation(n = 2) {
 		// setTimeout(ferro_pre_action,1000);
 	}
 }
+
 function round_change_animation(n = 2) {
 	let [stage, A, fen, plorder, uplayer, deck] = [Z.stage, Z.A, Z.fen, Z.plorder, Z.uplayer, Z.deck];
 	let pl = fen.players[uplayer];
@@ -307,8 +346,8 @@ function show_admin_ui() {
 		//console.log('random should show because game is', Z.game)
 		show('bRandomMove');
 	}
-	if (Z.uname == Z.host  || Z.uname == 'mimi') show('dHostButtons'); else hide('dHostButtons');
-	if (DA.TEST0 ==true) show('dTestButtons'); else hide('dTestButtons');
+	if (Z.uname == Z.host || Z.uname == 'mimi') show('dHostButtons'); else hide('dHostButtons');
+	if (DA.TEST0 == true) show('dTestButtons'); else hide('dTestButtons');
 }
 function show_fleeting_message(s, dParent, styles, id, ms = 2000) {
 	let d = mDiv(dParent, styles, id, s);
@@ -491,9 +530,14 @@ function show_history_popup() {
 
 }
 function show_polling_signal() {
-	let d = document.body;
-	let d1 = mDiv(d, { position: 'fixed', top: 10, left: 73, width: 20, height: 20, bg: 'green', rounding: 10});
-	mFadeRemove(d1, 1000);
+
+	let url = window.location.href;
+	//console.log('url', url, typeof(url));
+	let loc = url.includes('telecave')?'tele' : 'local';
+	let d = document.body; DA.pollCounter = valf(DA.pollCounter, 0) + 1; document.title = `${loc}:${DA.pollCounter} ${Config.games[Z.game].friendly}`;
+
+	// let d1 = mDiv(mBy('dAdmin'), { position: 'fixed', top: 10, left: 73, width: 20, height: 20, bg: valf(DA.reloadColor, 'green'), rounding: 10 });
+	// mFadeRemove(d1, 1000);
 }
 function show_settings(dParent) {
 	let [options, fen, uplayer] = [Z.options, Z.fen, Z.uplayer];

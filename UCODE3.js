@@ -1,3 +1,94 @@
+
+function new_cards_animation(n = 2) {
+	let [stage, A, fen, plorder, uplayer, deck] = [Z.stage, Z.A, Z.fen, Z.plorder, Z.uplayer, Z.deck];
+	let pl = fen.players[uplayer];
+	if (stage == 'card_selection' && !isEmpty(Clientdata.newcards)) {
+		let anim_elems = [];
+		for (const key of Clientdata.newcards) {
+			let ui = lastCond(UI.players[uplayer].hand.items, x => x.key == key);
+			ui = iDiv(ui);
+			anim_elems.push(ui);
+		}
+		delete Clientdata.newcards;
+		anim_elems.map(x => mPulse(x, n * 1000));
+	}
+}
+
+function new_cards_animation(n = 2) {
+	let [stage, A, fen, plorder, uplayer, deck] = [Z.stage, Z.A, Z.fen, Z.plorder, Z.uplayer, Z.deck];
+	let pl = fen.players[uplayer];
+	if (stage == 'card_selection' && !isEmpty(pl.newcards)) {
+		let anim_elems = [];
+
+		//console.log('player', uplayer, 'newcards', jsCopy(pl.newcards));
+		for (const key of pl.newcards) {
+			let ui = lastCond(UI.players[uplayer].hand.items, x => x.key == key);
+			ui = iDiv(ui);
+			anim_elems.push(ui);
+		}
+		delete pl.newcards;
+		//console.log('player', uplayer, 'newcards deleted:', pl.newcards);
+
+		//animate newcards!
+		anim_elems.map(x => mPulse(x, n * 1000));
+		// setTimeout(ferro_pre_action,1000);
+	}
+}
+
+function turn_send_move_update(action_star = false) {
+	take_turn_fen(); 
+}
+
+
+//#region ferro multi zeug!
+
+function ferro_start_buy_or_pass() {
+
+	let fen = Z.fen;
+	//fen.canbuy =, fen.trigger, fen.buyer, fen.nextturn (und playerdata natuerlich!)
+	//each player except uplayer will get opportunity to buy top discard - nextplayer will draw if passing
+	fen.ack_players = ack_players;
+	fen.lastplayer = arrLast(ack_players);
+	fen.nextplayer = nextplayer; //next player after ack!
+	fen.turn_after_ack = [nextplayer];
+	fen.callbackname_after_ack = callbackname_after_ack;
+	fen.keeppolling = keeppolling;
+
+	Z.stage = ackstage;
+	Z.turn = [ack_players[0]];
+
+}
+function ferro_simple_ack_player(plname) {
+	let [fen, uplayer, pl] = [Z.fen, Z.uplayer, Z.fen.players[Z.uplayer]];
+
+	//console.log('ack_player','plname',plname,'uplayer',uplayer,'pl',pl,'Z.turn',Z.turn,'Z.stage',Z.stage);
+	assertion(sameList(Z.turn, [plname]), "ack_player: wrong turn");
+
+	if (plname == fen.lastplayer || fen.players[uplayer].buy == true) {
+		let func = window[fen.callbackname_after_ack];
+		if (isdef(func)) func();
+	} else {
+		Z.turn = [get_next_in_list(plname, fen.ack_players)];
+	}
+	//console.log('ack_player','plname',plname,'uplayer',uplayer,'pl',pl,'Z.turn',Z.turn,'Z.stage',Z.stage);
+	take_turn_fen();
+}
+function ferro_clear_ack_variables() {
+	let [fen, uplayer, pl] = [Z.fen, Z.uplayer, Z.fen.players[Z.uplayer]];
+	delete fen.ack_players;
+	delete fen.lastplayer;
+	delete fen.nextplayer;
+	delete fen.turn_after_ack;
+	delete fen.ackstage;
+	delete fen.callbackname_after_ack;
+	delete fen.keeppolling;
+
+}
+
+
+
+
+
 function take_turn_lock_multi() { take_turn(true, false, true, 'lock'); }
 function take_turn_end_multi() { take_turn(true, false, true); }
 

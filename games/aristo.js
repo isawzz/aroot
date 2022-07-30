@@ -1053,7 +1053,7 @@ function post_complementing_market_after_church() {
 	}
 }
 function proceed_to_newcards_selection() {
-	//determine selection order for newcards selection
+	//determine selection order for _newcards selection
 	let fen = Z.fen;
 
 	let selorder = fen.selorder = sortByFuncDescending(fen.church_order, x => fen.players[x].tides.val);

@@ -47,7 +47,7 @@ function handle_result(result, cmd) {
 			update_table();
 
 			//console.log('status:',Z.status)
-			console.log('Z.playerdata', Z.playerdata.map(x => `${x.name}:${object2string(x.state)}`).join(', '));
+			//console.log('Z.playerdata', Z.playerdata.map(x => `${x.name}:${object2string(x.state)}`).join(', '));
 			//console.log('Z.table', Z.table);
 
 			//console.log('...playerdata',Z.playerdata,`turn:${Z.turn}`)
@@ -77,7 +77,7 @@ function load_assets(obj) {
 }
 function phpPost(data, cmd) {
 
-	if (DA.TEST1 == true && cmd == 'table') { cmd = 'table1'; }
+	if (DA.TEST1 === true && cmd == 'table') { cmd = 'table1'; }
 
 	clear_transaction();
 
@@ -88,7 +88,7 @@ function phpPost(data, cmd) {
 		if (xml.readyState == 4 || xml.status == 200) {
 			loader_off();
 			handle_result(xml.responseText, cmd);
-		}
+		}else{console.log('WTF?????')}
 	}
 	var o = {};
 	o.data = valf(data, {});

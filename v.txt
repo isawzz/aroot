@@ -9822,14 +9822,89 @@ __________ fr 29.7.22
 1- make table1 => table DA.TEST1 weg!
 2- variante table1 geht! ==>elim notes und server check!!!!
 3- test
-156: *9:30 AM 7/29/2022-
+156: *9:30 AM 7/29/2022-12:18 PM 7/29/2022 6
 ===>ALLES NOCHMAL VON VORN! ohne serrver participation!
-3- 
-
-
-
-
-
+157: *12:18 PM 7/29/2022-12:25 PM 7/29/2022
+==>
+1. es gibt nur noch clear_players, write_player, und fen
+2. jedesmal wird playerdata UND table geliefert!
+158: *12:26 PM 7/29/2022-12:37 PM 7/29/2022 7
+1- weiter: elim notes?
+2- weiter
+3- search notes
+159: *12:37 PM 7/29/2022-12:52 PM 7/29/2022 8
+160: *12:52 PM 7/29/2022-12:53 PM 7/29/2022
+1- es ist jetzt sehr viel simpler und koennte TEST1 und table1 entfernen!
+2- ich glaub es geht jetzt!!!! upload
+3- baustelle saven und neu machen!
+161: *12:53 PM 7/29/2022-12:54 PM 7/29/2022 9
+162: *12:54 PM 7/29/2022-12:59 PM 7/29/2022
+163: *1:00 PM 7/29/2022-1:01 PM 7/29/2022
+1- turn taking ist jetzt wieder in start, jetzt teste ferro spiel bei telecave!
+2- baustellen freimachen
+3- was jetzt??? sollte bluff machen!!!
+ok - upload!
+164: *1:01 PM 7/29/2022-1:04 PM 7/29/2022 10
+165: *2:37 PM 7/29/2022-2:51 PM 7/29/2022
+1- check code fuer resolve
+2- hab einen fehler gefunden: wenn out of turn kauft, sollen trotzdem die newcards integriert werden! 
+3- sollte ein komplettes spiel machen! ferro!
+166: *2:51 PM 7/29/2022-3:03 PM 7/29/2022 11
+167: *3:04 PM 7/29/2022-3:12 PM 7/29/2022
+1- switcing after reload
+2- wenn reload mache soll newcards WEG sein!
+3- how to detect when deactivating browser page (switching to another tab)
+168: *3:15 PM 7/29/2022-3:18 PM 7/29/2022 12
+169: *3:28 PM 7/29/2022-3:30 PM 7/29/2022
+170: *3:30 PM 7/29/2022-3:40 PM 7/29/2022
+1- schau was es vorher war!
+2- titlebar animation >>index.html
+3- show signal on tab!
+171: *3:40 PM 7/29/2022-5:39 PM 7/29/2022 13
+172: *5:39 PM 7/29/2022-6:48 PM 7/29/2022
+1- wie kann ich wenn ich reload mache newcards vorher loeschen?
+2- js how to find out url of current page?
+3- PAUSE!
+173: *6:50 PM 7/29/2022-6:57 PM 7/29/20226:57 PM 7/29/2022 14
+174: *6:57 PM 7/29/2022-6:59 PM 7/29/2022
+175: *6:59 PM 7/29/2022-7:00 PM 7/29/2022
+1- rem cons apiserver 50
+2- new game!
+3- kann ich newcards zu Clientdata geben? und nach anim loeschen
+176: *7:00 PM 7/29/2022-7:01 PM 7/29/2022 15
+177: *7:01 PM 7/29/2022-7:09 PM 7/29/2022
+1- ok, also das geht doch nicht mit dem onblur!!! weil wenn ich multiple browsers offen habe jeweils wenn ein browser aktiv werden die anderen deactivated!!! so geht es nicht!!!
+2- wieso geht jetzt ploetzlich das onclick_table
+3- rem cons gamehelpers 528
+178: *7:11 PM 7/29/2022-7:12 PM 7/29/2022 16
+179: *7:13 PM 7/29/2022-7:16 PM 7/29/2022
+1- new_cards_animation
+2- vielleicht koennte ich an der IP address feststellen dass mehrere browser windows offen sind (mit demselben table????)
+3- es geht eigentlich nur wenn ich nur 1 telecave instance offen habe! das ist nicht akzeptabel!
+180: *7:16 PM 7/29/2022-7:27 PM 7/29/2022
+181: *7:27 PM 7/29/2022-8:00 PM 7/29/2022
+1- ich sollte einen manual pause - resume button haben!!!
+2- revert!
+3- mist, das Clientdata newcards geht auch nicht!!!
+181: *7:27 PM 7/29/2022-8:00 PM 7/29/2022 17
++100
+__________ fr 29.7.22 
+280: *8:00 PM 7/29/2022-8:03 PM 7/29/2022
+281: *8:12 PM 7/29/2022-8:47 PM 7/29/2022
+282: *8:47 PM 7/29/2022-8:49 PM 7/29/2022
+283: *8:49 PM 7/29/2022-8:53 PM 7/29/2022
+284: *8:55 PM 7/29/2022-
+- irgendeine art von gamepause waer schon gut!!!
+- aristo: mach die simultaneous rounds!!!
+- js how to find out which browser I am using? Firefox vs Chrome...
+- mich nervt auch echt der font in firefox!!!! 
+- ich kann auch is_ack_round
+- ich hab es mit keeppolling geloest in easy - vielleicht war das gut????? fuer eine ack round?
+- weiter button bei bluff entfernen!!!
+- alle stages sollen immer game name 1 letter+sonstwas sein????
+- das autopoll ist ueberhaupt nicht robust!!!!!!! sondern extrem heikel!
+- bluff geht garnicht mehr!!! was ist da los?????
+- goto ferro 816
 
 
 

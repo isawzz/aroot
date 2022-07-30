@@ -1,4 +1,8 @@
 onload = start; var FirstLoad = true;
+//document.onBlur = stopPolling;
+//onblur = stopPolling;
+//onfocus = onclick_reload_after_switching;
+
 //DA.TEST0 = true; DA.TEST1 = true; DA.TEST1Counter = 0;
 function start() { let uname = localStorage.getItem('uname'); if (isdef(uname)) U = { name: uname }; phpPost({ app: 'simple' }, 'assets'); }
 //function start() { let uname = null; if (isdef(uname)) U = { name: uname }; phpPost({ app: 'simple' }, 'assets'); }
@@ -91,7 +95,10 @@ function gamestep() {
 		copyKeys(UI, Z);
 		activate_ui(Z); //console.log('uiActivated',uiActivated?'true':'false');
 		Z.func.activate_ui();
-		if (Z.options.zen_mode != 'yes' && Z.mode != 'hotseat' && Z.turn.length > 1 || Z.stage == 'can_resolve' && get_multi_trigger() != 'mimi') autopoll();
+		//if (Z.options.zen_mode != 'yes' && Z.mode != 'hotseat' && !DA.simulate) autopoll();
+		if (Z.options.zen_mode != 'yes' && Z.mode != 'hotseat' &&
+			//  (Z.turn.length > 1 || Z.stage == 'can_resolve' && get_multi_trigger() != 'mimi' || Z.game == 'bluff')) autopoll();
+			(Z.turn.length > 1 || Z.stage == 'can_resolve' || Z.game == 'bluff' && Z.stage == 1)) autopoll();
 	}
 
 	//landing();
@@ -306,10 +313,39 @@ function sendgameover(plname, friendly, fen, scoring) {
 	let o = { winners: plname, friendly: friendly, fen: fen, scoring: scoring };
 	phpPost(o, 'gameover');
 }
-function turn_send_move_update(action_star = false) {
-	take_turn_fen(); 
+
+function take_turn_fen() { take_turn(); }
+
+function take_turn_spotit() { take_turn(true, true); }
+
+function take_turn_fen_clear() { take_turn(true, false, true); }
+
+function take_turn_fen_write() { take_turn(true, true); }
+
+function take_turn_multi() { if (isdef(Z.state)) take_turn(false, true); else take_turn(false, false); }
+
+function take_turn(write_fen = true, write_player = false, clear_players = false) {
+	prep_move();
+	let o = { uname: Z.uplayer, friendly: Z.friendly };
+	if (isdef(Z.fen)) o.fen = Z.fen;
+	if (write_fen) { assertion(isdef(Z.fen), 'write_fen without fen!!!!'); o.write_fen = true; }
+	if (write_player) { o.write_player = true; o.state = Z.state; }
+	if (clear_players) o.clear_players = true;
+	let cmd = 'table';
+	send_or_sim(o, cmd);
 }
 
+function prep_move() {
+	let [fen, uplayer, pl] = [Z.fen, Z.uplayer, Z.pl];
+	for (const k of ['round', 'phase', 'stage', 'step', 'turn']) { fen[k] = Z[k]; }
+	deactivate_ui();
+	clear_timeouts();
+}
+function send_or_sim(o, cmd) {
+	Counter.server += 1;
+	//if (nundef(Z) || is_multi_stage()) o.read_players = true; das wird jetzt IMMER gemacht!!!
+	if (DA.simulate) phpPostSimulate(o, cmd); else phpPost(o, cmd);
+}
 
 
 
