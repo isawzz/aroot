@@ -220,7 +220,7 @@ function ui_type_deck(list, dParent, styles = {}, path = 'deck', title = 'deck',
 		//append in umgekehrter reihenfolge!?
 		for (let i = items.length - 1; i >= 0; i--) { let x = items[i]; face_down(x); mAppend(cardcont, iDiv(x)); mStyle(iDiv(x), { position: 'absolute', top: 0, left: 0 }) }
 		// (old code) mContainerSplay(cont, 4, ct.w, ct.h, list.length, 0); // ui_add_cards_to_deck_container(cont, items);
-		mText(list.length, iDiv(ct), { position: 'absolute', left: list.length > 100 ? '10%' : '25%', top: 10, fz: ct.h / 3 }); //add number of cards in deck to top card
+		mText(list.length, iDiv(ct), { position: 'absolute', left: list.length >= 100 ? '10%' : '25%', top: 10, fz: ct.h / 3 }); //add number of cards in deck to top card
 	}
 	return {
 		ctype: 'deck',

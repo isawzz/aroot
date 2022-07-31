@@ -7,6 +7,11 @@ function ferro() {
 	function setup(players, options) {
 		let fen = { players: {}, plorder: jsCopy(players), history: [] };
 
+		fen.allGoals = ['7R', '55', '5', '44', '4', '33', '3'];
+		fen.availableGoals = options.maxrounds==1?[rChoose(fen.allGoals)]:options.maxrounds<7?rChoose(fen.allGoals, options.maxrounds):fen.allGoals;
+
+		console.log('availableGoals',fen.availableGoals);
+
 		//calc how many decks are needed (basically 1 suit per person, plus 1 for the deck)
 		let n = players.length;
 		let num_decks = fen.num_decks = 2 + (n >= 9 ? 2 : n >= 7 ? 1 : 0); // 2 + (n > 5 ? Math.ceil((n - 5) / 2) : 0); //<=5?2:Math.max(2,Math.ceil(players.length/3));
@@ -28,7 +33,10 @@ function ferro() {
 				name: plname,
 				color: get_user_color(plname),
 			};
-			pl.goals = { 3: 0, 33: 0, 4: 0, 44: 0, 5: 0, 55: 0, '7R': 0 };
+			pl.goals = {};
+			for(const g of fen.availableGoals) {console.log('g',g); pl.goals[g]=0; }// { 3: 0, 33: 0, 4: 0, 44: 0, 5: 0, 55: 0, '7R': 0 };
+
+			console.log('pl.goals',plname, pl.goals);
 
 			if (DA.TEST0 == true && plname == starter) { pl.hand = ['AHn', 'AHn', 'AHn', 'AHn']; }
 		}
@@ -48,7 +56,7 @@ function ferro_pre_action() {
 	let [stage, A, fen, plorder, uplayer, deck] = [Z.stage, Z.A, Z.fen, Z.plorder, Z.uplayer, Z.deck];
 	switch (stage) {
 		case 'can_resolve': if (Z.options.auto_weiter) ferro_change_to_card_selection(); else {select_add_items(ui_get_string_items(['weiter']), ferro_change_to_card_selection, 'may click to continue', 1, 1, Z.mode == 'multi');select_timer(2000,ferro_change_to_card_selection);} break;
-		case 'buy_or_pass': if (!is_playerdata_set(uplayer)) { select_add_items(ui_get_buy_or_pass_items(), ferro_ack_uplayer, 'may click top discard to buy or pass', 1, 1); select_timer(Z.options.thinking_time*1000,ferro_ack_uplayer); } break;
+		case 'buy_or_pass': if (!is_playerdata_set(uplayer)) { select_add_items(ui_get_buy_or_pass_items(), ferro_ack_uplayer, 'may click discard pile to buy or pass', 1, 1); select_timer(Z.options.thinking_time*1000,ferro_ack_uplayer); } break;
 		case 'card_selection': select_add_items(ui_get_ferro_items(uplayer), fp_card_selection, 'must select one or more cards', 1, 100); break;
 		default: console.log('stage is', stage); break;
 	}
@@ -183,7 +191,7 @@ function ferro_state_new(dParent) {
 		dParent.innerHTML = `Round ${Z.round} ended by &nbsp;${get_user_pic_html(Z.fen.round_winner, 30)}`;
 	} else if (is_fixed_goal()) {
 		let goal = get_round_goal();
-		//console.log('goal', goal);
+		console.log('goal', goal);
 		let goal_html = `<div style="font-weight:bold;border-radius:50%;background:white;color:red;line-height:100%;padding:4px 8px">${goal}</div>`;
 		dParent.innerHTML = `Round ${Z.round}:&nbsp;&nbsp;minimum:&nbsp;${goal_html}`;
 	} else {
@@ -198,7 +206,7 @@ function ferro_stats_new(z, dParent) {
 	for (const plname of fen.plorder) {
 		let pl = fen.players[plname];
 		let item = player_stat_items[plname];
-		let d = iDiv(item); mCenterFlex(d); mLinebreak(d);
+		let d = iDiv(item); mCenterFlex(d); mStyle(d,{wmin:150}); mLinebreak(d); 
 		player_stat_count('coin', pl.coins, d);
 		// player_stat_count('hand with fingers splayed', pl.hand.length, d);
 		//console.log('pl.hand', pl.hand);
@@ -210,6 +218,7 @@ function ferro_stats_new(z, dParent) {
 		//console.log('is fixed goal', is_fixed_goal());
 		if (!is_fixed_goal()) {
 			let d2 = mDiv(d, { padding: 4, display: 'flex' }, `d_${plname}_goals`);
+			if (fen.availableGoals.length<4) {mStyle(d2,{wmin:120});mCenterFlex(d2);}
 			let sz = 16;
 			let styles_done = { h: sz, fz: sz, maleft: 6, fg: 'grey', 'text-decoration': 'line-through green', weight: 'bold' };
 			let styles_todo = { h: sz, fz: sz, maleft: 6, border: 'red', weight: 'bold', padding: 4, 'line-height': sz }; // 'text-decoration': 'underline red', 
@@ -357,7 +366,7 @@ function calc_ferro_highest_goal_achieved(pl) {
 		'7R': pl.journeys.length > 0 && is_sequence(pl.journeys[0]) && pl.journeys[0].length >= 7,
 	};
 
-	for (const k of ['7R', '55', '5', '44', '4', '33', '3']) {
+	for (const k of Z.fen.availableGoals){ // ['7R', '55', '5', '44', '4', '33', '3']) {
 		if (pl.goals[k]) {
 			console.log('player', pl.name, 'already achieved goal', k);
 			continue;
@@ -772,7 +781,8 @@ function find_players_with_min_score() {
 
 }
 function get_available_goals(plname) {
-	return ['3', '33', '4', '44', '5', '55', '7R'].filter(x => !Z.fen.players[plname].goals[x]);
+	//return ['3', '33', '4', '44', '5', '55', '7R'].filter(x => !Z.fen.players[plname].goals[x]);
+	return Z.fen.availableGoals.filter(x => !Z.fen.players[plname].goals[x]);
 }
 function get_round_goal() { return get_keys(Z.fen.players[Z.uplayer].goals).sort()[Z.round - 1]; }
 function is_correct_group(j, n = 3) { let r = j[0][0]; return j.length >= n && has_at_most_n_jolly(j, Z.options.jokers_per_group) && j.every(x => is_jolly(x) || x[0] == r); }
@@ -870,7 +880,7 @@ function onclick_clear_selection_ferro() { clear_selection(); }
 function ui_get_buy_or_pass_items() {
 	//console.log('uplayer',uplayer,UI.players[uplayer])
 	let items = [], i = 0;
-	items.push(ui_get_deck_item(UI.deck_discard));
+	if (!isEmpty(UI.deck_discard.items)) items.push(ui_get_deck_item(UI.deck_discard));
 
 	items = items.concat(ui_get_string_items(['pass']));
 

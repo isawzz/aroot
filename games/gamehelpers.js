@@ -344,7 +344,7 @@ function show_admin_ui() {
 	if (Z.game == 'spotit' && Z.uname == Z.host && Z.stage == 'init') show('bSpotitStart');
 	else if (Z.game == 'bluff' && Z.uname == Z.host && Z.stage == 1) show('bClearAck');
 	else if (Z.uname == Z.host && Z.stage == 'round_end') show('bClearAck');
-	else if (Z.game == 'ferro' && (Z.uname == Z.host || Z.uname == 'mimi') && Z.stage == 'can_resolve') show('bClearAck');
+	else if (Z.game == 'ferro' && Z.uname == 'mimi' && Z.stage == 'can_resolve') show('bClearAck');
 
 	if (['ferro', 'bluff', 'aristo', 'a_game'].includes(Z.game) && (Z.role == 'active' || Z.mode == 'hotseat')) {
 		//console.log('random should show because game is', Z.game)
@@ -387,6 +387,52 @@ function show_game_options(dParent, game) {
 			measure_fieldset(fs);
 		}
 	}
+
+}
+function show_history(fen, dParent) {
+	if (!isEmpty(fen.history)) {
+		let html = '';
+		for (const o of jsCopy(fen.history).reverse()) {
+			//console.log('o', o);
+			html += beautify_history(o.lines, o.title, fen);
+			//html += o;//html+=`<h1>${k}</h1>`;
+			//for (const line of arr) { html += `<p>${line}</p>`; }
+		}
+		// let dHistory =  mDiv(dParent, { padding: 6, margin: 4, bg: '#ffffff80', fg: 'black', hmax: 400, 'overflow-y': 'auto', wmin: 240, rounding: 12 }, null, html); //JSON.stringify(fen.history));
+		let dHistory = mDiv(dParent, { paleft: 12, bg: colorLight('#EDC690', .5), box: true, matop: 4, rounding: 10, patop: 10, pabottom: 10, w: '100%', hmax: `calc( 100vh - 250px )`, 'overflow-y': 'auto', w: 260 }, null, html); //JSON.stringify(fen.history));
+		// let dHistory =  mDiv(dParent, { padding: 6, margin: 4, bg: '#ffffff80', fg: 'black', hmax: 400, 'overflow-y': 'auto', wmin: 240, rounding: 12 }, null, html); //JSON.stringify(fen.history));
+		//mNode(fen.history, dHistory, 'history');
+		UI.dHistoryParent = dParent;
+		UI.dHistory = dHistory;
+		//console.log('dHistory', dHistory);
+
+
+		if (isdef(Clientdata.historyLayout)) {
+			show_history_layout(Clientdata.historyLayout);
+		}
+	}
+
+}
+function show_history_layout(layout) {
+	assertion(isdef(UI.dHistoryParent) && isdef(UI.dHistory), 'UI.dHistoryParent && UI.dHistory do NOT exist!!!');
+	if (layout == 'ph') PHLayout();
+	else if (layout == 'hp') HPLayout();
+	else if (layout == 'prh') PRHLayout();
+	else if (layout == 'hrp') HRPLayout();
+	else PHLayout();
+}
+function show_history_popup() {
+
+	if (isEmpty(Z.fen.history)) return;
+	assertion(isdef(UI.dHistoryParent) && isdef(UI.dHistory), 'UI.dHistoryParent && UI.dHistory do NOT exist!!!');
+
+	let l = valf(Clientdata.historyLayout, 'ph');
+	let cycle = ['ph', 'hp', 'prh', 'hrp'];
+	let i = (cycle.indexOf(l) + 1) % cycle.length;
+
+	show_history_layout(cycle[i]);
+
+
 
 }
 function show_home_logo() {
@@ -458,6 +504,7 @@ function show_options_popup(options) {
 	mInsert(dpop, mCreateFrom(`<div style="text-align:center;width:100%;font-family:Algerian;font-size:22px;">${Z.game}</div>`));
 	//console.log('popup', dpop);
 }
+function show_polling_signal() {}
 function show_role() {
 
 	let d = mBy('dAdminMiddle');
@@ -487,74 +534,6 @@ function show_role() {
 	d.innerHTML = text;
 	mStyle(d, styles);
 }
-function show_history(fen, dParent) {
-	if (!isEmpty(fen.history)) {
-		let html = '';
-		for (const o of jsCopy(fen.history).reverse()) {
-			//console.log('o', o);
-			html += beautify_history(o.lines, o.title, fen);
-			//html += o;//html+=`<h1>${k}</h1>`;
-			//for (const line of arr) { html += `<p>${line}</p>`; }
-		}
-		// let dHistory =  mDiv(dParent, { padding: 6, margin: 4, bg: '#ffffff80', fg: 'black', hmax: 400, 'overflow-y': 'auto', wmin: 240, rounding: 12 }, null, html); //JSON.stringify(fen.history));
-		let dHistory = mDiv(dParent, { paleft: 12, bg: colorLight('#EDC690', .5), box: true, matop: 4, rounding: 10, patop: 10, pabottom: 10, w: '100%', hmax: `calc( 100vh - 250px )`, 'overflow-y': 'auto', w: 260 }, null, html); //JSON.stringify(fen.history));
-		// let dHistory =  mDiv(dParent, { padding: 6, margin: 4, bg: '#ffffff80', fg: 'black', hmax: 400, 'overflow-y': 'auto', wmin: 240, rounding: 12 }, null, html); //JSON.stringify(fen.history));
-		//mNode(fen.history, dHistory, 'history');
-		UI.dHistoryParent = dParent;
-		UI.dHistory = dHistory;
-		//console.log('dHistory', dHistory);
-
-
-		if (isdef(Clientdata.historyLayout)) {
-			show_history_layout(Clientdata.historyLayout);
-		}
-	}
-
-}
-function show_history_layout(layout) {
-	assertion(isdef(UI.dHistoryParent) && isdef(UI.dHistory), 'UI.dHistoryParent && UI.dHistory do NOT exist!!!');
-	if (layout == 'ph') PHLayout();
-	else if (layout == 'hp') HPLayout();
-	else if (layout == 'prh') PRHLayout();
-	else if (layout == 'hrp') HRPLayout();
-	else PHLayout();
-}
-function show_history_popup() {
-
-	if (isEmpty(Z.fen.history)) return;
-	assertion(isdef(UI.dHistoryParent) && isdef(UI.dHistory), 'UI.dHistoryParent && UI.dHistory do NOT exist!!!');
-
-	let l = valf(Clientdata.historyLayout, 'ph');
-	let cycle = ['ph', 'hp', 'prh', 'hrp'];
-	let i = (cycle.indexOf(l) + 1) % cycle.length;
-
-	show_history_layout(cycle[i]);
-
-
-
-}
-var WhichCorner = 0;
-const CORNERS0 = ['♠', '♡']; //, '♣', '♢'];
-const CORNERS = ['◢', '◣', '◤', '◥'];
-const CORNERS2 = ['⬔', '⬕'];
-const CORNERS3 = ['⮜','⮝','⮞','⮟'];
-const CORNERS4 = ['⭐', '⭑']; //, '⭒', '⭓'];
-const CORNERS5 = ['⬛', '⬜']; //, '⭒', '⭓'];
-
-function animatedTitle() {
-	TO.titleInterval = setInterval(() => {
-		let corner = CORNERS[WhichCorner++ % CORNERS.length];
-		document.title = `${corner} DU BIST DRAN!!!!!`; //'⌞&amp;21543;    U+231E \0xE2Fo\u0027o Bar';
-	}, 1000);
-}
-function staticTitle() {
-	clearInterval(TO.titleInterval);
-	let url = window.location.href;
-	let loc = url.includes('telecave') ? 'telecave' : 'local';
-	let game = isdef(Z.game) ? Config.games[Z.game].friendly : '♠ GAMES ♠'
-	document.title = `(${loc}) ${game} ${DA.TEST0 == true?DA.pollCounter:''}`;
-}
-function show_polling_signal() {}
 function show_settings(dParent) {
 	let [options, fen, uplayer] = [Z.options, Z.fen, Z.uplayer];
 	clearElement(dParent);
@@ -694,6 +673,32 @@ function tableLayoutMR(dParent, m = 7, r = 1) {
 	let dOpenTable = ui.dOpenTable = mDiv(dMiddle, { w: '100%', padding: 10 }); mFlexWrap(dOpenTable);// mLinebreak(d_table);
 	return [dOben, dOpenTable, dMiddle, dRechts];
 }
+
+//#region title of page (in tab)
+var WhichCorner = 0;
+const CORNERS0 = ['♠', '♡']; //, '♣', '♢'];
+const CORNERS = ['◢', '◣', '◤', '◥'];
+const CORNERS2 = ['⬔', '⬕'];
+const CORNERS3 = ['⮜','⮝','⮞','⮟'];
+const CORNERS4 = ['⭐', '⭑']; //, '⭒', '⭓'];
+const CORNERS5 = ['⬛', '⬜']; //, '⭒', '⭓'];
+
+function animatedTitle() {
+	TO.titleInterval = setInterval(() => {
+		let corner = CORNERS[WhichCorner++ % CORNERS.length];
+		document.title = `${corner} DU BIST DRAN!!!!!`; //'⌞&amp;21543;    U+231E \0xE2Fo\u0027o Bar';
+	}, 1000);
+}
+function staticTitle() {
+	clearInterval(TO.titleInterval);
+	let url = window.location.href;
+	let loc = url.includes('telecave') ? 'telecave' : 'local';
+	// let game = isdef(Z) ? Config.games[Z.game].friendly : '♠ GAMES ♠'
+	let game = isdef(Z) ? stringAfter(Z.friendly,'of ') : '♠ GAMES ♠'
+	document.title = `(${loc}) ${game} ${DA.TEST0 == true?DA.pollCounter:''}`;
+}
+//#endregion title (tab)
+
 function PRHLayout() {
 	let drr = UI.DRR = mDiv(dTable);
 	mAppend(drr, UI.dHistory);

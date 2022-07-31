@@ -10068,19 +10068,66 @@ ok - gamestep
 449: *5:52 AM 7/31/2022-5:52 AM 7/31/2022
 WAAAAAAAAAAAAAAAAYYYYYYYYYYYYYYY SHORTER!!!
 450: *5:53 AM 7/31/2022-6:02 AM 7/31/2022
-4551: *6:02 AM 7/31/2022-
-- NOPE
+451: *6:02 AM 7/31/2022-6:11 AM 7/31/2022
+452: *6:11 AM 7/31/2022-6:13 AM 7/31/2022
+453: *6:13 AM 7/31/2022-6:30 AM 7/31/2022
+454: *6:30 AM 7/31/2022-6:31 AM 7/31/2022
+455: *6:32 AM 7/31/2022-6:38 AM 7/31/2022
+456: *6:38 AM 7/31/2022-6:46 AM 7/31/2022
+457: *6:46 AM 7/31/2022-6:48 AM 7/31/2022
+458: *6:48 AM 7/31/2022-6:51 AM 7/31/2022
+459: *6:51 AM 7/31/2022-6:55 AM 7/31/2022
+= last one!
+- noch eines!
+- noch ein unicode
+- soll ich einen unconscious sync machen????
+- wenn activate mach den title
+WAAAAAAAAAAAAAAAY SHORTER!!!!!!
+- zuerst such mir die corners!!!
+- blinking title
+460: *6:55 AM 7/31/2022-6:57 AM 7/31/2022
+461: *6:57 AM 7/31/2022-6:59 AM 7/31/2022
+462: *6:59 AM 7/31/2022-7:03 AM 7/31/2022
+463: *7:03 AM 7/31/2022-7:05 AM 7/31/2022
+464: *7:05 AM 7/31/2022-7:07 AM 7/31/2022
+465: *7:07 AM 7/31/2022-7:09 AM 7/31/2022
+466: *7:09 AM 7/31/2022-7:23 AM 7/31/2022
+467: *7:23 AM 7/31/2022-7:42 AM 7/31/2022
+468: *7:42 AM 7/31/2022-7:47 AM 7/31/2022
+469: *7:47 AM 7/31/2022-7:51 AM 7/31/2022
+470: *7:51 AM 7/31/2022-8:05 AM 7/31/2022
+471: *8:05 AM 7/31/2022-8:18 AM 7/31/2022
+472: *8:18 AM 7/31/2022-8:25 AM 7/31/2022
+473: *8:25 AM 7/31/2022-8:39 AM 7/31/2022
+- ferro stats muss min 125 sein!
+- deck: zahl muss zentriert sein!
+- wie wird bei fixed rounds das minimum selected?
+- nochmal stats!!!
+- stop game: tele games
+- stats wmin:120
+- mach ein fen.available_goals
+- brauch eine goals var
+- rounds: n, random rounds
+- upload!
+- select_timer
+- option: thinking time
+- option: auto_weiter
+- upload!
+474: *8:39 AM 7/31/2022-8:39 AM 7/31/2022
+475: *8:39 AM 7/31/2022-
+
 
 
 ferro:
 DONE- timer fuer pass
 DONE- automatisch weiter?
-- besseres signal (etwas das sich bewegt) fuer your turn!
+DONE- besseres signal (etwas das sich bewegt) fuer your turn!
+DONE- auch der weiter clicker soll timed sein!!!
+=>botify, unbotify fuer mimi
 - erklaerungen fuer nasi
 - ==>retard status fuer nasi, ev mac
-- auch der weiter clicker soll timed sein!!!
 - check ob wirklich newcards stimmt!
-- show clear ack button nur bei mimi
+==>- show clear ack button nur bei mimi
 - newcards problem ist das erst wenn wirklich dran ist newcards geloescht werden koennen!
 
 tbaitodirhmotd!!!
