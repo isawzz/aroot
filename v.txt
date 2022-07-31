@@ -10114,7 +10114,33 @@ WAAAAAAAAAAAAAAAY SHORTER!!!!!!
 - option: auto_weiter
 - upload!
 474: *8:39 AM 7/31/2022-8:39 AM 7/31/2022
-475: *8:39 AM 7/31/2022-
+475: *8:39 AM 7/31/2022-9:49 AM 7/31/2022
+476: *9:49 AM 7/31/2022-9:55 AM 7/31/2022
+477: *9:55 AM 7/31/2022-9:57 AM 7/31/2022
+478: *9:55 AM 7/31/2022-9:59 AM 7/31/2022
+479: *9:59 AM 7/31/2022-10:00 AM 7/31/2022
+480: *10:00 AM 7/31/2022-10:05 AM 7/31/2022
+481: *10:05 AM 7/31/2022-10:15 AM 7/31/2022
+1- goto fonts
+2- output
+3- js how to find out which browser is running the client page?
+if(window.navigator.appName == "") OR if(window.navigator.userAgent == "")
+482: *10:15 AM 7/31/2022-10:17 AM 7/31/2022 1
+483: *10:29 AM 7/31/2022-10:29 AM 7/31/2022
+484: *10:30 AM 7/31/2022-10:34 AM 7/31/2022
+1- zuerst output browser name
+2- download NotoColorEmoji woff
+3- suche NotoColorEmoji
+485: *10:34 AM 7/31/2022-10:34 AM 7/31/2022 2
+3- jetzt: basemin
+
+
+
+
+
+- font firefox! how 
+- was ist als naechstes zu tun? ein testspiel waere gut!
+
 
 
 

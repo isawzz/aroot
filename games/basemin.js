@@ -1106,7 +1106,10 @@ function miPic(item, dParent, styles, classes) {
 	let d = mDiv(dParent);
 	d.innerHTML = info.text;
 	if (nundef(styles)) styles = {};
-	addKeys({ family: info.family, fz: 50, display: 'inline-block' }, styles);
+
+	let family = info.family; // == 'emoNoto' && DA.isFirefox == true? 'emoNotoFF':info.family;
+
+	addKeys({ family: family, fz: 50, display: 'inline-block' }, styles);
 	mStyle(d, styles);
 	if (isdef(classes)) mClass(d, classes);
 	mCenterCenterFlex(d);
@@ -1134,7 +1137,10 @@ function mSymText(s, dParent, styles = {}, pos, classes) {
 function mSym(key, dParent, styles = {}, pos, classes) {
 	let info = Syms[key];
 	styles.display = 'inline-block';
-	styles.family = info.family;
+
+	let family = info.family; // == 'emoNoto' && DA.isFirefox == true? 'emoNotoFF':info.family;
+
+	styles.family = family;
 
 	//console.log('vorher: styles', jsCopy(styles))
 

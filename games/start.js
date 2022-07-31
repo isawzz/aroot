@@ -9,6 +9,8 @@ function start() { let uname = localStorage.getItem('uname'); if (isdef(uname)) 
 //function start() { let uname = null; if (isdef(uname)) U = { name: uname }; phpPost({ app: 'simple' }, 'assets'); }
 function start_with_assets() {
 
+	//console.log(`browser name: ${navigator.appName}, or ${navigator.userAgent}`);
+	DA.isFirefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1; if (DA.isFirefox) console.log('using Firefox!')
 	show_home_logo();
 	if (nundef(U)) { show_users(); return; } show_username();
 
