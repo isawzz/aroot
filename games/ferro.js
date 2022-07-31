@@ -47,8 +47,8 @@ function ferro() {
 function ferro_pre_action() {
 	let [stage, A, fen, plorder, uplayer, deck] = [Z.stage, Z.A, Z.fen, Z.plorder, Z.uplayer, Z.deck];
 	switch (stage) {
-		case 'can_resolve': select_add_items(ui_get_string_items(['weiter']), ferro_change_to_card_selection, 'may click to continue', 1, 1, Z.mode == 'multi'); break;
-		case 'buy_or_pass': if (!is_playerdata_set(uplayer)) { select_add_items(ui_get_buy_or_pass_items(), ferro_ack_uplayer, 'may click top discard to buy or pass', 1, 1); } break;
+		case 'can_resolve': if (Z.options.auto_weiter) ferro_change_to_card_selection(); else {select_add_items(ui_get_string_items(['weiter']), ferro_change_to_card_selection, 'may click to continue', 1, 1, Z.mode == 'multi');select_timer(2000,ferro_change_to_card_selection);} break;
+		case 'buy_or_pass': if (!is_playerdata_set(uplayer)) { select_add_items(ui_get_buy_or_pass_items(), ferro_ack_uplayer, 'may click top discard to buy or pass', 1, 1); select_timer(Z.options.thinking_time*1000,ferro_ack_uplayer); } break;
 		case 'card_selection': select_add_items(ui_get_ferro_items(uplayer), fp_card_selection, 'must select one or more cards', 1, 100); break;
 		default: console.log('stage is', stage); break;
 	}
@@ -89,12 +89,18 @@ function ferro_present_new(z, dParent, uplayer) {
 	}
 
 	if (Z.stage == 'round_end') show_waiting_for_ack_message();
-	else if (Z.stage == 'buy_or_pass' && (Z.role != 'active' || is_playerdata_set(uplayer))) {
+	else if (Z.stage == 'buy_or_pass' && uplayer == fen.trigger && ferro_check_resolve()) {
+		assertion(Z.stage == 'buy_or_pass', 'stage is not buy_or_pass when checking can_resolve!');
+		Z.stage = 'can_resolve';
+		[Z.turn, Z.stage] = [[get_multi_trigger()], 'can_resolve'];
+		take_turn_fen();
+	} else if (Z.stage == 'buy_or_pass' && (Z.role != 'active' || is_playerdata_set(uplayer))) {
 		//get players in turn that have not yet set playerdata
 		assertion(isdef(Z.playerdata), 'playerdata is not defined in buy_or_pass (present ferro)');
 		let pl_not_done = Z.playerdata.filter(x => Z.turn.includes(x.name) && isEmpty(x.state)).map(x => x.name);
 		show_waiting_message(`waiting for ${pl_not_done.join(', ')} to make buy decision`);
 	}
+
 
 	new_cards_animation();
 
@@ -216,7 +222,7 @@ function ferro_stats_new(z, dParent) {
 	}
 }
 
-//#region turns card_selection and buy_or_pass
+//#region turn changes
 function ferro_change_to_buy_pass() {
 	let [plorder, stage, A, fen, uplayer] = [Z.plorder, Z.stage, Z.A, Z.fen, Z.uplayer];
 
@@ -226,11 +232,16 @@ function ferro_change_to_buy_pass() {
 	//newturn is list of players starting with nextplayer
 	let newturn = jsCopy(plorder); while (newturn[0] != nextplayer) { newturn = arrCycle(newturn, 1); } //console.log('newturn', newturn);
 	fen.canbuy = newturn.filter(x => x != uplayer && fen.players[x].coins > 0); //fen.canbuy list ist angeordnet nach reihenfolge der frage
-	fen.trigger = uplayer;
+	fen.trigger = uplayer; //get_admin_player(fen.plorder); // uplayer;
+
+	//der grund warum es nicht geht dass der trigger zugleich in canbuy ist, ist dass er ja kein ack ausloesen kann und deshalb
+	//fuer immer => ueberleg das!!!!
+
+	console.log('trigger is', fen.trigger);
 	fen.buyer = null;
 	fen.nextturn = [nextplayer];
 
-	if (Z.mode == 'multi') { [Z.stage, Z.turn] = ['buy_or_pass', fen.canbuy]; take_turn_fen_clear(); }
+	if (Z.mode == 'multi') { [Z.stage, Z.turn] = ['buy_or_pass', fen.canbuy]; fen.keeppolling = true; take_turn_fen_clear(); }
 	else {
 		fen.canbuy.map(x => fen.players[x].buy = 'unset');
 		fen.lastplayer = arrLast(fen.canbuy);
@@ -248,6 +259,7 @@ function ferro_ack_uplayer_multi() {
 	if (can_resolve) {
 		assertion(Z.stage == 'buy_or_pass', 'stage is not buy_or_pass when checking can_resolve!');
 		Z.stage = 'can_resolve';
+
 		[Z.turn, Z.stage] = [[get_multi_trigger()], 'can_resolve'];
 		take_turn_fen_write();
 	} else { take_turn_multi(); }
@@ -277,7 +289,7 @@ function ferro_check_resolve() {
 function ferro_ack_uplayer_hotseat() {
 	let [A, fen, uplayer] = [Z.A, Z.fen, Z.uplayer];
 	let buy = !isEmpty(A.selected) && A.selected[0] == 0;
-	if (buy) { fen.buyer = uplayer; [Z.turn, Z.stage] = [[get_multi_trigger()], 'can_resolve']; }
+	if (buy) { fen.buyer = uplayer;[Z.turn, Z.stage] = [[get_multi_trigger()], 'can_resolve']; }
 	if (uplayer == fen.lastplayer) { [Z.turn, Z.stage] = [[get_multi_trigger()], 'can_resolve']; }
 	else { Z.turn = [get_next_in_list(uplayer, fen.canbuy)]; }
 	take_turn_fen();
@@ -300,15 +312,20 @@ function ferro_change_to_card_selection() {
 		deck_deal_safe_ferro(fen, plname, 1);
 		pl.coins -= 1; //pay
 		ari_history_list([`${plname} bought ${card}`], 'buy');
-	} 
+	}
 
 	//nextplayer draws
-	let nextplayer = fen.nextturn[0];	deck_deal_safe_ferro(fen, nextplayer, 1);
+	let nextplayer = fen.nextturn[0];
+	deck_deal_safe_ferro(fen, nextplayer, 1);
+
+	if (isdef(fen.buyer)) console.log('newcards', fen.buyer, fen.players[fen.buyer].newcards);
+	console.log('newcards', nextplayer, fen.players[nextplayer].newcards);
 
 	Z.turn = fen.nextturn;
 	Z.stage = 'card_selection';
 
 	for (const k of ['buyer', 'canbuy', 'nextturn', 'trigger', 'lastplayer']) delete fen[k];//cleanup buy_or_pass multi-turn!!!!!!!!!!!!!
+	delete fen.keeppolling;
 
 	clear_transaction();
 	take_turn_fen();

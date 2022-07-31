@@ -250,6 +250,7 @@ const ARI = {
 		101: 'build end',
 		102: 'select building to upgrade',
 		103: 'select downgrade cards',
+		104: 'next_comm_setup_stage',
 
 	}
 };
@@ -1614,6 +1615,7 @@ function arr_get_min(arr, func) {
 function arrMax(arr, f) { return arr_get_max(arr, f); }
 function arrMin(arr, f) { return arr_get_min(arr, f); }
 function arrMinus(a, b) { if (isList(b)) return a.filter(x => !b.includes(x)); else return a.filter(x => x != b); }
+function arrPlus(a,b){b.map(x=>a.push(x));return a;}
 function arrRange(from = 1, to = 10, step = 1) { let res = []; for (let i = from; i <= to; i += step)res.push(i); return res; }
 function arrRemove(arr, listweg) {
 	//ACHTUNG!!!! geht nur wenn array elements unique sind! removes FIRST OCCURRENCE of el in arr!!!!!!!!!!!!!	

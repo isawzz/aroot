@@ -64,7 +64,7 @@ function bluff_present_new(dParent) {
 	mLinebreak(dt, 10);
 
 	if (stage == 1) {
-
+		show_waiting_for_ack_message();
 		let loser = fen.loser;
 		let msg1 = fen.war_drin ? 'war drin!' : 'war NICHT drin!!!';
 		let msg2 = isdef(fen.players[loser]) ? `${capitalize(loser)} will get ${fen.players[loser].handsize} cards!` : `${capitalize(loser)} is out!`;
@@ -105,29 +105,24 @@ function bluff_state_new(dParent) {
 
 }
 
-//#region ack_ NEW!
+//#region turn changes
 function bluff_change_to_ack_round(fen, nextplayer) {
-	start_simple_ack_round(1, jsCopy(fen.plorder), nextplayer, 'bluff_change_to_turn_round', true);	//_bluff_change_to_ack_round();
+	[Z.stage,Z.turn] = [1,[get_admin_player(fen.plorder)]];
+	fen.keeppolling = true;
+	fen.nextturn = [nextplayer]; //next player after ack!
 }
 function bluff_change_to_turn_round() {
-	let [z, A, fen, stage, uplayer, ui] = [Z, Z.A, Z.fen, Z.stage, Z.uplayer, UI];
-	assertion(stage == 1, "ALREADY IN TURN ROUND!!!!!!!!!!!!!!!!!!!!!!")
-	Z.turn = fen.turn_after_ack;
-	//console.log('bluff_change_to_turn_round', Z.turn);
-	Z.round += 1;
+	let [fen, stage] = [Z.fen, Z.stage];
+	assertion(stage == 1, "ALREADY IN TURN ROUND!!!!!!!!!!!!!!!!!!!!!!");
+	//assertion(isdef(Z) && isdef(fen), "Z or fen is undefined!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 	Z.stage = 0;
+	Z.turn = fen.nextturn;
+	Z.round += 1;
 	for (const k of ['bidder', 'loser', 'aufheber', 'lastbid', 'lastbidder']) delete fen[k];
+	for (const k of ['nextturn', 'keeppolling']) delete fen[k];
+	
 	for (const plname of fen.plorder) { delete fen.players[plname].lastbid; }
-	clear_ack_variables();
 }
-function bluff_ack_uplayer() {
-	let [A, fen, stage, uplayer] = [Z.A, Z.fen, Z.stage, Z.uplayer];
-	fen.players[uplayer].ack = true;
-	//DA.ack[uplayer] = true;
-	ack_player(uplayer);
-}
-
-//#endregion
 
 //#region helpers
 function apply_skin1(item) {
@@ -184,11 +179,11 @@ function bluff_activate_stage1() {
 	if (isdef(DA.ack) && isdef(DA.ack[uplayer])) { console.log('DA.ack', DA.ack); mText('...waiting for ack', dt); return; }
 
 	mPulse(ui.dHandsize, 2000);
-	mButton('WEITER', () => {
-		bluff_ack_uplayer();
-		if (isEmpty(Z.turn) || Z.mode == 'hotseat') { bluff_change_to_turn_round(); take_turn_fen(); }
+	// mButton('WEITER', () => {
+	// 	bluff_ack_uplayer();
+	// 	if (isEmpty(Z.turn) || Z.mode == 'hotseat') { bluff_change_to_turn_round(); take_turn_fen(); }
 
-	}, dt, { fz: 22 }, ['donebutton']);
+	// }, dt, { fz: 22 }, ['donebutton']);
 }
 function bluff_button_panel1(dt, bid, sz) {
 	let n = bid[0] == '_' ? 1 : Number(bid[0]);

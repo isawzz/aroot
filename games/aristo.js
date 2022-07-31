@@ -46,7 +46,8 @@ function aristo() {
 
 		if (exp_commissions(options)) {
 			ari_history_list([`commission trading starts`], 'commissions', fen);
-			[fen.stage, fen.turn] = [23, [fen.plorder[0]]]; fen.comm_setup_num = 3;
+			//[fen.stage, fen.turn] = [23, [fen.plorder[0]]]; fen.comm_setup_num = 3;
+			[fen.stage, fen.turn] = [23, fen.plorder]; fen.comm_setup_num = 3; fen.keeppolling = true;
 		} else if (exp_rumors(options)) {
 			ari_history_list([`gossiping starts`], 'rumors', fen);
 			[fen.stage, fen.turn] = [24, [fen.plorder[0]]];
@@ -218,6 +219,31 @@ function aristo() {
 			return iDiv(card).outerHTML;
 		}
 
+		if (DA.TEST0 == true) {
+			//testing output
+			let html = `${Z.stage}`;
+			if (isdef(Z.playerdata)) {
+	
+				let trigger = get_multi_trigger();
+				if (trigger) html += ` trigger:${trigger}`;
+	
+				for (const data of Z.playerdata) {
+					if (data.name == trigger) continue;
+					let name = data.name;
+					let state = data.state;
+					//console.log('state', name, state, typeof(state));
+					let s_state = object2string(state);
+					html += ` ${name}:'${s_state}'`; // (${typeof state})`;
+					//let buys=!isEmpty(data.state)?data.state.buy:'_';
+					//html += ` ${name}:${buys}`;
+				}
+				dParent.innerHTML += ` ${Z.playerdata.map(x => x.name)}`;
+			}
+	
+			dParent.innerHTML = html;
+			return;
+		}
+	
 		let user_html = get_user_pic_html(Z.uplayer, 30);
 		let phase_html = get_phase_html();
 
@@ -340,6 +366,7 @@ function ari_pre_action() {
 		case 'auction: buy': select_add_items(ui_get_market_items(), post_auction, 'must buy a card', 1, 1); break;
 		case 'end game?': select_add_items(ui_get_endgame(uplayer), post_endgame, 'may end the game here and now or go on!', 1, 1); break;
 		case 'pick luxury or journey cards': select_add_items(ui_get_string_items(['luxury cards', 'journey cards']), post_luxury_or_journey_cards, 'must select luxury cards or getting cards from the other end of the journey', 1, 1); break;
+		case 'next_comm_setup_stage': select_confirm_weiter(post_comm_setup_stage); break;
 		default: console.log('stage is', stage); break;
 	}
 

@@ -84,6 +84,7 @@ function onclick_random() {
 function onclick_reload_after_switching() { DA.pollCounter=0;DA.reloadColor=rColor(); onclick_reload(); }
 
 function onclick_reload() {
+	console.log('WAS?')
 	if (isdef(Z)) {
 		// bei einem timed game mit schachuhr, muss ich die zeit abziehen!!!
 		if (Z.game == 'fritz' && nundef(Z.fen.winners)) {
@@ -92,7 +93,7 @@ function onclick_reload() {
 			take_turn_fen();
 
 		} else {
-			FORCE_REDRAW = true; send_or_sim({ friendly: Z.friendly, uname: Z.uplayer }, 'table');
+			FORCE_REDRAW = true; send_or_sim({ friendly: Z.friendly, uname: Z.uplayer, auto:false }, 'table');
 		}
 
 	} else if (U) { onclick_tables(); }
@@ -134,7 +135,7 @@ function onclick_restart() {
 	let i = 0; playernames.map(x => fen.players[x].playmode = playermodes[i++]); //restore playmode
 	//if (Z.game == 'spotit') spotit_clear_score();
 	//console.log('neue fen',Z.fen.plorder.map(x=>fen.players[x].time_left))
-	take_turn_fen(true);
+	take_turn_fen_clear();
 }
 function onclick_restart_move() {
 	if (isdef(Clientdata.snapshot)) {

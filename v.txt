@@ -9893,18 +9893,229 @@ __________ fr 29.7.22
 281: *8:12 PM 7/29/2022-8:47 PM 7/29/2022
 282: *8:47 PM 7/29/2022-8:49 PM 7/29/2022
 283: *8:49 PM 7/29/2022-8:53 PM 7/29/2022
-284: *8:55 PM 7/29/2022-
-- irgendeine art von gamepause waer schon gut!!!
+284: *8:55 PM 7/29/2022-5:55 AM 7/30/2022
+285: *5:55 AM 7/30/2022-5:56 AM 7/30/2022
+286: *5:56 AM 7/30/2022-6:00 AM 7/30/2022
+287: *6:00 AM 7/30/2022-6:02 AM 7/30/2022
+288: *6:02 AM 7/30/2022-6:05 AM 7/30/2022
+289: *6:05 AM 7/30/2022-6:15 AM 7/30/2022
+290: *6:15 AM 7/30/2022-6:19 AM 7/30/2022
+291: *6:19 AM 7/30/2022-6:20 AM 7/30/2022
+292: *6:20 AM 7/30/2022-6:22 AM 7/30/2022
+293: *6:22 AM 7/30/2022-6:24 AM 7/30/2022
+294: *6:24 AM 7/30/2022-6:29 AM 7/30/2022
+295: *6:30 AM 7/30/2022-6:33 AM 7/30/2022
+296: *6:33 AM 7/30/2022-6:37 AM 7/30/2022
+297: *6:37 AM 7/30/2022-6:39 AM 7/30/2022
+298: *6:40 AM 7/30/2022-6:41 AM 7/30/2022
+- its seomthing else...
+- bei jedem bug!!!!!!!! something else entirely
+- WAAAAAAAAAAYYYYYYYYYYYY SHORTER!!!!!!!!!!!!!!!!!!!!
+- bluff 117
+- bluff change to turn round something else is relevant...
+bluff 112 something else is relevant...
+- ich brauch ein dSelection0 oben!
+- wie hab ich das coole message gemacht?
+- present bluff stage 1 as NO WEITER button!!!
+WAAAAAAAAAAAAAAAAAAAAY SHORTER!!!!!!!!!!!!!!
+- first admin player in plorder
+- wie soll sagen wer weiter sagen kann???
+- oder turn: first advanced player? first nonret player
+- echt??? soll ich nicht einfach sagen: turn: plorder(0)
+299: *6:41 AM 7/30/2022-6:42 AM 7/30/2022
+300: *6:43 AM 7/30/2022-6:44 AM 7/30/2022
+301: *6:46 AM 7/30/2022-6:48 AM 7/30/2022
+302: *6:48 AM 7/30/2022-6:50 AM 7/30/2022
+303: *6:50 AM 7/30/2022-6:52 AM 7/30/2022
+304: *6:52 AM 7/30/2022-6:53 AM 7/30/2022
+305: *6:53 AM 7/30/2022-6:54 AM 7/30/2022
+=>es gibt keine players!!!! habe verrgessen die players zu setzen!!!
+- apiserver 201 turn empty!!! wie kann das sein?
+- something else ...
+- ferro test!
+- zuerst noch: ferro can_resolve ist keeppolling
+306: *6:54 AM 7/30/2022-6:55 AM 7/30/2022
+307: *6:55 AM 7/30/2022-6:56 AM 7/30/2022
+308: *6:56 AM 7/30/2022-7:01 AM 7/30/2022
+309: *7:01 AM 7/30/2022-7:02 AM 7/30/2022
+310: *7:02 AM 7/30/2022-7:04 AM 7/30/2022
+311: *7:04 AM 7/30/2022-7:04 AM 7/30/2022
+312: *7:05 AM 7/30/2022-7:05 AM 7/30/2022
+313: *7:05 AM 7/30/2022-7:06 AM 7/30/2022
+314: *7:06 AM 7/30/2022-7:09 AM 7/30/2022
+315: *7:09 AM 7/30/2022-7:13 AM 7/30/2022
+316: *7:13 AM 7/30/2022-7:15 AM 7/30/2022
+317: *7:15 AM 7/30/2022-7:19 AM 7/30/2022
+318: *7:19 AM 7/30/2022-7:25 AM 7/30/2022
+319: *7:25 AM 7/30/2022-7:25 AM 7/30/2022
+320: *7:25 AM 7/30/2022-7:30 AM 7/30/2022
+321: *7:30 AM 7/30/2022-7:30 AM 7/30/2022
+322: *7:30 AM 7/30/2022-7:47 AM 7/30/2022
+323: *7:47 AM 7/30/2022-7:49 AM 7/30/2022
+- goto onclick_restart
+- verify playerdata state cleared at RESTART!!!!!!!
+324: *7:49 AM 7/30/2022-7:55 AM 7/30/2022
+1- in welchen stage gehe wenn 
+2- weiter
+3- test game restart bei ferro
+325: *7:55 AM 7/30/2022-7:57 AM 7/30/2022 1
+326: *7:57 AM 7/30/2022-8:00 AM 7/30/2022
+327: *8:00 AM 7/30/2022-8:00 AM 7/30/2022
+328: *8:00 AM 7/30/2022-8:01 AM 7/30/2022
+329: *8:01 AM 7/30/2022-8:02 AM 7/30/2022
+1- SUCCESS!!! der host muss pldata in die fen integrieren!
+2- test
+3- fail
+4- test
+330: *8:02 AM 7/30/2022-8:05 AM 7/30/2022 2
+331: *8:07 AM 7/30/2022-8:07 AM 7/30/2022
+332: *8:07 AM 7/30/2022-8:08 AM 7/30/2022
+333: *8:08 AM 7/30/2022-8:09 AM 7/30/2022
+1- open ferro!
+2- das soll so aehnlich aussehen wie can_resolve stage in ferro
+3- brauch ein select_confirm_weiter
+4- der stage ist jetzt 104
+334: *8:09 AM 7/30/2022-8:11 AM 7/30/2022 3
+335: *8:12 AM 7/30/2022-8:16 AM 7/30/2022
+336: *8:16 AM 7/30/2022-8:19 AM 7/30/2022
+1- uebertrage von giver zu receiver comissions!
+2- wie heisst diese zahl? fen.comm_setup_num -= 1;
+3- test! bis OK 3
+4- wie heisst das zeug?
+337: *8:19 AM 7/30/2022-8:24 AM 7/30/2022 4
+338: *8:25 AM 7/30/2022-8:26 AM 7/30/2022
+339: *8:26 AM 7/30/2022-8:29 AM 7/30/2022
+340: *8:29 AM 7/30/2022-8:30 AM 7/30/2022
+1- goto ferro state
+2- need to output player states in state sowie in ferro state
+3- test!
+4- weiter?
+341: *8:30 AM 7/30/2022-8:37 AM 7/30/2022 5
+342: *8:37 AM 7/30/2022-8:38 AM 7/30/2022
+343: *8:38 AM 7/30/2022-8:39 AM 7/30/2022
+344: *8:39 AM 7/30/2022-8:39 AM 7/30/2022
+345: *8:39 AM 7/30/2022-8:42 AM 7/30/2022
+1- jetzt schau warum er sie nicht zum anderen added?
+2- er hat sie weggenommen!!!
+3- WAS IST DA LOS????
+4- verify that uplayer is giver OK
+5- set DA.TEST0
+346: *8:42 AM 7/30/2022-8:44 AM 7/30/2022 6
+347: *8:49 AM 7/30/2022-8:49 AM 7/30/2022
+348: *8:49 AM 7/30/2022-8:51 AM 7/30/2022
+349: *8:51 AM 7/30/2022-8:51 AM 7/30/2022
+1- dann sollte ich aber das NICHT machen erstmal!
+2- es ist weil ich override pldata erlaube solange nicht locked!
+3- ***fe click,A click,fe shows correct pldata but incorrect role!
+4- merke mir was mimi hat!
+5- move_from-to
+350: *9:45 AM 7/30/2022-9:47 AM 7/30/2022 7
+351: *9:47 AM 7/30/2022-9:49 AM 7/30/2022
+352: *9:49 AM 7/30/2022-9:52 AM 7/30/2022
+353: *9:53 AM 7/30/2022-9:53 AM 7/30/2022
+1- es muesste eigentlich gehen dass derjenige der resolve check hat den turn an den trigger weitergibt und der trigger sowieso immer pollt
+2- warum kann der trigger nicht immer die mimi sein"???
+3- upload ohne DA.TEST0
+4- upload ferro!
+354: *9:53 AM 7/30/2022-9:55 AM 7/30/2022 8
+355: *10:02 AM 7/30/2022-10:02 AM 7/30/2022
+356: *10:02 AM 7/30/2022-1:36 PM 7/30/2022
+357: *1:36 PM 7/30/2022-3:48 PM 7/30/2022
+2- ich glaub jetzt gehts! >fgu!
+3- localhost game ferro starten!
+4- aendere nochmal das trigger zu admin
+358: *3:49 PM 7/30/2022-3:56 PM 7/30/2022 9
+359: *3:56 PM 7/30/2022-3:59 PM 7/30/2022
+360: *3:59 PM 7/30/2022-4:00 PM 7/30/2022
+361: *4:00 PM 7/30/2022-4:03 PM 7/30/2022
+1- find: to make buy decision
+2- er sagt: waiting for to make buy decision empty!
+3- versuch dasselbe auf telecave!
+4- versuch ein spiel ohne selbst mitzuspielen zu machen!
+362: *4:03 PM 7/30/2022-4:53 PM 7/30/2022 10
+363: *4:54 PM 7/30/2022-5:00 PM 7/30/2022
+364: *5:00 PM 7/30/2022-5:05 PM 7/30/2022
+365: *5:05 PM 7/30/2022-5:20 PM 7/30/2022
+1- der state ist buy_or_pass aber ich hab keine ui!!!
+2- versuch zu replicaten: beide passen und einer davon is trigger
+3- hergang:
+4- trigger falsch gesetzt! lauren discarded but amanda is trigger!
+366: *5:21 PM 7/30/2022-5:22 PM 7/30/2022 11
+367: *5:22 PM 7/30/2022-5:24 PM 7/30/2022
+368: *5:24 PM 7/30/2022-5:28 PM 7/30/2022
+1- upload!
+2- in change to turn round
+3- wo bekommt man die neuen cards?
+4- weiter!
+369: *5:28 PM 7/30/2022-6:38 PM 7/30/2022 
+4- aufschreibe todo fuer ferro!
+__________ so 31.7.22 
+440: *8:50 PM 7/30/2022-5:18 AM 7/31/2022
+441: *5:18 AM 7/31/2022-5:19 AM 7/31/2022
+442: *5:19 AM 7/31/2022-5:20 AM 7/31/2022
+443: *5:20 AM 7/31/2022-5:25 AM 7/31/2022
+444: *5:25 AM 7/31/2022-5:28 AM 7/31/2022
+445: *5:28 AM 7/31/2022-5:29 AM 7/31/2022
+446: *5:29 AM 7/31/2022-5:32 AM 7/31/2022
+447: *5:32 AM 7/31/2022-5:46 AM 7/31/2022
+448: *5:46 AM 7/31/2022-5:52 AM 7/31/2022
+ok - warum ist result.auto true???
+ok - new data warum nicht einfach ein DA.result
+ok - verify that get playerdata on reload!
+ok - verify that select_timer is stopped when ack player!
+ok - wo? ferro?
+ok - gamestep
+449: *5:52 AM 7/31/2022-5:52 AM 7/31/2022
+WAAAAAAAAAAAAAAAAYYYYYYYYYYYYYYY SHORTER!!!
+450: *5:53 AM 7/31/2022-6:02 AM 7/31/2022
+4551: *6:02 AM 7/31/2022-
+- NOPE
+
+
+ferro:
+DONE- timer fuer pass
+DONE- automatisch weiter?
+- besseres signal (etwas das sich bewegt) fuer your turn!
+- erklaerungen fuer nasi
+- ==>retard status fuer nasi, ev mac
+- auch der weiter clicker soll timed sein!!!
+- check ob wirklich newcards stimmt!
+- show clear ack button nur bei mimi
+- newcards problem ist das erst wenn wirklich dran ist newcards geloescht werden koennen!
+
+tbaitodirhmotd!!!
+
+
+
+
+
+- must check if can_resolve
+- nothing changes 
+- ok alles FALSCH@!!! muss ja pldata verrwenden!!! NICHT IN DIE FEN SCHREIBEN!!!
+- anstatt das ding mit der commission round und comm num, soll ich einfach multiple stages machen!
+- sobald ein stage complete ist, gebe dem 
+- WAY SHORTER!!! next!
+- comm stage 3 is complete when comm_setup_di hat entry fuer alle players in plorder
+- goto baustelle
+- verify that baustelle is imported AFTER aristo
+- aristo 1222
+- bug!
+- commission trading ist ja nur 1x und zwar bei setup!
+- clear baustellen!
+- open aristo!
+- aristo commissions weitergeben!
+
+
+
+
+
+- change - test - outcome - think - ... pick next choice:
+choices:
+- aristo commissions weitergeben!
 - aristo: mach die simultaneous rounds!!!
+- irgendeine art von gamepause waer schon gut!!!
 - js how to find out which browser I am using? Firefox vs Chrome...
 - mich nervt auch echt der font in firefox!!!! 
-- ich kann auch is_ack_round
-- ich hab es mit keeppolling geloest in easy - vielleicht war das gut????? fuer eine ack round?
-- weiter button bei bluff entfernen!!!
-- alle stages sollen immer game name 1 letter+sonstwas sein????
-- das autopoll ist ueberhaupt nicht robust!!!!!!! sondern extrem heikel!
-- bluff geht garnicht mehr!!! was ist da los?????
-- goto ferro 816
 
 
 

@@ -162,6 +162,9 @@ function select_add_items(items, callback = null, instruction = null, min = 0, m
 		} else { activate_ui(); }
 	} else { activate_ui(); }
 }
+function select_confirm_weiter(callback){
+	select_add_items(ui_get_string_items(['weiter']), callback, 'may click to continue', 1, 1, Z.mode == 'multi'); 
+}
 function select_last(item, callback, ev) {
 	//console.log('clicked',ev.target)
 	//console.log('haaaaaaaaaaaaaaaaaaaalllllllllllllllllooooooooooooooooo')

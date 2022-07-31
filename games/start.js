@@ -3,7 +3,8 @@ onload = start; var FirstLoad = true;
 //onblur = stopPolling;
 //onfocus = onclick_reload_after_switching;
 
-//DA.TEST0 = true; DA.TEST1 = true; DA.TEST1Counter = 0;
+//DA.TEST0 = true; 
+//DA.TEST1 = true; DA.TEST1Counter = 0;
 function start() { let uname = localStorage.getItem('uname'); if (isdef(uname)) U = { name: uname }; phpPost({ app: 'simple' }, 'assets'); }
 //function start() { let uname = null; if (isdef(uname)) U = { name: uname }; phpPost({ app: 'simple' }, 'assets'); }
 function start_with_assets() {
@@ -81,6 +82,7 @@ function gamestep() {
 	Z.func.present(Z, dTable, Z.uplayer);	// *** Z.uname und Z.uplayer ist IMMER da! ***
 
 	//console.log('_____uname:'+Z.uname,'role:'+Z.role,'player:'+Z.uplayer,'host:'+Z.host,'curplayer:'+Z.turn[0],'bot?',is_current_player_bot()?'YES':'no');
+	staticTitle();
 	if (isdef(Z.scoring.winners)) { show_winners(); }
 	else if (Z.func.check_gameover(Z)) {
 		let winners = show_winners();
@@ -93,16 +95,12 @@ function gamestep() {
 		Z.A = { level: 0, di: {}, ll: [], items: [], selected: [], tree: null, breadcrumbs: [], sib: [], command: null, autosubmit: Config.autosubmit };
 		copyKeys(jsCopy(Z.fen), Z);
 		copyKeys(UI, Z);
-		activate_ui(Z); //console.log('uiActivated',uiActivated?'true':'false');
+		activate_ui(Z); 
 		Z.func.activate_ui();
-		//if (Z.options.zen_mode != 'yes' && Z.mode != 'hotseat' && !DA.simulate) autopoll();
-		if (Z.options.zen_mode != 'yes' && Z.mode != 'hotseat' &&
-			//  (Z.turn.length > 1 || Z.stage == 'can_resolve' && get_multi_trigger() != 'mimi' || Z.game == 'bluff')) autopoll();
-			(Z.turn.length > 1 || Z.stage == 'can_resolve' || Z.game == 'bluff' && Z.stage == 1)) autopoll();
+		if (Z.mode == 'multi') animatedTitle();
+		if (Z.options.zen_mode != 'yes' && Z.mode != 'hotseat' && Z.fen.keeppolling) autopoll();
 	}
-
 	//landing();
-
 }
 
 //#region basemin NEW HELPERS!!!!!
@@ -149,50 +147,6 @@ function complexCompare(obj1, obj2) {
 
 	return true;
 }
-
-//#region ack::: rem cons nach bluff check!!!!!!!!!!!!!
-function start_simple_ack_round(ackstage, ack_players, nextplayer, callbackname_after_ack, keeppolling = false) {
-
-	let fen = Z.fen;
-	//each player except uplayer will get opportunity to buy top discard - nextplayer will draw if passing
-	fen.ack_players = ack_players;
-	fen.lastplayer = arrLast(ack_players);
-	fen.nextplayer = nextplayer; //next player after ack!
-	fen.turn_after_ack = [nextplayer];
-	fen.callbackname_after_ack = callbackname_after_ack;
-	fen.keeppolling = keeppolling;
-
-	Z.stage = ackstage;
-	Z.turn = [ack_players[0]];
-
-}
-function ack_player(plname) {
-	let [fen, uplayer, pl] = [Z.fen, Z.uplayer, Z.fen.players[Z.uplayer]];
-
-	//console.log('ack_player','plname',plname,'uplayer',uplayer,'pl',pl,'Z.turn',Z.turn,'Z.stage',Z.stage);
-	assertion(sameList(Z.turn, [plname]), "ack_player: wrong turn");
-
-	if (plname == fen.lastplayer || fen.players[uplayer].buy == true) {
-		let func = window[fen.callbackname_after_ack];
-		if (isdef(func)) func();
-	} else {
-		Z.turn = [get_next_in_list(plname, fen.ack_players)];
-	}
-	//console.log('ack_player','plname',plname,'uplayer',uplayer,'pl',pl,'Z.turn',Z.turn,'Z.stage',Z.stage);
-	take_turn_fen();
-}
-function clear_ack_variables() {
-	let [fen, uplayer, pl] = [Z.fen, Z.uplayer, Z.fen.players[Z.uplayer]];
-	delete fen.ack_players;
-	delete fen.lastplayer;
-	delete fen.nextplayer;
-	delete fen.turn_after_ack;
-	delete fen.ackstage;
-	delete fen.callbackname_after_ack;
-	delete fen.keeppolling;
-
-}
-//#endregion
 
 //#region helpers
 function ai_move(ms = 100) {

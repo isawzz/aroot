@@ -1,4 +1,180 @@
 
+function show_polling_signal() {
+
+	let url = window.location.href;
+	//console.log('url', url, typeof(url));
+	let loc = url.includes('telecave') ? 'tele' : 'local';
+	document.title = `${loc}:${DA.pollCounter} ${Config.games[Z.game].friendly}`;
+
+
+	// let d1 = mDiv(mBy('dAdmin'), { position: 'fixed', top: 10, left: 73, width: 20, height: 20, bg: valf(DA.reloadColor, 'green'), rounding: 10 });
+	// mFadeRemove(d1, 1000);
+}
+
+function gamestep() {
+
+	show_admin_ui();
+
+	DA.running = true; clear_screen();
+	dTable = mBy('dTable'); mFall(dTable); mClass('dTexture', 'wood');
+
+	shield_off();
+	show_title();
+	show_role();
+	Z.func.present(Z, dTable, Z.uplayer);	// *** Z.uname und Z.uplayer ist IMMER da! ***
+
+	//console.log('_____uname:'+Z.uname,'role:'+Z.role,'player:'+Z.uplayer,'host:'+Z.host,'curplayer:'+Z.turn[0],'bot?',is_current_player_bot()?'YES':'no');
+	if (isdef(Z.scoring.winners)) { show_winners(); }
+	else if (Z.func.check_gameover(Z)) {
+		let winners = show_winners();
+		Z.scoring = { winners: winners }
+		sendgameover(winners[0], Z.friendly, Z.fen, Z.scoring);
+	} else if (is_shield_mode()) {
+		if (!DA.no_shield == true) { hide('bRestartMove'); shield_on(); } //mShield(dTable.firstChild.childNodes[1])} //if (isdef(Z.fen.shield)) mShield(dTable);  }
+		autopoll();
+	} else {
+		Z.A = { level: 0, di: {}, ll: [], items: [], selected: [], tree: null, breadcrumbs: [], sib: [], command: null, autosubmit: Config.autosubmit };
+		copyKeys(jsCopy(Z.fen), Z);
+		copyKeys(UI, Z);
+		activate_ui(Z); //console.log('uiActivated',uiActivated?'true':'false');
+		Z.func.activate_ui();
+		//if (Z.options.zen_mode != 'yes' && Z.mode != 'hotseat' && !DA.simulate) autopoll();
+		if (Z.options.zen_mode != 'yes' && Z.mode != 'hotseat' && Z.fen.keeppolling) autopoll();
+		//  (Z.turn.length > 1 || Z.stage == 'can_resolve' && get_multi_trigger() != 'mimi' || Z.game == 'bluff')) autopoll();
+		//  (Z.turn.length > 1 || Z.stage == 'can_resolve' || Z.game == 'bluff' && Z.stage == 1)) autopoll();
+
+		//let favicon = document.querySelector('[rel=icon]'); favicon.href = "../base/assets/images/icons/yourturn.gif";
+
+	}
+
+	//landing();
+
+}
+
+//#region comm pass trial 1
+function ari_transfer_commission_cards_to_di(){
+	let [fen, A, uplayer, plorder] = [Z.fen, Z.A, Z.uplayer, Z.plorder];
+
+	//console.log('we are in stage ' + Z.stage);
+
+	let items = A.selected.map(x => A.items[x]);
+	let next = get_next_player(Z, uplayer);
+	let receiver = next;
+	let giver = uplayer;
+	let keys = items.map(x => x.key);
+	fen.players[giver].commissions = arrMinus(fen.players[giver].commissions, keys);
+	if (nundef(fen.comm_setup_di)) fen.comm_setup_di = {};
+	fen.comm_setup_di[receiver] = keys;
+}
+function process_comm_setup() {
+
+	let [fen, A, uplayer, plorder] = [Z.fen, Z.A, Z.uplayer, Z.plorder];
+
+	//console.log('we are in stage ' + Z.stage);
+
+	ari_transfer_commission_cards_to_di();
+
+	if (is_commission_stage_complete(fen)) {
+		//transfer cards from di to each player's commision cards
+		for (const plname of plorder) {
+			if (isdef(fen.comm_setup_di[plname])) {
+				fen.players[plname].commissions = arrPlus(fen.players[plname].commissions, fen.comm_setup_di[plname]);
+			}
+		}
+
+		// 
+	}
+}
+function old_process_comm_setup(){
+	if (is_setup_commissions_complete()) {
+		for (const plname of plorder) {
+			let pl = fen.players[plname];
+			assertion(isdef(fen.comm_setup_di[plname]), 'no commission setup for ' + plname);
+			pl.commissions = pl.commissions.concat(fen.comm_setup_di[plname]);
+		}
+		delete fen.comm_setup_di;
+		delete fen.comm_setup_num;
+
+		ari_history_list([`commission trading ends`], 'commissions');
+
+		if (exp_rumors) { 
+			[Z.stage, Z.turn] = [24, [plorder[0]]]; 
+			ari_history_list([`gossiping starts`], 'rumors');
+		
+		}else { [Z.stage, Z.turn] = set_journey_or_stall_stage(fen, Z.options, fen.phase); }
+
+	} else if (next == plorder[0]) {
+		//next commission round starts
+		for (const plname of plorder) {
+			let pl = fen.players[plname];
+			assertion(isdef(fen.comm_setup_di[plname]), 'no commission setup for ' + plname);
+			pl.commissions = pl.commissions.concat(fen.comm_setup_di[plname]);
+		}
+		fen.comm_setup_num -= 1;
+		Z.turn = [plorder[0]]
+	} else {
+		Z.turn = [next];
+	}
+	take_turn_fen();
+
+}
+
+
+
+
+
+//#region ack::: rem cons nach bluff check!!!!!!!!!!!!!
+function start_simple_ack_round(ackstage, ack_players, nextplayer, callbackname_after_ack, keeppolling = false) {
+
+	let fen = Z.fen;
+	//each player except uplayer will get opportunity to buy top discard - nextplayer will draw if passing
+	fen.ack_players = ack_players;
+	fen.lastplayer = arrLast(ack_players);
+	fen.nextplayer = nextplayer; //next player after ack!
+	fen.turn_after_ack = [nextplayer];
+	fen.callbackname_after_ack = callbackname_after_ack;
+	fen.keeppolling = keeppolling;
+
+	Z.stage = ackstage;
+	Z.turn = [ack_players[0]];
+
+}
+function ack_player(plname) {
+	let [fen, uplayer, pl] = [Z.fen, Z.uplayer, Z.fen.players[Z.uplayer]];
+
+	//console.log('ack_player','plname',plname,'uplayer',uplayer,'pl',pl,'Z.turn',Z.turn,'Z.stage',Z.stage);
+	assertion(sameList(Z.turn, [plname]), "ack_player: wrong turn");
+
+	if (plname == fen.lastplayer || fen.players[uplayer].buy == true) {
+		let func = window[fen.callbackname_after_ack];
+		if (isdef(func)) func();
+	} else {
+		Z.turn = [get_next_in_list(plname, fen.ack_players)];
+	}
+	//console.log('ack_player','plname',plname,'uplayer',uplayer,'pl',pl,'Z.turn',Z.turn,'Z.stage',Z.stage);
+	take_turn_fen();
+}
+function clear_ack_variables() {
+	let [fen, uplayer, pl] = [Z.fen, Z.uplayer, Z.fen.players[Z.uplayer]];
+	delete fen.ack_players;
+	delete fen.lastplayer;
+	delete fen.nextplayer;
+	delete fen.turn_after_ack;
+	delete fen.ackstage;
+	delete fen.callbackname_after_ack;
+	delete fen.keeppolling;
+
+}
+//#endregion
+
+
+function bluff_ack_uplayer() {
+	let [A, fen, stage, uplayer] = [Z.A, Z.fen, Z.stage, Z.uplayer];
+	fen.players[uplayer].ack = true;
+	//DA.ack[uplayer] = true;
+	ack_player(uplayer);
+}
+
 function new_cards_animation(n = 2) {
 	let [stage, A, fen, plorder, uplayer, deck] = [Z.stage, Z.A, Z.fen, Z.plorder, Z.uplayer, Z.deck];
 	let pl = fen.players[uplayer];

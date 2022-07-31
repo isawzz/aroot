@@ -7,6 +7,7 @@ $data = $o->data;
 $cmd = $o->cmd;
 $result = (object)[];
 if ($cmd == 'table'){ 
+	//$result->data = $data;
 	if (isset($data->auto)) $result->auto = $data->auto;
 	$friendly = $data->friendly;
 	$uname = $data->uname;

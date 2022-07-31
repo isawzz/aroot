@@ -11,6 +11,7 @@ function handle_result(result, cmd) {
 	if (Clientdata.AUTORESET) { Clientdata.AUTORESET = false; if (result.auto == true) { console.log('message bounced'); return; } }
 
 	if (verbose) console.log('HANDLERESULT bekommt', jsCopy(obj));
+	DA.result = jsCopy(obj); //console.log('DA.result', DA.result);
 	processServerdata(obj, cmd);
 
 	// console.log('obj.fen', obj.fen,'obj.turn', obj.turn, 'obj.a', obj.a, 'obj.b', obj.b);
@@ -241,6 +242,8 @@ function _poll() {
 	//console.log('polling...');
 
 	show_polling_signal();
+
+	if (nundef(DA.pollCounter)) DA.pollCounter = 0; DA.pollCounter++;
 
 	send_or_sim({ friendly: Z.friendly, uname: Z.uplayer, auto: true }, 'table');
 }

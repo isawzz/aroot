@@ -123,6 +123,10 @@ function generate_table_name(n) {
 		if (!existing.includes(s)) return s;
 	}
 }
+function get_admin_player(list) {
+	let res = valf(firstCond(list, x => x == 'mimi'), firstCond(list, x => ['felix', 'amanda', 'lauren'].includes(x)));
+	return res ?? list[0]; //if (!res) return list[0];
+}
 function get_checked_radios(rg) {
 	let inputs = rg.getElementsByTagName('INPUT');
 	let list = [];
@@ -529,16 +533,28 @@ function show_history_popup() {
 
 
 }
-function show_polling_signal() {
+var WhichCorner = 0;
+const CORNERS0 = ['♠', '♡']; //, '♣', '♢'];
+const CORNERS = ['◢', '◣', '◤', '◥'];
+const CORNERS2 = ['⬔', '⬕'];
+const CORNERS3 = ['⮜','⮝','⮞','⮟'];
+const CORNERS4 = ['⭐', '⭑']; //, '⭒', '⭓'];
+const CORNERS5 = ['⬛', '⬜']; //, '⭒', '⭓'];
 
-	let url = window.location.href;
-	//console.log('url', url, typeof(url));
-	let loc = url.includes('telecave')?'tele' : 'local';
-	let d = document.body; DA.pollCounter = valf(DA.pollCounter, 0) + 1; document.title = `${loc}:${DA.pollCounter} ${Config.games[Z.game].friendly}`;
-
-	// let d1 = mDiv(mBy('dAdmin'), { position: 'fixed', top: 10, left: 73, width: 20, height: 20, bg: valf(DA.reloadColor, 'green'), rounding: 10 });
-	// mFadeRemove(d1, 1000);
+function animatedTitle() {
+	TO.titleInterval = setInterval(() => {
+		let corner = CORNERS[WhichCorner++ % CORNERS.length];
+		document.title = `${corner} DU BIST DRAN!!!!!`; //'⌞&amp;21543;    U+231E \0xE2Fo\u0027o Bar';
+	}, 1000);
 }
+function staticTitle() {
+	clearInterval(TO.titleInterval);
+	let url = window.location.href;
+	let loc = url.includes('telecave') ? 'telecave' : 'local';
+	let game = isdef(Z.game) ? Config.games[Z.game].friendly : '♠ GAMES ♠'
+	document.title = `(${loc}) ${game} ${DA.TEST0 == true?DA.pollCounter:''}`;
+}
+function show_polling_signal() {}
 function show_settings(dParent) {
 	let [options, fen, uplayer] = [Z.options, Z.fen, Z.uplayer];
 	clearElement(dParent);
