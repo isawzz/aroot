@@ -14,6 +14,8 @@ function start_with_assets() {
 	show_home_logo();
 	if (nundef(U)) { show_users(); return; } show_username();
 
+	if (DA.TEST0) show('dTestButtons');
+
 	//startgame('ferro'); 
 	//#region TESTING
 	//test11_cardcoloring();
@@ -84,13 +86,13 @@ function gamestep() {
 	Z.func.present(Z, dTable, Z.uplayer);	// *** Z.uname und Z.uplayer ist IMMER da! ***
 
 	//console.log('_____uname:'+Z.uname,'role:'+Z.role,'player:'+Z.uplayer,'host:'+Z.host,'curplayer:'+Z.turn[0],'bot?',is_current_player_bot()?'YES':'no');
-	staticTitle();
-	if (isdef(Z.scoring.winners)) { show_winners(); }
+	if (isdef(Z.scoring.winners)) { show_winners(); animatedTitle('GAMEOVER!'); }
 	else if (Z.func.check_gameover(Z)) {
 		let winners = show_winners();
 		Z.scoring = { winners: winners }
 		sendgameover(winners[0], Z.friendly, Z.fen, Z.scoring);
 	} else if (is_shield_mode()) {
+		staticTitle();
 		if (!DA.no_shield == true) { hide('bRestartMove'); shield_on(); } //mShield(dTable.firstChild.childNodes[1])} //if (isdef(Z.fen.shield)) mShield(dTable);  }
 		autopoll();
 	} else {
@@ -99,8 +101,9 @@ function gamestep() {
 		copyKeys(UI, Z);
 		activate_ui(Z); 
 		Z.func.activate_ui();
-		if (Z.mode == 'multi') animatedTitle();
-		if (Z.options.zen_mode != 'yes' && Z.mode != 'hotseat' && Z.fen.keeppolling) autopoll();
+		//console.log('Z.waiting:', Z.isWaiting);
+		if (Z.isWaiting == true || Z.mode != 'multi') staticTitle(); else animatedTitle();
+		if (Z.options.zen_mode != 'yes' && Z.mode != 'hotseat' && Z.fen.keeppolling && Z.uplayer_data.player_status!='stop') autopoll();
 	}
 	//landing();
 }
@@ -280,14 +283,18 @@ function take_turn_fen_clear() { take_turn(true, false, true); }
 function take_turn_fen_write() { take_turn(true, true); }
 
 function take_turn_multi() { if (isdef(Z.state)) take_turn(false, true); else take_turn(false, false); }
+function take_turn_write() { take_turn_multi(); }
+function take_turn_write_partial() { if (isdef(Z.state)) take_turn(false, true, false, 'stop'); else take_turn(false, false, false, 'stop'); }
+function take_turn_write_stop() { take_turn_write_partial(); }
 
-function take_turn(write_fen = true, write_player = false, clear_players = false) {
+function take_turn(write_fen = true, write_player = false, clear_players = false, player_status = null) {
 	prep_move();
 	let o = { uname: Z.uplayer, friendly: Z.friendly };
 	if (isdef(Z.fen)) o.fen = Z.fen;
 	if (write_fen) { assertion(isdef(Z.fen), 'write_fen without fen!!!!'); o.write_fen = true; }
 	if (write_player) { o.write_player = true; o.state = Z.state; }
 	if (clear_players) o.clear_players = true;
+	if (player_status) o.player_status = player_status;
 	let cmd = 'table';
 	send_or_sim(o, cmd);
 }

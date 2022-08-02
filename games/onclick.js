@@ -1,10 +1,19 @@
-function test_start_ferro(mode='multi') {
+function test_start_ferro(mode = 'multi') {
 	let game = 'ferro';
 	// let playernames = ['felix', 'lauren', 'mimi'];
-	let playernames = ['mimi', 'felix'];
+	let playernames = ['mimi', 'lauren', 'felix'];
 	let playermodes = ['human', 'human', 'human'];
 	let i = 0; let players = playernames.map(x => ({ name: x, playmode: playermodes[i++] }));
-	let options = {mode:mode};
+	let options = { mode: mode, thinking_time: 20 };
+	startgame(game, players, options);
+}
+function test_start_aristo(mode = 'multi') {
+	let game = 'aristo';
+	// let playernames = ['felix', 'lauren', 'mimi'];
+	let playernames = ['mimi', 'felix', 'amanda']; //,'lauren'];
+	let playermodes = ['human', 'human', 'human']; //, 'human'];
+	let i = 0; let players = playernames.map(x => ({ name: x, playmode: playermodes[i++] }));
+	let options = { mode: mode, commission:'no' };
 	startgame(game, players, options);
 }
 
@@ -81,7 +90,7 @@ function onclick_random() {
 	else if (!uiActivated) console.log('ui not activated...');
 	else if (DA.ai_is_moving) console.log('ai is moving...');
 }
-function onclick_reload_after_switching() { DA.pollCounter=0;DA.reloadColor=rColor(); onclick_reload(); }
+function onclick_reload_after_switching() { DA.pollCounter = 0; DA.reloadColor = rColor(); onclick_reload(); }
 
 function onclick_reload() {
 	console.log('WAS?')
@@ -93,7 +102,7 @@ function onclick_reload() {
 			take_turn_fen();
 
 		} else {
-			FORCE_REDRAW = true; send_or_sim({ friendly: Z.friendly, uname: Z.uplayer, auto:false }, 'table');
+			FORCE_REDRAW = true; send_or_sim({ friendly: Z.friendly, uname: Z.uplayer, auto: false }, 'table');
 		}
 
 	} else if (U) { onclick_tables(); }

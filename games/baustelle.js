@@ -2,7 +2,7 @@ function process_comm_setup() {
 
 	let [fen, A, uplayer, plorder] = [Z.fen, Z.A, Z.uplayer, Z.plorder];
 	assertion(fen.keeppolling == true, "keeppolling must be true for process_comm_setup!!!");
-	console.log('OK 1');
+	//console.log('OK 1');
 
 	//get keys of selected cards
 	let items = A.selected.map(x => A.items[x]);
@@ -19,7 +19,7 @@ function process_comm_setup() {
 	assertion(isdef(data), `MISSING: playerdata for ${uplayer}`);
 	data.state = Z.state;
 
-	console.log('OK 2');
+	//console.log('OK 2');
 
 	//check if playerdata set for all players
 	let can_resolve = true;
@@ -39,7 +39,7 @@ function process_comm_setup() {
 
 }
 function post_comm_setup_stage() {
-	console.log('OK 3');
+	//console.log('OK 3');
 
 	//erst uebertrage alle cards from pldata.state.keys to pldata.state.receiver
 	let [fen, A, uplayer, plorder] = [Z.fen, Z.A, Z.uplayer, Z.plorder];
@@ -66,7 +66,7 @@ function post_comm_setup_stage() {
 		ari_history_list([`commission trading ends`], 'commissions');
 
 		if (exp_rumors) {
-			[Z.stage, Z.turn] = [24, [plorder[0]]];
+			[Z.stage, Z.turn] = [24, fen.plorder]; //fen.keeppolling = true; //[plorder[0]]];
 			ari_history_list([`gossiping starts`], 'rumors');
 
 		} else { [Z.stage, Z.turn] = set_journey_or_stall_stage(fen, Z.options, fen.phase); }

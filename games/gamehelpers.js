@@ -363,14 +363,20 @@ function show_games(ms = 500) {
 	mClear(dParent);
 	mText(`<h2>start new game</h2>`, dParent, { maleft: 12 });
 
-	let html = `<div id='game_menu' style="color:white;text-align: center; animation: appear 1s ease both">`;
+	let d = mDiv(dParent, { fg: 'white', animation: 'appear 1s ease both' }, 'game_menu'); mFlexWrap(d);
 	let gamelist = 'a_game aristo bluff spotit ferro fritz';
-	for (const g of dict2list(Config.games)) { if (gamelist.includes(g.id)) html += ui_game_menu_item(g); }
-	mAppend(dParent, mCreateFrom(html));
-	//mCenterCenterFlex(mBy('game_menu'));
-	mFlexWrap(mBy('game_menu'));
-
-	//mRise(dParent, ms);
+	for (const g of dict2list(Config.games)) {
+		if (gamelist.includes(g.id)) {
+			let [sym, bg, color, id] = [Syms[g.logo], g.color, null, getUID()];
+			let d1 = mDiv(d, { cursor: 'pointer', rounding: 10, margin: 10, padding: 0, patop: 15, wmin: 140, height: 90, bg: bg, position: 'relative' },g.id);
+			d1.setAttribute('gamename',g.id);
+			d1.onclick = onclick_game_menu_item;
+			mCenterFlex(d1);
+			mDiv(d1,{fz:50,family:sym.family, 'line-height':55},null,sym.text);
+			mLinebreak(d1);
+			mDiv(d1,{fz:18,align:'center'},null,g.friendly);
+		}
+	}
 }
 function show_game_options(dParent, game) {
 	mRemoveChildrenFromIndex(dParent, 2);
@@ -504,7 +510,7 @@ function show_options_popup(options) {
 	mInsert(dpop, mCreateFrom(`<div style="text-align:center;width:100%;font-family:Algerian;font-size:22px;">${Z.game}</div>`));
 	//console.log('popup', dpop);
 }
-function show_polling_signal() {}
+function show_polling_signal() { }
 function show_role() {
 
 	let d = mBy('dAdminMiddle');
@@ -523,6 +529,8 @@ function show_role() {
 	} else if (Z.role == 'active') {
 		styles = boldstyle;
 		text = `It's your turn!`;
+	} else if (Z.role == 'waiting'){
+		text = `waiting for players to complete their moves...`;
 	} else {
 		assertion(Z.role == 'inactive', 'role is not active or inactive or spectating ' + Z.role);
 		styles = normalstyle;
@@ -674,19 +682,20 @@ function tableLayoutMR(dParent, m = 7, r = 1) {
 	return [dOben, dOpenTable, dMiddle, dRechts];
 }
 
+
 //#region title of page (in tab)
 var WhichCorner = 0;
 const CORNERS0 = ['♠', '♡']; //, '♣', '♢'];
 const CORNERS = ['◢', '◣', '◤', '◥'];
 const CORNERS2 = ['⬔', '⬕'];
-const CORNERS3 = ['⮜','⮝','⮞','⮟'];
+const CORNERS3 = ['⮜', '⮝', '⮞', '⮟'];
 const CORNERS4 = ['⭐', '⭑']; //, '⭒', '⭓'];
 const CORNERS5 = ['⬛', '⬜']; //, '⭒', '⭓'];
 
-function animatedTitle() {
+function animatedTitle(msg='DU BIST DRAN!!!!!') {
 	TO.titleInterval = setInterval(() => {
 		let corner = CORNERS[WhichCorner++ % CORNERS.length];
-		document.title = `${corner} DU BIST DRAN!!!!!`; //'⌞&amp;21543;    U+231E \0xE2Fo\u0027o Bar';
+		document.title = `${corner} ${msg}`; //'⌞&amp;21543;    U+231E \0xE2Fo\u0027o Bar';
 	}, 1000);
 }
 function staticTitle() {
@@ -694,8 +703,8 @@ function staticTitle() {
 	let url = window.location.href;
 	let loc = url.includes('telecave') ? 'telecave' : 'local';
 	// let game = isdef(Z) ? Config.games[Z.game].friendly : '♠ GAMES ♠'
-	let game = isdef(Z) ? stringAfter(Z.friendly,'of ') : '♠ GAMES ♠'
-	document.title = `(${loc}) ${game} ${DA.TEST0 == true?DA.pollCounter:''}`;
+	let game = isdef(Z) ? stringAfter(Z.friendly, 'of ') : '♠ GAMES ♠';
+	document.title = `(${loc}) ${game}`; // DA.TEST0 == true? `poll: ${DA.pollCounter}` : `(${loc}) ${game}`; // ${DA.TEST0 == true ? DA.pollCounter : ''}`;
 }
 //#endregion title (tab)
 

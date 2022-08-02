@@ -4888,7 +4888,7 @@ function toggle_tables_on() { let a = mBy('aTables'); mStyle(a, { bg: '#afe78f' 
 function toggle_tables_off() { let a = mBy('aTables'); hide('dTables'); mStyle(a, { bg: 'silver' }); }
 function toggle_users_on() { let a = mBy('aUsers'); mStyle(a, { bg: 'coral' }); }
 function toggle_users_off() { let a = mBy('aUsers'); hide('dUsers'); mStyle(a, { bg: 'silver' }); }
-function ui_game_menu_item(g, g_tables = []) {
+function _ui_game_menu_item(g, g_tables = []) {
 	function runderkreis(color, id) {
 		return `<div id=${id} style='width:20px;height:20px;border-radius:50%;background-color:${color};color:white;position:absolute;left:0px;top:0px;'>` + '' + "</div>";
 	}
@@ -4900,7 +4900,7 @@ function ui_game_menu_item(g, g_tables = []) {
 		id = `rk_${t.id}`;
 	}
 	return `
-	<div onclick="onclick_game_menu_item(event)" gamename=${g.id} style='cursor:pointer;border-radius:10px;margin:10px;padding:5px;padding-top:15px;width:120px;height:90px;display:inline-block;background:${bg};position:relative;'>
+	<div onclick="onclick_game_menu_item(event)" gamename=${g.id} style='cursor:pointer;border-radius:10px;margin:10px;padding:5px;padding-top:15px;min-width:120px;height:90px;display:inline-block;background:${bg};position:relative;'>
 	${nundef(color) ? '' : runderkreis(color, id)}
 	<span style='font-size:50px;font-family:${sym.family}'>${sym.text}</span><br>${g.friendly.toString()}</div>
 	`;

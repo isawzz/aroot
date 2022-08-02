@@ -50,7 +50,7 @@ function aristo() {
 			[fen.stage, fen.turn] = [23, fen.plorder]; fen.comm_setup_num = 3; fen.keeppolling = true;
 		} else if (exp_rumors(options)) {
 			ari_history_list([`gossiping starts`], 'rumors', fen);
-			[fen.stage, fen.turn] = [24, [fen.plorder[0]]];
+			[fen.stage, fen.turn] = [24, fen.plorder]; //fen.keeppolling = true; //[plorder[0]]];
 		} else[fen.stage, fen.turn] = set_journey_or_stall_stage(fen, options, fen.phase);
 
 		return fen;
@@ -270,7 +270,15 @@ function ari_pre_action() {
 	show_stage();
 	switch (ARI.stage[stage]) {
 		case 'comm_weitergeben': select_add_items(ui_get_all_commission_items(uplayer), process_comm_setup, `must select ${fen.comm_setup_num} card${fen.comm_setup_num > 1 ? 's' : ''} to discard`, fen.comm_setup_num, fen.comm_setup_num); break;
-		case 'rumors_weitergeben': select_add_items(ui_get_rumors_and_players_items(uplayer), process_rumors_setup, `must select a player and a rumor to pass on`, 2, 2); break;
+		case 'rumors_weitergeben': 
+		let rumitems = ui_get_rumors_and_players_items(uplayer);
+		if (isEmpty(rumitems)) {
+			console.log('ALL ITEMS HAVE BEEN ASSIGNED!!!');
+			show_waiting_message('waiting for other players...');
+			ari_try_resolve_rumors_distribution();
+			//check if other playerdata are also complete, if yes and I am the trigger??? modify fen!
+		}else select_add_items(rumitems, process_rumors_setup, `must select a player and a rumor to pass on`, 2, 2); break;
+		case 'next_rumor_setup_stage': post_rumor_setup(); break;
 		case 'rumor': select_add_items(ui_get_other_buildings_and_rumors(uplayer), process_rumor, 'must select a building and a rumor card to place', 2, 2); break;
 		case 'buy rumor': select_add_items(ui_get_top_rumors(), post_buy_rumor, 'must select one of the cards', 1, 1); break;
 		case 'rumor discard': select_add_items(ui_get_rumors_items(uplayer), process_rumor_discard, 'must select a rumor card to discard', 1, 1); break;
@@ -1208,53 +1216,6 @@ function is_setup_commissions_complete() {
 	let [fen, A, uplayer, plorder] = [Z.fen, Z.A, Z.uplayer, Z.plorder];
 	let next = get_next_player(Z, uplayer);
 	return next == plorder[0] && fen.comm_setup_num == 1;
-}
-function process_comm_setup() {
-
-	let [fen, A, uplayer, plorder] = [Z.fen, Z.A, Z.uplayer, Z.plorder];
-
-	//console.log('we are in stage ' + Z.stage);
-
-	let items = A.selected.map(x => A.items[x]);
-	let next = get_next_player(Z, uplayer);
-	let receiver = next;
-	let giver = uplayer;
-	let keys = items.map(x => x.key);
-	fen.players[giver].commissions = arrMinus(fen.players[giver].commissions, keys);
-	if (nundef(fen.comm_setup_di)) fen.comm_setup_di = {};
-	fen.comm_setup_di[receiver] = keys;
-
-	if (is_setup_commissions_complete()) {
-		for (const plname of plorder) {
-			let pl = fen.players[plname];
-			assertion(isdef(fen.comm_setup_di[plname]), 'no commission setup for ' + plname);
-			pl.commissions = pl.commissions.concat(fen.comm_setup_di[plname]);
-		}
-		delete fen.comm_setup_di;
-		delete fen.comm_setup_num;
-
-		ari_history_list([`commission trading ends`], 'commissions');
-
-		if (exp_rumors) { 
-			[Z.stage, Z.turn] = [24, [plorder[0]]]; 
-			ari_history_list([`gossiping starts`], 'rumors');
-		
-		}else { [Z.stage, Z.turn] = set_journey_or_stall_stage(fen, Z.options, fen.phase); }
-
-	} else if (next == plorder[0]) {
-		//next commission round starts
-		for (const plname of plorder) {
-			let pl = fen.players[plname];
-			assertion(isdef(fen.comm_setup_di[plname]), 'no commission setup for ' + plname);
-			pl.commissions = pl.commissions.concat(fen.comm_setup_di[plname]);
-		}
-		fen.comm_setup_num -= 1;
-		Z.turn = [plorder[0]]
-	} else {
-		Z.turn = [next];
-	}
-	take_turn_fen();
-
 }
 
 //#endregion
@@ -2578,46 +2539,6 @@ function output_arr_short(arr) {
 	console.log('deck top 3', jsCopy(arrTake(arr, 3))); console.log('deck bottom 3', jsCopy(arrTakeLast(arr, 3)));
 
 }
-function process_rumors_setup() {
-
-	let [fen, A, uplayer, plorder] = [Z.fen, Z.A, Z.uplayer, Z.plorder];
-
-	let items = A.selected.map(x => A.items[x]);
-	let receiver = firstCond(items, x => plorder.includes(x.key)).key;
-	let rumor = firstCond(items, x => !plorder.includes(x.key));
-	if (nundef(receiver) || nundef(rumor)) {
-		select_error('you must select exactly one player and one rumor card!');
-		return;
-	}
-
-	//receiver gets that rumor, aber die verteilung ist erst wenn alle rumors verteilt sind!
-	let remaining = fen.players[uplayer].rumors = arrMinus(fen.players[uplayer].rumors, rumor.key);
-	lookupAddToList(fen, ['rumor_setup_di', receiver], rumor.key);
-	lookupAddToList(fen, ['rumor_setup_receivers'], receiver);
-	//console.log('di', fen.rumor_setup_di)
-
-	let next = get_next_player(Z, uplayer);
-	if (isEmpty(remaining) && next == plorder[0]) {
-		//rumor distrib is complete, goto next stage
-		for (const plname of plorder) {
-			//if (plname == uplayer) continue;
-			let pl = fen.players[plname];
-			assertion(isdef(fen.rumor_setup_di[plname]), 'no rumors for ' + plname);
-			pl.rumors = fen.rumor_setup_di[plname];
-		}
-		delete fen.rumor_setup_di;
-		delete fen.rumor_setup_receivers;
-		ari_history_list([`gossiping ends`], 'rumors');
-
-
-		[Z.stage, Z.turn] = set_journey_or_stall_stage(fen, Z.options, fen.phase);
-	} else if (isEmpty(remaining)) {
-		//next rumor round starts
-		delete fen.rumor_setup_receivers;
-		Z.turn = [next];
-	}
-	take_turn_fen();
-}
 function post_rumor_both() {
 	let [stage, A, fen, uplayer] = [Z.stage, Z.A, Z.fen, Z.uplayer];
 	let item = A.items[A.selected[0]];
@@ -2878,29 +2799,6 @@ function turn_schwein_up(b) {
 	let obuilding = lookup(Z.fen, b.path.split('.'));
 	b.schwein = obuilding.schwein = schwein;
 	ari_open_rumors(32);
-}
-function ui_get_rumors_and_players_items(uplayer) {
-	//console.log('uplayer',uplayer,UI.players[uplayer])
-	let items = [], i = 0;
-	let comm = UI.players[uplayer].rumors;
-	for (const o of comm.items) {
-		let item = { o: o, a: o.key, key: o.key, friendly: o.short, path: comm.path, index: i };
-		i++;
-		items.push(item);
-	}
-
-	let players = [];
-	let received = valf(Z.fen.rumor_setup_receivers, []);
-	for (const plname in UI.players) {
-		if (plname == uplayer || received.includes(plname)) continue;
-		players.push(plname);
-	}
-	items = items.concat(ui_get_string_items(players));
-
-	assertion(comm.items.length == players.length, 'irgendwas stimmt nicht mit rumors verteilung!!!!', players, comm)
-
-	reindex_items(items);
-	return items;
 }
 
 //#endregion

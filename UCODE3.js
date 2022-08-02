@@ -1,4 +1,190 @@
 
+function ui_get_rumors_and_players_items(uplayer) {
+	//console.log('uplayer',uplayer,UI.players[uplayer])
+	let items = [], i = 0;
+	let comm = UI.players[uplayer].rumors;
+
+	let data = firstCond(Z.playerdata, x => x.name == uplayer);
+	assertion(isdef(data), 'no data for player ' + uplayer);
+
+	let remaining = valf(lookup(data,['state','remaining']), jsCopy(Z.fen.players[uplayer].rumors));
+
+	for (const o of comm.items) {
+		
+		let item = { o: o, a: o.key, key: o.key, friendly: o.short, path: comm.path, index: i };
+		i++;
+		items.push(item);
+	}
+
+	let players = [];
+	// let received = valf(Z.fen.rumor_setup_receivers, []);
+
+	let received = valf(lookup(data,['state','rumor_setup_receivers']), []);
+	for (const plname in UI.players) {
+		if (plname == uplayer || received.includes(plname)) continue;
+		players.push(plname);
+	}
+	items = items.concat(ui_get_string_items(players));
+
+	assertion(comm.items.length == players.length, 'irgendwas stimmt nicht mit rumors verteilung!!!!', players, comm)
+
+	reindex_items(items);
+	return items;
+}
+
+function process_rumors_setup_orig() {
+
+	let [fen, A, uplayer, plorder] = [Z.fen, Z.A, Z.uplayer, Z.plorder];
+
+	let items = A.selected.map(x => A.items[x]);
+	let receiver = firstCond(items, x => plorder.includes(x.key)).key;
+	let rumor = firstCond(items, x => !plorder.includes(x.key));
+	if (nundef(receiver) || nundef(rumor)) {
+		select_error('you must select exactly one player and one rumor card!');
+		return;
+	}
+
+	//receiver gets that rumor, aber die verteilung ist erst wenn alle rumors verteilt sind!
+	let remaining = fen.players[uplayer].rumors = arrMinus(fen.players[uplayer].rumors, rumor.key);
+	lookupAddToList(fen, ['rumor_setup_di', receiver], rumor.key);
+	lookupAddToList(fen, ['rumor_setup_receivers'], receiver);
+	//console.log('di', fen.rumor_setup_di)
+
+	let next = get_next_player(Z, uplayer);
+	if (isEmpty(remaining) && next == plorder[0]) {
+		//rumor distrib is complete, goto next stage
+		for (const plname of plorder) {
+			//if (plname == uplayer) continue;
+			let pl = fen.players[plname];
+			assertion(isdef(fen.rumor_setup_di[plname]), 'no rumors for ' + plname);
+			pl.rumors = fen.rumor_setup_di[plname];
+		}
+		delete fen.rumor_setup_di;
+		delete fen.rumor_setup_receivers;
+		ari_history_list([`gossiping ends`], 'rumors');
+
+
+		[Z.stage, Z.turn] = set_journey_or_stall_stage(fen, Z.options, fen.phase);
+	} else if (isEmpty(remaining)) {
+		//next rumor round starts
+		delete fen.rumor_setup_receivers;
+		Z.turn = [next];
+	}
+	take_turn_fen();
+}
+
+
+function process_comm_setup_orig() {
+
+	let [fen, A, uplayer, plorder] = [Z.fen, Z.A, Z.uplayer, Z.plorder];
+
+	//console.log('we are in stage ' + Z.stage);
+
+	let items = A.selected.map(x => A.items[x]);
+	let next = get_next_player(Z, uplayer);
+	let receiver = next;
+	let giver = uplayer;
+	let keys = items.map(x => x.key);
+	fen.players[giver].commissions = arrMinus(fen.players[giver].commissions, keys);
+	if (nundef(fen.comm_setup_di)) fen.comm_setup_di = {};
+	fen.comm_setup_di[receiver] = keys;
+
+	if (is_setup_commissions_complete()) {
+		for (const plname of plorder) {
+			let pl = fen.players[plname];
+			assertion(isdef(fen.comm_setup_di[plname]), 'no commission setup for ' + plname);
+			pl.commissions = pl.commissions.concat(fen.comm_setup_di[plname]);
+		}
+		delete fen.comm_setup_di;
+		delete fen.comm_setup_num;
+
+		ari_history_list([`commission trading ends`], 'commissions');
+
+		if (exp_rumors) { 
+			[Z.stage, Z.turn] = [24, [plorder[0]]]; 
+			ari_history_list([`gossiping starts`], 'rumors');
+		
+		}else { [Z.stage, Z.turn] = set_journey_or_stall_stage(fen, Z.options, fen.phase); }
+
+	} else if (next == plorder[0]) {
+		//next commission round starts
+		for (const plname of plorder) {
+			let pl = fen.players[plname];
+			assertion(isdef(fen.comm_setup_di[plname]), 'no commission setup for ' + plname);
+			pl.commissions = pl.commissions.concat(fen.comm_setup_di[plname]);
+		}
+		fen.comm_setup_num -= 1;
+		Z.turn = [plorder[0]]
+	} else {
+		Z.turn = [next];
+	}
+	take_turn_fen();
+
+}
+
+function is_commission_stage_complete(fen) {
+
+	//comm stage 3 is complete when comm_setup_di hat entry fuer alle players in plorder
+	for (const plname of fen.plorder) {
+		if (!isdef(fen.comm_setup_di[plname])) return false;
+	}
+	return true;
+
+
+}
+
+function ui_game_menu_item(g, g_tables = []) {
+	function runderkreis(color, id) {
+		return `<div id=${id} style='width:20px;height:20px;border-radius:50%;background-color:${color};color:white;position:absolute;left:0px;top:0px;'>` + '' + "</div>";
+	}
+	let [sym, bg, color, id] = [Syms[g.logo], g.color, null, getUID()];
+	if (!isEmpty(g_tables)) {
+		let t = g_tables[0]; //most recent table of that game
+		let have_another_move = t.player_status == 'joined';
+		color = have_another_move ? 'green' : 'red';
+		id = `rk_${t.id}`;
+	}
+	return `
+	<div onclick="onclick_game_menu_item(event)" gamename=${g.id} style='cursor:pointer;border-radius:10px;margin:10px;padding:5px;padding-top:15px;min-width:120px;height:90px;display:inline-block;background:${bg};position:relative;'>
+	${nundef(color) ? '' : runderkreis(color, id)}
+	<span style='font-size:50px;font-family:${sym.family}'>${sym.text}</span><br>${g.friendly.toString()}</div>
+	`;
+}
+
+function show_games(ms = 500) {
+
+	let dParent = mBy('dGames');
+	mClear(dParent);
+	mText(`<h2>start new game</h2>`, dParent, { maleft: 12 });
+
+	let html = `<div id='game_menu' style="color:white;text-align: center; animation: appear 1s ease both">`;
+	let gamelist = 'a_game aristo bluff spotit ferro fritz';
+	for (const g of dict2list(Config.games)) { if (gamelist.includes(g.id)) html += ui_game_menu_item(g); }
+	mAppend(dParent, mCreateFrom(html));
+	//mCenterCenterFlex(mBy('game_menu'));
+	mFlexWrap(mBy('game_menu'));
+
+	//mRise(dParent, ms);
+}
+
+function ui_game_menu_item(g, g_tables = []) {
+	function runderkreis(color, id) {
+		return `<div id=${id} style='width:20px;height:20px;border-radius:50%;background-color:${color};color:white;position:absolute;left:0px;top:0px;'>` + '' + "</div>";
+	}
+	let [sym, bg, color, id] = [Syms[g.logo], g.color, null, getUID()];
+	if (!isEmpty(g_tables)) {
+		let t = g_tables[0]; //most recent table of that game
+		let have_another_move = t.player_status == 'joined';
+		color = have_another_move ? 'green' : 'red';
+		id = `rk_${t.id}`;
+	}
+	return `
+	<div onclick="onclick_game_menu_item(event)" gamename=${g.id} style='cursor:pointer;border-radius:10px;margin:10px;padding:5px;padding-top:15px;min-width:120px;height:90px;display:inline-block;background:${bg};position:relative;'>
+	${nundef(color) ? '' : runderkreis(color, id)}
+	<span style='font-size:50px;font-family:${sym.family}'>${sym.text}</span><br>${g.friendly.toString()}</div>
+	`;
+}
+
 function show_polling_signal() {
 
 	let url = window.location.href;

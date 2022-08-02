@@ -251,6 +251,7 @@ const ARI = {
 		102: 'select building to upgrade',
 		103: 'select downgrade cards',
 		104: 'next_comm_setup_stage',
+		105: 'next_rumor_setup_stage',
 
 	}
 };
@@ -1825,7 +1826,9 @@ function lookupSet(dict, keys, val) {
 	let d = dict;
 	let ilast = keys.length - 1;
 	let i = 0;
+	//console.log('val', val);
 	for (const k of keys) {
+		//console.log('dict', d, 'k', k, 'i', i, 'ilast', ilast);
 		if (nundef(k)) continue; //skip undef or null values
 		if (d[k] === undefined) d[k] = (i == ilast ? val : {});
 		if (nundef(d[k])) d[k] = (i == ilast ? val : {});

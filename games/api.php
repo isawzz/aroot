@@ -14,15 +14,16 @@ if ($cmd == 'table'){
 	$result->status = "table";
 	if (isset ($data->clear_players)){
 		$modified = get_now();
-		$qw = "UPDATE `indiv` SET `state`='',checked=$modified WHERE `friendly` = '$friendly'";
+		$qw = "UPDATE `indiv` SET `state`='',`player_status`=NULL,`checked`=$modified WHERE `friendly` = '$friendly'";
 		$qr = "SELECT * FROM indiv WHERE `friendly` = '$friendly'"; 
 		$res=db_write_read_all($qw,$qr);
 		$result->playerdata = $res;
 		$result->status = "clear_players";
 	}else if (isset($data->write_player) && isset($data->state)){ 
 		$state = json_encode($data->state);
+		$player_status = isset($data->player_status)? $data->player_status : '';
 		$modified = get_now();
-		$qw = "UPDATE `indiv` SET `state`='$state',checked=$modified WHERE `friendly` = '$friendly' and `name` = '$uname'";
+		$qw = "UPDATE `indiv` SET `state`='$state',`player_status`='$player_status',`checked`=$modified WHERE `friendly` = '$friendly' and `name` = '$uname'";
 		$qr = "SELECT * FROM indiv WHERE `friendly` = '$friendly'"; 
 		$res=db_write_read_all($qw,$qr);
 		$result->playerdata = $res;

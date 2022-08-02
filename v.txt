@@ -10132,16 +10132,174 @@ if(window.navigator.appName == "") OR if(window.navigator.userAgent == "")
 2- download NotoColorEmoji woff
 3- suche NotoColorEmoji
 485: *10:34 AM 7/31/2022-10:34 AM 7/31/2022 2
+485: *3:23 PM 7/31/2022-3:28 PM 7/31/2022
+1- font mess cleanup!
+2- ignore firefox! remove fonts unused!
 3- jetzt: basemin
+486: *3:29 PM 7/31/2022-3:29 PM 7/31/2022 3
+487: *3:31 PM 7/31/2022-5:37 PM 7/31/2022
+488: *5:37 PM 7/31/2022-5:58 AM 8/1/2022
+__________ mo 1.8.22 
+540: *5:59 AM 8/1/2022-6:11 AM 8/1/2022
+541: *6:11 AM 8/1/2022-6:13 AM 8/1/2022
+542: *6:14 AM 8/1/2022-6:17 AM 8/1/2022
+543: *6:17 AM 8/1/2022-6:19 AM 8/1/2022
+ok - verify keeppolling wird abgedreht!
+544: *6:19 AM 8/1/2022-6:22 AM 8/1/2022
+545: *6:22 AM 8/1/2022-6:25 AM 8/1/2022
+546: *6:25 AM 8/1/2022-6:27 AM 8/1/2022
+547: *6:27 AM 8/1/2022-6:31 AM 8/1/2022
+548: *6:31 AM 8/1/2022-6:32 AM 8/1/2022
+549: *6:32 AM 8/1/2022-6:33 AM 8/1/2022
+550: *6:33 AM 8/1/2022-6:42 AM 8/1/2022
+551: *6:42 AM 8/1/2022-6:45 AM 8/1/2022
+552: *6:45 AM 8/1/2022-6:47 AM 8/1/2022
+553: *6:47 AM 8/1/2022-6:51 AM 8/1/2022
+554: *6:51 AM 8/1/2022-6:51 AM 8/1/2022
+555: *6:52 AM 8/1/2022-6:56 AM 8/1/2022
+556: *6:56 AM 8/1/2022-7:07 AM 8/1/2022
+557: *7:07 AM 8/1/2022-7:17 AM 8/1/2022
+558: *7:17 AM 8/1/2022-7:19 AM 8/1/2022
+559: *7:19 AM 8/1/2022-7:20 AM 8/1/2022
+560: *7:20 AM 8/1/2022-7:26 AM 8/1/2022
+561: *7:27 AM 8/1/2022-7:30 AM 8/1/2022
+562: *7:30 AM 8/1/2022-7:31 AM 8/1/2022
+563: *7:31 AM 8/1/2022-7:33 AM 8/1/2022
+564: *7:34 AM 8/1/2022-7:41 AM 8/1/2022
+565: *7:41 AM 8/1/2022-7:57 AM 8/1/2022
+566: *7:57 AM 8/1/2022-8:04 AM 8/1/2022
+567: *8:04 AM 8/1/2022-8:11 AM 8/1/2022
+568: *8:11 AM 8/1/2022-8:20 AM 8/1/2022
+569: *8:20 AM 8/1/2022-8:20 AM 8/1/2022
+1- alles falsch!!! redo protocol!!!
+2- wie kann ich plaer_status uebermitteln?
+3- es muss ganz simpel sein!
+570: *8:20 AM 8/1/2022-8:21 AM 8/1/2022 1
+femto 1x
+571: *8:38 AM 8/1/2022-8:39 AM 8/1/2022
+1- rem cons ferro 40
+2- take_turn_fen_clear also clears players
+3- start rumors weitergeben mit clear_players!
+572: *8:39 AM 8/1/2022-8:40 AM 8/1/2022 2
+573: *8:42 AM 8/1/2022-8:42 AM 8/1/2022
+574: *8:42 AM 8/1/2022-8:51 AM 8/1/2022
+1- ferro: waiting for message soll
+a) keinesfalls das du bist dran zeigen!
+b) statt dessen in tab title UND in admin line waiting message zeigen!!!
+2- turn off TEST0
+3- turn on polling
+575: *8:52 AM 8/1/2022-8:53 AM 8/1/2022 3
+576: *8:52 AM 8/1/2022-8:55 AM 8/1/2022
+577: *8:55 AM 8/1/2022-9:16 AM 8/1/2022
+1- check it out!!
+2- er muss ja sowieso staendig checken ob done, also kann er genauso fuer die players die done sind sie aus dem trun entfernen!!!
+3- waer es nicht viel einfacher wenn der host fen turn modified!
+578: *9:16 AM 8/1/2022-9:27 AM 8/1/2022 4
+1- weil doch alle pollen, erfahre ich wenn wer anderer out of turn faellt!
+2- someone else fell out of turn! ich erfahre das ja!!!
+3- es gibt schon wieder ein problem und zwar dass der timer jetzt immer von neuem startet!!! also dann doch wieder lieber nicht reloaden!!!
+579: *9:28 AM 8/1/2022-9:28 AM 8/1/2022 5
+580: *9:31 AM 8/1/2022-9:35 AM 8/1/2022
+1- new game!
+2- macht er skip presentation???
+3- pollt er ueberhaupt im buy_or_pass stage??? JA
+581: *9:35 AM 8/1/2022-9:35 AM 8/1/2022 6
+kurz gehen:POST holen!!!
+1- inspect code
+2- ich muss es ueberhaupt ganz anders machen!!!
+3- der fehler mit dem timer ist anyway da!!!!!!!!!!!!!!!!!!!!!!!
+582: *10:20 AM 8/1/2022-10:33 AM 8/1/2022 7
+583: *10:33 AM 8/1/2022-10:39 AM 8/1/2022
+1- check if trigger ist jetzt immer uplayer! OK
+2- also auch wenn trigger ist soll presenten!
+3- frage: wenn eigene playerdata sich nicht geaendert haben und es mein turn ist, dann sollte eigentlich NICHT 
+584: *10:40 AM 8/1/2022-10:40 AM 8/1/2022 8
+585: *11:04 AM 8/1/2022-11:07 AM 8/1/2022
+586: *11:09 AM 8/1/2022-11:09 AM 8/1/2022
+587: *11:09 AM 8/1/2022-11:12 AM 8/1/2022
+1- battle of sanaa!
+2- test
+3- config: test table ferro mit mimi,fe,lauren und 20sec
+588: *11:12 AM 8/1/2022-11:12 AM 8/1/2022 9
+589: *11:12 AM 8/1/2022-11:16 AM 8/1/2022
+590: *11:16 AM 8/1/2022-11:33 AM 8/1/2022
+591: *11:33 AM 8/1/2022-11:33 AM 8/1/2022
+1- weiter
+2- er macht das dynamic tab nicht mehr!!! WARUM???????
+3- TEST0 weg! upload!
+592: *11:33 AM 8/1/2022-11:33 AM 8/1/2022 10
+593: *11:33 AM 8/1/2022-1:14 PM 8/1/2022
+1- test tele
+2- upload
+3- test
+594: *1:14 PM 8/1/2022-1:14 PM 8/1/2022 11
+595: *1:16 PM 8/1/2022-1:17 PM 8/1/2022
+596: *1:17 PM 8/1/2022-1:28 PM 8/1/2022
+1- back to tets0
+2- back to local
+3- zurueck zu aristo!
+597: *1:28 PM 8/1/2022-1:28 PM 8/1/2022 12
+598: *1:30 PM 8/1/2022-1:34 PM 8/1/2022
+1- weil einfach alles falsch ist!!!!
+2- wo ist der pollCounter??? search staticTitle
+3- receivers rename!
+599: *1:35 PM 8/1/2022-1:35 PM 8/1/2022 13
+600: *1:35 PM 8/1/2022-2:59 PM 8/1/2022
+601: *2:59 PM 8/1/2022-3:05 PM 8/1/2022
+602: *3:05 PM 8/1/2022-3:43 PM 8/1/2022
+603: *3:44 PM 8/1/2022-4:15 PM 8/1/2022
+1- was ist stage 105?
+2- was soll als naechstes passieren???
+3- baustelle2 48 17
+604: *4:15 PM 8/1/2022-4:15 PM 8/1/2022 14
+PAUSE!
+605: *4:26 PM 8/1/2022-4:27 PM 8/1/2022
+606: *4:33 PM 8/1/2022-4:34 PM 8/1/2022
+1- das mit dem title ist immer noch mist!!!
+2- wieso sagt der poll: undefined?
+3- sollen journeys auch gleichzeitig stattfinden??? NEIN
+607: *7:33 PM 8/1/2022-7:34 PM 8/1/2022 15
+3- 
 
 
 
 
 
-- font firefox! how 
-- was ist als naechstes zu tun? ein testspiel waere gut!
+- keeppolling loescht die playerdata wieder weg!
+- ich muss die eigenen playerdata saven in Clientdata
+- ausserdem brauch ich nicht pollen! erst bei absenden kann ich den player aus dem turn rausnehmen?
+- ne das geht auch nicht
+
+- keeppolling in rumor weitergeben erst wenn player done ist mit seinen rumors!
+- mach show_playerdatastate
+- show auto pollinng!!!
+- wieso bleibt der nicht stehen endlich!!!
+- alle TEST FERRRO weg!!!
+- config: commissions no! oder besser noch: TEST ARISTO
+- schon ein bug! baustelle3 13
+- brauch jetzt ein spiel mit 3 spielern! ohne commissions!
+- erste runde sollten ALLE rumors und alle players bis auf den uplayer selectable sein!
+- ich koennte wenn keine rumors remaining sind
+- wie kann ich das mit den rumors_remaining machen?
+- 
+- hoffe ich hab jetzt die richtigen players!
+- goto ari_pre_action
+- brauch einen neuen stage fuer nach rumors =>basemin!
+WAY SHORTER!!!
+- set DA.TEST0 damit ich playerdata sehen kann!!!
+- verify dass am anfang take_turn_clear mache!!! OK
+- reicht es wenn ich fen durch Z.state ersetze und take_turn_write mache???
+- process_rumors_setup =>copy to UCODE
+- was ist stage 24? rumors_weitergeben
+- rumors gleich wie commission
+- aristo rumors auch so wie commissions!
+- ich brauch das lineheight!
 
 
+=>danach mach ich was lustiges: 
+a) strategy definen!
+b) stadt land
+c) wise / otherwise deutsch
 
 
 ferro:

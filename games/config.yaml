@@ -46,7 +46,7 @@ games:
   bluff:
     friendly: Bluff
     logo: beaming face with smiling eyes
-    color: RED
+    color: red
     game_type: turn
     options:
       mode: 'solo,hotseat,multi'
@@ -98,7 +98,7 @@ games:
   spotit:
     friendly: Spotit
     logo: spy
-    color: GREEN
+    color: green
     game_type: race
     options:
       mode: 'solo,hotseat,multi'

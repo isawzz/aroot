@@ -225,9 +225,23 @@ function update_table() {
 	//console.log('Z.playerdata_changed_for', Z.playerdata_changed_for);
 	//console.log('FORCE_REDRAW', FORCE_REDRAW);
 	//console.log()
-	Z.skip_presentation = isEmpty(Z.playerdata_changed_for) && !FORCE_REDRAW && friendly == Z.prev.friendly && modified <= Z.prev.modified && uplayer == Z.prev.uplayer;
+	Z.uplayer_data = firstCond(Z.playerdata,x=>x.name==Z.uplayer);
+
+	// Z.skip_presentation = isEmpty(Z.playerdata_changed_for) && !FORCE_REDRAW && friendly == Z.prev.friendly && modified <= Z.prev.modified && uplayer == Z.prev.uplayer;
+	let sametable = !FORCE_REDRAW && friendly == Z.prev.friendly && modified <= Z.prev.modified && uplayer == Z.prev.uplayer;
+	let sameplayerdata = isEmpty(Z.playerdata_changed_for);
+	let myplayerdatachanged = Z.playerdata_changed_for.includes(Z.uplayer);
+	Z.skip_presentation = sametable && (sameplayerdata || !myplayerdatachanged && Z.role == 'active');
+
+	// Z.skip_presentation = !FORCE_REDRAW && friendly == Z.prev.friendly && modified <= Z.prev.modified && uplayer == Z.prev.uplayer;
+	// !Z.playerdata_changed_for.includes(uplayer) && 
+	// if (Z.skip_presentation && !isEmpty(Z.playerdata_changed_for) && Z.role != 'active') {
+	// 	//some playerdata have changed, but NOT uplayer's
+	// 	//may make some small adjustments but NOT full_fledged redraw!
+	// 	console.log('skip_presentation but playerdata_changed_for not empty', Z.playerdata_changed_for);
+	// }
 	FORCE_REDRAW = false;
-	//console.log('Z.skip_presentation', Z.skip_presentation);
+	//console.log('!!!!!!!!!!!!!!!!!Z.skip_presentation', Z.skip_presentation);
 
 	//if (Z.skip_presentation) { autopoll(); } else { clear_timeouts(); }
 
@@ -239,15 +253,23 @@ function stopPolling() { pollStop(); }
 function ensure_polling() { }
 function _poll() {
 	if (nundef(U) || nundef(Z) || nundef(Z.friendly)) { console.log('poll without U or Z!!!', U, Z); return; }
-	//console.log('polling...');
+
+
+	//console.log('polling OFF!...'); return;
+	console.log('polling...');
 
 	show_polling_signal();
 
-	if (nundef(DA.pollCounter)) DA.pollCounter = 0; DA.pollCounter++;
+	if (nundef(DA.pollCounter)) DA.pollCounter = 0; DA.pollCounter++; console.log('DA.pollCounter', DA.pollCounter);
 
 	send_or_sim({ friendly: Z.friendly, uname: Z.uplayer, auto: true }, 'table');
 }
-
+function sss(){show_playerdatastate();}
+function show_playerdatastate(){
+	for(const pldata of Z.playerdata){
+		console.log('player',pldata.name,`status=${isEmpty(pldata.player_status)?'none':pldata.player_status}`,pldata.state);
+	}
+}
 
 
 

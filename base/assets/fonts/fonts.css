@@ -1,32 +1,15 @@
-/* @font-face {
-	font-family: 'opensansFF';
-	src: url('./opensans.woff') format("truetype");
-}
-@font-face {
-  font-family: 'emoNotoFF';
-	src: url('./NotoColorEmoji.woff');
-} */
-@font-face {
-  font-family: 'emoNoto';
-	src: url('./NotoColorEmoji.ttf') format("truetype");
-}
-/* @font-face {
-  font-family: 'emoNoto';
-  font-style: normal;
-  font-weight: 400;
-  src: url(https://fonts.gstatic.com/s/notocolremojiglyf/v14/~ChYKFE5vdG8gQ29sciBFbW9qaSBHbHlmIAVCCQoFZW1vamkQAA==.0.woff2) format('woff2');
-  unicode-range: U+1f1e6-1f1ff;
-} */
-/* @font-face {
-  font-family: 'emoNoto';
-	src: url('./NotoColorEmoji.ttf') format("truetype");
-  src: url(https://fonts.gstatic.com/s/notocolremojiglyf/v14/~ChYKFE5vdG8gQ29sciBFbW9qaSBHbHlmIAVCCQoFZW1vamkQAA==.0.woff2) format('woff2'); 
-} */
 @font-face {
 	font-family: 'AlgerianRegular';
 	src: url('./AlgerianRegular.ttf') format("truetype");
 }
-
+@font-face {
+	font-family: 'blackops';
+	src: url('./blackops.ttf') format("truetype");
+}
+@font-face {
+  font-family: 'emoNoto';
+	src: url('./NotoColorEmoji.ttf') format("truetype");
+}
 @font-face{
 	font-family: 'pictoFa';
 	src: url('./pictoFa.otf') format("truetype");
@@ -46,9 +29,5 @@
 @font-face {
 	font-family: 'fredericka';
 	src: url('./fredericka.ttf') format("truetype");
-}
-@font-face {
-	font-family: 'blackops';
-	src: url('./blackops.ttf') format("truetype");
 }
 
