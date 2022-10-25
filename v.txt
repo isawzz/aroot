@@ -15036,1339 +15036,276 @@ ok - kuchen
 811: *3:14 PM 9/27/2022-3:29 PM 9/27/2022
 - tesl sam termin etc
 911: *3:29 PM 9/27/2022-5:16 PM 9/27/2022
-912: *5:16 PM 9/27/2022-
+912: *5:16 PM 9/27/2022-5:32 PM 9/27/2022
+913: *5:32 PM 9/27/2022-
+- brauch ein mbtiles file oder sowas!
 - ich muss das gesamte git aroot loeschen!!!
 - wieviel platz ist auf telecave?
 - jetzt muss ich das remote UEBERSCHREIBEN mit dem current one!!!
 - openlayers docu:
-
-
-- for each package list what it is and can do
-
-
-list all the software packages that I found so far:
-openlayers
-openmaptiles
-openstreetmaps
-tileserver GL
-tileserver-php
-mapbox
-leaflet
-maptiler desktop
-maptiler server
-HOT export tool
-mapster
-mapshaper
-geojson.xyz
-geojson.io
-geofabric.de
-geofabrik.de
-igismap
-arcGIS
-mapzen
-
-
-- wo war dieses woodcut
-
-- npm install ol
-https://openlayers.org/download/
-- map in aroot contains php
-
-- github tileserver-php: https://github.com/maptiler/tileserver-php
-- open in aroot: map
-- create files in maptiler: maptiler ist MIST! muss was anderes finden!
-- put mbtiles file into map dir
-- goto localhost:8080/aroot/map
-
-1. 
-=======
-787: *5:50 PM 9/26/2022-10:50 AM 9/27/2022
-788: *10:52 AM 9/27/2022-
-5- 
-
->>>>>>> 632927addf55e22ddc7f07f47e3b6de99f089616
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-git fetch --all
-git reset --hard origin/master
-
-- nicht geschafft und ist eh egal
-- wird wahrscheinlich nicht gehen! aber egal
-- trying to install node js app!
-- connect to mapbox account: does not work!!!
-- launch!
-
-- er geht zu web.archive.org
-- sucht nach mapbox-studio-classic
-- 
-
-- ja das ist ziemlich cool!!!
-- load svg in vs code
-- das mapshaper.simplify ist cool! damit kann ich ganz simple svg files erzeugen!!!
-- es ist bei custom tileset und hat 138KB *max ist 300MB
-- das war jetzt das 2te von 20 fuer september! uploads!!!
-- in mapbox studio goto tilesets
-- ok, jetzt hab ich ein shapefile, was jetzt?
-- goto OneNote
-- hab ein random shapefile downloaded in testlocal auf a03
-- next kommt: tilesets
-
-
-
-
-
-- goto geo.JSON.io
-
-
-
-?- can I use mapbox.GL JS with maps from OSM (OpenStreetMap)?
-- moeglicher project starter: https://github.com/mapzen/metro-extracts (ist das flask???)
-
-
-
-
-
-
-
-
-
-
-
-
-- make map mapbox gl js
-
-
-- was brauch ich fuer rudimentary map? 
-- check ob man mit dem free tier ueberhaupt was anfangen kann?
-3- mach ein project in nodemaster
-
-1- goto mapbox.com
-
-
-- 100x100 resolution map
-- .tif 1 riesiges
-- 100x100m panzoom rasterized daten
-- select punkt schickt coord zum server
-- qgis mapping sw
-
-
-
-
-
-
-
-
-
-
-
-
-
-30/E>=12
-
-
-
-
-
-
-- eigentlich faengt es mit der sprache an
-- wie immer bei der library! die library muss einfach SUPER sein!
-?-wo faengt das ganze an?!?
-- damit man immer gleich alles versteht!
-- oder: um ganz schnell mitzuschreiben bei einem youtube mit interactiven visualisierungsmoeglichkeiten!!!
-- I guess ein system um ganz schnell ein spiel zu programmieren oder irgendwas zu visualisieren
-- was will ich ueberhaupt fuer ein system haben???
-- fang mit GANZ SIMPLEN beispiel an!!!!!!!
-- phantasie anwendung!!!
-- latex formatting!!!!
-- files downloaden nur fuer statist beispiel!
-- schau zu helpers
-- schau zu helpers ob was vergessen habe!
-- schreibe phantasie code!
-- alle funcs sollen OHNE grosse class ausfuerhbar sein!
-- define library! fuer statistics!!!
-- schoenes bogner beispiel machen
-- cleanup stats
-- mini app
-- upload to serverr!
-?- wie macht er das plotten?
-- wie kann ich das am besten nutzen?
->>>extrem cool! hat naemlich auch latex formattieren!!!!!
-3.9 wenn stdev=1 ist
-dh
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-- cleanup gaussian!
-
-
-50asp
-5sk
-
-- test
-- cdf
-- code
-- heisst aber: viele pausen!!!
-- i guess ich muss heut ohne energy arbeiten! schade
-- nerdamer cumulative normal function
-- nerdamer integrate custom function
-- js calculate function normal distribution mean 100 and stdev 15
-- reset to canvas 1
-- call
-- mach ein beispiel davon!!!
-- coole ganz simple normal curve:
-var a = 100;
-var b = 25;
-var c = 10;
-
-var cv = document.getElementById('c');
-var ctx = cv.getContext("2d");
-
-for (var j=0; j< 150; j++){
-    var y = a/Math.pow(Math.E, (Math.pow(j-b, 2))/(2*c*c));
-    ctx.rect(j*10, cv.height-y, 10, y);
-    ctx.stroke();
-}
-<canvas id='c' height='200' width='500'></canvas>
-
-- wie soll ich das ausrechnen?
-- als erstes will ich das integral berechnen!!!
-- oder: shade_integral(f, x0,x1,color)
-- sowas wie: shade_function(f,x0,x1,color)
-- waer cool wenn ich integral shaden koennte!!!
-- narrow font
-- ziemlich cool!!!!
-- parse offy
-- ich koennt das noch besser machen: offy:'below 4', offx:'start -4'
-- ist schon alles in styles! geh zu test
-- yOffset:'below',xOffset:5
-
-- wunsch: point(0,0,above,+5,
-- one by one
-- all draw_text
-- all pp
-- draw_text params bei pp richtigstellen!
-- only 1 point bei mean
-- was bedeutet pos bei pp?
-
-- valf erweitern!
-- adding statt offx
-- call noc4
-- pp braucht color
-- weiter gaussian!
-- wo ist das drawtext?
-
-
-
-
-
-
-
-
-
-
-wenn pos:'tl'... verwendet ist, soll x,y um pos verschoben werden
-wenn align:'tc' ... verwendet wird, soll entsprechendes offset addiert werden
-dritte component: v|[h]|r: vertical: 
-v: (vertical) letters von oben nach unten
-h: normal
-trbl: vertical aber die letters sind gedreht
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-pos heisst wo am canvas,oder point,
-align heisst rel to pos wie soll der text dargestellt werden?
-
-- brauch ein pos und ein align!!!!!
-?wieso???
-bravo!
-SHORTER!!!!!
-- in basemin soll es ein measureText geben!
-- height?
-SHORTER!!!
-- goto code pp
-- ticks soll auch styles haben!!!
-- WAAAAAAAAAAYYYYYYYYYYY SHORTER!!!!!!!!!!!!!!!!!
-- js canvas measure text
-- goto canvas.pp
-?- wieso?
-- WAY SHORTER!!!
-- bei draw_ functions immer zuerst den canvas
-- alle draw functions soll es auch IM canvas geben!
-- wie hab ich draw_text gemacht?
-- draw_ticks_gaussian fertig
-- zu canvas class oder zu helpers?
-- plot_guassian
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-______________TODO
-==>standard dev plotten: how is normalized stdev related to mean?
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-- colorMix('yellow','green');
-- er mixt die colors ueberhaupt nicht!!!!!!!!!
-nochmal!!!
-p lerp(a, b, t) = a + (b — a) * t
-
-
-
-
-
-
-
-- das waer ein echter mathcanvas, da kann ich dann plot machen und so weiter!
-- einfach xrange, yrange bei math canvas
-- oder xticks, yticks
-- was ist eine gute art bei full resolution kleinere daten zu haben?
-- kann weitermachen!!!! mit physics!
-- cartest math
-- versuch das scale schon im translate
-- comment out scale nach save
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-- sk 10
-- asp 20
-- schwimmen ca 11 10
-
-- how to calc canvas dims from origin and size?
-- Canvas needs maxx maxy minx miny
-multiple canvases:	
-- das gameloop ist verantwortlich das interval zu stoppen wenn alle canvases abgedreht sind!
-- der canvas selbst soll nur das geschehen auf seinem eigenen bereich pausen koennen!
-- goto code mCanvas
-- goto code: noc
-Canvas99: macht nur draw
-Canvas98: macht draw und update
-Canvas97: hat auch einen play pause button
-- ja geht!!!!!!!
-- check ob default draw geht!
-- mach start stop button! what does it take?
-- there is another choice: ich kann dem item selbst einen turntype geben: slowturn wenn er das hat kann er das movement
-- update_card heisst: verwendet arrow keys, slow turn
-- update_walker heist: verwendet arrow keys, immediate turn
-
-
-
-
-
-
-
-
-
-
-
-C9
-- mach verschiedene simple canvas classes und dann schau welches am praktischsten ist!
-translate to 100,100
-- let canvas = 200x200 aufloesung, let unit=1
-- welches ist das primitive? wahrscheinlich path
-- rotate around center of element
-heisst einfach: musst always keep center of element at 0,0
-
-moveto(x,y) macht eine translation
-x,y muss immer das center sein!
-
-drawAt(x,y,w,h)
-eigentlich ist line und rect dasselbe!
-eigentlich ist auch line und ellipse dasselbe!
-(w=thickness)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-- ok also so ist es: wenn ich scale x,y by SAME AMOUONT, rotate-scale is the same as scale-rotate!
-- matrix mult:
-      g h i
-      j k l
-      1 0 0
-
-0 1 2
-3 4 5
-
-scx sin -sin scy tx ty
-
-a b c 
-d e f
-1 0 0
-
-25 therapy 9h
-15 skype
-10 gu TKD
-10 katzen
-25/A spz
-
-- run test
-
-
-- in der matrix will ich den angle in degree behalten!
-goto code
-ctx.transform
-js canvas  setTransform vs transform
-- set rotation to angle 0
-- katzen runde 10
-- what if I reset the angle to 0 and 
-
-
-
-3 - how to get the current rotation from the 2d matrix?
-
-
-orig matrix ist 100100=s 
-
-
-
-
-- find out wie die rotation geht!
-- wie mach ich eine transformationmatrix fuer diesen canvas?
-- 
-- default styles! wo?
-- wieso bin ich so TOTMUEDE???
-
-- such den genialen code mit export und import! =>try learning_node
-oder eine class Canvas
-C kann ich ruhig nehmen!
-- mach einen wrapper fuer canvas mit readable und writeable transformation matrix
-- cooles zeug! code fuer matrix
-- 2D transform matrix rotate
-setTransform(scaleX,skewY,skewX,scaleY,transX,transY);
-getTransform: 
-- 
-- output getTransform()
-- wie bring ich die gesamte origin zurueck?
-
-- elim cStyle_dep
-- code cleanup
-- rem cons
-cEllipse params?
-- walker?
-- besseres rect	
-- strokeRect?
-- clearRect function
-- which color?
-- cClear mit farbe
-- line
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-- 
-- def den fireClick test in test.js
-- mach ein test file in basejs
-- fireClick geht!!!! also brauch wirklich nur den button!!!
-- mClassToggle
-- add HasClass
-
-
-- mClassToggle(d, cstr)
-for every class in cstr, if the class is present remove, iff not, add
-- remove togglebg from basemin.css!
-- mach ein mClassToggle
-- wo war der coole code mit dem toggleClass? learn-node css css3-play-pause-button: icon.classList.toggle('active');
-- verwende toggleClass
-- way shorter!
-- 1. mach einen button TEST in noc
-- 2. call b.dispatchEvent('click')
-
-- test fireClick: in noc mach einen button, 
-- schau ob document.createEvent existiert!
-ok - instead of ev.initEvent use 2nd param in constructor:
-var evt = new Event("look", {"bubbles":true, "cancelable":false});
-document.dispatchEvent(evt);
-- test ob fireclick functioniert! dann brauch ich den ganzen mist nicht!
-- mPlayPause ist auch schlecht!
-- rearrange SHORTER
-- find mCanvas
-- mod mCanvas: dParent, styles
-
-- ich weiss ueberhauptnicht warum es so ist?
-- ui_type_canvas
-- mach ein start stop button
-- open getting started matter.js
-- how did I create the canvas?
-- matter.js api
-
-- matter.js ist wirklich cool!!!! worauf baut es auf?
-- simple vector library
-- walking crowd 
-- such mir ein gutes canvas prog von dem simon channel fuer 
-- geh mal dahin!
-- oder soll ich gleich bei the nature of code anfangen????
-
-- neural networks playlist: https://www.youtube.com/watch?v=XJ7HLz9VYz0&list=PLRqwX-V7Uu6aCibgK1PTWWu9by6XFdCfh
-- hol coding challenge 100
-- copy to nodemaster
-- find coding challenge code
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-==>herrichten (#50)
-https://www.uscis.gov/sites/default/files/document/guides/M-477.pdf
-- greencards
-- appt notice (den brief)
-- drivers license
-- passports
-- impfcard
-==>test 1x (#80)
-https://www.uscis.gov/citizenship/civics-practice-test-2008
-
- [+++W][---W]YV
-
-Character        Meaning
-   F	         Move forward by line length drawing a line
-   f	         Move forward by line length without drawing a line
-   +	         Turn left by turning angle
-   -	         Turn right by turning angle
-   |	         Reverse direction (ie: turn by 180 degrees)
-   [	         Push current drawing state onto stack
-   ]	         Pop current drawing state from the stack
-   #	         Increment the line width by line width increment
-   !	         Decrement the line width by line width increment
-   @	         Draw a dot with line width radius
-   {	         Open a polygon
-   }	         Close a polygon and fill it with fill colour
-   >	         Multiply the line length by the line length scale factor
-   <	         Divide the line length by the line length scale factor
-   &	         Swap the meaning of + and -
-   (	         Decrement turning angle by turning angle increment
-   )	         Increment turning angle by turning angle increment
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-- code cleanup, next system!
-8B9216 A79F0F EDA421 E98604 DF3908 C91E0A C91E0A 8C584A 4C4B49
-5C8020 4C4B49 8E2100 5C1306 371C0F
-- upload
-- select text in input element: elem.select()
-- wie kann ich ganz schnell bootstrap einbinden?
-- wie soll ich einen button machen bei dem man dann eine search conducten kann? telecave
-- der playbutton selbst muss ein autorevert haben!!!!!!!!!!!!!!!!!
-- handler ist verkehrt!!!
-- dCenter oder dMain
-- 3. der start stop button soll beide timers machen
-
-https://www.bing.com/videos/search?q=Dokus+Auf+Deutsch+streben+nach+perfektion&qft=+filterui:duration-long&FORM=VRFLTR
-
-choices:
-1. ab sommer soll baumstamm duenkler werden
-2. im winter soll baum schrumpfen
-3. der start stop button soll beide timers machen
-4. es soll kein menu geben
-5. das menu koennte sein: welche art von tree
-6. am ende soll ein riesiger kaefer kommen
-
-- baumstamm muss duenkler werden
-- eigentlich will ich im tree programm dass es kein menu gibt
-- ich will dass man grow timer extra setzen kann!
-todo:
-1. add jittering: kommt im herbst dazu
-2. 
-- in summer, leaves have to turn red
-- speed haengt eigentlich von season ab!
-- draw an ellipse in the middle of the screen
-- leaf angle ist falsch!!!!
-- start in autodraw
-- ich brauch ein branch_draw und ein leaf_draw
-- jetzt add gameloop button!
-- button styling macht keinen sinn!!!
-1. wenn auf tree clicke mach G_init
-2. 
-
-
-
-?soll component ein dict (by name) oder eine list sein? dict by name
-G hat globals
-C hat canvas {changed,jitter,... , und components comps}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-- ok ja also es gibt eine component die hat changed...
-und es gibt ihre parts das sind die branches
-
-
-- skype
-wie mach ich ein system?
-- schreib einfach phantasie code
-- nein nicht so!!!
-- drawing is done by type
-
-go MUST NOT HAVE ANY DOM!!!!
-go sind pure primitives a JSON object
-go ist: dict of primitives existing in G
-G sollte sein: what ever is drawn on the canvas in its current state
-- was ist der unterschied zwischen G und go????
-- keep level 0 global
-- irgendwas stimmt nicht window ist NICHT ein system
-- wie kann ich probleme vermeiden?
-
-- soll leaf eine class sein? soll branch eine class sein?
-- options spill over to G!
-- WAY SHORTER!!!
-- vergleiche add_branch mit init
-- brauch ich eine echte root?
-- wenn root null: set root to branch mit options
-- was macht add bei tree? 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-- baustelle: mach es mit system hat eine func
-- region
-
-
-
-- github!!!
-- das kann ich aber wirklich auch bei LG
-- ich moecht das ganze umschreiben damit branch x1,x2,y1,y2 hat statt p
-- hier muss ich eine entscheidung treffen!!!!!!!
-=>soll jedes fractal system verschieden sein oder gleich mit dem menu?
-
-- js can I use clearTimeout and clearInterval interchangeably? YES apparently, although not guaranteed!
-1- noch besser: TO wird jetzt: TO.intervals.
-2- iv=>TO.iv, iv1=>TO.iv1,clear_timeouts
-3- wo werden in games intervals gecleared?
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-- wenn der baum waechst, sollte am anfang nur wenig gruen, dann mehr, dann wieder weniger sein
-- versuch noch muell zu fuellen!
-- trunk muss besser werden!!!
-- trunk soll bisschen anders aussehen und nicht jittern!
-- js canvas flower
-- jetzt moecht ich die blaetter als 
-- wie convert color to hex?
-- ich koennt brauchen colorMix(c,color,percent) und dann mach ich colorDark 
-- colorLight und colorDark soll percent nehmen!
-choices:
-1. arc tutorial- waers nicht cool ein arc tutorial zu machen?
-2. 
-- clearcanvas am anfang
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-- toggle jitter / repair!
-- arc
-- geht zu tree
-- geh zu canvas9 und schau wie ellipse geht?
-- repair bedeutet: p[0]:=pbase;
-- add onclick.js
-
-
-- test
-- wie soll ich all die go organizen?
-- es ist jetzt de facto ein tree und ich brauch mir nur die root merken!
-- das heisst, ich habe: parts:(alles in go)branch,leaves
-- habe structures: starting part
-
-- click auf tree
-- grow randomized alle vals und dann zeichnet tree
-- tree vals: levels
-- wenn levels erreicht: mach ein leaf statt einem fork
-- was ist ein tree?
-tree muss eigentlich nur sein: root
-
-
-
-- define was ich eigentlich will?
-- add leaves when finished!
-
-- draw it VERY FAST!
-- color must be set
-- was ist da fuer ein bug?
-- test!
-- das age kann genommen werden!
-- fuer alle waer gut ein age
-- wie kann man color transformen? 
-	colorDark(x,-.1..-1)
-	colorLight(x,.1,..1)
-	colorTrans(x,alpha)
-choices:
-ok - 1. add color to go
-2. cSet(prop,val)
-3. add leaves to tree drawing
-4. add circular fractals as in canvas9
-
-
-
-
-
-
-
-
-
-
-
-
-- baum koennte 
-- test
-- wenn max erreicht ist, stop intervals!
-- test
-
-ich bin nicht sehr muede und auch nicht hungrig - also kann ich arbeiten
-- erstmal eintrag in OneNotes
-- mToolbar: butons sollen namen bekommen
-- nasi skype
-=>add a button to toolbar or a new toolbar!
-1- add_fork
-2- open basemin c section
-3- back to code
-- 
-- draw gameobjects by type
-- mach ein lightweight go
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-- try atrament
-- jquery gebraucht!
-- draw a line like a paint brush varying thickness js canvas
-
-es gibt point, line and surface
-
-ist eigentlich alles immer ein voronoi diagramm?
-ein L-system????
-pval: 
-p (position): pt | plist | pt+type | plist+type
-v (velocity): angle+mag
-a (accel): mag
-l (links): list of {pt,pval}
-age: kann jedem object ein age geben, das sagt welche generation
-=>age is set to maxage, wenn it is 0 this object dies
-
-wie passt ein L-system da rein?
-wie passt ein graph da rein?
-wie passt ein board da rein? (eg., ttt, catan)
-wie passt ein voronoi da rein?
-wie passt decay da rein?
-kann man es simplifizieren?
-
-- soll ein graph dann 6 go oder 3 haben? 6 natuerlich wenn edges dargestellt werden
-graph:
-a-b-c (dreieck): 
-a={geo={[p],vertex},links=[{p,ab},{p,ac}]}
-=>nenne ab jetzt p,v,a,ch
-
-
-geo + links=
-go={geo={[v1,v2,,...],type},links=[{v,go},...]}
-
-und fuer jeden type gibt es: show_type,clear_type,transform_type
-morph_into(type1,type2)
-
-every link has v,go
-
-- edge=2 vertices geo=nvertices, node=1 vertex
-- ich hatte ja immer schon die vertices
-- was ist dann der unterschied zwischen pos und corners?
-- ein graph bei dem edges und nodes dasselbe sind
-- alles sind points
-- kann ich nicht haben: pos,dir,geo,children,done,type?
-- aus pos,dir,geo kann ich jedesmal draw machen!
-
-
-
-- branch object has start,end,initial,children,finished,type
-- leaf object has pos,dir,
-
-- nein ich kann es mit functions machen und irgendwelchen objects
-die objects bekommen defaults
-- muss ich fuer ein go eine class machen?
-nein, ich kann einfach ein interface machen: just functions und 
-- open 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-- ich hab noch 2h
-- back to code
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-choices: 
-
-
-
-
-
-- space colonialization mit echten canvas funcs!
-
-
-=>I have to learn to get back into my bubble instantaneously and forget the world around all the while the countdown is ticking: auszeit!
-
-=>brot! 
-- eintragen!
-- gamedeveloperstudio.com
-- sollte current value draufschreiben!
-
-
-generative art:
-- https://www.youtube.com/watch?v=0v4_Dw0K8pw
-
-
-
-
-
-dann:
-https://www.youtube.com/watch?v=gm1QtePAYTM
-
-
-
-
-
-dann: decide was ich mit nature mache?
-
-
-
-
-
-
-
-
-70# fuer spazier mit jeslyn
-100# fuer tel Sam
-
-
-
-
-
-
-- multiplayer snake?
-
-
-==>fix nature! do NOT use p5.js
-or
-==>still use it but irgendwie besser
-
-- ich sollte p5 nicht verwenden, es ist buggy!
-- ich will: einen button der ein solches space_color_instance macht
-- einen button der es wieder removed
-- schwierig!!!
-
-- soll ich ein mSection
-- mach ein simples beispiel!
-- p5 instantiation mode what is the sketch parameter?
-
-- nature soll all die plant generation algos haben zum ausprobieren
-- ssh zu host: OneNote
-- brot raus, fgu
-
-- achtung!!!! NIE mehr das ganze nodemaster hochladen!!!!!!!!!!!!!!!!!!! nur einzelne projects within!!!
-- upload! start tramsfer WinSCP
-- upload!
-
-- eliminate pointer!!! in tree
-- restart soll clear machen!
-- repair soll alle leaves wieder attachen!!!
-- open my site
-- back to my code!
-- move codingChallenges to learning_node
-- in tree replace tree1 by tree
-- encapsulate p5
-- open dir
-- get organized!
-- slow down!!!!!!!!
-use p5.js just within a designated div
-- p5.js clear canvas
-- 
-- L-systems
-- add animate button!
-
-
-
-
-- restart: clear numlayers
-- randomize angle or give a different angle left and right!
-- was ist mit addlayer???
-- make many leaves if layer is 
-- bga
-- onclick_leaf
-- button leaf
-- goto index.html
-- mach ein onclick leaf
-
-- fractal tree COOL!!!
-- translate origin to w/2,h: p5: translate(w/2,h)
-- mit p5
-
-- such guten tree generator
-- ich koennt so eine character class machen mit:
-
-jumpby,rollby,appear,disappear,flip,jumpto,rollto,grow,shrink,...
-onclick,onhover,ondragstart,ondrop,whiledragging,
-shapeshift (mindestens mit geo),leave,enterfrom,moveto,moveby
-say,vibrate,pulse (getangry:pulse to red)
-
-chipmunk
-
-dann koennt ich pflanzen machen: flower,tree: grow, wilt,....
-
-
-- wenn alles geladen ist, geht der monkey weg
-- pm2 show app
-- gist vom youtube ausschreiben!
-- versuche: pm2 start nodemaster/socketstarter/app.js
-- open OneNote
-- open nodemaster
-
-
-- er sol hin und retour gehen!
-- mach bei basemin: mStyleGet
-- font spec w3schools: window.getComputedStyle(el, null).getPropertyValue('font-size');
-- how to organize?
-- als naechstes brauch ich die css mit wood
-- hol mir die gamehelpers
-?-wie geht texture wood?
-?-wie sollte eine fileupload feature aussehen?
-1. die form sollte mit mFileUploadForm(dParent) kommen
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-- cleanup a02, a03, a04 =>mach einfach nur ein avps
-- wo ist meine coole feedback app? die a01 feedback muss weg!!!
-- suche perlen
-- start chatApp was ist eigentlich mit perlen???? wurde chatApp nicht renamed>>>
-- close all except start in games
-- goto nodemaster
-- was ist unterschied beim server zwischen live-server und localhost:2121?
-- wo hab ich cors verwendet? wo hab ich sockets verwendet?
-- start server mit: npx nodemon starter/app.js
-- mach ein howto
-- strictly therapeutic
-- rename starter to minstarter und superstarter to starter
-- remove index zeug from starter indes.html und head
-- clear all
-- work on nodemaster for now!
-
-- suche flask apps: videmo, step4, eximple, flask0 => a04vps
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+__________ mi 28.9.22 waiting at the airport... openlayers v0
+914: *6:58 AM 9/28/2022-7:02 AM 9/28/2022
+915: *7:02 AM 9/28/2022-7:04 AM 9/28/2022
+916: *7:05 AM 9/28/2022-7:06 AM 9/28/2022
+917: *7:06 AM 9/28/2022-7:13 AM 9/28/2022
+918: *7:13 AM 9/28/2022-7:14 AM 9/28/2022
+919: *7:15 AM 9/28/2022-7:15 AM 9/28/2022
+920: *7:15 AM 9/28/2022-7:31 AM 9/28/2022
+921: *7:31 AM 9/28/2022-7:31 AM 9/28/2022
+github https://github.com/openlayers/openlayers/releases/tag/v6.14.1
+> das ist ein anderes github!
+922: *7:31 AM 9/28/2022-7:32 AM 9/28/2022
+>es hat ein dist mit ol.js und ol.js.map drin!
+923: *7:32 AM 9/28/2022-7:33 AM 9/28/2022
+(das openlayers-main ist irgendein ganz anderes riesiges zeug wahrscheinlich die implementierung von dem vite server oder sowas)
+924: *7:33 AM 9/28/2022-7:33 AM 9/28/2022
+- jetzt muss ich ein beispiel finden das einfach nur ol.js verwendet ohne den vite server!
+925: *7:33 AM 9/28/2022-7:34 AM 9/28/2022
+926: *7:34 AM 9/28/2022-7:36 AM 9/28/2022
+927: *7:36 AM 9/28/2022-7:36 AM 9/28/2022
+928: *7:36 AM 9/28/2022-7:40 AM 9/28/2022
+929: *7:40 AM 9/28/2022-7:43 AM 9/28/2022
+930: *7:43 AM 9/28/2022-7:45 AM 9/28/2022
+931: *7:45 AM 9/28/2022-7:50 AM 9/28/2022
+- was ist mein access token fuer mapbox? pk.eyJ1IjoidGF3enoiLCJhIjoiY2w4Z25iYmJpMGdmODNvbWw5c2d3enJ5ZSJ9.GcwAMxqmxDwVE665KFCMtQ
+- such ein example mit ol
+- versuch dahin zu gehen!
+- wie mach ich ein import?
+- copy index.html from mapol dahin
+- zuerst mach ein project mapoljs und gib die 2 files rein!
+- suchen!
+932: *7:50 AM 9/28/2022-7:51 AM 9/28/2022
+>mapoljs failed!!!!!!!!!!!!!!
+933: *7:52 AM 9/28/2022-8:00 AM 9/28/2022
+934: *8:00 AM 9/28/2022-8:10 AM 9/28/2022
+935: *8:10 AM 9/28/2022-8:11 AM 9/28/2022
+936: *8:11 AM 9/28/2022-8:19 AM 9/28/2022
+937: *8:19 AM 9/28/2022-8:19 AM 9/28/2022
+938: *8:19 AM 9/28/2022-8:31 AM 9/28/2022
+939: *8:31 AM 9/28/2022-8:37 AM 9/28/2022
+940: *8:37 AM 9/28/2022-8:37 AM 9/28/2022
+941: *8:37 AM 9/28/2022-8:59 AM 9/28/2022
+942: *8:59 AM 9/28/2022-9:22 AM 9/28/2022
+943: *9:23 AM 9/28/2022-9:39 AM 9/28/2022
+944: *9:39 AM 9/28/2022-9:39 AM 9/28/2022
+- ne ich bleib mit ol-games
+- sollt doch noch leaeflet anschauen
+- cooles yt ueber was sich geaendert hat in einer region
+version 6.13
+945: *9:39 AM 9/28/2022-9:48 AM 9/28/2022
+946: *9:48 AM 9/28/2022-6:17 AM 9/29/2022
+__________ do 29.9.22 waiting at the airport... openlayers v0
+947: *6:18 AM 9/29/2022-6:18 AM 9/29/2022
+948: *6:18 AM 9/29/2022-6:25 AM 9/29/2022
+949: *6:26 AM 9/29/2022-6:39 AM 9/29/2022
+950: *6:47 AM 9/29/2022-6:47 AM 9/29/2022
+___tutorial openlayers: mapping: https://www.youtube.com/watch?v=YGak-5dCvHM
+==>code source in C:\D\a03\testlocal\GISSimplified
+C>/Program Files/GeoServer port 8081 admin geoserver
+data in: C:/ProgramData/GeoServer
+- installing jdk17 from https://adoptium.net/download
+>musste auch noch JDK 11 installen von: https://www.techspot.com/downloads/5553-java-jdk.html
+geoserver
+951: *6:48 AM 9/29/2022-6:48 AM 9/29/2022
+- browse to localhost:8081/geoserver
+Layer Preview
+click US population
+Open Layer
+952: *7:02 AM 9/29/2022-7:15 AM 9/29/2022
+953: *7:15 AM 9/29/2022-7:32 AM 9/29/2022
+- do it again, this time mitschreiben step by step!
+1- stay in same workspace
+- click WorkSpaces: created new (default) workspace 'hallo'
+2. how to get data shapefile for europe:
+step 1: You can download the "official" EU administrative/statistical units from Eurostat's GISCO service. The vector layers are available as ESRI Shapefiles and Personal GDBs, at different resolutions from here: https://ec.europa.eu/eurostat/web/gisco/geodata/reference-data/administrative-units-statistical-units
+step 2: selected: Countries 2020, click on zip to download
+3. how to add data to my server:
+step 1: click Stores: create new store 'shp' (this time: eu2010)
+step 2: browse to shapefiles, this is where I placed the file
+step 3: save, then 
+step 4: click Publish, fill out w/ data from file, save
+>goto Layer preview, should be in list! click on openlayers
+955: *7:33 AM 9/29/2022-8:00 AM 9/29/2022
+4. how to create a new style:
+step 1: click styles
+step 2: Add New Style 'europe' (workspace hallo)
+step 3: StyleContent: select Polygon, click generate
+step 4: edit generated xml, Validate and Save
+(alternativ kann man auch style file loaden!)
+(or, can copy from existing style)
+5. how to apply a style to Layer:
+step 1: Click Layers
+step 2: select europe
+step 3: click Publishing, scroll to WMS Settings, Layer Settings
+step 4: set default style to hallo:europe
+step 5: Save
+6. example style file:
+<?xml version="1.0" encoding="UTF-8"?>
+<StyledLayerDescriptor version="1.0.0" xmlns="http://www.opengis.net/sld" xmlns:ogc="http://www.opengis.net/ogc"
+  xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:gml="http://www.opengis.net/gml"
+  xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.0.0/StyledLayerDescriptor.xsd">
+  <NamedLayer>
+    <Name>USA states population</Name>
+    <UserStyle>
+      <Name>population</Name>
+      <Title>Population in the United States</Title>
+      <Abstract>A sample filter that filters the United States into three
+        categories of population, drawn in different colors</Abstract>
+      <FeatureTypeStyle>
+        <Rule>
+          <Title>&lt; 2M</Title>
+          <ogc:Filter>
+            <ogc:PropertyIsLessThan>
+             <ogc:PropertyName>PERSONS</ogc:PropertyName>
+             <ogc:Literal>2000000</ogc:Literal>
+            </ogc:PropertyIsLessThan>
+          </ogc:Filter>
+          <PolygonSymbolizer>
+             <Fill>
+                <!-- CssParameters allowed are fill (the color) and fill-opacity -->
+                <CssParameter name="fill">#4DFF4D</CssParameter>
+                <CssParameter name="fill-opacity">0.7</CssParameter>
+             </Fill>     
+          </PolygonSymbolizer>
+        </Rule>
+        <Rule>
+          <Title>2M - 4M</Title>
+          <ogc:Filter>
+            <ogc:PropertyIsBetween>
+              <ogc:PropertyName>PERSONS</ogc:PropertyName>
+              <ogc:LowerBoundary>
+                <ogc:Literal>2000000</ogc:Literal>
+              </ogc:LowerBoundary>
+              <ogc:UpperBoundary>
+                <ogc:Literal>4000000</ogc:Literal>
+              </ogc:UpperBoundary>
+            </ogc:PropertyIsBetween>
+          </ogc:Filter>
+          <PolygonSymbolizer>
+             <Fill>
+                <!-- CssParameters allowed are fill (the color) and fill-opacity -->
+                <CssParameter name="fill">#FF4D4D</CssParameter>
+                <CssParameter name="fill-opacity">0.7</CssParameter>
+             </Fill>     
+          </PolygonSymbolizer>
+        </Rule>
+        <Rule>
+          <Title>&gt; 4M</Title>
+          <!-- like a linesymbolizer but with a fill too -->
+          <ogc:Filter>
+            <ogc:PropertyIsGreaterThan>
+             <ogc:PropertyName>PERSONS</ogc:PropertyName>
+             <ogc:Literal>4000000</ogc:Literal>
+            </ogc:PropertyIsGreaterThan>
+          </ogc:Filter>
+          <PolygonSymbolizer>
+             <Fill>
+                <!-- CssParameters allowed are fill (the color) and fill-opacity -->
+                <CssParameter name="fill">#4D4DFF</CssParameter>
+                <CssParameter name="fill-opacity">0.7</CssParameter>
+             </Fill>     
+          </PolygonSymbolizer>
+        </Rule>
+        <Rule>
+          <Title>Boundary</Title>
+          <LineSymbolizer>
+            <Stroke>
+              <CssParameter name="stroke-width">0.2</CssParameter>
+            </Stroke>
+          </LineSymbolizer>
+          <TextSymbolizer>
+            <Label>
+              <ogc:PropertyName>STATE_ABBR</ogc:PropertyName>
+            </Label>
+            <Font>
+              <CssParameter name="font-family">Times New Roman</CssParameter>
+              <CssParameter name="font-style">Normal</CssParameter>
+              <CssParameter name="font-size">14</CssParameter>
+            </Font>
+            <LabelPlacement>
+              <PointPlacement>
+                <AnchorPoint>
+                  <AnchorPointX>0.5</AnchorPointX>
+                  <AnchorPointY>0.5</AnchorPointY>
+                </AnchorPoint>
+              </PointPlacement>
+            </LabelPlacement>
+          </TextSymbolizer>
+        </Rule>
+     </FeatureTypeStyle>
+    </UserStyle>
+    </NamedLayer>
+</StyledLayerDescriptor>
+7. how to extend style to show text:
+step 1: goto Styles, edit xml code
+960: *8:00 AM 9/29/2022-8:02 AM 9/29/2022
+961: *8:02 AM 9/29/2022-8:05 AM 9/29/2022
+?-what is PostGIS extension? store spacial data in db
+see https://www.bostongis.com/PrinterFriendly.aspx?content_name=postgis_tut01
+962: *8:05 AM 9/29/2022-8:07 AM 9/29/2022
+963: *8:07 AM 9/29/2022-8:08 AM 9/29/2022
+>>too heavy for 1 day!!!!! abgebrochen bei minute 16
+>>mach jetzt was lustigeres!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+- what do I need this GeoServer for?
+- I think that's too much! 
+?- woher weiss ich welche properties ich habe?
+964: *8:13 AM 9/29/2022-8:38 AM 9/29/2022
+965: *8:38 AM 9/29/2022-9:07 AM 9/29/2022
+966: *9:07 AM 9/29/2022-9:11 AM 9/29/2022
+967: *9:11 AM 9/29/2022-9:17 AM 9/29/2022
+968: *9:17 AM 9/29/2022-9:29 AM 9/29/2022
+969: *9:29 AM 9/29/2022-4:35 PM 9/29/2022
+970: *4:35 PM 9/29/2022-5:28 PM 9/29/2022
+971: *5:28 PM 9/29/2022-5:42 PM 9/29/2022
+972: *5:42 PM 9/29/2022-5:20 AM 9/30/2022
+__________ fr 30.9.22 waiting at the airport... openlayers v0
+973: *5:20 AM 9/30/2022-5:21 AM 9/30/2022
+974: *5:21 AM 9/30/12022-5:21 AM 9/30/2022
+975: *5:21 AM 9/30/2022-5:24 AM 9/30/2022
+976: *5:24 AM 9/30/2022-5:35 AM 9/30/2022
+- npm install
+977: *5:35 AM 9/30/2022-5:37 AM 9/30/2022
+http://127.0.0.1:5173/
+978: *5:37 AM 9/30/2022-5:38 AM 9/30/2022
+979: *5:38 AM 9/30/2022-5:58 AM 9/30/2022
+980: *5:58 AM 9/30/2022-5:59 AM 9/30/2022
+981: *5:59 AM 9/30/2022-6:36 AM 9/30/2022
+982: *6:36 AM 9/30/2022-6:36 AM 9/30/2022
+983: *6:36 AM 9/30/2022-6:55 AM 9/30/2022
+984: *6:55 AM 9/30/2022-6:57 AM 9/30/2022
+985: *6:57 AM 9/30/2022-6:57 AM 9/30/2022
+>>>- also die technik um import zu machen aber nicht export, ist mit window zu arbeiten!
+986: *6:58 AM 9/30/2022-7:02 AM 9/30/2022
+- aber was nuetzt das? es hilft innerhalb von einem modul hidden data / functions zu haben!
+- modules sollen capital haben und die file cap ist zugleich die cap
+987: *7:02 AM 9/30/2022-7:02 AM 9/30/2022
+- klar ich verwende immer noch Mapping global aber das sollte ja ok sein!
+- how to mix modules and non-modules in javascript
+- ne zuerst schau ob es oldfashioned geht!
+- soll ich import und export lernen?
+- save workshop then make transform
+?- wie mach ich map kleiner?
+988: *7:03 AM 9/30/2022-7:05 AM 9/30/2022
+989: *7:05 AM 9/30/2022-7:08 AM 9/30/2022
+- back to workshop
+- weiter im workshop
+990: *7:08 AM 9/30/2022-7:11 AM 9/30/2022
+991: *7:11 AM 9/30/2022-7:12 AM 9/30/2022
+- look at countries.json in data dir
+992: *7:12 AM 9/30/2022-7:14 AM 9/30/2022
+- describe what you see in geojson file: 
+>>>- 215KB (geht noch fuer local) einfache json data 
+>>>- type: FeatureCollection, features: list of {type,id,properties,geometry}
+993: *7:15 AM 9/30/2022-7:30 AM 9/30/2022
+994: *7:30 AM 9/30/2022-7:49 AM 9/30/2022
+995: *7:49 AM 9/30/2022-9:21 AM 9/30/2022
+996: *9:21 AM 9/30/2022-9:21 AM 9/30/2022
+>>>- ok, also er ladet die map so dass with fits container,und top=0
+997: *9:22 AM 9/30/2022-9:22 AM 9/30/2022
+ok - A geholt
+998: *9:22 AM 9/30/2022-9:26 AM 9/30/2022
+999: *9:26 AM 9/30/2022-9:38 AM 9/30/2022
+1000: *9:38 AM 9/30/2022-9:45 AM 9/30/2022
+1001: *9:45 AM 9/30/2022-1:33 PM 9/30/2022
 
 
