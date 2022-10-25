@@ -153,7 +153,6 @@ class GAbacus extends Game {
 	eval(isCorrect) { return isCorrect; }
 
 }
-
 function makeDraggableInner(elem) {
 	elem.setAttribute('draggable', true);
 	elem.ondragstart = ev => {
@@ -263,7 +262,6 @@ class GAnagram extends Game {
 	}
 	onTimeup() { this.controller.evaluate(); }
 }
-
 class GAnagramBROKEN extends Game {
 	constructor(name, o) {
 		super(name, o);
@@ -2487,8 +2485,6 @@ class GSpotit extends GameTimed {
 	}
 }
 
-
-
 //deactivated!
 class GMissingNumber extends Game {
 	constructor(name, o) { super(name, o); }
@@ -2598,9 +2594,6 @@ class GMissingNumber extends Game {
 
 	eval(isCorrect) { return isCorrect; }
 }
-
-
-
 class GAnagram_orig extends Game {
 	constructor(name, o) {
 		super(name, o);
