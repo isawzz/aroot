@@ -8,3 +8,4 @@ function startsearch(){
 	window.location = part1 + toWords(itext).join('+') + part2;
 }
 
+

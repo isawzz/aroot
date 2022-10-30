@@ -8,6 +8,7 @@
 		<link rel="icon" href="../base/assets/images/icons/firetrans.png" />
 		<!-- <link rel="icon" href="https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/softbank/145/cat-face_1f431.png" /> -->
 		<link rel="stylesheet" href="../base/assets/fonts/fonts.css" />
+		<link rel="stylesheet" href="../base/alibs/fa.min.css" />
 		<link rel="stylesheet" href="css/base.css" />
 
 		<script src="../base/alibs/jq3.js"></script>
@@ -20,12 +21,9 @@
 	</head>
 	<body>
 		<div id="loader_holder" class="loader_on"><img style="width: 70px" src="../base/assets/images/icons/giphy.gif" /></div>
-		<div id="dSearch">
-			<form id="myform" action="javascript:startsearch();" autocomplete="off" style='text-align:center;'>
-				<input id='i_search' type="text" name="search" placeholder='motto' value="schule" autofocus />
-				<input type="submit" value="Submit" ><br>
-			</form>
-
+		<div id="dToolbar">
+			<button onclick="onclick_fa()">fa</button>
+			<button onclick="onclick_syms()">syms</button>
 		</div>
 		<div id="dMain"></div>
 

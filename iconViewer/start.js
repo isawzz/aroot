@@ -1,12 +1,41 @@
 window.onload = start;
-function start() { get_assets(); }
+var fa_words;
+async function start() {
 
-function startsearch() {
-	let itext = mBy('i_search').value;
-	console.log('input', itext);
-	let part1 = `https://www.bing.com/videos/search?q=Dokus+Auf+Deutsch+`;
-	let part2 = `&qft=+filterui:duration-long&FORM=VRFLTR`;
-	window.location = part1+toWords(itext).join('+')+part2;
+	let txt = await route_path_text('../iconViewer/fa_symbols.css');
+	let parts = txt.split(':before');
+	console.log('parts', parts.length);
+	let list = [];
+	for (const p of parts) {
+		//console.log('p',p)
+		let word = stringAfter(p, '.fa-').trim();
+		//console.log('word',word);
+		list.push(word);
+	}
+	console.log('list', list);
+	fa_words = list.sort();
+
+	get_assets();
+}
+function onclick_fa() {
+	let dParent = mBy('dMain');
+	dParent.innerHTML = '';
+	for (const w of fa_words){ // arrTake(fa_words, 100)) {
+		let d = mDiv(dParent, { align: 'center', bg: 'blue', margin: 8, fg: 'white', display: 'inline-block', padding: 10 }, null, `<i class="fa fa-${w} fa-2x"></i><br>${w}`);
+	}
+
+}
+function onclick_syms() {
+	let dParent = mBy('dMain');
+
+	// *** hier ist item auswahl!!! ***
+	//let items = ['gAbacus','gTouchPic', 'gAnagram', 'gChess'].map(x => DB.games[x]);
+	//let items = findKeys('hand').map(x=>Syms[x]); // filter keys
+	let items = dict2list(Syms); //all keys
+	//console.log('items',items);
+
+	//let x=Syms.watch;	console.log('x',x);
+	dParent.innerHTML = createViewerContent(items, [], true);
 }
 
 function get_assets() {
