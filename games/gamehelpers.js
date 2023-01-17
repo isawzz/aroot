@@ -43,8 +43,8 @@ function show_playerdatastate() {
 		console.log('player', pldata.name, `status=${isEmpty(pldata.player_status) ? 'none' : pldata.player_status}`, pldata.state);
 	}
 }
-function shuffletest(list){
-	for(let i=0; i<100; i++){
+function shuffletest(list) {
+	for (let i = 0; i < 100; i++) {
 		shuffle(list);
 		console.log('shuffle: ' + jsCopy(list));
 	}
@@ -89,20 +89,22 @@ function activate_playerstats(items) {
 		d.onclick = () => { switch_uname(plname); onclick_reload(); }
 	}
 }
-function if_hotseat_autoswitch(result){
-	if (isdef(result.table) && isdef(Z) && Z.mode == 'hotseat'){ //!DA.AUTOSWITCH) {
+function if_hotseat_autoswitch(result) {
+	if (isdef(result.table) && isdef(Z) && Z.mode == 'hotseat') { //!DA.AUTOSWITCH) {
 		//DA.AUTOSWITCH = true;
 		//hier sollte der automatische switch von uname passieren!!!
 		let turn = lookup(result, ['table', 'fen', 'turn']);
 		assertion(isdef(turn), 'turn is NOT defined (_sendSIMSIM) !!!!');
 		//console.log('turn', turn, 'res', result)
+		//console.log('autoswitch vorher',result,U.name)
 		let uname = turn.length == 1 ? turn[0] : get_next_in_list(U.name, turn);
-		//console.log('uname', uname);
+		//console.log('uname', uname,U.name);
 		if (uname != U.name) switch_uname(uname);
 	}
 }
 function switch_uname(plname) {
 	set_user(plname);
+	//console.log('uname is',U.name,Z.uname,Z.uplayer,Z.prev.uplayer)
 	show_username();
 	//DA.AUTOSWITCH = false;
 }
@@ -454,7 +456,7 @@ function new_cards_animation(n = 2) {
 		//console.log('player', uplayer, 'newcards', jsCopy(pl.newcards));
 		for (const key of pl.newcards) {
 			let ui = lastCond(UI.players[uplayer].hand.items, x => x.key == key);
-			if (nundef(ui)) {pl.newcards=[];return;}
+			if (nundef(ui)) { pl.newcards = []; return; }
 			ui = iDiv(ui);
 			anim_elems.push(ui);
 		}
@@ -491,11 +493,12 @@ function set_user(name) {
 	}
 	U = firstCond(Serverdata.users, x => x.name == name);
 	//console.log('set_user', name, U);
-	if (isdef(Z)){
+	if (isdef(Z)) {
 		Z.u = U;
-		Z.uname = Z.uplayer = name;
+		Z.uname = name;
+		//if (Z.mode != 'hotseat') Z.uplayer = Z.uname; // ?????
 		//console.log('Z.uname', Z.uname);
-	
+
 	}
 }
 function set_player(name, fen) {
@@ -546,18 +549,18 @@ function show_games(ms = 500) {
 	mText(`<h2>start new game</h2>`, dParent, { maleft: 12 });
 
 	let d = mDiv(dParent, { fg: 'white', animation: 'appear 1s ease both' }, 'game_menu'); mFlexWrap(d);
-	let gamelist = 'aristo bluff spotit ferro fritz'; if (DA.TEST0) gamelist += ' a_game';
-	for (const g of dict2list(Config.games)) {
-		if (gamelist.includes(g.id)) {
-			let [sym, bg, color, id] = [Syms[g.logo], g.color, null, getUID()];
-			let d1 = mDiv(d, { cursor: 'pointer', rounding: 10, margin: 10, padding: 0, patop: 15, wmin: 140, height: 90, bg: bg, position: 'relative' }, g.id);
-			d1.setAttribute('gamename', g.id);
-			d1.onclick = onclick_game_menu_item;
-			mCenterFlex(d1);
-			mDiv(d1, { fz: 50, family: sym.family, 'line-height': 55 }, null, sym.text);
-			mLinebreak(d1);
-			mDiv(d1, { fz: 18, align: 'center' }, null, g.friendly);
-		}
+	let gamelist = 'aristo bluff wise spotit ferro'; if (DA.TEST0) gamelist += ' a_game';
+
+	for (const gname of toWords(gamelist)) {
+		let g = Config.games[gname];
+		let [sym, bg, color, id] = [Syms[g.logo], g.color, null, getUID()];
+		let d1 = mDiv(d, { cursor: 'pointer', rounding: 10, margin: 10, padding: 0, patop: 15, wmin: 140, height: 90, bg: bg, position: 'relative' }, g.id);
+		d1.setAttribute('gamename', gname);
+		d1.onclick = onclick_game_menu_item;
+		mCenterFlex(d1);
+		mDiv(d1, { fz: 50, family: sym.family, 'line-height': 55 }, null, sym.text);
+		mLinebreak(d1);
+		mDiv(d1, { fz: 18, align: 'center' }, null, g.friendly);
 	}
 }
 function show_game_options(dParent, game) {
@@ -626,7 +629,7 @@ function show_view_buildings_button(plname) {
 	//let dPlayerButtons = mDiv(d, { position: 'absolute', top: 8, left: 52, height: 25, width: 200, bg:'green' }, 'dPlayerButtons');
 	show_player_button('view buildings', d2, onclick_view_buildings);
 
-} 
+}
 function show_history(fen, dParent) {
 	if (!isEmpty(fen.history)) {
 		let html = '';

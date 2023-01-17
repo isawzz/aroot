@@ -1,3 +1,89 @@
+function present_wise_rest() {
+
+	let done = Z.playerdata.filter(x => isDict(x.state)); //.length = fen.plorder.length;
+	console.log('done', done)
+	Z.switchStage = uplayer == fen.starter && done.length == Z.plorder.length;
+
+
+	if (stage == 'write' && !Z.switchStage) {
+		if (done.find(x => x.name == uplayer)) {
+			mDiv(dt, {}, null, 'waiting for other players to finish.....');
+		} else {
+			let d = mCreate('form');
+			mAppend(dt, d);
+			d.autocomplete = "off";
+			d.action = "javascript:void(0);";
+			mDiv(d, { fz: 20 }, 'dForm', Sayings[fen.index].start.toLowerCase() + '...');
+			Z.form = d;
+		}
+
+	} else if (isdef(fen.sentences)) {
+		console.log('sentences', fen)
+		let d = mDiv(dt, {});
+		for (const s of fen.sentences) {
+			let d1 = mDiv(d, { fz: 20, cursor: 'pointer' }, `dsent_${s.plname}`, s.text, 'hop1');
+
+			d1.onclick = wise_select_sentence;
+			//mLinebreak(dt)
+		}
+	}
+
+
+
+}function _activate_wise() {
+	let [d, stage, A, fen, phase, uplayer] = [Z.form, Z.stage, Z.A, Z.fen, Z.phase, Z.uplayer];
+
+	if (Z.switchStage) {
+		console.log('hallo!!!!!!!!!!!!!!!!!!!!!!!!')
+		//ich bin der starter und alle playerdata sind complete!
+		let start = Sayings[fen.index].start.toLowerCase();
+		let sentences = [];
+		for (const pldata of Z.playerdata) {
+			let plname = pldata.name;
+			let text = start + ' ' + pldata.state.text;
+			//fen.players[plname].text = text;
+			sentences.push({ plname: plname, text: text.toLowerCase() });
+		}
+		fen.sentences = shuffle(sentences);
+		//fen.sentences = Z.playerdata.map(x => start + ' ' + x.state.text);
+		delete Z.switchStage;
+		Z.turn = [Z.uplayer];
+		Z.stage = 'select';
+		take_turn_fen_clear();
+	} else {
+		let pldata = Z.playerdata.find(x => x.name == uplayer);
+
+		if (!isEmpty(pldata.state)) {
+			console.log('player already turned in sentence!!!', pldata);
+		} else {
+			mLinebreak(d, 10);
+			mInput(d, { wmin: 600 }, 'i_end', 'enter ending');
+			//console.log('parent', d.parentNode)
+			d.onsubmit = wise_submit_text; // ()=>console.log('SUBMITTING',mBy('i_end').value)
+
+		}
+	}
+
+
+
+}
+function activate_MUELL() {
+	let [stage, A, fen, phase, uplayer] = [Z.stage, Z.A, Z.fen, Z.phase, Z.uplayer];
+
+	show_stage();
+	switch (stage) {
+		case 'write': break;
+
+
+		case 'pick_schwein': select_add_items(ui_get_schweine_candidates(A.uibuilding), post_inspect, 'must select the new schwein', 1, 1); break;
+		case 'comm_weitergeben': if (!is_playerdata_set(uplayer)) select_add_items(ui_get_all_commission_items(uplayer), process_comm_setup, `must select ${fen.comm_setup_num} card${fen.comm_setup_num > 1 ? 's' : ''} to discard`, fen.comm_setup_num, fen.comm_setup_num); break;
+		case 'auto market': ari_open_market(fen, phase, deck, market); break;
+		case 'next_comm_setup_stage': select_confirm_weiter(post_comm_setup_stage); break;
+		default: console.log('stage is', stage); break;
+	}
+
+}
+
 
 //WRONG!!!!!!!!!!!!!!!
 

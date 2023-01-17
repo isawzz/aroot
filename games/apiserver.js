@@ -71,6 +71,7 @@ function load_assets(obj) {
 	C52 = jsyaml.load(obj.c52);
 	Cinno = jsyaml.load(obj.cinno);
 	Info = jsyaml.load(obj.info);
+	Sayings = jsyaml.load(obj.sayings);
 	create_card_assets_c52();
 	KeySets = getKeySets();
 
@@ -205,6 +206,7 @@ function update_table() {
 	for (const wichtig of ['playerdata', 'notes', 'uplayer', 'uname', 'friendly', 'step', 'round', 'phase', 'stage', 'timestamp', 'modified', 'stime', 'mode', 'scoring']) {
 		if (isdef(Z[wichtig])) Z.prev[wichtig] = jsCopy(Z[wichtig]);
 	}
+	//console.log('last uplayer was',Z.prev.uplayer)
 	Z.prev.turn = Clientdata.last_turn = Clientdata.this_turn;
 
 	copyKeys(Serverdata, Z);
@@ -230,6 +232,7 @@ function update_table() {
 	let upl = Z.role == 'active' ? uname : turn[0];
 	if (mode == 'hotseat' && turn.length > 1) { let next = get_next_human_player(Z.prev.uplayer); if (next) upl = next; }
 	if (mode == 'multi' && Z.role == 'inactive' && (uname != host || is_human_player(upl))) { upl = uname; }
+	//console.log('-----------setting', upl,'\nuname',uname,'\nturn',turn,'\nprev',Z.prev.uplayer)
 	set_player(upl, fen);
 
 	//set playmode and strategy

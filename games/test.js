@@ -969,6 +969,16 @@ function ltest0_card() { let c = ari_get_card('QSn'); mAppend(dTable, iDiv(c)); 
 //#endregion
 
 //#region fen (=local) tests
+function fentest_wise(){
+	TESTING = true; DA.testing = true; DA.test = { mods: [], iter: 0, maxiter: 200, running: false, step: true, suiteRunning: false, number: 0, list: [0] };
+	DA.test.end = () => { };
+	DA.auto_moves = [];
+	let playernames = [U.name, 'felix'];
+
+	//startgame('aristo', playernames.map(x => ({ name: x, playmode: 'human' })), { mode: 'hotseat' });
+	startgame('wise',playernames.map(x => ({ name: x, playmode: 'human' })), { mode: 'hotseat' });
+
+}
 function fentest10_ferro_end_of_round_goals() {
 	let [game, A, fen, uplayer, plorder] = [Z.game, Z.A, Z.fen, Z.uplayer, Z.plorder];
 
@@ -1935,7 +1945,7 @@ function small_hands(o) {
 		pl.hand = arrTake(pl.hand, 7); //journeys.push(['4Hn', '4Sn', '*Hn']);
 	}
 }
-
+//#endregion
 
 
 

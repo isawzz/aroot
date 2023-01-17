@@ -332,6 +332,7 @@ function take_turn_fen_write() { take_turn(true, true); }
 
 function take_turn_multi() { if (isdef(Z.state)) take_turn(false, true); else take_turn(false, false); }
 function take_turn_write() { take_turn_multi(); }
+function take_turn_waiting() { take_turn(true,false,false,null); }
 
 //next 2 can be eliminated: stay on client during partial playerdata writes!
 // function take_turn_write_partial() { if (isdef(Z.state)) take_turn(false, true, false, 'stop'); else take_turn(false, false, false, 'stop'); }
@@ -346,6 +347,7 @@ function take_turn(write_fen = true, write_player = false, clear_players = false
 	if (clear_players) o.clear_players = true;
 	o.player_status = player_status;
 	let cmd = 'table';
+	//console.log('sending',o)
 	send_or_sim(o, cmd);
 }
 function take_feedback_host(write_fen = true, write_player = false, clear_players = false, player_status = null) {

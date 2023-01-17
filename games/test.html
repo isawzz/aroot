@@ -4,7 +4,7 @@
 		<meta charset="UTF-8" />
 		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>games</title>
+		<title>TESTING</title>
 		<link rel="icon" href="../base/assets/images/icons/bubble.png" style="height: 40px" />
 		<link rel="stylesheet" href="../base/assets/fonts/fonts.css" />
 		<link rel="stylesheet" href="../games/basemin.css" />
@@ -35,42 +35,10 @@
 		<script src="../games/baustelle.js"></script>
 		<script src="../games/baustelle2.js"></script>
 		<script src="../games/baustelle3.js"></script>
-
 		<script src="../games/start.js"></script>
+		<script src="../games/start_test.js"></script>
 	</head>
-
 	<body>
-		<!-- #region svg symbols -->
-		<svg style="visibility: hidden; position: fixed" width="0" height="0" xmlns="http://www.w3.org/2000/svg" version="1.1">
-			<symbol id="Treff" viewBox="-600 -600 1200 1200" preserveAspectRatio="xMinYMid">
-				<path
-					d="M30 150C35 385 85 400 130 500L-130 500C-85 400 -35 385 -30 150A10 10 0 0 0 -50 150A210 210 0 1 1 -124 -51A10 10 0 0 0 -110 -65A230 230 0 1 1 110 -65A10 10 0 0 0 124 -51A210 210 0 1 1 50 150A10 10 0 0 0 30 150Z"
-					fill="black"
-				></path>
-			</symbol>
-			<symbol id="Karo" viewBox="-600 -600 1200 1200" preserveAspectRatio="xMinYMid">
-				<path d="M-400 0C-350 0 0 -450 0 -500C0 -450 350 0 400 0C350 0 0 450 0 500C0 450 -350 0 -400 0Z" fill="red"></path>
-			</symbol>
-			<symbol id="Herz" viewBox="-600 -600 1200 1200" preserveAspectRatio="xMinYMid">
-				<path
-					d="M0 -300C0 -400 100 -500 200 -500C300 -500 400 -400 400 -250C400 0 0 400 0 500C0 400 -400 0 -400 -250C-400 -400 -300 -500 -200 -500C-100 -500 0 -400 -0 -300Z"
-					fill="red"
-				></path>
-			</symbol>
-			<symbol id="Pik" viewBox="-600 -600 1200 1200" preserveAspectRatio="xMinYMid">
-				<path
-					d="M0 -500C100 -250 355 -100 355 185A150 150 0 0 1 55 185A10 10 0 0 0 35 185C35 385 85 400 130 500L-130 500C-85 400 -35 385 -35 185A10 10 0 0 0 -55 185A150 150 0 0 1 -355 185C-355 -100 -100 -250 0 -500Z"
-					fill="black"
-				></path>
-			</symbol>
-			<symbol id="Times" x="0px" y="0px" width="32" height="32" viewBox="0 0 32 32" style="fill: #000000">
-				<path
-					d="M 16 3 C 8.832031 3 3 8.832031 3 16 C 3 23.167969 8.832031 29 16 29 C 23.167969 29 29 23.167969 29 16 C 29 8.832031 23.167969 3 16 3 Z M 16 5 C 22.085938 5 27 9.914063 27 16 C 27 22.085938 22.085938 27 16 27 C 9.914063 27 5 22.085938 5 16 C 5 9.914063 9.914063 5 16 5 Z M 12.21875 10.78125 L 10.78125 12.21875 L 14.5625 16 L 10.78125 19.78125 L 12.21875 21.21875 L 16 17.4375 L 19.78125 21.21875 L 21.21875 19.78125 L 17.4375 16 L 21.21875 12.21875 L 19.78125 10.78125 L 16 14.5625 Z"
-				></path>
-			</symbol>
-		</svg>
-		<!-- #endregion svg symbols -->
-
 		<div class="page-wrap">
 			<div id="dAdmin">
 				<div id="dAdminLeft" style="display: flex; justify-content: space-evenly; align-items: center; padding-left: 10px"></div>
@@ -78,7 +46,7 @@
 				<div id="dAdminRight" style="display: flex; justify-content: space-evenly; align-items: center; box-sizing: border-box"></div>
 			</div>
 			<div id="dTest" style="background: silver; padding: 3px; position: relative">
-				<button onclick="fentest10_ferro_end_of_round_goals()">TEST</button>
+				<button onclick="fentest_wise()">TEST</button>
 
 				<button onclick="onclick_home()">home</button>
 				<!-- <button onclick="show_users()">users</button> -->
@@ -102,7 +70,7 @@
 					<button onclick="test_start_aristo(2)">TEST ARISTO 2</button>
 					<button onclick="test_start_ferro()">TEST FERRO</button>
 					<!-- <button onclick="test_start_ferro('hotseat')">TEST FERRO HOTSEAT</button>
-				<button onclick="test_start_ferro('solo')">TEST FERRO SOLO</button> -->
+			<button onclick="test_start_ferro('solo')">TEST FERRO SOLO</button> -->
 				</span>
 				&nbsp;&nbsp;&nbsp;
 				<button id="bRandomMove" onclick="onclick_random()" style="display: none">random</button>
@@ -114,7 +82,7 @@
 					<button onclick="onclick_reset_all()">delete tables</button>
 					<button onclick="test7_add_hand_card()">add card</button>
 					<!-- <button onclick="loader_on()">loader on</button>
-				<button onclick="loader_off()">loader off</button> -->
+			<button onclick="loader_off()">loader off</button> -->
 					<button onclick="onclick_remove_host()">remove host</button>
 					<button onclick="onclick_ack()">CLEAR ACK</button>
 					<button onclick="onclick_random()">random</button>

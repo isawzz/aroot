@@ -2,7 +2,7 @@
 var SOCKETSERVER = 'http://localhost:5000'; //geht im spital
 var SERVER = "http://localhost:8080/aroot/simple"; // oder telecave!
 //var SOCKETSERVER = `https://eximple.herokuapp.com/5000/` geht nicht!!!!!!!
-var Pollmode = 'auto';
+var Pollmode = 'auto', Sayings;
 var Info, ColorDi, Items = {}, DA = {}, Card = {}, TO = {}, Counter = { server: 0 }, Socket = null;
 var uiActivated = false, Selected, Turn, Prevturn;
 var S = {}, Z, U = null, PL, G, UI = {}, Users, Tables, Basepath, Serverdata = {}, Clientdata = {};
@@ -1118,6 +1118,7 @@ const STYLE_PARAMS = {
 	hmin: 'min-height',
 	wmax: 'max-width',
 	hmax: 'max-height',
+	hline: 'line-height',
 	fontSize: 'font-size',
 	fz: 'font-size',
 	family: 'font-family',

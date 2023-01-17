@@ -112,7 +112,7 @@ function apiphp(o, saveFromZ = false) {
 	return result;
 }
 function sendSIMSIM(o, exclusive = false, saveFromZ = false) {
-	o = data_from_client(o);	//console.log('sending', o);
+	o = data_from_client(o);	//console.log('sendSIMSIM', o,exclusive);
 
 	let result = apiphp(o, saveFromZ); //console.log('result', result); //this is server send!!! 
 
