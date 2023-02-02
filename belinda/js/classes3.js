@@ -135,7 +135,7 @@ class GKrieg extends G2Player {
 class GKriegBack {
 	load(state) {
 		this.history = [];
-		let deck = this.deck = new Deck('52');
+		let deck = this.deck = new DeckClass('52');
 		//console.log(deck.cards().sort((a,b)=>a-b))
 
 		let n = 4;

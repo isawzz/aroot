@@ -1255,7 +1255,7 @@ function cTest04_2HandsRandom() {
 	// let h1 = iMakeHand([33, 7, 1, 2, 3, 4], dTable,{}, 'h1');
 	let iarr = [33, 7, 1, 2, 3, 4], dParent = dTable, id = 'h1';
 	let data = DA[id] = {};
-	let h = data.deck = new Deck();
+	let h = data.deck = new DeckClass();
 	h.init(iarr);
 	//iPresentHand_test(dParent, data);
 	let redo = true;

@@ -44,8 +44,7 @@ var PieceBig = [BOOL.FALSE, BOOL.FALSE, BOOL.TRUE, BOOL.TRUE, BOOL.TRUE, BOOL.TR
 var PieceMaj = [BOOL.FALSE, BOOL.FALSE, BOOL.FALSE, BOOL.FALSE, BOOL.TRUE, BOOL.TRUE, BOOL.TRUE, BOOL.FALSE, BOOL.FALSE, BOOL.FALSE, BOOL.TRUE, BOOL.TRUE, BOOL.TRUE];
 var PieceMin = [BOOL.FALSE, BOOL.FALSE, BOOL.TRUE, BOOL.TRUE, BOOL.FALSE, BOOL.FALSE, BOOL.FALSE, BOOL.FALSE, BOOL.TRUE, BOOL.TRUE, BOOL.FALSE, BOOL.FALSE, BOOL.FALSE];
 var PieceVal = [0, 100, 325, 325, 550, 1000, 50000, 100, 325, 325, 550, 1000, 50000];
-var PieceCol = [COLOURS.BOTH, COLOURS.WHITE, COLOURS.WHITE, COLOURS.WHITE, COLOURS.WHITE, COLOURS.WHITE, COLOURS.WHITE,
-COLOURS.BLACK, COLOURS.BLACK, COLOURS.BLACK, COLOURS.BLACK, COLOURS.BLACK, COLOURS.BLACK];
+var PieceCol = [COLOURS.BOTH, COLOURS.WHITE, COLOURS.WHITE, COLOURS.WHITE, COLOURS.WHITE, COLOURS.WHITE, COLOURS.WHITE, COLOURS.BLACK, COLOURS.BLACK, COLOURS.BLACK, COLOURS.BLACK, COLOURS.BLACK, COLOURS.BLACK];
 
 var PiecePawn = [BOOL.FALSE, BOOL.TRUE, BOOL.FALSE, BOOL.FALSE, BOOL.FALSE, BOOL.FALSE, BOOL.FALSE, BOOL.TRUE, BOOL.FALSE, BOOL.FALSE, BOOL.FALSE, BOOL.FALSE, BOOL.FALSE];
 var PieceKnight = [BOOL.FALSE, BOOL.FALSE, BOOL.TRUE, BOOL.FALSE, BOOL.FALSE, BOOL.FALSE, BOOL.FALSE, BOOL.FALSE, BOOL.TRUE, BOOL.FALSE, BOOL.FALSE, BOOL.FALSE, BOOL.FALSE];
@@ -97,16 +96,6 @@ var CastlePerm = [
 	15, 15, 15, 15, 15, 15, 15, 15, 15, 15
 ];
 
-
-/*                         	                        
-0000 0000 0000 0000 0000 0111 1111 -> From 0x7F
-0000 0000 0000 0011 1111 1000 0000 -> To >> 7, 0x7F
-0000 0000 0011 1100 0000 0000 0000 -> Captured >> 14, 0xF
-0000 0000 0100 0000 0000 0000 0000 -> EP 0x40000
-0000 0000 1000 0000 0000 0000 0000 -> Pawn Start 0x80000
-0000 1111 0000 0000 0000 0000 0000 -> Promoted Piece >> 20, 0xF
-0001 0000 0000 0000 0000 0000 0000 -> Castle 0x1000000
-*/
 
 var MFLAGEP = 0x40000
 var MFLAGPS = 0x80000
@@ -178,9 +167,9 @@ function MIRROR64(sq) { return Mirror64[sq]; }
 
 function RAND_32() { return (Math.floor((Math.random() * 255) + 1) << 23) | (Math.floor((Math.random() * 255) + 1) << 16) | (Math.floor((Math.random() * 255) + 1) << 8) | Math.floor((Math.random() * 255) + 1); }
 
-function SQOFFBOARD(sq) {	if (FilesBrd[sq] == SQUARES.OFFBOARD) return BOOL.TRUE;	return BOOL.FALSE;}
+function SQOFFBOARD(sq) { if (FilesBrd[sq] == SQUARES.OFFBOARD) return BOOL.TRUE; return BOOL.FALSE; }
 
-function HASH_PCE(pce, sq) {	brd_posKey ^= PieceKeys[pce * 120 + sq];}
+function HASH_PCE(pce, sq) { brd_posKey ^= PieceKeys[pce * 120 + sq]; }
 function HASH_CA() { brd_posKey ^= CastleKeys[brd_castlePerm]; }
 function HASH_SIDE() { brd_posKey ^= SideKey; }
 function HASH_EP() { brd_posKey ^= PieceKeys[brd_enPas]; }
@@ -519,8 +508,8 @@ function LineMatch(BookLine, gameline) {
 	//console.log("Matching " + gameline + " with " + BookLine + " len = " + gameline.length);
 	for (var len = 0; len < gameline.length; ++len) {
 		//console.log("Char Matching " + gameline[len] + " with " + BookLine[len]);
-		if (len >= BookLine.length) { /*console.log('no match');*/ return BOOL.FALSE; }
-		if (gameline[len] != BookLine[len]) { /*console.log('no match'); */return BOOL.FALSE; }
+		if (len >= BookLine.length) { return BOOL.FALSE; }
+		if (gameline[len] != BookLine[len]) { return BOOL.FALSE; }
 	}
 	//console.log('Match');
 	return BOOL.TRUE;
@@ -768,7 +757,7 @@ function InitMvvLva() {
 		}
 	}
 }
-function MOVE(from, to, captured, promoted, flag) {	return (from | (to << 7) | (captured << 14) | (promoted << 20) | flag);}
+function MOVE(from, to, captured, promoted, flag) { return (from | (to << 7) | (captured << 14) | (promoted << 20) | flag); }
 function MoveExists(move) {
 
 	GenerateMoves();
@@ -2213,7 +2202,7 @@ $(document).on('click', '.Square', function (e) {
 		MakeUserMove();
 	}
 });
-$(document).ajaxComplete(function () {});
+$(document).ajaxComplete(function () { });
 
 function ActivateChessWidgets() {
 	StopThinking();
@@ -2257,7 +2246,7 @@ function ActivateChessWidgets() {
 
 	$("#EndGameButton").click(function () {
 		let fen = chooseRandom(FenPositionList).FEN;
-		console.log('fen',fen)
+		console.log('fen', fen)
 		NewGame(fen);
 		NewGameAjax();
 	});
@@ -2474,7 +2463,7 @@ function MakeUserMove() {
 			CheckAndSet();
 			PreSearch();
 		} else {
-			ShowChessMessage('illegal move!',1000);
+			ShowChessMessage('illegal move!', 1000);
 		}
 
 		UserMove.from = SQUARES.NO_SQ;
@@ -2646,14 +2635,14 @@ function SetInitialBoardPieces() {
 	}
 
 }
-function ShowChessMessage(s,ms){
+function ShowChessMessage(s, ms) {
 	//showFleetingMessage(`<div style='margin-left:-178px;width:483px;text-align:center;'>${s}</div>`,0,{fg:'red',bg:'blue'},true);
 	//dTitle.innerHTML = `<div style='margin-left:78px;width:483px;text-align:center;'>Turn: ${pl}`;
 	//mBy('GameStatus').innerHTML = 'HALOOOOOO';
-	console.log('message:',s);
+	console.log('message:', s);
 
 	$("#GameStatus").text(s);
-	if (isdef(ms)) setTimeout(()=>$("#GameStatus").text(''),ms)
+	if (isdef(ms)) setTimeout(() => $("#GameStatus").text(''), ms)
 }
 function ShowFenPosition() {
 	//var fenStr = BoardToFen();

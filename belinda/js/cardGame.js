@@ -66,7 +66,7 @@ function iPresentHand(h, dParent, styles, redo = true) {
 }
 function iMakeHand(iarr, dParent, styles, id) {
 	let data = DA[id] = {};
-	let h = data.deck = new Deck();
+	let h = data.deck = new DeckClass();
 	h.init(iarr);
 	iPresentHand(data, dParent, styles);
 	return data;
@@ -88,7 +88,7 @@ function iH00_dep(iarr, dParent, styles, id) {
 	}
 	//should return item={iarr,live.div,styles}
 	let data = DA[id] = {};
-	let h = data.deck = new Deck();
+	let h = data.deck = new DeckClass();
 	h.init(iarr);
 	// iPresentHand_test(dParent, data);
 	// return data;
@@ -160,7 +160,7 @@ function iPresentHand_test(dParent, h, redo = true) {
 }
 function iMakeHand_test(dParent, iarr, id) {
 	let data = DA[id] = {};
-	let h = data.deck = new Deck();
+	let h = data.deck = new DeckClass();
 	h.init(iarr);
 	iPresentHand_test(dParent, data);
 	return data;
@@ -297,7 +297,7 @@ class Card52 {
 	}
 }
 
-class Deck {
+class DeckClass {
 	constructor(f) { this.data = []; if (isdef(f)) if (isString(f)) this['init' + f](); else if (isList(f)) this.init(f); }
 	init(arr) { this.data = arr; }
 	initEmpty() { this.data = []; }
@@ -314,7 +314,7 @@ class Deck {
 	count() { return this.data.length; }
 	clear() { this.data = []; }
 	deal(n) { return this.data.splice(0, n); }
-	dealDeck(n) { let d1 = new Deck(); d1.init(this.data.splice(0, n)); return d1; }
+	dealDeck(n) { let d1 = new DeckClass(); d1.init(this.data.splice(0, n)); return d1; }
 	popTop() { return this.data.pop(); }
 	popBottom() { return this.data.shift(); }
 	remTop() { this.data.pop(); return this; }
