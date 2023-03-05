@@ -1,5 +1,5 @@
 function accuse() {
-	function state_info() { return; }
+	function state_info(dParent) { dParent.innerHTML = `phase: ${Z.phase}, turn: ${Z.turn}, stage:${Z.stage}`; }
 	function setup(players, options) {
 		//console.log('SETUP!!!!!!!!!!!!!!!!!!!')
 		let fen = { players: {}, plorder: jsCopy(players), history: [], num: options.num };
@@ -50,7 +50,7 @@ function accuse() {
 			fen.players[players[i]].idleft = fen.players[players[j]].idright;
 		}
 
-		[fen.phase, fen.stage, fen.step, fen.turn] = ['one', 'write', 0, jsCopy(fen.plorder)];
+		[fen.phase, fen.stage, fen.step, fen.turn] = ['1', 'hand', 0, jsCopy(fen.plorder)];
 		return fen;
 	}
 	function check_gameover() { return false; }
@@ -117,7 +117,18 @@ function accuse_activate() {
 	Z.isWaiting = false;
 	if (waiting) {
 		//either results are not all in or am NOT the starter (=admin)
-		mDiv(dTable, {}, null, 'WAITING FOR PLAYERS TO COMPLETE....');
+		let mystate = donelist.find(x => x.name == uplayer).state.card;
+		if (!isEmpty(mystate)) {
+			let handui=lookup(UI,['players',uplayer,'hand']);
+			console.log('handui',handui)
+			let items = handui.items;
+			let cardui = items.find(x=>x.key == mystate)
+
+			//.items.find(item=>item.a == mystate);
+			console.log('mystate',mystate,cardui)
+			make_card_selected(cardui)
+		}
+		//mDiv(dTable, {}, null, 'WAITING FOR PLAYERS TO COMPLETE....');
 		if (complete) {
 			//turn is transferred to starter
 			Z.turn = [fen.starter];
@@ -141,17 +152,18 @@ function accuse_activate() {
 		Z.stage = 'select';
 		take_turn_fen_clear();
 
-	} else if (stage == 'write') {
-		let d = mCreate('form');
-		let dt = dTable;
-		mAppend(dt, d);
-		d.autocomplete = "off";
-		d.action = "javascript:void(0);";
-		mDiv(d, { fz: 20 }, 'dForm', fen.saying.start.toLowerCase() + '...');
-		Z.form = d;
-		mLinebreak(d, 10);
-		mInput(d, { wmin: 600 }, 'i_end', 'enter ending');
-		d.onsubmit = accuse_submit_card;
+	} else if (stage == 'hand') {
+		select_add_items(ui_get_hand_items(uplayer), accuse_submit_card, 'may select card to play',0,1);
+		// let d = mCreate('form');
+		// let dt = dTable;
+		// mAppend(dt, d);
+		// d.autocomplete = "off";
+		// d.action = "javascript:void(0);";
+		// mDiv(d, { fz: 20 }, 'dForm', fen.saying.start.toLowerCase() + '...');
+		// Z.form = d;
+		// mLinebreak(d, 10);
+		// mInput(d, { wmin: 600 }, 'i_end', 'enter ending');
+		// d.onsubmit = accuse_submit_card;
 	} else if (stage == 'select' && resolvable) {
 		assertion(uplayer == fen.starter, 'NOT THE STARTER WHO COMPLETES THE STAGE!!!')
 		let d = mDiv(dTable, {});
@@ -220,7 +232,13 @@ function accuse_select_sentence(ev) {
 	take_turn_multi();
 
 }
-function accuse_submit_card(ev) { ev.preventDefault(); let text = mBy('i_end').value; Z.state = { text: text }; take_turn_multi(); }
+function accuse_submit_card() { 
+	console.log('A',Z.A);
+	let A = Z.A;
+	let card = isEmpty(A.selected)?'':A.items[A.selected[0]].a;
+	Z.state = { card: card }; 
+	take_turn_multi(); 
+}
 
 
 function post_select(){ console.log('post_select...')}
