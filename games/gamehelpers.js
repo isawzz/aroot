@@ -549,7 +549,7 @@ function show_games(ms = 500) {
 	mText(`<h2>start new game</h2>`, dParent, { maleft: 12 });
 
 	let d = mDiv(dParent, { fg: 'white', animation: 'appear 1s ease both' }, 'game_menu'); mFlexWrap(d);
-	let gamelist = 'aristo bluff wise spotit ferro'; if (DA.TEST0) gamelist += ' a_game';
+	let gamelist = 'accuse aristo bluff wise spotit ferro'; if (DA.TEST0) gamelist += ' a_game';
 
 	for (const gname of toWords(gamelist)) {
 		let g = Config.games[gname];

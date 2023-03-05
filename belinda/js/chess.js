@@ -2504,11 +2504,6 @@ function MoveGUIPiece(move) {
 	var rankName = "rank" + (rank + 1);
 	var fileName = "file" + (file + 1);
 
-	/*if(GameController.BoardFlipped == BOOL.TRUE) {
-		rankName += "flip";
-		fileName += "flip";
-	}*/
-
 	$(".Piece").each(function (index) {
 		//console.log( "Picture:" + index + ": " + $(this).position().top + "," + $(this).position().left );
 		if ((RanksBrd[flippedFrom] == 7 - Math.round($(this).position().top / 60)) && (FilesBrd[flippedFrom] == Math.round($(this).position().left / 60))) {
@@ -2567,13 +2562,6 @@ function NewGame(fen) {
 
 }
 function NewGameAjax() {
-	//console.log('new Game Ajax');
-	/*$.ajax({
-		url : "insertNewGame.php",
-		cache: false
-		}).done(function( html ) {
-			console.log('result:' + html);
-		});*/
 }
 function RemoveGUIPiece(sq) {
 	//console.log("remove on:" + PrSq(sq));

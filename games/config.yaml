@@ -25,6 +25,15 @@ games:
       mode: 'solo,hotseat,multi'
       #mode: 'multi,solo,hotseat'
       handsize: '7,3,10'
+  accuse:
+    friendly: "J'Accuse"
+    logo: fencing
+    color: navy
+    defaulthandsorting: none
+    options:
+      #mode: 'solo,hotseat,multi'
+      mode: 'solo,hotseat,multi'
+    hand_size: 7
   aristo:
     friendly: Aristocracy
     logo: crown

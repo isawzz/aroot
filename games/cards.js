@@ -25,7 +25,7 @@ function luxury_card_deco(card) {
 	d1 = mDiv(d, { position: 'absolute', bottom: -2, left: 3, opacity: .25 }, null, html);
 }
 function ari_get_card(ckey, h, w, ov = .3) {
-	//console.log('ckey', ckey);
+	console.log('ckey', ckey);
 	let type = ckey[2];
 	let sz = { largecard: 100, smallcard: 50 };
 	let info = type == 'n' ? to_aristocard(ckey, sz.largecard) : type == 'l' ? to_luxurycard(ckey, sz.largecard) : type == 'r' ? to_rumorcard(ckey, sz.smallcard) : to_commissioncard(ckey, sz.smallcard);

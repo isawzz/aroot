@@ -3,9 +3,16 @@ onload = start; var FirstLoad = true;//document.onBlur = stopPolling;//onblur = 
 //DA.SIMSIM = true; //DA.exclusive = true; DA.TESTSTART1 = true; //DA.sendmax = 3; 
 //DA.TEST0 = true; 
 //DA.TEST1 = true; DA.TEST1Counter = 0;
-function start() { let uname = DA.secretuser = localStorage.getItem('uname'); if (isdef(uname)) U = { name: uname }; phpPost({ app: 'simple' }, 'assets'); }
+function start() { 
+	//console.log('.......................'); return;
+
+	let uname = DA.secretuser = localStorage.getItem('uname'); 
+	if (isdef(uname)) U = { name: uname }; 
+	phpPost({ app: 'simple' }, 'assets'); 
+}
 //function start() { let uname = null; if (isdef(uname)) U = { name: uname }; phpPost({ app: 'simple' }, 'assets'); }
 function start_with_assets() {
+	console.log('.......................',Serverdata.users);
 
 	//console.log(`browser name: ${navigator.appName}, or ${navigator.userAgent}`);
 	DA.isFirefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1; if (DA.isFirefox) console.log('using Firefox!')
@@ -15,6 +22,7 @@ function start_with_assets() {
 	show_username();
 	if (DA.TEST0) show('dTestButtons');
 
+	//startgame('accuse',)
 	//startgame('ferro'); 
 	//#region TESTING
 	//test11_cardcoloring();
