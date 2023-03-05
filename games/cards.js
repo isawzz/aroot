@@ -24,13 +24,18 @@ function luxury_card_deco(card) {
 	let html = `<img height=${18} src="../base/assets/images/icons/deco0.svg" style="transform:scaleX(-1);">`;
 	d1 = mDiv(d, { position: 'absolute', bottom: -2, left: 3, opacity: .25 }, null, html);
 }
+function heritage_card_deco(card) {
+	let d = iDiv(card); mStyle(d, { position: 'relative' });
+	let d1 = mDiv(d, { fg: 'silver', fz: 11, family: 'tangerine', position: 'absolute', right: '36%', top: 1 }, null, 'heritage');
+}
 function ari_get_card(ckey, h, w, ov = .3) {
-	console.log('ckey', ckey);
+	//console.log('ckey', ckey);
 	let type = ckey[2];
 	let sz = { largecard: 100, smallcard: 50 };
 	let info = type == 'n' ? to_aristocard(ckey, sz.largecard) : type == 'l' ? to_luxurycard(ckey, sz.largecard) : type == 'r' ? to_rumorcard(ckey, sz.smallcard) : to_commissioncard(ckey, sz.smallcard);
 	let card = cardFromInfo(info, h, w, ov);
 	if (type == 'l') luxury_card_deco(card);
+	else if (type == 'h') heritage_card_deco(card);
 	return card;
 }
 function ferro_get_card(ckey, h, w, ov = .25) {

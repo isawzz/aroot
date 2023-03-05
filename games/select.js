@@ -332,7 +332,14 @@ function ari_make_unselected(item) {
 
 }
 // card
-function make_card_selectable(item) { let d = iDiv(item.o); mClass(d, 'selectable'); if (Z.game != 'aristo') { spread_hand(item.path, .3); } mClass(d.parentNode, 'selectable_parent'); }
+function make_card_selectable(item) { 
+	let d = iDiv(item.o); 
+	mClass(d, 'selectable'); 
+	//console.log('WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW')
+	if (Z.game != 'aristo') { spread_hand(item.path, .3); } 
+	//console.log('WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW')
+	mClass(d.parentNode, 'selectable_parent'); 
+}
 
 function make_card_unselectable(item) { let d = iDiv(item.o); d.onclick = null; mClassRemove(d, 'selectable'); mClassRemove(d.parentNode, 'selectable_parent'); spread_hand(item.path); }
 function make_card_selected(item) {

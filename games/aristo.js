@@ -2324,7 +2324,7 @@ function ui_get_all_hidden_building_items(uplayer) {
 	return items;
 }
 function ui_get_hand_items(uplayer) {
-	//console.log('uplayer',uplayer,UI.players[uplayer])
+	console.log('uplayer',uplayer,UI.players[uplayer])
 	let items = [], i = 0;
 	let hand = UI.players[uplayer].hand;
 	for (const o of hand.items) {

@@ -973,8 +973,8 @@ function fentest_accuse(){
 	TESTING = true; DA.testing = true; DA.test = { mods: [], iter: 0, maxiter: 200, running: false, step: true, suiteRunning: false, number: 0, list: [0] };
 	DA.test.end = () => { };
 	DA.auto_moves = [];
-	let playernames = arrTake(Serverdata.users,4).map(x=>x.name);
-	playernames.unshift(U.name); //[U.name, 'felix'];
+	let playernames = arrTake(Serverdata.users,10).map(x=>x.name);
+	//playernames.unshift(U.name); //[U.name, 'felix'];
 
 	//startgame('aristo', playernames.map(x => ({ name: x, playmode: 'human' })), { mode: 'hotseat' });
 	startgame('accuse',playernames.map(x => ({ name: x, playmode: 'human' })), { mode: 'hotseat' });
