@@ -799,7 +799,7 @@ function show_settings(dParent) {
 
 	//dHistoryButton.onmouseleave = hide_options_popup;
 }
-function show_stage() {
+function show_progress() {
 	if (isdef(Z.fen.progress)) {
 		let d = mBy('dTitleLeft');
 		let former = mBy('dProgress');

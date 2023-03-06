@@ -7,6 +7,7 @@ function correct_handsorting(hand, plname) {
 	hand = sort_cards(hand, s == 'suit', 'CDSH', true, Z.func.rankstr);
 	return hand;
 }
+function get_color_of_card(ckey){return ['H', 'D'].includes(ckey[1]) ? 'red' : 'black';}
 
 //#region get_card and card assets
 

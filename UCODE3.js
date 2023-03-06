@@ -1,3 +1,195 @@
+
+function accuse_activate() {
+	//console.log('activating for', Z.uplayer)
+	let [stage, A, fen, phase, uplayer] = [Z.stage, Z.A, Z.fen, Z.phase, Z.uplayer];
+
+	show_progress();
+	stage = 'ball'
+	switch (stage) {
+		case 'ball': select_add_items(ui_get_hand_items(uplayer), post_select, 'may select card to play', 0, 1); break;
+		default:
+	}
+}
+
+
+function accuse_activate() {
+	let [pldata, stage, A, fen, phase, uplayer] = [Z.playerdata, Z.stage, Z.A, Z.fen, Z.phase, Z.uplayer];
+
+	//stages: hand, write, select, round
+	//hand: 
+	let donelist = Z.playerdata.filter(x => isDict(x.state));
+	let complete = donelist.length == Z.plorder.length;
+	let resolvable = uplayer == fen.starter && complete;
+	//console.log('donelist',donelist.length
+	let waiting = !resolvable && isdef(donelist.find(x => x.name == uplayer));
+
+	// let humans=[];
+	// for(const pl in fen.players) if (fen.players[pl].playmode == 'human') humans.push(pl);
+	// let humancomplete = true;
+	// for(data of Z.playerdata) if (humans.includes(data.name) && isEmpty(data.state)) humancomplete = false;
+	//console.log(uplayer, stage, 'done', donelist, 'complete', complete, 'waiting', waiting);
+
+	Z.isWaiting = false;
+	if (waiting) {
+		console.log('WAITING!!!!!!!!!',uplayer);
+		//either results are not all in or am NOT the starter (=admin)
+		let mystate = donelist.find(x => x.name == uplayer).state.card;
+		if (!isEmpty(mystate)) {
+			let handui = lookup(UI, ['players', uplayer, 'hand']);
+			//console.log('handui',handui)
+			let items = handui.items;
+			let cardui = items.find(x => x.key == mystate)
+
+			//.items.find(item=>item.a == mystate);
+			//console.log('mystate',mystate,cardui)
+			if (stage == 'hand' && isdef(cardui)) make_card_selected(cardui);
+			else if (stage == 'membership'  && isdef(cardui)) make_card_selected(cardui);
+			else mDiv(dTable(''))
+
+
+		}
+		//mDiv(dTable, {}, null, 'WAITING FOR PLAYERS TO COMPLETE....');
+		if (complete) {
+			//turn is transferred to starter
+			Z.turn = [fen.starter];
+			if (Z.mode != 'multi') take_turn_waiting();
+
+		}
+		Z.isWaiting = true;
+		autopoll();
+	} else if (stage == 'hand' && resolvable) {
+		assertion(uplayer == fen.starter, 'NOT THE STARTER WHO COMPLETES THE STAGE!!!')
+		console.log('RESOLVING HAND!!!!!!!!!!!!!')
+		let votes = [];
+		let outofpoll = [];
+		for (const pldata of Z.playerdata) {
+			let plname = pldata.name;
+			let card = pldata.state.card;
+			if (!isEmpty(card)) votes.push({ plname: plname, card: card });
+			else outofpoll.push(plname);
+		}
+
+		//resolve votes
+		//0. check if unsuccessful (no votes)
+		if (isEmpty(votes)) {
+			//nothing has changed
+			//restart session
+			Z.turn = jsCopy(Z.plorder);
+			Z.stage = 'hand';
+			take_turn_fen_clear();
+			return;
+		}
+		//1. check if all votes same color
+		let color = ['H', 'D'].includes(votes[0].card[1]) ? 'red' : 'black';
+		let allsame = true;
+		for (const v of votes) {
+			let c1 = ['H', 'D'].includes(v.card[1]) ? 'red' : 'black';
+			if (c1 != color) { allsame = false; break; }
+		}
+		if (allsame) {
+			//session ends! consensus
+			lookupAddToList(fen, ['sessions'], color)
+			Z.turn = jsCopy(Z.plorder);
+			//Z.phase += 1
+			Z.stage = 'round';
+			take_turn_fen_clear();
+			return;
+
+		}
+		//ermittle winner if any
+		//sort votes by rank
+		let ranks = 'KQJT98765432A';
+		let vsorted = sortByFunc(votes,x=>ranks.indexOf(x.card[0]));
+		let best = vsorted[0];
+		//schau ob eindeutig!
+		let winning_vote=vsorted[0];
+		if (votes.length > 1 && vsorted[1].card[0]==vsorted[0].card[0]){
+			winning_vote=null;
+		}
+		if (winning_vote){
+			let plwinner = winning_vote.plname
+			Z.turn = [plwinner];
+			Z.stage = 'president';
+			//return all non-winning votes zu player hands
+			//done
+			//discard winning vote
+			removeInPlace(fen.players[plwinner].hand,winning_vote.card);
+			//eigentlich soll es zur discard pile!			
+		}
+
+		return;
+		sentences.push({ plname: '', text: start + ' ' + fen.saying.end.toLowerCase() });
+		fen.sentences = shuffle(sentences);
+		Z.turn = jsCopy(Z.plorder);
+		Z.stage = 'select';
+		take_turn_fen_clear();
+
+	} else if (stage == 'hand') {
+		select_add_items(ui_get_hand_items(uplayer), accuse_submit_card, 'may select card to play', 0, 1);
+		// let d = mCreate('form');
+		// let dt = dTable;
+		// mAppend(dt, d);
+		// d.autocomplete = "off";
+		// d.action = "javascript:void(0);";
+		// mDiv(d, { fz: 20 }, 'dForm', fen.saying.start.toLowerCase() + '...');
+		// Z.form = d;
+		// mLinebreak(d, 10);
+		// mInput(d, { wmin: 600 }, 'i_end', 'enter ending');
+		// d.onsubmit = accuse_submit_card;
+	} else if (stage == 'select' && resolvable) {
+		assertion(uplayer == fen.starter, 'NOT THE STARTER WHO COMPLETES THE STAGE!!!')
+		let d = mDiv(dTable, {});
+		fen.result = {};
+		for (const pldata of Z.playerdata) {
+			let selecting = pldata.name;
+			let selected = pldata.state.plname;
+			let text = pldata.state.text;
+			//console.log('selected',selected, typeof selected);
+			if (isEmpty(selected)) { //} || selected === null || !selected || nundef(selected)){ // nundef(selected)) {
+				console.log('REINGEGANGEN!!!!!!!!!!!!!!')
+				fen.players[selecting].score += 1;
+				selected = 'correct';
+			} else if (selecting != selected) {
+				//console.log('selecting', selecting, 'selected', selected ?? 'null')
+				fen.players[selected].score += 1;
+			}
+			fen.result[selecting] = { plname: selected, text: text };
+			//that player gets a point
+			//selections.push({ plname: plname, text: text.toLowerCase() });
+
+		}
+		delete fen.sentences;
+		Z.turn = jsCopy(Z.plorder);
+		Z.stage = 'round';
+		take_turn_fen_clear();
+	} else if (stage == 'select') {
+		let d = mDiv(dTable, {});
+		let i = 1;
+		for (const s of fen.sentences) {
+			let d1 = mDiv(d, { fz: 20, hline: 30 }, `dsent_${s.plname}`, '' + (i++) + ') ' + s.text, 'hop1');
+			d1.onclick = accuse_select_sentence;
+		}
+	} else if (stage == 'round' && resolvable) {
+		assertion(uplayer == fen.starter, 'NOT THE STARTER WHO COMPLETES THE STAGE!!!')
+		//new session starts here!!!!!
+		Z.turn = jsCopy(Z.plorder);
+		Z.phase+=1;
+		Z.stage = 'hand';
+
+		take_turn_fen_clear();
+	} else if (stage == 'round') {
+		let d = mDiv(dTable, {}, null, `Session end! ${fen.session[fen.phase]} wins`);
+		mLinebreak(dTable, 12)
+		mButton('WEITER', accuse_onclick_weiter, dTable, {}, ['donebutton', 'enabled']);
+	} else {
+		//console.log('Z',Z)
+		alert('PROBLEM!!!')
+	}
+}
+
+
+
+
 function present_wise_rest() {
 
 	let done = Z.playerdata.filter(x => isDict(x.state)); //.length = fen.plorder.length;

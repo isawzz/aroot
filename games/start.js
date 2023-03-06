@@ -12,7 +12,7 @@ function start() {
 }
 //function start() { let uname = null; if (isdef(uname)) U = { name: uname }; phpPost({ app: 'simple' }, 'assets'); }
 function start_with_assets() {
-	console.log('.......................',Serverdata.users);
+	//console.log('.......................',Serverdata.users);
 
 	//console.log(`browser name: ${navigator.appName}, or ${navigator.userAgent}`);
 	DA.isFirefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1; if (DA.isFirefox) console.log('using Firefox!')
@@ -95,6 +95,8 @@ function gamestep() {
 	show_title();
 	show_role();
 	Z.func.present(dTable);	// *** Z.uname und Z.uplayer ist IMMER da! ***
+
+	//console.log('uplayer',Z.uplayer)
 
 	//console.log('_____uname:'+Z.uname,'role:'+Z.role,'player:'+Z.uplayer,'host:'+Z.host,'curplayer:'+Z.turn[0],'bot?',is_current_player_bot()?'YES':'no');
 	if (isdef(Z.scoring.winners)) { show_winners(); animatedTitle('GAMEOVER!'); }
@@ -232,7 +234,9 @@ function ai_move(ms = 100) {
 	let [A, fen] = [valf(Z.A, {}), Z.fen];
 	let selitems;
 
-	if (Z.game == 'ferro') {
+	if (Z.game == 'accuse' && Z.stage == 'hand'){
+		selitems=[];
+	}else	if (Z.game == 'ferro') {
 		//console.log('ferro ai_move', A.items);
 		if (Z.stage == 'card_selection') {
 			let uplayer = Z.uplayer;

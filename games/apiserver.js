@@ -230,8 +230,17 @@ function update_table() {
 	let [uname, turn, mode, host] = [Z.uname, fen.turn, Z.mode, Z.host];
 	//console.log('uname', uname, 'turn', turn, 'mode', mode, 'host', host);
 	let upl = Z.role == 'active' ? uname : turn[0];
-	if (mode == 'hotseat' && turn.length > 1) { let next = get_next_human_player(Z.prev.uplayer); if (next) upl = next; }
-	if (mode == 'multi' && Z.role == 'inactive' && (uname != host || is_human_player(upl))) { upl = uname; }
+
+	//console.log('Z',Z)
+	if (Z.game == 'accuse') {
+		if (mode == 'hotseat' && turn.length > 1) { let next = get_next_player(Z,Z.prev.uplayer); if (next) upl = next; }
+
+	} else {
+		if (mode == 'hotseat' && turn.length > 1) { let next = get_next_human_player(Z.prev.uplayer); if (next) upl = next; }
+		if (mode == 'multi' && Z.role == 'inactive' && (uname != host || is_human_player(upl))) { upl = uname; }
+
+	}
+
 	//console.log('-----------setting', upl,'\nuname',uname,'\nturn',turn,'\nprev',Z.prev.uplayer)
 	set_player(upl, fen);
 

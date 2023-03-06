@@ -179,7 +179,7 @@ function ari_pre_action() {
 
 	if (Z.num_actions > 0) fen.progress = `(action ${Z.action_number} of ${Z.total_pl_actions})`; else delete fen.progress;
 
-	show_stage();
+	show_progress();
 	switch (ARI.stage[stage]) {
 		case 'action: command': Z.stage = 6; select_add_items(ui_get_commands(uplayer), process_command, 'must select an action', 1, 1); break; //5
 		case 'action step 2':
@@ -2324,7 +2324,7 @@ function ui_get_all_hidden_building_items(uplayer) {
 	return items;
 }
 function ui_get_hand_items(uplayer) {
-	console.log('uplayer',uplayer,UI.players[uplayer])
+	//console.log('uplayer',uplayer,UI.players[uplayer])
 	let items = [], i = 0;
 	let hand = UI.players[uplayer].hand;
 	for (const o of hand.items) {

@@ -35,8 +35,8 @@ function select_add_items(items, callback = null, instruction = null, min = 0, m
 	let A = Z.A;
 	select_clear_previous_level();
 	A.level++; A.items = items; A.callback = callback; A.selected = []; A.minselected = min; A.maxselected = max;
-	console.log('A.level', A.level)
-	show_stage();
+	//console.log('A.level', A.level)
+	show_progress();
 	let dInstruction = mBy('dSelections0');
 	mClass(dInstruction, 'instruction');
 	mCenterCenterFlex(dInstruction);
