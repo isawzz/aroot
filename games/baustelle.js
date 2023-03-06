@@ -1,4 +1,32 @@
 
+function parlay_player_selected() {
+	let [A, uplayer, fen] = [Z.A, Z.uplayer, Z.fen];
+	let other = fen.other = A.items[A.selected[0]].a;
+	fen.maxcards = Math.max(fen.players[other].hand.length, fen.players[uplayer].hand.length);
+	Z.stage = 'parlay_select_cards'
+	accuse_activate();
+}
+function parlay_cards_selected() {
+	let [A, uplayer, fen] = [Z.A, Z.uplayer, Z.fen];
+	let player_cards = fen.player_cards = A.selected.map(x => A.items[x]);
+	Z.turn = [fen.other];
+	Z.stage = 'parlay_opponent_selects';
+	take_turn_fen();
+}
+function opponent_selected(){
+	let opp_cards = A.selected.map(x => A.items[x]);
+	//resolve!
+	let pl1=fen.players[fen.president];
+	let pl2=fen.players[uplayer];
+	fen.player_cards.map(x=>removeInPlace(pl1.hand,x))
+	fen.player_cards.map(x=>pl2.hand.push(x)); 
+	opp_cards.map(x=>removeInPlace(pl2.hand,x))
+	opp_cards.map(x=>pl1.hand.push(x)); 
+	
+
+
+}
+
 function accuse_submit_president() {
 	let [A, uplayer, fen] = [Z.A, Z.uplayer, Z.fen];
 	let action = A.items[A.selected[0]].a;
@@ -8,7 +36,7 @@ function accuse_submit_president() {
 		Z.stage = 'president_accuse';
 		accuse_activate();
 
-	}else if (action =='parlay'){
+	} else if (action == 'parlay') {
 		Z.stage = 'parlay_select_player';
 		accuse_activate();
 	}
@@ -154,6 +182,9 @@ function accuse_enact_policy() {
 }
 function get_players_with_at_least_one_hand_card() {
 	return get_keys(Z.fen.players).filter(x => Z.fen.players[x].hand.length >= 1);
+}
+function get_others_with_at_least_one_hand_card() {
+	return get_keys(Z.fen.players).filter(x => x.name != Z.uplayer && Z.fen.players[x].hand.length >= 1);
 }
 function arrAllSame(arr, func) {
 	let arr1 = arr.map(x => func(x));

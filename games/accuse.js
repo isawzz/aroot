@@ -81,11 +81,13 @@ function accuse_activate() {
 		select_add_items(ui_get_string_items(validplayers), accuse_submit_accused, 'must select player name', 1, 1);
 
 	} else if (stage == 'parlay_select_player') {
-		select_add_items(ui_get_hand_items(uplayer), accuse_enact_policy, 'may enact a policy', 0, 1);
+		let players = get_others_with_at_least_one_hand_card();
+		select_add_items(ui_get_string_items(players), parlay_player_selected, 'must select player to exchange cards with', 1, 1);
 	} else if (stage == 'parlay_select_cards') {
-		select_add_items(ui_get_hand_items(uplayer), accuse_enact_policy, 'may enact a policy', 0, 1);
+		select_add_items(ui_get_hand_items(uplayer), parlay_cards_selected, 'may select cards to exchange', 0, fen.maxcards);
 	} else if (stage == 'parlay_opponent_selects') {
-		select_add_items(ui_get_hand_items(uplayer), accuse_enact_policy, 'may enact a policy', 0, 1);
+		let n=fen.player_cards.length;
+		select_add_items(ui_get_hand_items(uplayer), opponent_selected, `must select ${n} cards`, n, n);
 	} else if (stage == 'resign') {
 		select_add_items(ui_get_hand_items(uplayer), accuse_enact_policy, 'may enact a policy', 0, 1);
 	} else if (stage == 'select_accused_color') {
@@ -238,7 +240,9 @@ function accuse_activate() {
 		select_add_items(ui_get_hand_items(uplayer), accuse_submit_card, 'may select card to play', 0, 1);
 	} else if (stage == 'president') {
 		let accuse_action_available = !fen.isprovisional || fen.players[uplayer].hand.length >= 1;
-		let actions = ['parlay', 'defect', 'resign'];
+		let parlay_action_available = get_others_with_at_least_one_hand_card().length >= 1;
+		let actions = ['defect', 'resign'];
+		if (parlay_action_available) actions.unshift('parlay');
 		if (accuse_action_available) actions.unshift('accuse');
 		select_add_items(ui_get_string_items(actions), accuse_submit_president, 'must select action to play', 1, 1);
 	} else if (stage == 'select' && resolvable) {
