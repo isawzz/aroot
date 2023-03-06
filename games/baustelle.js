@@ -8,6 +8,9 @@ function accuse_submit_president() {
 		Z.stage = 'president_accuse';
 		accuse_activate();
 
+	}else if (action =='parlay'){
+		Z.stage = 'parlay_select_player';
+		accuse_activate();
 	}
 }
 function accuse_submit_accused() {

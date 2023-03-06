@@ -80,7 +80,13 @@ function accuse_activate() {
 		let validplayers = plnames.filter(x => fen.players[x].hand.length >= 1 && x != uplayer);
 		select_add_items(ui_get_string_items(validplayers), accuse_submit_accused, 'must select player name', 1, 1);
 
-	} else if (stage == 'president_cleanup') {
+	} else if (stage == 'parlay_select_player') {
+		select_add_items(ui_get_hand_items(uplayer), accuse_enact_policy, 'may enact a policy', 0, 1);
+	} else if (stage == 'parlay_select_cards') {
+		select_add_items(ui_get_hand_items(uplayer), accuse_enact_policy, 'may enact a policy', 0, 1);
+	} else if (stage == 'parlay_opponent_selects') {
+		select_add_items(ui_get_hand_items(uplayer), accuse_enact_policy, 'may enact a policy', 0, 1);
+	} else if (stage == 'resign') {
 		select_add_items(ui_get_hand_items(uplayer), accuse_enact_policy, 'may enact a policy', 0, 1);
 	} else if (stage == 'select_accused_color') {
 		select_add_items(ui_get_string_items(['red', 'black']), accuse_submit_accused_color, 'must select color', 1, 1);
