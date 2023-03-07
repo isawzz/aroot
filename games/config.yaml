@@ -33,7 +33,8 @@ games:
     options:
       #mode: 'solo,hotseat,multi'
       mode: 'solo,hotseat,multi'
-    hand_size: 7
+      rounds: 5,4,2,1
+      policies_needed: 5,4,3,2
   aristo:
     friendly: Aristocracy
     logo: crown

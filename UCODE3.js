@@ -1,4 +1,3 @@
-
 function accuse_activate() {
 	//console.log('activating for', Z.uplayer)
 	let [stage, A, fen, phase, uplayer] = [Z.stage, Z.A, Z.fen, Z.phase, Z.uplayer];

@@ -392,7 +392,7 @@ function ari_present_player(plname, d, ishidden = false) {
 	if (fen.stage < 5 && ishidden) { stall.items.map(x => face_down(x)); }
 
 	//present commissions
-	if (exp_commissions(Z.options)) { //} && (!ishidden || isdef(fen.winners))) {
+	if (exp_commissions(Z.options)) { 
 		if (!ishidden) pl.commissions = correct_handsorting(pl.commissions, plname);
 		ui.commissions = ui_type_market(pl.commissions, d, { maleft: 12 }, `players.${plname}.commissions`, 'commissions', Z.stage == 23 ? ari_get_card_large : ari_get_card);
 
@@ -401,7 +401,7 @@ function ari_present_player(plname, d, ishidden = false) {
 	}
 
 	//present rumors
-	if (exp_rumors(Z.options)) { //} && (!ishidden || isdef(fen.winners))) {
+	if (exp_rumors(Z.options)) { 
 		if (!ishidden) pl.rumors = correct_handsorting(pl.rumors, plname);
 		ui.rumors = ui_type_market(pl.rumors, d, { maleft: 12 }, `players.${plname}.rumors`, 'rumors', Z.stage == 24 ? ari_get_card_large : ari_get_card);
 
@@ -1875,6 +1875,7 @@ function ari_get_max_journey_length(fen, uplayer) {
 function ari_history_list(lines, title = '', fen) {
 	if (nundef(fen)) fen = Z.fen;
 	if (nundef(fen.history)) fen.history = [];
+	if (isString(lines)) lines = [lines];
 
 	// let html = beautify_history(lines,title, fen,Z.uplayer);
 	// fen.history.push(html);

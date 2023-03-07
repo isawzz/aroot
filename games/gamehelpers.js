@@ -209,20 +209,13 @@ function beautify_history(lines, title, fen, uplayer) {
 		let words = toWords(l);
 		//console.log('words', words);
 		for (const w1 of words) {
-			if (is_card_key(w1)) {
-				//html += ` ${ari_get_card(w1).friendly} `; 
-
-				//html += `${w1[0]}<i class="fas fa-spade"></i>`;
-				//let suit =  mCardText(w1).innerHTML;
-				html += mCardText(w1);
-				//console.log('suit', suit);
-				continue;
-			}
+			if (is_card_key(w1)) { html += mCardText(w1); continue; }
 			w = w1.toLowerCase();
 			if (isdef(fen.players[w])) {
 				html += `<span style="color:${get_user_color(w)};font-weight:bold"> ${w} </span>`;
 			} else html += ` ${w} `;
 		}
+		if (lines.length > 1) html = html.trim() + (l == arrLast(lines) ? '.' : ', ');
 	}
 	html += "</div>";
 	return html;
@@ -647,10 +640,8 @@ function show_history(fen, dParent) {
 		UI.dHistory = dHistory;
 		//console.log('dHistory', dHistory);
 
-
-		if (isdef(Clientdata.historyLayout)) {
-			show_history_layout(Clientdata.historyLayout);
-		}
+		//console.log(Clientdata.historyLayout);
+		if (isdef(Clientdata.historyLayout)) { show_history_layout(Clientdata.historyLayout); }
 	}
 
 }

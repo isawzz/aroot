@@ -233,10 +233,10 @@ function update_table() {
 
 	//console.log('Z',Z)
 	if (Z.game == 'accuse') {
-		if (mode == 'hotseat' && turn.length > 1) { let next = get_next_player(Z,Z.prev.uplayer); if (next) upl = next; }
+		if (mode == 'hotseat' && turn.length > 1) { let next = get_next_in_list(Z.prev.uplayer,Z.turn); if (next) upl = next; }
 
 	} else {
-		if (mode == 'hotseat' && turn.length > 1) { let next = get_next_human_player(Z.prev.uplayer); if (next) upl = next; }
+		if (mode == 'hotseat' && turn.length > 1) { let next = get_next_in_list(Z.prev.uplayer,Z.turn); if (next) upl = next; }
 		if (mode == 'multi' && Z.role == 'inactive' && (uname != host || is_human_player(upl))) { upl = uname; }
 
 	}
