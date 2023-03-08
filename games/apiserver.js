@@ -215,6 +215,7 @@ function update_table() {
 
 	if (isdef(Serverdata.table)) { copyKeys(Serverdata.table, Z); Z.playerlist = Z.players; copyKeys(Serverdata.table.fen, Z); }
 	assertion(isdef(Z.fen), 'no fen in Z bei cmd=table or startgame!!!', Serverdata);
+	assertion(isdef(Z.host),'TABLE HAS NOT HOST IN UPDATE_TABLE!!!!!!!!!!!!!!')
 
 	Clientdata.this_turn = Z.turn;
 
@@ -234,6 +235,20 @@ function update_table() {
 	//console.log('Z',Z)
 	if (Z.game == 'accuse') {
 		if (mode == 'hotseat' && turn.length > 1) { let next = get_next_in_list(Z.prev.uplayer,Z.turn); if (next) upl = next; }
+		if(mode == 'multi' && uname == host){
+			//if upl is host, first move all bots
+			//if upl is bot but there is no other bot, go back to host
+			let bots = turn_has_bots_that_must_move();
+			console.log('bots on turn that must move',bots);
+			//if (!isEmpty(bots)) assertion(false,"GOT BOTS!!!!!!!!!!!!!!!")
+			if (!isEmpty(bots)) upl=bots[0];
+			
+		} 
+		// console.log('Z.role',Z.role,'turn',turn,'uname',uname,'host',host)
+		// let pld=Z.playerdata.find(x=>x.name == uname);
+		// let hasmoved=isdef(pld) && isDict(pld.state);
+		// let isrobot = Z.fen.players[uname].playmode != 'human';
+		// if (mode == 'multi' && (uname == host || isrobot) && turn.length > 1 && hasmoved) { upl = uname; }
 
 	} else {
 		if (mode == 'hotseat' && turn.length > 1) { let next = get_next_in_list(Z.prev.uplayer,Z.turn); if (next) upl = next; }
@@ -242,7 +257,8 @@ function update_table() {
 	}
 
 	//console.log('-----------setting', upl,'\nuname',uname,'\nturn',turn,'\nprev',Z.prev.uplayer)
-	set_player(upl, fen);
+	set_player(upl, fen); //sets uplayer
+	console.log('uplayer',Z.uplayer)
 
 	//set playmode and strategy
 	let pl = Z.pl;

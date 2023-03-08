@@ -1,3 +1,51 @@
+
+function accuse_player_stat(d1, plname) {
+	let players = Z.fen.players;
+	let pl = players[plname];
+	let onturn = Z.turn.includes(plname);
+	let sz = 40; //onturn?100:50;
+	let bcolor = plname == Z.uplayer ? 'lime' : 'silver';
+	let border = pl.playmode == 'bot' ? `double 5px ${bcolor}` : `solid 5px ${bcolor}`;
+	let rounding = pl.playmode == 'bot' ? '0px' : '50%';
+	let d = mDiv(d1, { margin: 4, align: 'center' });
+	let stats = mDiv(d, { hmax: 14 },null,'hallo'); mCenterFlex(stats);
+	// let img=mCreate('img');
+	// img.setAttribute('height',sz);
+	// img.setAttribute('width',sz);
+	// img.src=`../base/assets/images/${plname}.jpg`;
+	// mStyle(img,{rounding:rounding,display:'inline',border:border,box:true});
+	// let dimg=mDiv(d,{align:'center',padding:0},null,img);
+	//let dimg = mDiv(d, {}, null, `<img src='../base/assets/images/${plname}.jpg' style="border-radius:${rounding};display:block;border:${border};box-sizing:border-box" class='img_person' width=${sz} height=${sz}>`);
+	let dimg = mDiv(d, {padding:0}, null, `<img src='../base/assets/images/${plname}.jpg' style="border-radius:${rounding};border:${border};box-sizing:border-box" width=${sz} height=${sz}>`);
+	mCenterFlex(dimg);
+	let card = mDiv(d, { hmin: 40 }); mCenterFlex(card);
+	let x = lookupSetOverride(UI, ['stats', plname], { douter: d, dstats: stats, dimg: dimg, dcard: card });
+	return x;
+}
+
+function accuse_stats(d) {
+	let players = Z.fen.players;
+	//console.log('uplayer',Z.uplayer)
+	let d1 = mDiv(d, { display: 'flex', 'justify-content': 'center', 'align-items': 'space-evenly' });
+	for (const plname of get_present_order()) {
+		let pl = players[plname];
+		let onturn = Z.turn.includes(plname);
+		let sz = 50; //onturn?100:50;
+		let bcolor = plname == Z.uplayer ? 'lime' : 'silver';
+		let border = pl.playmode == 'bot' ? `double 5px ${bcolor}` : `solid 5px ${bcolor}`;
+		let rounding = pl.playmode == 'bot' ? '0px' : '50%';
+		let d2 = mDiv(d1, { margin: 4, align: 'center' }, null, `<img src='../base/assets/images/${plname}.jpg' style="border-radius:${rounding};display:block;border:${border};box-sizing:border-box" class='img_person' width=${sz} height=${sz}>${get_player_score(plname)}`);
+
+		if (TESTHISTORY) {
+			let d3 = mDiv(d2, { display: 'flex', gap: 4 });
+			let dleft = ari_get_card(pl.idleft, 40); mAppend(d3, iDiv(dleft))
+			if (isdef(pl.membership)) { let dmiddle = ari_get_card(pl.membership, 40); mAppend(d3, iDiv(dmiddle)); }
+			let dright = ari_get_card(pl.idright, 40); mAppend(d3, iDiv(dright))
+		}
+	}
+}
+
+
 function accuse_activate() {
 	//console.log('activating for', Z.uplayer)
 	let [stage, A, fen, phase, uplayer] = [Z.stage, Z.A, Z.fen, Z.phase, Z.uplayer];

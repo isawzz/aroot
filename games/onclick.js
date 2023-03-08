@@ -180,13 +180,10 @@ function onclick_restart() {
 	fen = Z.fen = Z.func.setup(playernames, Z.options);
 	[Z.plorder, Z.stage, Z.turn, Z.round, Z.step, Z.phase] = [fen.plorder, fen.stage, fen.turn, 1, 1, fen.phase];
 
-	if (DA.TESTSTART1) Z.turn = fen.turn = Z.host;
+	if (DA.TESTSTART1) Z.turn = fen.turn = [Z.host];
 
 	let i = 0; playernames.map(x => { let pl = fen.players[x]; pl.name = x; pl.strategy = strategies[i]; pl.playmode = playmodes[i++]; });
-	// let i = 0; let players = playernames.map(x => ({ name: x, strategy: strategies[i], playmode: playmodes[i++] }));
-	// let i = 0; playernames.map(x => fen.players[x].playmode = playmodes[i++]); //restore playmode
-	//if (Z.game == 'spotit') spotit_clear_score();
-	//console.log('neue fen',Z.fen.plorder.map(x=>fen.players[x].time_left))
+
 	take_turn_fen_clear();
 }
 function onclick_restart_move() { clear_transaction(); onclick_reload(); }

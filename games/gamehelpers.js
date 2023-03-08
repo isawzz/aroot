@@ -859,8 +859,8 @@ function show_tables(ms = 500) {
 }
 function show_title() {
 	//mBy('dTitleMiddle').innerHTML = Z.friendly;
-	Z.func.state_info(mBy('dTitleLeft'));
-	show_settings(mBy('dTitleRight'));
+	settingsOn=Z.func.state_info(mBy('dTitleLeft'));
+	if (nundef(settingsOn) || settingsOn) show_settings(mBy('dTitleRight'));
 	mBy('dTablename').innerHTML = Z.friendly;
 }
 function show_username() {

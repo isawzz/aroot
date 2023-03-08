@@ -1,12 +1,12 @@
 const TESTHISTORY = true;
 function accuse() {
-	function state_info(dParent) {
+	function state_info(dParent) { 
 		dParent.innerHTML = `Session ${Z.fen.phase}`; //`phase: ${Z.phase}, turn: ${Z.turn}, stage:${Z.stage}`; 
-		return false;
+		return false; 
 	}
 	function setup(players, options) {
 		//console.log('SETUP!!!!!!!!!!!!!!!!!!!')
-		console.log('players', players, 'options', options)
+		console.log('players',players,'options',options)
 		let fen = { players: {}, plorder: jsCopy(players), history: [{ title: '*** game start ***', lines: [] }], rounds: options.rounds, policies_needed: options.policies_needed };
 		shuffle(fen.plorder);
 		let plorder = fen.plorder;
@@ -36,6 +36,8 @@ function accuse() {
 
 		//show_sitting_order
 		accuse_show_sitting_order(fen);
+		//console.log('players',players)
+		let starter = fen.starter = plorder.includes('mimi')?'mimi':plorder.includes('felix')?'felix':firstCond(get_values(fen.players),x=>x.playmode == 'human'); //fen.plorder[0];
 
 		return fen;
 	}
@@ -56,7 +58,6 @@ function accuse() {
 
 function accuse_present(dParent) {
 
-	DA.no_shield = true;
 	let [fen, ui, stage, uplayer] = [Z.fen, UI, Z.stage, Z.uplayer];
 	let [dOben, dOpenTable, dMiddle, dRechts] = tableLayoutMR(dParent, 1, 0); ///tableLayoutOMR(dParent, 5, 1);
 	//dHistory = mDiv(dOben,{},'dHistory','history: '+ arrLast(fen.history));
@@ -104,7 +105,7 @@ function accuse_present(dParent) {
 }
 
 function presentcards() {
-	if (startsWith(Z.stage, 'hand')) {
+	if (startsWith(Z.stage,'hand')) {
 		let donelist = Z.playerdata.filter(x => isDict(x.state) && isdef(x.state.card));
 		//let reveal = donelist.length >= turn.length
 		for (const pld of donelist) {
@@ -121,34 +122,30 @@ function presentcards() {
 			}
 			if (!Z.fen.cardsrevealed || !plui.actualcard) face_down(plui.card);
 		}
-	} else {
-		console.log('presentcards no hand state!')
-		let fen = Z.fen;
-		console.log('fen',fen)
-		for (const plname in fen.players) {
-			let pl = fen.players[plname];
-			let plui = lookup(UI, ['stats', plname]);
-			console.log('plui',plui)
-			let dcard = plui.dcard;
-			console.log('dcard',dcard);
-			console.log('score',pl.score)
-			mClear(dcard);
-			mDiv(dcard,{},null,`${pl.score}`)
-
-		}
 	}
-
 
 }
 function accuse_activate() {
 	let [pldata, stage, A, fen, phase, uplayer, turn] = [Z.playerdata, Z.stage, Z.A, Z.fen, Z.phase, Z.uplayer, Z.turn];
 
-	let donelist = Z.playerdata.filter(x => isDict(x.state) && isdef(x.state.card));
-	let complete = ['hand', 'membership'].includes(stage) && donelist.length >= turn.length || stage == 'round' && firstCond(pldata, x => isDict(x));
-	let resolvable = uplayer == Z.host && complete;
-	let waiting = !resolvable && isdef(donelist.find(x => x.name == uplayer)) && turn.length > 1;
-	Z.isWaiting = false;
+	//mBy('dSpecial').innerHTML = pldata.filter(x => ['felix', 'mimi'].includes(x.name)).map(x => `${x.name}:${isEmpty(x.state) ? '()' : x.state.card}`).join(',');
+	//console.log(pldata.filter(x => ['felix', 'mimi'].includes(x.name)).map(x => `${x.name}:${isEmpty(x.state) ? '()' : x.state.card}`).join(','));
 
+	let donelist = Z.playerdata.filter(x => isDict(x.state) && isdef(x.state.card));
+	//let complete = turn.length == 1 || donelist.length >= turn.length;
+	// let complete = ['hand', 'membership'].includes(stage) && donelist.length >= turn.length  && turn.length >= 1;
+	// complete = complete || stage == 'round' && !firstCond(pldata,x=>!isDict(x));
+
+	let complete = ['hand', 'membership'].includes(stage) && donelist.length >= turn.length || stage == 'round' && firstCond(pldata, x => isDict(x));
+	//complete = complete || startsWith(sta)
+
+	let resolvable = uplayer == fen.starter && complete;
+	let waiting = !resolvable && isdef(donelist.find(x => x.name == uplayer)) && turn.length > 1;
+	//console.log('pl', uplayer, 'stage', stage, 'on turn', turn.length, '\ndonelist', donelist, 'complete', complete, 'waiting', waiting);
+	//if (complete) console.log('complete!'); //mBy('dSpecial').innerHTML += ' complete';
+	//if (resolvable) console.log('resolvable!'); //mBy('dSpecial').innerHTML += ' + resolvable';
+
+	Z.isWaiting = false;
 	if (stage == 'impossible') {
 		console.log('impossible stage!!!!!!!!!!!!')
 	} else if (stage == 'president') {
@@ -203,15 +200,15 @@ function accuse_activate() {
 		//mDiv(dTable, {}, null, 'WAITING FOR PLAYERS TO COMPLETE....');
 		if (complete) {
 			//turn is transferred to starter
-			Z.turn = [Z.host];
+			Z.turn = [fen.starter];
 			if (Z.mode != 'multi') { take_turn_waiting(); return; }
 		}
 
-		if (uplayer == Z.host && there_are_bots()) {
+		if (uplayer == fen.starter && there_are_bots()){
 			//mode for bots also!
 			let bots = get_bots_on_turn();
-			console.log('bots', bots)
-			for (const bot of bots) {
+			console.log('bots',bots)
+			for(const bot of bots){
 				accuse_ai_move(bot);
 			}
 		}
@@ -220,7 +217,7 @@ function accuse_activate() {
 		Z.isWaiting = true;
 		autopoll();
 	} else if (stage == 'membership' && resolvable) {
-		assertion(uplayer == Z.host, 'NOT THE STARTER WHO COMPLETES THE STAGE!!!')
+		assertion(uplayer == fen.starter, 'NOT THE STARTER WHO COMPLETES THE STAGE!!!')
 		console.log('RESOLVING membership!!!!!!!!!!!!!')
 		let histest = [];
 		for (const pldata of Z.playerdata) {
@@ -245,18 +242,18 @@ function accuse_activate() {
 	} else if (stage == 'membership') {
 		select_add_items(ui_get_hand_items(uplayer), accuse_submit_membership, 'must select your alliance', 1, 1);
 	} else if (stage == 'hand' && resolvable) {
-		assertion(uplayer == Z.host, 'NOT THE STARTER WHO COMPLETES THE STAGE!!!')
+		assertion(uplayer == fen.starter, 'NOT THE STARTER WHO COMPLETES THE STAGE!!!')
 
 		//all the cards in UI.stats[plname].card
 		fen.cardsrevealed = true;
 
 		//console.log('STOP: RESOLVING HAND!!!!!!!!!!!!!', Z.playerdata.map(x => x.state.card));
 		// DA.gobutton = mButton('reveal cards', () => { Z.stage = 'handresolve'; accuse_activate(); }, dTable, { w: 300 });
-		DA.gobutton = mButton('reveal cards', () => { Z.turn = [uplayer]; Z.stage = 'handresolve'; take_turn_fen(); }, dTable, { w: 300 });
+		DA.gobutton = mButton('reveal cards', () => { Z.turn=[uplayer]; Z.stage = 'handresolve'; take_turn_fen(); }, dTable, { w: 300 });
 		//Z.stage = 'handresolve'; accuse_activate();
 		return;
 	} else if (stage == 'handresolve') {
-		assertion(uplayer == Z.host && fen.cardsrevealed, 'NOT THE STARTER WHO COMPLETES THE STAGE!!!')
+		assertion(uplayer == fen.starter && fen.cardsrevealed, 'NOT THE STARTER WHO COMPLETES THE STAGE!!!')
 		DA.gobutton = mButton('evaluate cards', () => { Z.stage = 'handresolve_weiter'; take_turn_fen(); }, dTable, { w: 300 });
 		return;
 	} else if (stage == 'handresolve_weiter') {
@@ -358,7 +355,7 @@ function accuse_activate() {
 	} else if (stage == 'hand') {
 		select_add_items(ui_get_hand_items(uplayer), accuse_submit_card, 'may select card to play', 0, 1);
 	} else if (stage == 'round' && resolvable) {
-		assertion(uplayer == Z.host, 'NOT THE STARTER WHO COMPLETES THE STAGE!!!')
+		assertion(uplayer == fen.starter, 'NOT THE STARTER WHO COMPLETES THE STAGE!!!')
 		//new session starts here!!!!!
 		Z.turn = jsCopy(Z.plorder);
 		Z.phase = Number(Z.phase) + 1;
@@ -576,7 +573,7 @@ function defect_resolve() {
 	let pl = fen.players[uplayer];
 	pl.membership = card;
 	removeInPlace(pl.hand, card);
-	ari_history_list(`${uplayer} replaces membership`, 'defect')
+	ari_history_list(`${uplayer} replaces membership`,'defect')
 	president_end();
 }
 
