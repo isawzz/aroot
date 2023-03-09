@@ -10,13 +10,14 @@ function accuse_player_stat(dParent, plname, hvotecard,himg,hstatfz,gap) {
 	let bcolor = plname == Z.uplayer ? 'lime' : 'silver';
 	let border = pl.playmode == 'bot' ? `double 5px ${bcolor}` : `solid 5px ${bcolor}`;
 	let rounding = pl.playmode == 'bot' ? '0px' : '50%';
-	let d = mDiv(dParent, { margin: 4, align: 'center' });
+	let d = mDiv(dParent, { align: 'center' });
+	//let d = mDiv(dParent); mCenterFlex(d); //, { margin: 4, align: 'center' });
 	let card = mDiv(d, { hmin: hvotecard+gap,bg:'transparent',mabottom:gap, paright:4 }); mCenterFlex(card);
 
-	let dcombine = mDiv(d); //,{padding:6});
+	let dcombine = mDiv(d,{w:sz,margin:'auto'}); //,{padding:6});
 
 	let dimg = mDiv(dcombine, {padding:0}, null, `<img src='../base/assets/images/${plname}.jpg' style="border-radius:${rounding};border:${border};box-sizing:border-box" width=${sz} height=${sz}>`);mCenterFlex(dimg);
-	let stats = mDiv(dcombine, { align:'center',wmin:50,bg:'silver',rounding:10 }); mCenterFlex(stats);
+	let stats = mDiv(dcombine, { align:'center',w:sz,bg:'silver',rounding:10 }); mCenterFlex(stats);
 	let x = lookupSetOverride(UI, ['stats', plname], { douter: d, dcombi: dcombine, dstats: stats, dimg: dimg, dcard: card });
 	accuse_player_stat_count('star', pl.score, stats, {sz:hstatfz});
 	accuse_player_stat_count('hand with fingers splayed', pl.hand.length, stats, {sz:hstatfz});

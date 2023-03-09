@@ -97,7 +97,7 @@ function accuse_present(dParent) {
 	//let dstats = mDiv(d2, { display: 'flex', 'justify-content': 'space-between', 'align-items': 'space-evenly',gap:20, w: 'auto' });
 	//let dstats = mGrid(1,fen.plorder-1,d2,{display:'inline-grid',w:wneeded}); //, { display: 'flex', 'justify-content': 'space-between', 'align-items': 'space-evenly',gap:20, w: 'auto' });
 	let dstats = mDiv(d2,{w:wneeded}); //, bg:'lime'});
-	dstats.style.gridTemplateColumns = 'repeat(' + 5 + ',1fr)';
+	dstats.style.gridTemplateColumns = 'repeat(' + (fen.plorder.length-1) + ',1fr)';
 	dstats.style.display = 'inline-grid';
 	dstats.style.padding = dstats.style.gap = `${wgap}px`;
 	let order = get_present_order();
