@@ -969,15 +969,35 @@ function ltest0_card() { let c = ari_get_card('QSn'); mAppend(dTable, iDiv(c)); 
 //#endregion
 
 //#region fen (=local) tests
+function fentest2_accuse(){
+	TESTING = true; DA.testing = true; DA.test = { mods: [], iter: 0, maxiter: 200, running: false, step: true, suiteRunning: false, number: 0, list: [0] };
+	DA.test.end = () => { };
+	DA.auto_moves = [];
+	let numplayers = 12;
+	let list = jsCopy(Serverdata.users).map(x=>x.name);
+	let list1 = arrWithout(list,['mimi','felix']);
+	console.log('list1',list1)
+	let playernames = arrTake(list1,numplayers-2);
+	playernames = ['mimi','felix'].concat(playernames);
+	startgame('accuse',playernames.map(x => ({ name: x, playmode: ['mimi','felix'].includes(x)?'human':'bot' })), { mode: 'hotseat' });
+}
 function fentest_accuse(){
 	TESTING = true; DA.testing = true; DA.test = { mods: [], iter: 0, maxiter: 200, running: false, step: true, suiteRunning: false, number: 0, list: [0] };
 	DA.test.end = () => { };
 	DA.auto_moves = [];
-	let playernames = arrTake(Serverdata.users,10).map(x=>x.name);
+	let numplayers = 12;
+	let list = jsCopy(Serverdata.users).map(x=>x.name);
+	let list1 = arrWithout(list,['mimi','felix']);
+	console.log('list1',list1)
+	//let list = jsCopy(Serverdata.users);
+	//['mimi','felix'].map(x=>removeInPlace(list,x));
+
+	let playernames = arrTake(list1,numplayers-2);
+	playernames = ['mimi','felix'].concat(playernames);
 	//playernames.unshift(U.name); //[U.name, 'felix'];
 
 	//startgame('aristo', playernames.map(x => ({ name: x, playmode: 'human' })), { mode: 'hotseat' });
-	startgame('accuse',playernames.map(x => ({ name: x, playmode: 'human' })), { mode: 'hotseat' });
+	startgame('accuse',playernames.map(x => ({ name: x, playmode: ['mimi','felix'].includes(x)?'human':'bot' })), { mode: 'multi' });
 
 }
 

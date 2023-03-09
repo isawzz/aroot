@@ -16,7 +16,9 @@ function accuse() {
 		for (let i = 0; i < num; i++) { deck_identities.push(ranks[i] + 'Hh'); deck_identities.push(ranks[i] + 'Sh'); }
 		shuffle(deck_identities);
 
+		console.log('plorder', plorder)
 		for (const plname of plorder) {
+			console.log('plname', plname)
 			let pl = fen.players[plname] = {
 				score: 0,
 				name: plname,
@@ -58,52 +60,97 @@ function accuse_present(dParent) {
 
 	DA.no_shield = true;
 	let [fen, ui, stage, uplayer] = [Z.fen, UI, Z.stage, Z.uplayer];
-	let [dOben, dOpenTable, dMiddle, dRechts] = tableLayoutMR(dParent, 1, 0); ///tableLayoutOMR(dParent, 5, 1);
-	//dHistory = mDiv(dOben,{},'dHistory','history: '+ arrLast(fen.history));
+	let [dOben, dOpenTable, dMiddle, dRechts] = tableLayoutMR(dParent, 1, 0);
 	let dt = dTable = dOpenTable; clearElement(dt); mCenterFlex(dt); mStyle(dt, { hmin: 700 })
 
-	//console.log('dTitle',dTitle); hide(dTitle); //return;
-	// mBy('dTitleLeft').innerHTML = `Session ${fen.phase}`; mStyle(dTitle, { hpadding: 10, vpadding: 1, h: 20 });
-	// mBy('dTitleRight').innerHTML = '';
-
-	//mStyle(dRechts,{wmin:265,bg:'#00000080'});
 	show_history(fen, dRechts);
 
-	let colorfunc = () => 'transparent' //rColor
-	let [d1, d2, d3, d4] = [mDiv(dt, { bg: colorfunc() }), mDiv(dt, { bg: colorfunc() }), mDiv(dt, { bg: colorfunc() }), mDiv(dt, { bg: colorfunc() })];
-	mStyle(d1, { h: 130, w: '90%' }); //, bg: 'yellow' });
-	mStyle(d2, { h: 130, display: 'grid', 'grid-template-columns': '120px 1fr 120px', gap: 4, w: '100%' }); //, bg: 'orange' });
-	mStyle(d3, { h: 130, display: 'grid', 'grid-template-columns': '100px 120px 1fr 120px 100px', gap: 4, w: '100%' }); //, bg: 'red' });
-	mStyle(d4, { h: 130, display: 'grid', 'grid-template-columns': '120px 1fr 120px', gap: 4, w: '100%' }); //, bg: 'hotpink' });
-	let [d2le, d2mid, d2ri] = [mDiv(d2), mDiv(d2), mDiv(d2)];
-	let [d3le, d3lemi, d3mid, d3rimi, d3ri] = [mDiv(d3), mDiv(d3), mDiv(d3), mDiv(d3), mDiv(d3)];
-	// let [d4le, d4lemi, d4mid, d4rimi, d4ri] = [mDiv(d4,{w:100}), mDiv(d4), mDiv(d4), mDiv(d4), mDiv(d4)];
-	let [d4le, d4mid, d4ri] = [mDiv(d4), mDiv(d4), mDiv(d4)];
-	for (const d of [d2le, d2mid, d2ri, d3lemi, d3mid, d3rimi, d4le, d4mid]) mCenterFlex(d);
-	for (const d of [d2le, d2mid, d2ri, d3lemi, d3mid, d3rimi, d4le, d4mid]) mStyle(d, { h: 130 });
+	let [hlg,hsm] = [80,50];
+	let [hpolcard,hvotecard,himg,hstatfz,hnetcard,hhandcard,gap] = [hsm,hlg,50,8,hsm,hlg,4];
+	let [hpol,hstat,hhand]=[hpolcard+30,hvotecard+himg+hstatfz*3+gap*2,hhandcard+30];
+	let [d1, d2, d3, d4, d5] = [mDiv(dt), mDiv(dt), mDiv(dt), mDiv(dt), mDiv(dt)];
+	//for (const d of [d1, d2, d3, d4, d5]) { mCenterCenterFlex(d); mStyle(d, { gap:10, w: '100%', hmin: h }) }
 
-	// *** player stats ***
-	accuse_stats(d1, d2le, d2ri, d4le); //lookupSetOverride(UI, ['stats', plname], { douter: d, dstats: stats, dimg: img, dcard: card });
-	presentcards();
+	// *** test example ***
+	//fen.policies = ['QHn','QSn','AHn','2Dn'];
+	// fen.players[uplayer].membership='QSn'
 
-	// *** policies ***
-	if (nundef(fen.policies)) fen.policies = [];
-	UI.policies = ui_type_hand(fen.policies, d2mid, { hmin: 120 }, '', 'policies', ari_get_card, false);
 
-	// *** player membership cards ***
+	// *** d1 policies ***
+	let [color, n] = get_policies_to_win();
+	//if (isEmpty(fen.policies))
+	UI.policies = ui_type_accuse_hand(fen.policies, d1, {h:hpol}, '', 'policies', accuse_get_card_func(hsm,GREEN), false);
+	console.log(UI.policies);
+	mStyle(d1, { h: isEmpty(fen.policies)?40:hpol, w: '90%', display: 'flex', gap: 12 })
+	let msg = color == 'any' ? `${n} policies are needed to win!` : `${capitalize(color)} needs ${n} more policies`
+	let x = mDiv(d1, { h: isEmpty(fen.policies)?40:hpolcard }, null, msg); mCenterCenterFlex(x)
+
+	// *** d2 players ***
+	let wgap=20;
+	let players = fen.players;
+	console.log('himg',himg)
+	let wneeded = (himg+wgap)*fen.plorder.length+wgap; 
+	console.log('wneeded',wneeded)
+	let wouter = '95%';
+	mStyle(d2, { hmin: hstat, w: wouter}); mCenterFlex(d2);
+	// mStyle(d2, { hmin: hstat, w: wouter, bg:GREEN }); mCenterFlex(d2);
+	//let dstats = mDiv(d2, { display: 'flex', 'justify-content': 'space-between', 'align-items': 'space-evenly',gap:20, w: 'auto' });
+	//let dstats = mGrid(1,fen.plorder-1,d2,{display:'inline-grid',w:wneeded}); //, { display: 'flex', 'justify-content': 'space-between', 'align-items': 'space-evenly',gap:20, w: 'auto' });
+	let dstats = mDiv(d2,{w:wneeded}); //, bg:'lime'});
+	dstats.style.gridTemplateColumns = 'repeat(' + 5 + ',1fr)';
+	dstats.style.display = 'inline-grid';
+	dstats.style.padding = dstats.style.gap = `${wgap}px`;
+	let order = get_present_order();
+	let me = order[0];
+	//assertion(me == uplayer,'order wrong!!!!!!!!')
+	//console.log('order',order)
+	for (const plname of order.slice(1)) { accuse_player_stat(dstats, plname, hvotecard,himg,hstatfz,gap); }
+	mLinebreak(d2)
+
+	// *** d3 me ***
+	//mStyle(d3, { hmin: hstat, wmax: wneeded, bg:ORANGE })
+	mStyle(d3, { hmin: hstat, w: wouter }); mCenterFlex(d3);
+	// mStyle(d3, { hmin: hstat, w: wouter, bg:RED }); mCenterFlex(d3);
+	//let dnet = mDiv(d3, { display: 'inline-flex', 'justify-content': 'space-between', 'align-items': 'space-evenly', w: wneeded });
+	let dnet = mDiv(d3,{w:wneeded}); //, bg:'orange'});
+	let wrest = wneeded-2*himg;
+	console.log('wrest',wrest)
+	// dnet.style.gridTemplateColumns = `${himg}px ${wrest}px ${himg}px`; // 'repeat(' + 3 + ',1fr)';
+	//dnet.style.gridTemplateColumns = `${hnetcard*.7}px 1fr ${hnetcard*.7}px`; // 'repeat(' + 3 + ',1fr)';
+	dnet.style.gridTemplateColumns = `64px 1fr 64px`; // 'repeat(' + 3 + ',1fr)';
+	dnet.style.display = 'inline-grid';
+	dnet.style.padding = `${wgap}px`; // = dstats.style.gap = `${wgap}px`;
+
 	let pl = fen.players[uplayer];
-	let idleft = ari_get_card(pl.idleft, 100); mAppend(d3lemi, iDiv(idleft))
-	let membership = ui_type_market(isdef(pl.membership) ? [pl.membership] : [], d3mid, { hmargin: 120 }, '', 'alliance')
-	let idright = ari_get_card(pl.idright, 100); mAppend(d3rimi, iDiv(idright))
 
-	// *** player hand ***
-	mStyle(d4mid, { h: 130 });
-	let handui = ui_type_hand(pl.hand, d4mid, { paleft: 25 }, `players.${uplayer}.hand`);
+	let par=(64-hnetcard*.7)/2;
+	let d_idleft = mDiv(dnet,{w:64,padding:par}); //align:'center'}); //let d_idleft = mDiv(dnet,{align:'left'})
+	let idleft = get_color_card(pl.idleft, hnetcard); mAppend(d_idleft, iDiv(idleft))
+
+	let dme_stats = mDiv(dnet, { display: 'flex', 'justify-content': 'center', 'align-items': 'space-evenly'});//, w: 200 });
+	let dx = accuse_player_stat(dme_stats, me, hvotecard,himg,hstatfz,gap);
+	if (isdef(pl.membership)) {
+		let c = get_color_of_card(pl.membership);
+		mStyle(dx.dcombi, { bg: c, rounding: hnetcard / 10 });//, patop: 4 })
+		mStyle(dx.dstats, { bg: c, fg: 'white' });
+		dx.dimg.firstChild.width = dx.dimg.firstChild.height = himg-10;
+	}
+	//mStyle(dx.dcombi,{bg:isdef(pl.membership)?get_color_of_card(pl.membership):'transparent'});
+	//let membership = get_color_card(pl.membership, hnet); mAppend(dme_stats, iDiv(membership))
+
+	// let d_idright = mDiv(dnet,{paright:align:'center'}); //'right'})
+	let d_idright = mDiv(dnet,{w:64,padding:par}); //align:'center'}); //let d_idleft = mDiv(dnet,{align:'left'})
+	let idright = get_color_card(pl.idright, hnetcard); mAppend(d_idright, iDiv(idright))
+
+	// *** d4 hand ***
+	mStyle(d4, { matop:10, h: hhand, w: '90%' }); mCenterFlex(d4);
+	let handui = ui_type_accuse_hand(pl.hand, d4, {}, `players.${uplayer}.hand`,'hand',accuse_get_card_func(hhandcard));
 	//mStyle(handui.container,{wmax:300})
 	lookupSetOverride(ui, ['players', uplayer, 'hand'], handui);
-}
 
-function presentcards() {
+	presentcards(hvotecard);
+}
+function presentcards(h) {
 	if (startsWith(Z.stage, 'hand')) {
 		let donelist = Z.playerdata.filter(x => isDict(x.state) && isdef(x.state.card));
 		//let reveal = donelist.length >= turn.length
@@ -116,31 +163,16 @@ function presentcards() {
 				// console.log('dcard',dcard)
 				let card = pld.state.card;
 				let actualcard = plui.actualcard = !isEmpty(card)
-				let card1 = plui.card = ari_get_card(actualcard ? card : 'AHn', 35)
+				let card1 = plui.card = ari_get_card(actualcard ? card : 'AHn', h)
 				mAppend(dcard, iDiv(card1));
 			}
 			if (!Z.fen.cardsrevealed || !plui.actualcard) face_down(plui.card);
 		}
-	} else {
-		console.log('presentcards no hand state!')
-		let fen = Z.fen;
-		console.log('fen',fen)
-		for (const plname in fen.players) {
-			let pl = fen.players[plname];
-			let plui = lookup(UI, ['stats', plname]);
-			console.log('plui',plui)
-			let dcard = plui.dcard;
-			console.log('dcard',dcard);
-			console.log('score',pl.score)
-			mClear(dcard);
-			mDiv(dcard,{},null,`${pl.score}`)
-
-		}
 	}
-
-
 }
+
 function accuse_activate() {
+	//return;
 	let [pldata, stage, A, fen, phase, uplayer, turn] = [Z.playerdata, Z.stage, Z.A, Z.fen, Z.phase, Z.uplayer, Z.turn];
 
 	let donelist = Z.playerdata.filter(x => isDict(x.state) && isdef(x.state.card));

@@ -1,4 +1,153 @@
 
+function accuse_stats(d, dl, dr, dmain) {
+	let players = Z.fen.players;
+	//console.log('uplayer',Z.uplayer)
+	let d1 = mDiv(d, { display: 'flex', 'justify-content': 'center', 'align-items': 'space-evenly' });
+	let order = get_present_order();
+
+	let me = order[0];
+	accuse_player_stat(dmain, me)
+	let next = order[1];
+	accuse_player_stat(dl, next)
+	let prev = arrLast(order);
+	accuse_player_stat(dr, prev)
+	let middle = order.slice(2, order.length - 1);
+	//console.log('me', me, 'next', next, 'prev', prev, 'middle', middle);
+
+	for (const plname of middle) {
+		let pl = players[plname];
+		if (TESTHISTORY && plname == middle[0]) { let dleft = ari_get_card(pl.idleft, 80); mAppend(d1, iDiv(dleft)) }
+
+		accuse_player_stat(d1, plname)
+
+		//if (TESTHISTORY && isdef(pl.membership)) { let dmiddle = ari_get_card(pl.membership, 40); mAppend(dmain, iDiv(dmiddle)); }
+		if (TESTHISTORY) { let dright = ari_get_card(pl.idright, 80); mAppend(d1, iDiv(dright)); }
+
+	}
+
+
+}
+
+function presentcards() {
+	if (startsWith(Z.stage, 'hand')) {
+		let donelist = Z.playerdata.filter(x => isDict(x.state) && isdef(x.state.card));
+		//let reveal = donelist.length >= turn.length
+		for (const pld of donelist) {
+			let plname = pld.name;
+			let plui = lookup(UI, ['stats', plname]);
+			let dcard = plui.dcard;
+
+			if (isEmpty(arrChildren(dcard))) {
+				// console.log('dcard',dcard)
+				let card = pld.state.card;
+				let actualcard = plui.actualcard = !isEmpty(card)
+				let card1 = plui.card = ari_get_card(actualcard ? card : 'AHn', 35)
+				mAppend(dcard, iDiv(card1));
+			}
+			if (!Z.fen.cardsrevealed || !plui.actualcard) face_down(plui.card);
+		}
+	} else {
+		console.log('presentcards no hand state!')
+		// let fen = Z.fen;
+		// console.log('fen', fen)
+		// for (const plname in fen.players) {
+		// 	let pl = fen.players[plname];
+		// 	let plui = lookup(UI, ['stats', plname]);
+		// 	console.log('plui', plui)
+		// 	let dcard = plui.dcard;
+		// 	console.log('dcard', dcard);
+		// 	console.log('score', pl.score)
+		// 	mClear(dcard);
+		// 	mDiv(dcard, {}, null, `${pl.score}`)
+
+		// }
+	}
+
+
+}
+
+function restpresent(dParent) {
+	mStyle(d1, { h: 130, w: '90%' }); //, bg: 'yellow' });
+	mStyle(d2, { h: 130, display: 'grid', 'grid-template-columns': '120px 1fr 120px', gap: 4, w: '100%' }); //, bg: 'orange' });
+	mStyle(d3, { h: 130, display: 'grid', 'grid-template-columns': '100px 120px 1fr 120px 100px', gap: 4, w: '100%' }); //, bg: 'red' });
+	mStyle(d4, { h: 130, display: 'grid', 'grid-template-columns': '120px 1fr 120px', gap: 4, w: '100%' }); //, bg: 'hotpink' });
+	let [d2le, d2mid, d2ri] = [mDiv(d2), mDiv(d2), mDiv(d2)];
+	let [d3le, d3lemi, d3mid, d3rimi, d3ri] = [mDiv(d3), mDiv(d3), mDiv(d3), mDiv(d3), mDiv(d3)];
+	// let [d4le, d4lemi, d4mid, d4rimi, d4ri] = [mDiv(d4,{w:100}), mDiv(d4), mDiv(d4), mDiv(d4), mDiv(d4)];
+	let [d4le, d4mid, d4ri] = [mDiv(d4), mDiv(d4), mDiv(d4)];
+	for (const d of [d2le, d2mid, d2ri, d3lemi, d3mid, d3rimi, d4le, d4mid]) mCenterFlex(d);
+	for (const d of [d2le, d2mid, d2ri, d3lemi, d3mid, d3rimi, d4le, d4mid]) mStyle(d, { h: 130 });
+
+	// *** player stats ***
+	accuse_stats(d1, d2le, d2ri, d4le); //lookupSetOverride(UI, ['stats', plname], { douter: d, dstats: stats, dimg: img, dcard: card });
+	presentcards();
+
+	// *** policies ***
+	if (nundef(fen.policies)) fen.policies = [];
+	UI.policies = ui_type_hand(fen.policies, d2mid, { hmin: 120 }, '', 'policies', ari_get_card, false);
+
+	// *** player membership cards ***
+	let pl = fen.players[uplayer];
+	let idleft = ari_get_card(pl.idleft, 100); mAppend(d3lemi, iDiv(idleft))
+	let membership = ui_type_market(isdef(pl.membership) ? [pl.membership] : [], d3mid, { hmargin: 120 }, '', 'alliance')
+	let idright = ari_get_card(pl.idright, 100); mAppend(d3rimi, iDiv(idright))
+
+	// *** player hand ***
+	mStyle(d4mid, { h: 130 });
+	let handui = ui_type_hand(pl.hand, d4mid, { paleft: 25 }, `players.${uplayer}.hand`);
+	//mStyle(handui.container,{wmax:300})
+	lookupSetOverride(ui, ['players', uplayer, 'hand'], handui);
+}
+
+function accuse_present(dParent) {
+
+	DA.no_shield = true;
+	let [fen, ui, stage, uplayer] = [Z.fen, UI, Z.stage, Z.uplayer];
+	let [dOben, dOpenTable, dMiddle, dRechts] = tableLayoutMR(dParent, 1, 0); ///tableLayoutOMR(dParent, 5, 1);
+	//dHistory = mDiv(dOben,{},'dHistory','history: '+ arrLast(fen.history));
+	let dt = dTable = dOpenTable; clearElement(dt); mCenterFlex(dt); mStyle(dt, { hmin: 700 })
+
+	//console.log('dTitle',dTitle); hide(dTitle); //return;
+	// mBy('dTitleLeft').innerHTML = `Session ${fen.phase}`; mStyle(dTitle, { hpadding: 10, vpadding: 1, h: 20 });
+	// mBy('dTitleRight').innerHTML = '';
+
+	//mStyle(dRechts,{wmin:265,bg:'#00000080'});
+	show_history(fen, dRechts);
+
+	let colorfunc = () => 'transparent' //rColor
+	let [d1, d2, d3, d4] = [mDiv(dt, { bg: colorfunc() }), mDiv(dt, { bg: colorfunc() }), mDiv(dt, { bg: colorfunc() }), mDiv(dt, { bg: colorfunc() })];
+	mStyle(d1, { h: 130, w: '90%' }); //, bg: 'yellow' });
+	mStyle(d2, { h: 130, display: 'grid', 'grid-template-columns': '120px 1fr 120px', gap: 4, w: '100%' }); //, bg: 'orange' });
+	mStyle(d3, { h: 130, display: 'grid', 'grid-template-columns': '100px 120px 1fr 120px 100px', gap: 4, w: '100%' }); //, bg: 'red' });
+	mStyle(d4, { h: 130, display: 'grid', 'grid-template-columns': '120px 1fr 120px', gap: 4, w: '100%' }); //, bg: 'hotpink' });
+	let [d2le, d2mid, d2ri] = [mDiv(d2), mDiv(d2), mDiv(d2)];
+	let [d3le, d3lemi, d3mid, d3rimi, d3ri] = [mDiv(d3), mDiv(d3), mDiv(d3), mDiv(d3), mDiv(d3)];
+	// let [d4le, d4lemi, d4mid, d4rimi, d4ri] = [mDiv(d4,{w:100}), mDiv(d4), mDiv(d4), mDiv(d4), mDiv(d4)];
+	let [d4le, d4mid, d4ri] = [mDiv(d4), mDiv(d4), mDiv(d4)];
+	for (const d of [d2le, d2mid, d2ri, d3lemi, d3mid, d3rimi, d4le, d4mid]) mCenterFlex(d);
+	for (const d of [d2le, d2mid, d2ri, d3lemi, d3mid, d3rimi, d4le, d4mid]) mStyle(d, { h: 130 });
+
+	// *** player stats ***
+	accuse_stats(d1, d2le, d2ri, d4le); //lookupSetOverride(UI, ['stats', plname], { douter: d, dstats: stats, dimg: img, dcard: card });
+	presentcards();
+
+	// *** policies ***
+	if (nundef(fen.policies)) fen.policies = [];
+	UI.policies = ui_type_hand(fen.policies, d2mid, { hmin: 120 }, '', 'policies', ari_get_card, false);
+
+	// *** player membership cards ***
+	let pl = fen.players[uplayer];
+	let idleft = ari_get_card(pl.idleft, 100); mAppend(d3lemi, iDiv(idleft))
+	let membership = ui_type_market(isdef(pl.membership) ? [pl.membership] : [], d3mid, { hmargin: 120 }, '', 'alliance')
+	let idright = ari_get_card(pl.idright, 100); mAppend(d3rimi, iDiv(idright))
+
+	// *** player hand ***
+	mStyle(d4mid, { h: 130 });
+	let handui = ui_type_hand(pl.hand, d4mid, { paleft: 25 }, `players.${uplayer}.hand`);
+	//mStyle(handui.container,{wmax:300})
+	lookupSetOverride(ui, ['players', uplayer, 'hand'], handui);
+}
+
 function accuse_player_stat(d1, plname) {
 	let players = Z.fen.players;
 	let pl = players[plname];

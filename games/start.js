@@ -19,9 +19,10 @@ function start_with_assets() {
 	show_home_logo();
 	if (nundef(U)) { show_users(); return; } 
 	
-	show_username();
+	show_username(true);
 	if (DA.TEST0) show('dTestButtons');
 
+	
 	//startgame('accuse',)
 	//startgame('ferro'); 
 	//#region TESTING

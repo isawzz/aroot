@@ -239,7 +239,7 @@ function update_table() {
 			//if upl is host, first move all bots
 			//if upl is bot but there is no other bot, go back to host
 			let bots = turn_has_bots_that_must_move();
-			console.log('bots on turn that must move',bots);
+			//console.log('bots on turn that must move',bots);
 			//if (!isEmpty(bots)) assertion(false,"GOT BOTS!!!!!!!!!!!!!!!")
 			if (!isEmpty(bots)) upl=bots[0];
 			
@@ -258,7 +258,7 @@ function update_table() {
 
 	//console.log('-----------setting', upl,'\nuname',uname,'\nturn',turn,'\nprev',Z.prev.uplayer)
 	set_player(upl, fen); //sets uplayer
-	console.log('uplayer',Z.uplayer)
+	//console.log('uplayer',Z.uplayer)
 
 	//set playmode and strategy
 	let pl = Z.pl;

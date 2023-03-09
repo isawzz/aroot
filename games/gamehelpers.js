@@ -312,6 +312,12 @@ function get_next_human_player(plname) {
 	//console.log('next player should be',plnew);
 	return plnew;
 }
+function get_present_order_accuse() {
+	let [fen, uplayer] = [Z.fen, Z.uplayer];
+	let show_first = uplayer;
+	console.log('uplayer',uplayer)
+	return arrCycle(Z.fen.plorder, Z.fen.plorder.indexOf(show_first));
+}
 function get_present_order() {
 	let [fen, uplayer, uname] = [Z.fen, Z.uplayer, Z.uname];
 	let uname_plays = fen.plorder.includes(Z.uname);
@@ -863,7 +869,7 @@ function show_title() {
 	if (nundef(settingsOn) || settingsOn) show_settings(mBy('dTitleRight'));
 	mBy('dTablename').innerHTML = Z.friendly;
 }
-function show_username() {
+function show_username(loadTable=false) {
 	let uname = U.name;
 	let dpic = get_user_pic(uname, 30);
 	let d = mBy('dAdminRight');
@@ -876,7 +882,13 @@ function show_username() {
 
 	//console.log('DA.running',DA.running); //'Z',Z,'dTable',dTable,mBy('dTable'),isVisible('dTable'));
 
-	if (!TESTING && !DA.running) phpPost({ app: 'easy' }, 'tables'); //else console.log('no tables cmd! DA.running', DA.running);
+	if (!TESTING && !DA.running) {
+		if (!loadTable) phpPost({ app: 'easy' }, 'tables'); //else console.log('no tables cmd! DA.running', DA.running);
+		else if (!isEmpty(Serverdata.tables)){
+			console.log('Serverdata',Serverdata);
+			onclick_table(Serverdata.tables[0].friendly); 
+		}
+	}
 }
 function show_users(ms = 300) {
 	let dParent = mBy('dUsers');

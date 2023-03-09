@@ -1,4 +1,52 @@
 
+function accuse_ai_move(bot){
+	let [pl,fen,stage]=[Z.fen.players[bot],Z.fen,Z.stage];
+	if (stage == 'hand'){
+		//this is where hand card or empty can be played
+		pl.move={state:{card:''}}
+	}else if (stage == 'membership'){
+		//this is where a membership card has to be chosen
+	}
+}
+function accuse_show_sitting_order(fen){
+	if (nundef(fen)) fen=Z.fen;
+
+	//ist der turn immer wie der sitting order?
+	//console.log('turn');
+	for(const plname of fen.turn){
+		let pl=fen.players[plname];
+		//console.log(pl.idleft,plname,pl.idright)
+	}
+
+	//console.log('plorder');
+	for(const plname of fen.plorder){
+		let pl=fen.players[plname];
+		//console.log(pl.idleft,plname,pl.idright)
+	}
+
+}
+function get_bots_on_turn(){
+	let players = Z.turn;
+	return players.filter(x=>Z.fen.players[x].playmode != 'human');
+}
+function get_policies_to_win(){
+	let fen=Z.fen;
+
+	if (isEmpty(fen.policies)) return ['any',fen.policies_needed]; //`${fen.policies_needed} policies of the same color needed!`]
+	//let color = get_color_of_card(arrLast(fen.policies));
+	let revlist = fen.policies.reverse();
+	console.log('revlist',revlist);
+	let color = get_color_of_card(revlist[0]);
+	let samecolorlist=arrTakeWhile(revlist,x=>get_color_of_card(x)==color);
+	console.log('samecolorlist',samecolorlist)
+	//while()
+	return [color,Math.max(0,fen.policies_needed-samecolorlist.length)];
+}
+function there_are_bots(){
+	let players = get_values(Z.fen.players);
+	return firstCond(players,x=>x.playmode != 'human');
+
+}
 function turn_has_bots_that_must_move(){
 	let [turn,pldata] = [Z.turn,Z.playerdata];
 
@@ -9,7 +57,7 @@ function turn_has_bots_that_must_move(){
 	//console.log('bots_on_turn',bots_on_turn)
 
 	for(const bot of bots_on_turn){
-		console.log(bot,pldata_dict[bot])
+		//console.log(bot,pldata_dict[bot])
 	}
 
 	let no_pldata = bots_on_turn.filter(x=>!isDict(pldata_dict[x].state));
@@ -22,69 +70,7 @@ function turn_has_bots_that_must_move(){
 }
 
 
-function there_are_bots(){
-	let players = get_values(Z.fen.players);
-	return firstCond(players,x=>x.playmode != 'human');
 
-}
-function get_bots_on_turn(){
-	let players = Z.turn;
-	return players.filter(x=>Z.fen.players[x].playmode != 'human');
-}
-
-
-function accuse_ai_move(bot){
-	let [pl,fen,stage]=[Z.fen.players[bot],Z.fen,Z.stage];
-	if (stage == 'hand'){
-		//this is where hand card or empty can be played
-		pl.move={state:{card:''}}
-	}else if (stage == 'membership'){
-		//this is where a membership card has to be chosen
-	}
-}
-
-
-
-
-
-
-
-function start_downgrade_ticker() {
-	TO.main = setTimeout(degrade_bars, 5000);
-}
-function degrade_bars() {
-	for (const color in DA.bars) {
-		let bar = DA.bars[color];
-		set_bar(color, bar.w - 1, 1);
-		
-	}
-	Z.fen.decrement += 1;
-	start_downgrade_ticker();
-}
-function feedback_update_fen() {
-	//aggregate all values for green and red in playerdata
-	let fen = Z.fen;
-	fen.barvalues = {};
-	for (const pldata of Z.playerdata) {
-		if (isdef(pldata.state)) {
-			for (const color in pldata.state) {
-				let value = pldata.state[color];
-				if (isdef(fen.barvalues[color])) {
-					fen.barvalues[color] += value;
-				} else {
-					fen.barvalues[color] = value;
-				}
-			}
-		}
-	}
-	for(const k in fen.barvalues) {
-		let val = fen.barvalues[k]-fen.decrement;
-		if (val<0) val=0;
-		fen.barvalues[k] = val;
-	}
-
-
-}
 
 
 

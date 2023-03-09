@@ -24,7 +24,7 @@ function start_with_assets() {
 }
 function landing() { if (isdef(DA.landing)) DA.landing(); } //onclick_by_rank(); } //show_strategy_popup(); } //onclick_random(); }//show_history_popup(); }
 function start_tests() {
-	fentest_accuse(); //fentest_wise();
+	fentest2_accuse(); //fentest_wise();
 	//#region old tests
 	//dTable = mBy('dTable'); mCenterFlex(dTable); mStyle(dTable, { hmin: 500 }); mClass(dTable, 'wood')
 	//ltest6_bluff_skin();	//ltest11_ferro_discard(); //ltest10_ferro_sim();  //ltest5_jokerhtml(); 	//ltest4_sheriff(); 	//ltest0_card();
