@@ -50,13 +50,14 @@ function select_add_items(items, callback = null, instruction = null, min = 0, m
 	let has_submit_items = false;
 	let buttonstyle = { maleft: 10, vmargin: 2, rounding: 6, padding: '4px 12px 5px 12px', border: '0px solid transparent', outline: 'none' }
 	for (const item of A.items) {
-		let type = item.itemtype = is_card(item) ? 'card' : isdef(item.o) ? 'container' : 'string'; // nundef(item.submit_on_click) ? 'string' : 'submit';
+		let type = item.itemtype = is_card(item) ? 'card' : is_player(item.a)? 'player': isdef(item.o) ? 'container' : is_color(item.a)? 'color' : 'string'; // nundef(item.submit_on_click) ? 'string' : 'submit';
 		if (isdef(item.submit_on_click)) { has_submit_items = true; }
 		//if (type == 'submit') has_submit_items = true;
 		let id = item.id = lookup(item, ['o', 'id']) ? item.o.id : getUID(); A.di[id] = item;
-		if (type == 'string') { //make button for this item!
+		if (type == 'string' || type == 'color') { //make button for this item!
 			let handler = ev => select_last(item, isdef(item.submit_on_click) ? callback : select_toggle, ev);
 			item.div = mButton(item.a, handler, dInstruction, buttonstyle, null, id);
+			if (type == 'color') mStyle(item.div,{bg:item.a,fg:'contrast'});
 		} else {
 			let ui = item.div = iDiv(item.o);
 			ui.onclick = ev => select_last(item, select_toggle, ev); // show_submit_button ? _select_toggle : select_finalize;
@@ -144,7 +145,7 @@ function select_clear_previous_level() {
 		console.assert(A.level >= 1, 'have items but level is ' + A.level);
 		A.ll.push({ items: A.items, selected: A.selected });
 
-		let dsel = mBy(`dSelections1`); // mBy(`dSelections${A.level}`)
+		let dsel = Z.game == 'accuse'?mBy(`dTitleMiddle`):mBy(`dSelections1`); // mBy(`dSelections${A.level}`)
 		mStyle(dsel, { display: 'flex', 'align-items': 'center', padding: 10, box: true, gap: 10 });
 		//return;
 		for (const item of A.items) {
@@ -165,12 +166,11 @@ function select_clear_previous_level() {
 				let cont2 = ui_make_hand_container(cards, dsel, { bg: 'transparent' });
 				ui_add_cards_to_hand_container(cont2, cards, list);
 			} else if (item.itemtype == 'string') {
-				// let bui = mBy(item.id);
-				// bui.remove();
 				let db = mDiv(dsel, { bg: 'yellow', fg: 'black', border: 'black', hpadding: 4 }, item.id, item.a);
-				// bui.onclick = null;
-				// mBy(bui, { bg: 'yellow', fg: 'black', outline: '', border: '', cursor:'default' });
-				// mAppend(dsel, bui);
+			} else if (item.itemtype == 'color') {
+				let db = mDiv(dsel, { bg: item.a, fg: 'contrast', border: 'black', hpadding: 4 }, item.id, item.a);
+			} else if (item.itemtype == 'player') {
+				let db = mDiv(dsel, {  }, item.id, `<span style="color:${get_user_color(item.a)};font-weight:bold"> ${item.a} </span>`);
 			}
 		}
 	}
@@ -301,6 +301,7 @@ function ari_make_selectable(item, dParent, dInstruction) {
 	switch (item.itemtype) {
 		case 'card': make_card_selectable(item); break;
 		case 'container': make_container_selectable(item); break;
+		case 'player': make_container_selectable(item); break;
 		case 'string': make_string_selectable(item); break;
 	}
 }
@@ -309,6 +310,7 @@ function ari_make_unselectable(item) {
 	switch (item.itemtype) {
 		case 'card': make_card_unselectable(item); break;
 		case 'container': make_container_unselectable(item); break;
+		case 'player': make_container_unselectable(item); break;
 		case 'string': make_string_unselectable(item); break;
 	}
 }
@@ -318,6 +320,7 @@ function ari_make_selected(item) {
 	switch (item.itemtype) {
 		case 'card': make_card_selected(item); break;
 		case 'container': make_container_selected(item); break;
+		case 'player': make_container_selected(item); break;
 		case 'string': make_string_selected(item); break;
 	}
 
@@ -327,6 +330,7 @@ function ari_make_unselected(item) {
 	switch (item.itemtype) {
 		case 'card': make_card_unselected(item); break;
 		case 'container': make_container_unselected(item); break;
+		case 'player': make_container_unselected(item); break;
 		case 'string': make_string_unselected(item); break;
 	}
 

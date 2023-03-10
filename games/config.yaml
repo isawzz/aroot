@@ -33,7 +33,7 @@ games:
     options:
       #mode: 'solo,hotseat,multi'
       mode: 'hotseat,multi'
-      rounds: 5,4,2,1
+      rounds: 6,2,1,4
       policies_needed: 5,4,3,2
   aristo:
     friendly: Aristocracy

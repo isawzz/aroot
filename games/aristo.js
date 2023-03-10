@@ -2110,57 +2110,22 @@ function set_journey_or_stall_stage(fen, options, phase) {
 //#endregion
 
 //#region get ui items for various object groups
-function ui_get_rumors_and_players_items(uplayer) {
+function ui_get_all_commission_items(uplayer) {
 	//console.log('uplayer',uplayer,UI.players[uplayer])
 	let items = [], i = 0;
-	let comm = UI.players[uplayer].rumors;
-
-	let [data, pl] = [Z.uplayer_data, Z.pl];
-	// let data = firstCond(Z.playerdata, x => x.name == uplayer);
-	assertion(isdef(data), 'no data for player ' + uplayer);
-
-	//console.log('ui: uplayer', Z.uplayer, 'data', data);
-	//sss();
-
-	if (!isDict(data.state)) data.state = { remaining: jsCopy(pl.rumors), receivers: [], di: {} };
-	let rem = data.state.remaining;
-	for (const k of rem) {
-		let o = firstCond(comm.items, x => x.key == k);
+	let comm = UI.players[uplayer].commissions;
+	for (const o of comm.items) {
 		let item = { o: o, a: o.key, key: o.key, friendly: o.short, path: comm.path, index: i };
 		i++;
 		items.push(item);
 	}
-
-	let players = [];
-
-	// let receivers = valf(Z.fen.receivers, []);
-	let receivers = data.state.receivers;
-	//console.log('receivers', receivers);
-
-	for (const plname in UI.players) {
-		if (plname == uplayer || receivers.includes(plname)) continue;
-		players.push(plname);
-	}
-	items = items.concat(ui_get_string_items(players));
-
-	//assertion(comm.items.length == players.length, 'irgendwas stimmt nicht mit rumors verteilung!!!!', players, comm)
-
-	reindex_items(items);
 	return items;
 }
-function ui_get_top_rumors() {
-	let items = [], i = 0;
-	for (const o of UI.rumor_top.items) {
-		let item = { o: o, a: o.key, key: o.key, friendly: o.short, path: `rumor_top`, index: i };
-		i++;
-		items.push(item);
+function ui_get_all_hidden_building_items(uplayer) {
+	let items = [];
+	for (const gb of UI.players[uplayer].buildinglist) {
+		items = items.concat(ui_get_hidden_building_items(gb));
 	}
-	return items;
-}
-function ui_get_other_buildings_and_rumors(uplayer) {
-	let items = ui_get_other_buildings(uplayer);
-	items = items.concat(ui_get_rumors_items(uplayer));
-
 	reindex_items(items);
 	return items;
 }
@@ -2177,26 +2142,69 @@ function ui_get_blackmailed_items() {
 	}
 	return ui_get_string_items(commands);
 }
-function ui_get_rumors_items(uplayer) {
-	//console.log('uplayer',uplayer,UI.players[uplayer])
+function ui_get_build_items(uplayer, except) {
+	let items = ui_get_hand_and_stall_items(uplayer);
+	if (is_card(except)) items = items.filter(x => x.key != except.key);
+	//console.log('__________build items:', items)
+	reindex_items(items);
+	return items;
+}
+function ui_get_building_items(uplayer) {
+	let gblist = UI.players[uplayer].buildinglist;
 	let items = [], i = 0;
-	let rum = UI.players[uplayer].rumors;
-	for (const o of rum.items) {
-		let item = { o: o, a: o.key, key: o.key, friendly: o.short, path: rum.path, index: i };
+	for (const o of gblist) {
+		let name = o.type + ' ' + (o.list[0][0] == 'T' ? '10' : o.list[0][0]);
+		o.div = o.container;
+		let item = { o: o, a: name, key: o.list[0], friendly: name, path: o.path, index: i, ui: o.container };
+		i++;
+		items.push(item);
+	}
+	//console.log('________building items', items)
+	return items;
+}
+function ui_get_building_items_of_type(uplayer, types = ['farm', 'estate', 'chateau']) {
+	let gblist = UI.players[uplayer].buildinglist.filter(x => types.includes(x.type));
+	//console.log('gblist', gblist);
+	let items = [], i = 0;
+	for (const o of gblist) {
+		let name = o.type + ' ' + (o.list[0][0] == 'T' ? '10' : o.list[0][0]);
+		o.div = o.container;
+		let item = { o: o, a: name, key: o.list[0], friendly: name, path: o.path, index: i, ui: o.container };
 		i++;
 		items.push(item);
 	}
 	return items;
 }
-function ui_get_all_commission_items(uplayer) {
-	//console.log('uplayer',uplayer,UI.players[uplayer])
+function ui_get_buildings(gblist) {
 	let items = [], i = 0;
-	let comm = UI.players[uplayer].commissions;
-	for (const o of comm.items) {
-		let item = { o: o, a: o.key, key: o.key, friendly: o.short, path: comm.path, index: i };
+	for (const o of gblist) {
+		let name = o.type + ' ' + (o.list[0][0] == 'T' ? '10' : o.list[0][0]);
+		o.div = o.container;
+		let item = { o: o, a: name, key: o.list[0], friendly: name, path: o.path, index: i, ui: o.container };
 		i++;
 		items.push(item);
 	}
+	return items;
+}
+function ui_get_coin_amounts(uplayer) {
+	let items = [];
+	for (let i = 0; i <= Z.fen.players[uplayer].coins; i++) {
+		let cmd = '' + i;
+		let item = { o: null, a: cmd, key: cmd, friendly: cmd, path: null, index: i };
+		items.push(item);
+	}
+	return items;
+}
+function ui_get_commands(uplayer) {
+
+	let avail = ari_get_actions(uplayer);
+	let items = [], i = 0;
+	for (const cmd of avail) { //just strings!
+		let item = { o: null, a: cmd, key: cmd, friendly: cmd, path: null, index: i };
+		i++;
+		items.push(item);
+	}
+	//console.log('available commands', items);
 	return items;
 }
 function ui_get_commission_items(uplayer) {
@@ -2241,89 +2249,23 @@ function ui_get_deck_item(uideck) {
 	let item = { o: topdeck, a: topdeck.key, key: topdeck.key, friendly: topdeck.short, path: uideck.path, index: 0 };
 	return item;
 }
-function ui_get_building_items(uplayer) {
-	let gblist = UI.players[uplayer].buildinglist;
-	let items = [], i = 0;
-	for (const o of gblist) {
-		let name = o.type + ' ' + (o.list[0][0] == 'T' ? '10' : o.list[0][0]);
-		o.div = o.container;
-		let item = { o: o, a: name, key: o.list[0], friendly: name, path: o.path, index: i, ui: o.container };
-		i++;
-		items.push(item);
-	}
-	//console.log('________building items', items)
+function ui_get_endgame(uplayer) { return ui_get_string_items(['end game', 'go on']); }
+function ui_get_estates_chateaus_items(uplayer) { return ui_get_building_items_of_type(uplayer, ['estate', 'chateau']); }
+function ui_get_exchange_items(uplayer) {
+	//all hand items
+	let ihand = ui_get_hand_items(uplayer);
+	//all stall items
+	let istall = ui_get_stall_items(uplayer);
+	//all invisible (1+) building items
+	let irepair = ui_get_all_hidden_building_items(uplayer);
+	irepair.map(x => face_up(x.o));
+	let items = ihand.concat(istall).concat(irepair);
+	reindex_items(items);
+
+	//console.log('exchange items',items)
 	return items;
 }
 function ui_get_farms_estates_items(uplayer) { return ui_get_building_items_of_type(uplayer, ['farm', 'estate']); }
-function ui_get_estates_chateaus_items(uplayer) { return ui_get_building_items_of_type(uplayer, ['estate', 'chateau']); }
-
-function ui_get_building_items_of_type(uplayer, types = ['farm', 'estate', 'chateau']) {
-	let gblist = UI.players[uplayer].buildinglist.filter(x => types.includes(x.type));
-	//console.log('gblist', gblist);
-	let items = [], i = 0;
-	for (const o of gblist) {
-		let name = o.type + ' ' + (o.list[0][0] == 'T' ? '10' : o.list[0][0]);
-		o.div = o.container;
-		let item = { o: o, a: name, key: o.list[0], friendly: name, path: o.path, index: i, ui: o.container };
-		i++;
-		items.push(item);
-	}
-	return items;
-}
-function ui_get_buildings(gblist) {
-	let items = [], i = 0;
-	for (const o of gblist) {
-		let name = o.type + ' ' + (o.list[0][0] == 'T' ? '10' : o.list[0][0]);
-		o.div = o.container;
-		let item = { o: o, a: name, key: o.list[0], friendly: name, path: o.path, index: i, ui: o.container };
-		i++;
-		items.push(item);
-	}
-	return items;
-}
-function ui_get_other_buildings(uplayer) {
-	let items = [];
-	for (const plname of Z.plorder) {
-		if (plname == uplayer) continue;
-		items = items.concat(ui_get_buildings(UI.players[plname].buildinglist));
-	}
-	reindex_items(items);
-	return items;
-}
-function ui_get_other_buildings_with_rumors(uplayer) {
-	let items = [];
-	for (const plname of Z.plorder) {
-		if (plname == uplayer) continue;
-		items = items.concat(ui_get_buildings(UI.players[plname].buildinglist.filter(x => !isEmpty(x.rumors))));
-	}
-	reindex_items(items);
-	return items;
-}
-function ui_get_hidden_building_items(uibuilding) {
-	let items = [];
-	for (let i = 1; i < uibuilding.items.length; i++) {
-		let o = uibuilding.items[i];
-		//console.log('o',o);
-		o.index = i;
-		let item = { o: o, a: o.key, key: o.key, friendly: o.short, path: uibuilding.path, index: i - 1 };
-		items.push(item);
-	}
-	return items;
-}
-function ui_get_schweine_candidates(uibuilding) {
-	let items = ui_get_hidden_building_items(uibuilding);
-	items = items.filter(x => x.o.key[0] != uibuilding.keycard.key[0]);
-	reindex_items(items);
-	return items;
-}
-function ui_get_all_hidden_building_items(uplayer) {
-	let items = [];
-	for (const gb of UI.players[uplayer].buildinglist) {
-		items = items.concat(ui_get_hidden_building_items(gb));
-	}
-	reindex_items(items);
-	return items;
-}
 function ui_get_hand_items(uplayer) {
 	//console.log('uplayer',uplayer,UI.players[uplayer])
 	let items = [], i = 0;
@@ -2353,114 +2295,6 @@ function ui_get_hand_items_minus(uplayer, cardlist) {
 	}
 	return items;
 }
-function ui_get_stall_items(uplayer) {
-	let items = [], i = 0;
-	let stall = UI.players[uplayer].stall;
-	for (const o of stall.items) {
-		o.index = i;
-		let item = { o: o, a: o.key, key: o.key, friendly: o.short, path: stall.path, index: i };
-		i++;
-		items.push(item);
-	}
-	return items;
-}
-function ui_get_harvest_items(uplayer) {
-	let items = []; let i = 0;
-	for (const gb of UI.players[uplayer].buildinglist) {
-		//console.log('gbuilding', gb);
-		if (isdef(gb.harvest)) {
-			let d = gb.harvest;
-			mStyle(d, { cursor: 'pointer', opacity: 1 });
-			gb.div = d;
-			let name = 'H' + i + ':' + (gb.list[0][0] == 'T' ? '10' : gb.list[0][0]);
-			let item = { o: gb, a: name, key: name, friendly: name, path: gb.path, index: i };
-			i++;
-			items.push(item);
-		}
-	}
-	return items;
-}
-function ui_get_journey_items(plname) {
-	let gblist = UI.players[plname].journeys;
-	let items = [], i = 0;
-	for (const o of gblist) {
-		let name = `${plname}_j${i}`;
-		o.div = o.container;
-		let item = { o: o, a: name, key: o.list[0], friendly: name, path: o.path, index: i, ui: o.container };
-		i++;
-		items.push(item);
-	}
-	return items;
-}
-function ui_get_payment_items(pay_letter) {
-	let [fen, A, uplayer] = [Z.fen, Z.A, Z.uplayer];
-	let items = ui_get_hand_and_stall_items(uplayer); //gets all hand and stall cards
-
-	let n = items.length;
-
-	items = items.filter(x => x.key[0] == pay_letter);
-
-	if (n == 4 && A.command == 'build') items = []; //das ist damit min building items gewahrt bleibt!
-	if (n == 1 && A.command == 'upgrade') items = []; //das ist damit min upgrade items gewahrt bleibt!
-
-	if (fen.players[uplayer].coins > 0 && fen.phase[0].toUpperCase() == pay_letter) {
-		items.push({ o: null, a: 'coin', key: 'coin', friendly: 'coin', path: null });
-	}
-	let i = 0; items.map(x => { x.index = i; i++; }); //need to reindex when concat!!!
-	return items;
-}
-function ui_get_open_discard_items() {
-	let items = [], i = 0;
-	for (const o of UI.open_discard.items) {
-		let item = { o: o, a: o.key, key: o.key, friendly: o.short, path: `open_discard`, index: i };
-		i++;
-		items.push(item);
-	}
-	return items;
-}
-function ui_get_market_items() {
-	let items = [], i = 0;
-	for (const o of UI.market.items) {
-		o.index = i;
-		let item = { o: o, a: o.key, key: o.key, friendly: o.short, path: `market`, index: i };
-		i++;
-		items.push(item);
-	}
-	return items;
-}
-function ui_get_commands(uplayer) {
-
-	let avail = ari_get_actions(uplayer);
-	let items = [], i = 0;
-	for (const cmd of avail) { //just strings!
-		let item = { o: null, a: cmd, key: cmd, friendly: cmd, path: null, index: i };
-		i++;
-		items.push(item);
-	}
-	//console.log('available commands', items);
-	return items;
-}
-function ui_get_string_items(commands) {
-	let items = [], i = 0;
-	for (const cmd of commands) { //just strings!
-		let item = { o: null, a: cmd, key: cmd, friendly: cmd, path: null, index: i };
-		i++;
-		items.push(item);
-	}
-	//console.log('available commands', items);
-	return items;
-}
-function ui_get_endgame(uplayer) { return ui_get_string_items(['end game', 'go on']); }
-function ui_get_coin_amounts(uplayer) {
-	let items = [];
-	for (let i = 0; i <= Z.fen.players[uplayer].coins; i++) {
-		let cmd = '' + i;
-		let item = { o: null, a: cmd, key: cmd, friendly: cmd, path: null, index: i };
-		items.push(item);
-	}
-	return items;
-}
-//concatenating primitive lists of items:
 function ui_get_hand_and_stall_items(uplayer) {
 	let items = ui_get_hand_items(uplayer);
 	items = items.concat(ui_get_stall_items(uplayer));
@@ -2493,6 +2327,191 @@ function ui_get_hand_and_journey_items(uplayer) {
 	reindex_items(items);
 	return items;
 }
+function ui_get_harvest_items(uplayer) {
+	let items = []; let i = 0;
+	for (const gb of UI.players[uplayer].buildinglist) {
+		//console.log('gbuilding', gb);
+		if (isdef(gb.harvest)) {
+			let d = gb.harvest;
+			mStyle(d, { cursor: 'pointer', opacity: 1 });
+			gb.div = d;
+			let name = 'H' + i + ':' + (gb.list[0][0] == 'T' ? '10' : gb.list[0][0]);
+			let item = { o: gb, a: name, key: name, friendly: name, path: gb.path, index: i };
+			i++;
+			items.push(item);
+		}
+	}
+	return items;
+}
+function ui_get_hidden_building_items(uibuilding) {
+	let items = [];
+	for (let i = 1; i < uibuilding.items.length; i++) {
+		let o = uibuilding.items[i];
+		//console.log('o',o);
+		o.index = i;
+		let item = { o: o, a: o.key, key: o.key, friendly: o.short, path: uibuilding.path, index: i - 1 };
+		items.push(item);
+	}
+	return items;
+}
+function ui_get_journey_items(plname) {
+	let gblist = UI.players[plname].journeys;
+	let items = [], i = 0;
+	for (const o of gblist) {
+		let name = `${plname}_j${i}`;
+		o.div = o.container;
+		let item = { o: o, a: name, key: o.list[0], friendly: name, path: o.path, index: i, ui: o.container };
+		i++;
+		items.push(item);
+	}
+	return items;
+}
+function ui_get_market_items() {
+	let items = [], i = 0;
+	for (const o of UI.market.items) {
+		o.index = i;
+		let item = { o: o, a: o.key, key: o.key, friendly: o.short, path: `market`, index: i };
+		i++;
+		items.push(item);
+	}
+	return items;
+}
+function ui_get_open_discard_items() {
+	let items = [], i = 0;
+	for (const o of UI.open_discard.items) {
+		let item = { o: o, a: o.key, key: o.key, friendly: o.short, path: `open_discard`, index: i };
+		i++;
+		items.push(item);
+	}
+	return items;
+}
+function ui_get_other_buildings(uplayer) {
+	let items = [];
+	for (const plname of Z.plorder) {
+		if (plname == uplayer) continue;
+		items = items.concat(ui_get_buildings(UI.players[plname].buildinglist));
+	}
+	reindex_items(items);
+	return items;
+}
+function ui_get_other_buildings_with_rumors(uplayer) {
+	let items = [];
+	for (const plname of Z.plorder) {
+		if (plname == uplayer) continue;
+		items = items.concat(ui_get_buildings(UI.players[plname].buildinglist.filter(x => !isEmpty(x.rumors))));
+	}
+	reindex_items(items);
+	return items;
+}
+function ui_get_other_buildings_and_rumors(uplayer) {
+	let items = ui_get_other_buildings(uplayer);
+	items = items.concat(ui_get_rumors_items(uplayer));
+
+	reindex_items(items);
+	return items;
+}
+function ui_get_payment_items(pay_letter) {
+	let [fen, A, uplayer] = [Z.fen, Z.A, Z.uplayer];
+	let items = ui_get_hand_and_stall_items(uplayer); //gets all hand and stall cards
+
+	let n = items.length;
+
+	items = items.filter(x => x.key[0] == pay_letter);
+
+	if (n == 4 && A.command == 'build') items = []; //das ist damit min building items gewahrt bleibt!
+	if (n == 1 && A.command == 'upgrade') items = []; //das ist damit min upgrade items gewahrt bleibt!
+
+	if (fen.players[uplayer].coins > 0 && fen.phase[0].toUpperCase() == pay_letter) {
+		items.push({ o: null, a: 'coin', key: 'coin', friendly: 'coin', path: null });
+	}
+	let i = 0; items.map(x => { x.index = i; i++; }); //need to reindex when concat!!!
+	return items;
+}
+function ui_get_rumors_items(uplayer) {
+	//console.log('uplayer',uplayer,UI.players[uplayer])
+	let items = [], i = 0;
+	let rum = UI.players[uplayer].rumors;
+	for (const o of rum.items) {
+		let item = { o: o, a: o.key, key: o.key, friendly: o.short, path: rum.path, index: i };
+		i++;
+		items.push(item);
+	}
+	return items;
+}
+function ui_get_rumors_and_players_items(uplayer) {
+	//console.log('uplayer',uplayer,UI.players[uplayer])
+	let items = [], i = 0;
+	let comm = UI.players[uplayer].rumors;
+
+	let [data, pl] = [Z.uplayer_data, Z.pl];
+	// let data = firstCond(Z.playerdata, x => x.name == uplayer);
+	assertion(isdef(data), 'no data for player ' + uplayer);
+
+	//console.log('ui: uplayer', Z.uplayer, 'data', data);
+	//sss();
+
+	if (!isDict(data.state)) data.state = { remaining: jsCopy(pl.rumors), receivers: [], di: {} };
+	let rem = data.state.remaining;
+	for (const k of rem) {
+		let o = firstCond(comm.items, x => x.key == k);
+		let item = { o: o, a: o.key, key: o.key, friendly: o.short, path: comm.path, index: i };
+		i++;
+		items.push(item);
+	}
+
+	let players = [];
+
+	// let receivers = valf(Z.fen.receivers, []);
+	let receivers = data.state.receivers;
+	//console.log('receivers', receivers);
+
+	for (const plname in UI.players) {
+		if (plname == uplayer || receivers.includes(plname)) continue;
+		players.push(plname);
+	}
+	items = items.concat(ui_get_string_items(players));
+
+	//assertion(comm.items.length == players.length, 'irgendwas stimmt nicht mit rumors verteilung!!!!', players, comm)
+
+	reindex_items(items);
+	return items;
+}
+function ui_get_schweine_candidates(uibuilding) {
+	let items = ui_get_hidden_building_items(uibuilding);
+	items = items.filter(x => x.o.key[0] != uibuilding.keycard.key[0]);
+	reindex_items(items);
+	return items;
+}
+function ui_get_stall_items(uplayer) {
+	let items = [], i = 0;
+	let stall = UI.players[uplayer].stall;
+	for (const o of stall.items) {
+		o.index = i;
+		let item = { o: o, a: o.key, key: o.key, friendly: o.short, path: stall.path, index: i };
+		i++;
+		items.push(item);
+	}
+	return items;
+}
+function ui_get_string_items(commands) {
+	let items = [], i = 0;
+	for (const cmd of commands) { //just strings!
+		let item = { o: null, a: cmd, key: cmd, friendly: cmd, path: null, index: i };
+		i++;
+		items.push(item);
+	}
+	//console.log('available commands', items);
+	return items;
+}
+function ui_get_top_rumors() {
+	let items = [], i = 0;
+	for (const o of UI.rumor_top.items) {
+		let item = { o: o, a: o.key, key: o.key, friendly: o.short, path: `rumor_top`, index: i };
+		i++;
+		items.push(item);
+	}
+	return items;
+}
 function ui_get_trade_items(uplayer) {
 	let items = ui_get_market_items(uplayer);
 	//console.log('market items', items);
@@ -2501,27 +2520,6 @@ function ui_get_trade_items(uplayer) {
 		if (plname != uplayer) items = items.concat(ui_get_stall_items(plname));
 	}
 	reindex_items(items);
-	return items;
-}
-function ui_get_build_items(uplayer, except) {
-	let items = ui_get_hand_and_stall_items(uplayer);
-	if (is_card(except)) items = items.filter(x => x.key != except.key);
-	//console.log('__________build items:', items)
-	reindex_items(items);
-	return items;
-}
-function ui_get_exchange_items(uplayer) {
-	//all hand items
-	let ihand = ui_get_hand_items(uplayer);
-	//all stall items
-	let istall = ui_get_stall_items(uplayer);
-	//all invisible (1+) building items
-	let irepair = ui_get_all_hidden_building_items(uplayer);
-	irepair.map(x => face_up(x.o));
-	let items = ihand.concat(istall).concat(irepair);
-	reindex_items(items);
-
-	//console.log('exchange items',items)
 	return items;
 }
 //#endregion

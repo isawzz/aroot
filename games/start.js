@@ -19,7 +19,7 @@ function start_with_assets() {
 	show_home_logo();
 	if (nundef(U)) { show_users(); return; } 
 	
-	show_username(false); //true);
+	show_username();
 	if (DA.TEST0) show('dTestButtons');
 
 	

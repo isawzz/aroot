@@ -418,6 +418,8 @@ function is_multi_stage() { return isdef(Z.fen.trigger); }
 function is_playerdata_set(plname) {
 	return isdef(Z.playerdata) && !isEmpty(Z.playerdata) && !isEmpty(Z.playerdata.find(x => x.name == plname).state);
 }
+function is_color(s){return isdef(ColorDi[s.toLowerCase()]);}
+function is_player(s){return isdef(Z.fen.players[s]);}
 function is_playing(pl, fen) {
 	//returns true is pl is in fen.plorder or in fen.roundorder
 	return isList(fen.plorder) && fen.plorder.includes(pl) || isList(fen.roundorder) && fen.roundorder.includes(pl) || Z.game == 'feedback' && isdef(Z.fen.players[pl]);
@@ -864,7 +866,6 @@ function show_tables(ms = 500) {
 	//mRise('dScreen', 1000); 
 }
 function show_title() {
-	//mBy('dTitleMiddle').innerHTML = Z.friendly;
 	settingsOn=Z.func.state_info(mBy('dTitleLeft'));
 	if (nundef(settingsOn) || settingsOn) show_settings(mBy('dTitleRight'));
 	mBy('dTablename').innerHTML = Z.friendly;
@@ -885,7 +886,7 @@ function show_username(loadTable=false) {
 	if (!TESTING && !DA.running) {
 		if (!loadTable) phpPost({ app: 'easy' }, 'tables'); //else console.log('no tables cmd! DA.running', DA.running);
 		else if (!isEmpty(Serverdata.tables)){
-			console.log('Serverdata',Serverdata);
+			//console.log('Serverdata',Serverdata);
 			onclick_table(Serverdata.tables[0].friendly); 
 		}
 	}

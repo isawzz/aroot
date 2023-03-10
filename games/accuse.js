@@ -6,7 +6,7 @@ function accuse() {
 	}
 	function setup(players, options) {
 		//console.log('SETUP!!!!!!!!!!!!!!!!!!!')
-		console.log('players', players, 'options', options)
+		//console.log('players', players, 'options', options)
 		let fen = { players: {}, plorder: jsCopy(players), history: [{ title: '*** game start ***', lines: [] }], rounds: options.rounds, policies_needed: options.policies_needed };
 		shuffle(fen.plorder);
 		let plorder = fen.plorder;
@@ -16,9 +16,9 @@ function accuse() {
 		for (let i = 0; i < num; i++) { deck_identities.push(ranks[i] + 'Hh'); deck_identities.push(ranks[i] + 'Sh'); }
 		shuffle(deck_identities);
 
-		console.log('plorder', plorder)
+		//console.log('plorder', plorder)
 		for (const plname of plorder) {
-			console.log('plname', plname)
+			//console.log('plname', plname)
 			let pl = fen.players[plname] = {
 				score: 0,
 				name: plname,
@@ -56,10 +56,15 @@ function accuse() {
 	return { state_info, setup, present: accuse_present, check_gameover, activate_ui: accuse_activate };
 }
 
+var firsttime=false;
 function accuse_present(dParent) {
+
+	mStyle(mBy('dTitle'),{display:'grid','grid-template-columns':'auto 1fr auto' });
+
 
 	DA.no_shield = true;
 	let [fen, ui, stage, uplayer] = [Z.fen, UI, Z.stage, Z.uplayer];
+	if (firsttime){fen=Z.fen=getfen1();firsttime=false;}
 	let [dOben, dOpenTable, dMiddle, dRechts] = tableLayoutMR(dParent, 1, 0);
 	let dt = dTable = dOpenTable; clearElement(dt); mCenterFlex(dt); mStyle(dt, { hmin: 700 })
 
@@ -80,7 +85,7 @@ function accuse_present(dParent) {
 	let [color, n] = get_policies_to_win();
 	//if (isEmpty(fen.policies))
 	UI.policies = ui_type_accuse_hand(fen.policies, d1, {h:hpol}, '', 'policies', accuse_get_card_func(hsm,GREEN), false);
-	console.log(UI.policies);
+	//console.log(UI.policies);
 	mStyle(d1, { h: isEmpty(fen.policies)?40:hpol, w: '90%', display: 'flex', gap: 12 })
 	let msg = color == 'any' ? `${n} policies are needed to win!` : `${capitalize(color)} needs ${n} more policies`
 	let x = mDiv(d1, { h: isEmpty(fen.policies)?40:hpolcard }, null, msg); mCenterCenterFlex(x)
@@ -88,9 +93,9 @@ function accuse_present(dParent) {
 	// *** d2 players ***
 	let wgap=20;
 	let players = fen.players;
-	console.log('himg',himg)
+	//console.log('himg',himg)
 	let wneeded = (himg+wgap)*fen.plorder.length+wgap; 
-	console.log('wneeded',wneeded)
+	//console.log('wneeded',wneeded)
 	let wouter = '95%';
 	mStyle(d2, { hmin: hstat, w: wouter}); mCenterFlex(d2);
 	// mStyle(d2, { hmin: hstat, w: wouter, bg:GREEN }); mCenterFlex(d2);
@@ -114,7 +119,7 @@ function accuse_present(dParent) {
 	//let dnet = mDiv(d3, { display: 'inline-flex', 'justify-content': 'space-between', 'align-items': 'space-evenly', w: wneeded });
 	let dnet = mDiv(d3,{w:wneeded}); //, bg:'orange'});
 	let wrest = wneeded-2*himg;
-	console.log('wrest',wrest)
+	//console.log('wrest',wrest)
 	// dnet.style.gridTemplateColumns = `${himg}px ${wrest}px ${himg}px`; // 'repeat(' + 3 + ',1fr)';
 	//dnet.style.gridTemplateColumns = `${hnetcard*.7}px 1fr ${hnetcard*.7}px`; // 'repeat(' + 3 + ',1fr)';
 	dnet.style.gridTemplateColumns = `64px 1fr 64px`; // 'repeat(' + 3 + ',1fr)';
@@ -195,7 +200,7 @@ function accuse_activate() {
 	} else if (stage == 'accuse_action_select_player') {
 		let plnames = get_keys(fen.players);
 		let validplayers = plnames.filter(x => fen.players[x].hand.length >= 1 && x != uplayer);
-		select_add_items(ui_get_string_items(validplayers), accuse_submit_accused, 'must select player name', 1, 1);
+		select_add_items(ui_get_player_items(validplayers), accuse_submit_accused, 'must select player name', 1, 1);
 	} else if (stage == 'accuse_action_select_color') {
 		select_add_items(ui_get_string_items(['red', 'black']), accuse_submit_accused_color, 'must select color', 1, 1);
 	} else if (stage == 'accuse_action_entlarvt') {
@@ -208,7 +213,7 @@ function accuse_activate() {
 		set_new_president();
 	} else if (stage == 'parlay_select_player') {
 		let players = get_others_with_at_least_one_hand_card();
-		select_add_items(ui_get_string_items(players), parlay_player_selected, 'must select player to exchange cards with', 1, 1);
+		select_add_items(ui_get_player_items(players), parlay_player_selected, 'must select player to exchange cards with', 1, 1);
 	} else if (stage == 'parlay_select_cards') {
 		select_add_items(ui_get_hand_items(uplayer), parlay_cards_selected, 'may select cards to exchange', 0, fen.maxcards);
 	} else if (stage == 'parlay_opponent_selects') {
@@ -217,7 +222,7 @@ function accuse_activate() {
 	} else if (stage == 'defect_membership') {
 		select_add_items(ui_get_hand_items(uplayer), defect_resolve, 'may replace your alliance', 0, 1);
 	} else if (waiting) {//} && !startsWith(stage,'handresolve')) {
-		console.log('WAITING!!', stage, uplayer);
+		//console.log('WAITING!!', stage, uplayer);
 		//either results are not all in or am NOT the starter (=admin)
 		let mystate = donelist.find(x => x.name == uplayer).state.card;
 		if (!isEmpty(mystate)) {
@@ -253,7 +258,7 @@ function accuse_activate() {
 		autopoll();
 	} else if (stage == 'membership' && resolvable) {
 		assertion(uplayer == Z.host, 'NOT THE STARTER WHO COMPLETES THE STAGE!!!')
-		console.log('RESOLVING membership!!!!!!!!!!!!!')
+		//console.log('RESOLVING membership!!!!!!!!!!!!!')
 		let histest = [];
 		for (const pldata of Z.playerdata) {
 			let plname = pldata.name;
@@ -472,6 +477,7 @@ function accuse_submit_accused() {
 	//console.log('president', Z.uplayer, 'accuses', plname);
 	fen.accused = plname;
 	Z.stage = 'accuse_action_select_color';
+	ari_history_list(`${uplayer} accuses ${plname}`, 'accuse')
 	accuse_activate();
 }
 function accuse_submit_accused_color() {
@@ -484,20 +490,21 @@ function accuse_submit_accused_color() {
 	//now check the color
 	let card = fen.players[accused].membership;
 	let real_color = get_color_of_card(card);
-	ari_history_list(`${uplayer} guesses ${color}, ${accused} is ${real_color}`, 'accuse')
+	ari_history_list(`${uplayer} guesses ${color==real_color?'CORRECT':'WRONG'} (${color})`, 'accuse')
+	console.log(`PRESIDENT GUESSES ${color==real_color?'CORRECT':'WRONG!!!'}!!!`)
 	if (color == real_color) {
 		//guess was correct!
 		//president keeps membership card
 		//accused needs to replace membership card
-		console.log('PRESIDENT GUESSES CORRECTLY!!!')
+		//console.log('PRESIDENT GUESSES CORRECTLY!!!')
 		Z.turn = [accused];
-		console.log(fen.players[uplayer], fen.players[uplayer].hand, card)
+		//console.log(fen.players[uplayer], fen.players[uplayer].hand, card)
 		fen.players[uplayer].hand.push(card);
 		delete fen.players[accused].membership;
 		Z.stage = 'accuse_action_entlarvt';
 		take_turn_fen();
 	} else {
-		console.log('PRESIDENT GUESSES WRONG!!!!!!!!!!!!');
+		//console.log('PRESIDENT GUESSES WRONG!!!!!!!!!!!!');
 		Z.turn = [accused];
 		fen.players[accused].hand.push(card);
 		//fen.president = accused;
@@ -708,7 +715,8 @@ function get_players_with_at_least_one_hand_card() {
 	return get_keys(Z.fen.players).filter(x => Z.fen.players[x].hand.length >= 1);
 }
 function get_others_with_at_least_one_hand_card() {
-	return get_keys(Z.fen.players).filter(x => x.name != Z.uplayer && Z.fen.players[x].hand.length >= 1);
+	console.log('uplayer',Z.uplayer)
+	return get_keys(Z.fen.players).filter(x => x != Z.uplayer && Z.fen.players[x].hand.length >= 1);
 }
 function redraw_hand() {
 	let [uplayer, fen, ui, dt] = [Z.uplayer, Z.fen, UI, dTable];
