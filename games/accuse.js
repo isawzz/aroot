@@ -1,4 +1,4 @@
-const TESTHISTORY = true;
+const TESTHISTORY = false;
 function accuse() {
 	function state_info(dParent) {
 		dParent.innerHTML = `Session ${Z.fen.phase}`; //`phase: ${Z.phase}, turn: ${Z.turn}, stage:${Z.stage}`; 
