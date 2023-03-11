@@ -1,3 +1,85 @@
+function accuse_deck(numpl,hz){
+	let need=numpl*hz;
+	let numbers=Math.ceil(need/2);
+	let ranks=['H','S'];
+	let deck=[];
+	ranks.map(x=>deck.push(`A${x}n`));
+	for(let i=2;i<=numbers;i++){
+		ranks.map(x=>deck.push(`${i}${x}n`));
+	}
+	//deck.shuffle();
+	return deck;
+}
+
+
+function find_players(){
+
+}
+
+
+function accuse_new_session(fen, players) {
+	let deck_discard = fen.deck_discard = [];
+	let deck_ballots = accuse_deck(fen.handsize,players.length); shuffle(deck_ballots);
+	let ranks = 'KQJT98765432A';
+	let tb = {
+		5: ['2', 'T', 7],
+		6: ['A', 'T', 6],
+		7: ['A', 'T', 5],
+		8: ['A', 'T', 5],
+		9: ['A', 'K', 5],
+		10: ['A', 'K', 5],
+		11: ['A', 'K', 4],
+		12: ['A', 'K', 4],
+		13: ['A', 'K', 4],
+	};
+	if (nundef(players)) players = get_keys(fen.players);
+	let N=players.length;
+	let [rmax, rmin, handsize] = isdef(tb[N])?tb[N]:['A','K',Math.min(8,Math.floor(52/N))];
+
+	// //modiy handsize options.handsize
+	// let hplus=N*Number(fen.inc_handsize_by);
+	// let cardsneeded = hplus-deck_ballots.length;
+	// let hz = handsize + Number(fen.inc_handsize_by);
+	// if (hz*N<=deck_ballots.length){
+	// 	handsize = hz;
+	// }
+	// assertion(handsize*N<=deck_ballots.length,"not enough cards!!!!!!!!!!!!!!!!!!!!!!!!")
+
+	let [imin, imax] = [ranks.indexOf(rmin), ranks.indexOf(rmax)];
+	//console.log('N',players.length,'minrank',imin,'maxrank',imax)
+	deck_ballots = deck_ballots.filter(x => {
+		let i = ranks.indexOf(x[0])
+		return i >= imin && i <= imax;
+	});
+	fen.deck_ballots = deck_ballots;
+	fen.handsize = handsize;
+	//console.log('deck_ballots:::',deck_ballots.length);
+	for (const plname in fen.players) {
+		let pl = fen.players[plname];
+		pl.hand = deck_deal(deck_ballots, handsize);
+	}
+	fen.policies = [];
+	fen.validvoters = jsCopy(players)
+	delete fen.president;
+	delete fen.newpresident;
+	delete fen.isprovisional;
+	delete fen.player_cards;
+	delete fen.accused;
+	delete fen.dominance;
+
+	//ari_history_list(`*** session ${fen.phase} starts ***`,'',fen)
+
+}
+
+function accuse_hand_discard(card,plname){
+	let fen = Z.fen;
+	let pl = fen.players[plname]
+	removeInPlace(pl.hand,card)
+	fen.deck_discard.push(card);
+}
+function accuse_hand_draw(player){
+	removeInPlace(from,)
+}
 
 function accuse_stats(d, dl, dr, dmain) {
 	let players = Z.fen.players;

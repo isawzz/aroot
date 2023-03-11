@@ -9,9 +9,9 @@ function accuse() {
 		//console.log('SETUP!!!!!!!!!!!!!!!!!!!')
 		//console.log('players', players, 'options', options)
 		let fen = { players: {}, plorder: jsCopy(players), history: [{ title: '*** game start ***', lines: [] }], rounds: options.rounds, policies_needed: options.policies_needed };
-		//console.log(options)
-		//fen.inc_handsize_by=options.handsize=="default"?0:Number(options.handsize);
-		//console.log('increment handsize by',fen.inc_handsize_by)
+		console.log(options)
+		fen.inc_handsize_by=options.handsize=="default"?0:Number(options.handsize);
+		console.log('increment handsize by',fen.inc_handsize_by)
 		shuffle(fen.plorder);
 		let plorder = fen.plorder;
 		let num = Math.ceil(players.length / 2)
@@ -622,39 +622,13 @@ function president_end() {
 //#region helpers
 function accuse_discard(card){Z.fen.deck_discard.push(card)}
 function accuse_new_session(fen, players) {
-	let deck_discard = fen.deck_discard = [];
-	let deck_ballots = create_fen_deck('n'); shuffle(deck_ballots);
-	let ranks = 'KQJT98765432A';
-	let tb = {
-		5: ['2', 'T', 7],
-		6: ['A', 'T', 6],
-		7: ['A', 'T', 5],
-		8: ['A', 'T', 5],
-		9: ['A', 'K', 5],
-		10: ['A', 'K', 5],
-		11: ['A', 'K', 4],
-		12: ['A', 'K', 4],
-		13: ['A', 'K', 4],
-	};
-	if (nundef(players)) players = get_keys(fen.players);
-	let N=players.length;
-	let [rmax, rmin, handsize] = isdef(tb[N])?tb[N]:['A','K',Math.min(8,Math.floor(52/N))];
-
-	//modiy handsize options.handsize
-	//handsize += Number(fen.inc_handsize_by);
-
-	let [imin, imax] = [ranks.indexOf(rmin), ranks.indexOf(rmax)];
-	//console.log('N',players.length,'minrank',imin,'maxrank',imax)
-	deck_ballots = deck_ballots.filter(x => {
-		let i = ranks.indexOf(x[0])
-		return i >= imin && i <= imax;
-	});
-	fen.deck_ballots = deck_ballots;
-	fen.handsize = handsize;
-	//console.log('deck_ballots:::',deck_ballots.length);
+	fen.deck_discard = [];
+	if (nundef(fen.handsize)) fen.handsize = 7;
+	[fen.deck_ballots,fen.ranks] = accuse_deck(fen.handsize,players.length); 
+	shuffle(fen.deck_ballots);
 	for (const plname in fen.players) {
 		let pl = fen.players[plname];
-		pl.hand = deck_deal(deck_ballots, handsize);
+		pl.hand = deck_deal(fen.deck_ballots, fen.handsize);
 	}
 	fen.policies = [];
 	fen.validvoters = jsCopy(players)

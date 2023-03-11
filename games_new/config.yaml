@@ -32,11 +32,12 @@ games:
     defaulthandsorting: none
     options:
       #mode: 'solo,hotseat,multi'
+      test: 13,10,8,5,0
       mode: 'hotseat,multi'
       rounds: 6,2,1,4
       policies_needed: 5,4,3,2
       defected: draw,exchange,remove
-      #handsize: '+3,+2,+1,default'
+      handsize: '+3,+2,+1,default'
   aristo:
     friendly: Aristocracy
     logo: crown
