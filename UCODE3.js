@@ -1,3 +1,608 @@
+function accuse_activate() {
+	//return;
+	let [pldata, stage, A, fen, phase, uplayer, turn, uname, host] = [Z.playerdata, Z.stage, Z.A, Z.fen, Z.phase, Z.uplayer, Z.turn, Z.uname, Z.host];
+
+	let donelist = Z.playerdata.filter(x => isDict(x.state) && isdef(x.state.card));
+
+	// let donehumans = donelist.filter(x=>is_human_player(x.name));
+	// let humans_on_turn = turn.filter(x=>is_human_player(x));
+	// let humanscomplete = ['hand', 'membership'].includes(stage) && donehumans.length >= humans_on_turn.length || stage == 'round' && firstCond(pldata, x => isDict(x));
+
+	//sobald die humans complete sind, kann host uebernehmen und die bot moves machen und anschliessend gleich evaluaten
+
+	let complete = ['hand', 'membership'].includes(stage) && donelist.length >= turn.length || stage == 'round' && firstCond(pldata, x => isDict(x));
+	let humanscomplete = complete;
+	// if (complete && uname == host){//} && turn.length>!sameList(turn,[Z.host])) {
+	if (complete && !sameList(turn,[Z.host])) {
+		console.log('complete', turn, sameList(turn, [Z.host]), 'uplayer', uplayer);
+		Z.turn = [Z.host];
+		take_turn_fen();
+		return;
+	}
+	//if still here and multiturn: it cannot be humanscomplete or Z.host is only player on turn now!
+	assertion(!humanscomplete || sameList(turn, [Z.host]), 'humanscomplete hat nicht zu host uebergeben!!!!!!!!!!')
+
+	let waiting = isdef(donelist.find(x => x.name == uplayer)) && turn.length > 1;
+	Z.isWaiting = false;
+
+	if (humanscomplete && stage == 'hand') {
+		assertion(sameList(turn, [Z.host]) && uplayer == Z.host, 'complete FEHLER!!!!!!!!!!!!!!!!!!!!!!!!!!', turn, Z.host, uplayer);
+
+		//first, vote for bots!
+
+		fen.cardsrevealed = true;
+		DA.gobutton = mButton('reveal cards', () => { Z.turn = [uplayer]; Z.stage = 'handresolve'; take_turn_fen(); }, dTable, { w: 300 });
+	} else if (stage == 'handresolve') {
+		assertion(uplayer == Z.host && fen.cardsrevealed, 'NOT THE STARTER WHO COMPLETES THE STAGE!!!')
+		DA.gobutton = mButton('evaluate cards', () => { Z.stage = 'handresolve_weiter'; take_turn_fen(); }, dTable, { w: 300 });
+	} else if (stage == 'handresolve_weiter') {
+		assertion(uplayer == Z.host && fen.cardsrevealed, 'NOT THE STARTER WHO COMPLETES THE STAGE!!!')
+		let votes = [];
+		for (const pldata of Z.playerdata) {
+			let plname = pldata.name;
+			let card = pldata.state.card;
+			if (!isEmpty(card)) votes.push({ plname: plname, card: card });
+			else removeInPlace(fen.validvoters, plname);
+		}
+
+		ari_history_list(votes.map(x => `${x.plname} ${x.card}`), 'poll');
+
+		//resolve votes
+		//0. check if unsuccessful (no votes)
+		if (isEmpty(votes)) {
+			//console.log('STOP! EMPTY VOTES!!!!!!!!!!!!!'); return;
+			//console.log('EMPTY VOTES!!!!!!!!!!!!!');
+			ari_history_list(`no votes!`, 'session ends');
+			accuse_score_update('white')
+
+			Z.turn = jsCopy(Z.plorder);
+			Z.stage = 'round';
+			take_turn_fen_clear();
+			return;
+		}
+		//1. check if all votes same color
+		let color = get_color_of_card(votes[0].card); //['H', 'D'].includes(votes[0].card[1]) ? 'red' : 'black';
+		let allsame = true;
+		for (const v of votes) {
+			let c1 = get_color_of_card(v.card); //['H', 'D'].includes(v.card[1]) ? 'red' : 'black';
+			if (c1 != color) { allsame = false; break; }
+		}
+		if (allsame) {
+			//session ends! consensus
+			//console.log('STOP! CONSENSUS!!!!!!!!!!!!!',color);return;
+			//console.log('...CONSENSUS!!!!!!!!!!!!!', color, votes);
+			ari_history_list(`consensus on ${color}!`, 'session ends');
+
+			//update score
+			accuse_score_update(color);
+
+			Z.turn = jsCopy(Z.plorder);
+			//Z.phase += 1
+			Z.stage = 'round';
+			take_turn_fen_clear();
+			return;
+
+		}
+		//ermittle winner if any
+		//sort votes by rank
+		let ranks = 'KQJT98765432A';
+		let vsorted = sortByFunc(votes, x => ranks.indexOf(x.card[0]));
+		//schau ob eindeutig!
+		let winning_vote = vsorted[0];
+		if (votes.length > 1 && vsorted[1].card[0] == vsorted[0].card[0]) {
+			winning_vote = null;
+		}
+		if (winning_vote) {
+			let plwinner = winning_vote.plname
+			//console.log('STOP! WINNER PRESIDENT!!!!!!!!!!!!!',plwinner,winning_vote.card); return;
+			//console.log('...WINNER PRESIDENT!!!!!!!!!!!!!', plwinner, winning_vote.card);
+			Z.turn = [plwinner];
+			Z.stage = 'president';
+			//return all non-winning votes zu player hands: done
+			//return all pending cards (from previous votes) to resp hands
+			for (const plname in fen.players) {
+				let pl = fen.players[plname];
+				if (!isEmpty(pl.pending)) pl.pending.map(x => pl.hand.push(x));
+				delete pl.pending;
+			}
+			//discard winning vote
+			removeInPlace(fen.players[plwinner].hand, winning_vote.card);
+			fen.deck_discard.push(winning_vote.card);
+			fen.president = plwinner;
+			fen.isprovisional = false;
+			ari_history_list(`${plwinner} wins presidency!`, 'president');
+			take_turn_fen_clear();
+			return;
+		}
+
+		// console.log('STOP! Tie!!!!!!!!!!!!!', vsorted); return;
+		//console.log('Tie!!!!!!!!!!!!!', vsorted);
+		ari_history_list(`tie!`, 'new poll round');
+		//played cards go into pending
+		for (const v of vsorted) {
+			let plname = v.plname;
+			let pl = fen.players[plname];
+			lookupAddToList(pl, ['pending'], v.card)
+			removeInPlace(pl.hand, v.card);
+		}
+		//stage goes to hand
+		Z.turn = vsorted.map(x => x.plname); //only active voters remain in poll
+		Z.stage = 'hand';
+		fen.cardsrevealed = false;
+		take_turn_fen_clear();
+
+	} else if (humanscomplete && stage == 'membership') {
+		assertion(uplayer == Z.host, 'NOT THE STARTER WHO COMPLETES THE STAGE!!!')
+		//console.log('RESOLVING membership!!!!!!!!!!!!!')
+		let histest = [];
+		for (const pldata of Z.playerdata) {
+			let plname = pldata.name;
+			let card = pldata.state.card;
+			assertion(!isEmpty(card), "INVALID MEMBERSHIP SELECTION!!!!!!!!!!!!", uplayer)
+			//selected card goes from hand to membership
+			let pl = fen.players[plname];
+			pl.membership = card;
+			removeInPlace(pl.hand, card);
+			histest.push(`${plname} ${TESTHISTORY ? card : ''}`); //TODO:KEEP secret!!!!!!!!!!!!!!!!!!!!!!
+		}
+		ari_history_list(histest, 'membership');
+		Z.stage = 'hand';
+		fen.cardsrevealed = false;
+		Z.turn = get_valid_voters();
+		take_turn_fen_clear();
+	} else if (humanscomplete && stage == 'round') {
+		assertion(uplayer == Z.host, 'NOT THE STARTER WHO COMPLETES THE STAGE!!!')
+		//new session starts here!!!!!
+		Z.turn = jsCopy(Z.plorder);
+		Z.phase = Number(Z.phase) + 1;
+		Z.stage = 'membership';
+		//console.log('REMOVING MEMBERSHIP!!!! SCORING SHOULD BE DONE BY NOW!!!!!')
+		for (const pl in fen.players) { delete fen.players[pl].membership; }
+		accuse_new_session(fen);
+		take_turn_fen_clear();
+	} else if (stage == 'president') {
+		let accuse_action_available = !fen.isprovisional || fen.players[uplayer].hand.length >= 1;
+		let parlay_action_available = get_others_with_at_least_one_hand_card().length >= 1;
+		let actions = ['defect', 'resign'];
+		if (parlay_action_available) actions.unshift('parlay');
+		if (accuse_action_available) actions.unshift('accuse');
+		select_add_items(ui_get_string_items(actions), president_action, 'must select action to play', 1, 1);
+	} else if (stage == 'pay_for_accuse') {
+		select_add_items(ui_get_hand_items(uplayer), pay_for_accuse_action, 'must pay a card for accuse action', 1, 1);
+	} else if (stage == 'accuse_action_select_player') {
+		let plnames = get_keys(fen.players);
+		let validplayers = plnames.filter(x => fen.players[x].hand.length >= 1 && x != uplayer);
+		select_add_items(ui_get_player_items(validplayers), accuse_submit_accused, 'must select player name', 1, 1);
+	} else if (stage == 'accuse_action_select_color') {
+		select_add_items(ui_get_string_items(['red', 'black']), accuse_submit_accused_color, 'must select color', 1, 1);
+	} else if (stage == 'accuse_action_entlarvt') {
+		select_add_items(ui_get_hand_items(uplayer), accuse_replaced_membership, 'must select new alliance', 1, 1);
+	} else if (stage == 'accuse_action_provisional') {
+		select_add_items(ui_get_hand_items(uplayer), accuse_replaced_membership, 'must select new alliance', 1, 1);
+	} else if (stage == 'accuse_action_policy') {
+		select_add_items(ui_get_hand_items(uplayer), accuse_enact_policy, 'may enact a policy', 0, 1);
+	} else if (stage == 'accuse_action_new_president') {
+		set_new_president();
+	} else if (stage == 'parlay_select_player') {
+		let players = get_others_with_at_least_one_hand_card();
+		select_add_items(ui_get_player_items(players), parlay_player_selected, 'must select player to exchange cards with', 1, 1);
+	} else if (stage == 'parlay_select_cards') {
+		select_add_items(ui_get_hand_items(uplayer), parlay_cards_selected, 'may select cards to exchange', 0, fen.maxcards);
+	} else if (stage == 'parlay_opponent_selects') {
+		let n = fen.player_cards.length;
+		select_add_items(ui_get_hand_items(uplayer), parlay_opponent_selected, `must select ${n} cards`, n, n);
+	} else if (stage == 'defect_membership') {
+		select_add_items(ui_get_hand_items(uplayer), defect_resolve, 'may replace your alliance', 0, 1);
+	} else if (waiting) {//} && !startsWith(stage,'handresolve')) {
+		//console.log('WAITING!!', stage, uplayer);
+		//either results are not all in or am NOT the starter (=admin)
+		let mystate = donelist.find(x => x.name == uplayer).state.card;
+		if (!isEmpty(mystate)) {
+			let handui = lookup(UI, ['players', uplayer, 'hand']);
+			//console.log('handui',handui)
+			let items = handui.items;
+			let cardui = items.find(x => x.key == mystate)
+
+			//.items.find(item=>item.a == mystate);
+			//console.log('mystate',mystate,cardui)
+			if (stage == 'hand' && isdef(cardui)) make_card_selected(cardui);
+			else if (stage == 'membership' && isdef(cardui)) make_card_selected(cardui);
+			else mDiv(dTable, {}, null, 'WAITING FOR PLAYERS TO COMPLETE....');
+		}
+		//mDiv(dTable, {}, null, 'WAITING FOR PLAYERS TO COMPLETE....');
+		if (complete) {
+			//turn is transferred to starter
+			Z.turn = [Z.host];
+			if (Z.mode != 'multi') { take_turn_waiting(); return; }
+		}
+
+		if (uplayer == Z.host && there_are_bots()) {
+			//mode for bots also!
+			let bots = get_bots_on_turn();
+			//console.log('bots', bots)
+			for (const bot of bots) { accuse_ai_move(bot); }
+		}
+
+
+		Z.isWaiting = true;
+		autopoll();
+	} else if (stage == 'membership') {
+		select_add_items(ui_get_hand_items(uplayer), accuse_submit_membership, 'must select your alliance', 1, 1);
+	} else if (stage == 'hand') {
+		select_add_items(ui_get_hand_items(uplayer), accuse_submit_card, 'may select card to play', 0, 1);
+	} else if (stage == 'round') {
+		//let d = mDiv(dTable, {}, null, `Session end! ${fen.sessions[fen.phase - 1].color} wins`);
+		show_special_message(`Session end! ${fen.sessions[fen.phase - 1].color} wins`, false, 3000, 0, { top: 67 })
+		if (is_ai_player(uplayer)) accuse_onclick_weiter();
+		else {
+			mLinebreak(dTable, 12)
+			mButton('WEITER', accuse_onclick_weiter, dTable, {}, ['donebutton', 'enabled']);
+		}
+	} else {
+		//console.log('Z',Z)
+		alert('PROBLEM!!!')
+	}
+}
+
+function accuse_activate() {
+	//return;
+	let [pldata, stage, A, fen, phase, uplayer, turn, uname, host] = [Z.playerdata, Z.stage, Z.A, Z.fen, Z.phase, Z.uplayer, Z.turn, Z.uname, Z.host];
+
+	let donelist = Z.playerdata.filter(x => isDict(x.state) && isdef(x.state.card));
+
+	// let donehumans = donelist.filter(x=>is_human_player(x.name));
+	// let humans_on_turn = turn.filter(x=>is_human_player(x));
+	// let humanscomplete = ['hand', 'membership'].includes(stage) && donehumans.length >= humans_on_turn.length || stage == 'round' && firstCond(pldata, x => isDict(x));
+
+	//sobald die humans complete sind, kann host uebernehmen und die bot moves machen und anschliessend gleich evaluaten
+
+	let complete = ['hand', 'membership'].includes(stage) && donelist.length >= turn.length || stage == 'round' && firstCond(pldata, x => isDict(x));
+	let humanscomplete = complete;
+	// if (complete && uname == host){//} && turn.length>!sameList(turn,[Z.host])) {
+	if (complete && !sameList(turn,[Z.host])) {
+		console.log('complete', turn, sameList(turn, [Z.host]), 'uplayer', uplayer);
+		Z.turn = [Z.host];
+		take_turn_fen();
+		return;
+	}
+	//if still here and multiturn: it cannot be humanscomplete or Z.host is only player on turn now!
+	assertion(!humanscomplete || sameList(turn, [Z.host]), 'humanscomplete hat nicht zu host uebergeben!!!!!!!!!!')
+
+	let waiting = isdef(donelist.find(x => x.name == uplayer)) && turn.length > 1;
+	Z.isWaiting = false;
+
+	if (humanscomplete && stage == 'hand') {
+		assertion(sameList(turn, [Z.host]) && uplayer == Z.host, 'complete FEHLER!!!!!!!!!!!!!!!!!!!!!!!!!!', turn, Z.host, uplayer);
+
+		//first, vote for bots!
+
+		fen.cardsrevealed = true;
+		DA.gobutton = mButton('reveal cards', () => { Z.turn = [uplayer]; Z.stage = 'handresolve'; take_turn_fen(); }, dTable, { w: 300 });
+	} else if (stage == 'handresolve') {
+		assertion(uplayer == Z.host && fen.cardsrevealed, 'NOT THE STARTER WHO COMPLETES THE STAGE!!!')
+		DA.gobutton = mButton('evaluate cards', () => { Z.stage = 'handresolve_weiter'; take_turn_fen(); }, dTable, { w: 300 });
+	} else if (stage == 'handresolve_weiter') {
+		assertion(uplayer == Z.host && fen.cardsrevealed, 'NOT THE STARTER WHO COMPLETES THE STAGE!!!')
+		let votes = [];
+		for (const pldata of Z.playerdata) {
+			let plname = pldata.name;
+			let card = pldata.state.card;
+			if (!isEmpty(card)) votes.push({ plname: plname, card: card });
+			else removeInPlace(fen.validvoters, plname);
+		}
+
+		ari_history_list(votes.map(x => `${x.plname} ${x.card}`), 'poll');
+
+		//resolve votes
+		//0. check if unsuccessful (no votes)
+		if (isEmpty(votes)) {
+			//console.log('STOP! EMPTY VOTES!!!!!!!!!!!!!'); return;
+			//console.log('EMPTY VOTES!!!!!!!!!!!!!');
+			ari_history_list(`no votes!`, 'session ends');
+			accuse_score_update('white')
+
+			Z.turn = jsCopy(Z.plorder);
+			Z.stage = 'round';
+			take_turn_fen_clear();
+			return;
+		}
+		//1. check if all votes same color
+		let color = get_color_of_card(votes[0].card); //['H', 'D'].includes(votes[0].card[1]) ? 'red' : 'black';
+		let allsame = true;
+		for (const v of votes) {
+			let c1 = get_color_of_card(v.card); //['H', 'D'].includes(v.card[1]) ? 'red' : 'black';
+			if (c1 != color) { allsame = false; break; }
+		}
+		if (allsame) {
+			//session ends! consensus
+			//console.log('STOP! CONSENSUS!!!!!!!!!!!!!',color);return;
+			//console.log('...CONSENSUS!!!!!!!!!!!!!', color, votes);
+			ari_history_list(`consensus on ${color}!`, 'session ends');
+
+			//update score
+			accuse_score_update(color);
+
+			Z.turn = jsCopy(Z.plorder);
+			//Z.phase += 1
+			Z.stage = 'round';
+			take_turn_fen_clear();
+			return;
+
+		}
+		//ermittle winner if any
+		//sort votes by rank
+		let ranks = 'KQJT98765432A';
+		let vsorted = sortByFunc(votes, x => ranks.indexOf(x.card[0]));
+		//schau ob eindeutig!
+		let winning_vote = vsorted[0];
+		if (votes.length > 1 && vsorted[1].card[0] == vsorted[0].card[0]) {
+			winning_vote = null;
+		}
+		if (winning_vote) {
+			let plwinner = winning_vote.plname
+			//console.log('STOP! WINNER PRESIDENT!!!!!!!!!!!!!',plwinner,winning_vote.card); return;
+			//console.log('...WINNER PRESIDENT!!!!!!!!!!!!!', plwinner, winning_vote.card);
+			Z.turn = [plwinner];
+			Z.stage = 'president';
+			//return all non-winning votes zu player hands: done
+			//return all pending cards (from previous votes) to resp hands
+			for (const plname in fen.players) {
+				let pl = fen.players[plname];
+				if (!isEmpty(pl.pending)) pl.pending.map(x => pl.hand.push(x));
+				delete pl.pending;
+			}
+			//discard winning vote
+			removeInPlace(fen.players[plwinner].hand, winning_vote.card);
+			fen.deck_discard.push(winning_vote.card);
+			fen.president = plwinner;
+			fen.isprovisional = false;
+			ari_history_list(`${plwinner} wins presidency!`, 'president');
+			take_turn_fen_clear();
+			return;
+		}
+
+		// console.log('STOP! Tie!!!!!!!!!!!!!', vsorted); return;
+		//console.log('Tie!!!!!!!!!!!!!', vsorted);
+		ari_history_list(`tie!`, 'new poll round');
+		//played cards go into pending
+		for (const v of vsorted) {
+			let plname = v.plname;
+			let pl = fen.players[plname];
+			lookupAddToList(pl, ['pending'], v.card)
+			removeInPlace(pl.hand, v.card);
+		}
+		//stage goes to hand
+		Z.turn = vsorted.map(x => x.plname); //only active voters remain in poll
+		Z.stage = 'hand';
+		fen.cardsrevealed = false;
+		take_turn_fen_clear();
+
+	} else if (humanscomplete && stage == 'membership') {
+		assertion(uplayer == Z.host, 'NOT THE STARTER WHO COMPLETES THE STAGE!!!')
+		//console.log('RESOLVING membership!!!!!!!!!!!!!')
+		let histest = [];
+		for (const pldata of Z.playerdata) {
+			let plname = pldata.name;
+			let card = pldata.state.card;
+			assertion(!isEmpty(card), "INVALID MEMBERSHIP SELECTION!!!!!!!!!!!!", uplayer)
+			//selected card goes from hand to membership
+			let pl = fen.players[plname];
+			pl.membership = card;
+			removeInPlace(pl.hand, card);
+			histest.push(`${plname} ${TESTHISTORY ? card : ''}`); //TODO:KEEP secret!!!!!!!!!!!!!!!!!!!!!!
+		}
+		ari_history_list(histest, 'membership');
+		Z.stage = 'hand';
+		fen.cardsrevealed = false;
+		Z.turn = get_valid_voters();
+		take_turn_fen_clear();
+	} else if (humanscomplete && stage == 'round') {
+		assertion(uplayer == Z.host, 'NOT THE STARTER WHO COMPLETES THE STAGE!!!')
+		//new session starts here!!!!!
+		Z.turn = jsCopy(Z.plorder);
+		Z.phase = Number(Z.phase) + 1;
+		Z.stage = 'membership';
+		//console.log('REMOVING MEMBERSHIP!!!! SCORING SHOULD BE DONE BY NOW!!!!!')
+		for (const pl in fen.players) { delete fen.players[pl].membership; }
+		accuse_new_session(fen);
+		take_turn_fen_clear();
+	} else if (stage == 'president') {
+		let accuse_action_available = !fen.isprovisional || fen.players[uplayer].hand.length >= 1;
+		let parlay_action_available = get_others_with_at_least_one_hand_card().length >= 1;
+		let actions = ['defect', 'resign'];
+		if (parlay_action_available) actions.unshift('parlay');
+		if (accuse_action_available) actions.unshift('accuse');
+		select_add_items(ui_get_string_items(actions), president_action, 'must select action to play', 1, 1);
+	} else if (stage == 'pay_for_accuse') {
+		select_add_items(ui_get_hand_items(uplayer), pay_for_accuse_action, 'must pay a card for accuse action', 1, 1);
+	} else if (stage == 'accuse_action_select_player') {
+		let plnames = get_keys(fen.players);
+		let validplayers = plnames.filter(x => fen.players[x].hand.length >= 1 && x != uplayer);
+		select_add_items(ui_get_player_items(validplayers), accuse_submit_accused, 'must select player name', 1, 1);
+	} else if (stage == 'accuse_action_select_color') {
+		select_add_items(ui_get_string_items(['red', 'black']), accuse_submit_accused_color, 'must select color', 1, 1);
+	} else if (stage == 'accuse_action_entlarvt') {
+		select_add_items(ui_get_hand_items(uplayer), accuse_replaced_membership, 'must select new alliance', 1, 1);
+	} else if (stage == 'accuse_action_provisional') {
+		select_add_items(ui_get_hand_items(uplayer), accuse_replaced_membership, 'must select new alliance', 1, 1);
+	} else if (stage == 'accuse_action_policy') {
+		select_add_items(ui_get_hand_items(uplayer), accuse_enact_policy, 'may enact a policy', 0, 1);
+	} else if (stage == 'accuse_action_new_president') {
+		set_new_president();
+	} else if (stage == 'parlay_select_player') {
+		let players = get_others_with_at_least_one_hand_card();
+		select_add_items(ui_get_player_items(players), parlay_player_selected, 'must select player to exchange cards with', 1, 1);
+	} else if (stage == 'parlay_select_cards') {
+		select_add_items(ui_get_hand_items(uplayer), parlay_cards_selected, 'may select cards to exchange', 0, fen.maxcards);
+	} else if (stage == 'parlay_opponent_selects') {
+		let n = fen.player_cards.length;
+		select_add_items(ui_get_hand_items(uplayer), parlay_opponent_selected, `must select ${n} cards`, n, n);
+	} else if (stage == 'defect_membership') {
+		select_add_items(ui_get_hand_items(uplayer), defect_resolve, 'may replace your alliance', 0, 1);
+	} else if (waiting) {//} && !startsWith(stage,'handresolve')) {
+		//console.log('WAITING!!', stage, uplayer);
+		//either results are not all in or am NOT the starter (=admin)
+		let mystate = donelist.find(x => x.name == uplayer).state.card;
+		if (!isEmpty(mystate)) {
+			let handui = lookup(UI, ['players', uplayer, 'hand']);
+			//console.log('handui',handui)
+			let items = handui.items;
+			let cardui = items.find(x => x.key == mystate)
+
+			//.items.find(item=>item.a == mystate);
+			//console.log('mystate',mystate,cardui)
+			if (stage == 'hand' && isdef(cardui)) make_card_selected(cardui);
+			else if (stage == 'membership' && isdef(cardui)) make_card_selected(cardui);
+			else mDiv(dTable, {}, null, 'WAITING FOR PLAYERS TO COMPLETE....');
+		}
+		//mDiv(dTable, {}, null, 'WAITING FOR PLAYERS TO COMPLETE....');
+		if (complete) {
+			//turn is transferred to starter
+			Z.turn = [Z.host];
+			if (Z.mode != 'multi') { take_turn_waiting(); return; }
+		}
+
+		if (uplayer == Z.host && there_are_bots()) {
+			//mode for bots also!
+			let bots = get_bots_on_turn();
+			//console.log('bots', bots)
+			for (const bot of bots) { accuse_ai_move(bot); }
+		}
+
+
+		Z.isWaiting = true;
+		autopoll();
+	} else if (stage == 'membership') {
+		select_add_items(ui_get_hand_items(uplayer), accuse_submit_membership, 'must select your alliance', 1, 1);
+	} else if (stage == 'hand') {
+		select_add_items(ui_get_hand_items(uplayer), accuse_submit_card, 'may select card to play', 0, 1);
+	} else if (stage == 'round') {
+		//let d = mDiv(dTable, {}, null, `Session end! ${fen.sessions[fen.phase - 1].color} wins`);
+		show_special_message(`Session end! ${fen.sessions[fen.phase - 1].color} wins`, false, 3000, 0, { top: 67 })
+		if (is_ai_player(uplayer)) accuse_onclick_weiter();
+		else {
+			mLinebreak(dTable, 12)
+			mButton('WEITER', accuse_onclick_weiter, dTable, {}, ['donebutton', 'enabled']);
+		}
+	} else {
+		//console.log('Z',Z)
+		alert('PROBLEM!!!')
+	}
+}
+
+function update_table() {
+	//creates and maintains Z (open tables)
+	assertion(isdef(U), 'NO USER LOGGED IN WHEN GETTING TABLE FROM SERVER!!!!!!!!!!!!!!!!!!!!', U);
+
+	//copy all important keys to Z.prev
+	if (nundef(Z) || nundef(Z.prev)) Z = { prev: {} };
+	for (const wichtig of ['playerdata', 'notes', 'uplayer', 'uname', 'friendly', 'step', 'round', 'phase', 'stage', 'timestamp', 'modified', 'stime', 'mode', 'scoring']) {
+		if (isdef(Z[wichtig])) Z.prev[wichtig] = jsCopy(Z[wichtig]);
+	}
+	//console.log('last uplayer was',Z.prev.uplayer)
+	Z.prev.turn = Clientdata.last_turn = Clientdata.this_turn;
+
+	copyKeys(Serverdata, Z);
+
+	//console.log('playerdata', Z.playerdata, 'prev', Z.prev.playerdata);
+
+	if (isdef(Serverdata.table)) { copyKeys(Serverdata.table, Z); Z.playerlist = Z.players; copyKeys(Serverdata.table.fen, Z); }
+	assertion(isdef(Z.fen), 'no fen in Z bei cmd=table or startgame!!!', Serverdata);
+	assertion(isdef(Z.host), 'TABLE HAS NOT HOST IN UPDATE_TABLE!!!!!!!!!!!!!!')
+
+	Clientdata.this_turn = Z.turn;
+
+	set_user(U.name); //sets Z.uname
+
+	assertion(!isEmpty(Z.turn), 'turn empty!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!', Z.turn);
+
+	//console.log('Z', Z);
+	let fen = Z.fen; //set Z.role
+	Z.role = !is_playing(Z.uname, fen) ? 'spectator' : fen.turn.includes(Z.uname) ? 'active' : 'inactive';
+
+	//set Z.uplayer
+	let [uname, turn, mode, host] = [Z.uname, fen.turn, Z.mode, Z.host];
+	//console.log('uname', uname, 'turn', turn, 'mode', mode, 'host', host);
+	let upl = uname;
+
+	//console.log('Z',Z)
+	if (Z.game == 'accuse') {
+		//upl = Z.role == 'active' ? uname : turn[0];
+		if (mode == 'hotseat' && turn.length > 1) { let next = get_next_in_list(Z.prev.uplayer, Z.turn); if (next) upl = next; }
+		else if (turn.length > 1){
+			//if ()
+		}
+		if (mode == 'multi' && uname == host) {
+			//if upl is host, first move all bots
+			//if upl is bot but there is no other bot, go back to host
+			let bots = turn_has_bots_that_must_move();
+			//console.log('bots on turn that must move',bots);
+			//if (!isEmpty(bots)) assertion(false,"GOT BOTS!!!!!!!!!!!!!!!")
+			if (!isEmpty(bots)) upl = bots[0];
+
+		}
+		// console.log('Z.role',Z.role,'turn',turn,'uname',uname,'host',host)
+		// let pld=Z.playerdata.find(x=>x.name == uname);
+		// let hasmoved=isdef(pld) && isDict(pld.state);
+		// let isrobot = Z.fen.players[uname].playmode != 'human';
+		// if (mode == 'multi' && (uname == host || isrobot) && turn.length > 1 && hasmoved) { upl = uname; }
+
+	} else {
+		upl = Z.role == 'active' ? uname : turn[0];
+
+		if (mode == 'hotseat' && turn.length > 1) { let next = get_next_in_list(Z.prev.uplayer, Z.turn); if (next) upl = next; }
+		if (mode == 'multi' && Z.role == 'inactive' && (uname != host || is_human_player(upl))) { upl = uname; }
+
+	}
+
+	//console.log('-----------setting', upl,'\nuname',uname,'\nturn',turn,'\nprev',Z.prev.uplayer)
+	set_player(upl, fen); //sets uplayer
+	//console.log('uplayer',Z.uplayer)
+
+	//set playmode and strategy
+	let pl = Z.pl;
+	Z.playmode = pl.playmode; //could be human | ai | hybrid (that's for later!!!)
+	Z.strategy = uname == pl.name ? valf(Clientdata.strategy, pl.strategy) : pl.strategy; //humans are really hybrids: they have default strategy 'random'
+	//if (Z.playmode != 'human') Z.strategy = pl.strategy;
+
+	//determine wheather have to present game state!
+	let [uplayer, friendly, modified] = [Z.uplayer, Z.friendly, Z.modified];
+
+	//can skip presentation if: same table & uplayer, state newer (has been modified)
+	//console.log('modified', modified, 'Z.prev.modified', Z.prev.modified);
+	//console.log('Z.playerdata_changed_for', Z.playerdata_changed_for);
+	//console.log('FORCE_REDRAW', FORCE_REDRAW);
+	//console.log()
+	Z.uplayer_data = firstCond(Z.playerdata, x => x.name == Z.uplayer);
+
+	// _Z.skip_presentation = isEmpty(Z.playerdata_changed_for) && !FORCE_REDRAW && friendly == Z.prev.friendly && modified <= Z.prev.modified && uplayer == Z.prev.uplayer;
+	let sametable = !FORCE_REDRAW && friendly == Z.prev.friendly && modified <= Z.prev.modified && uplayer == Z.prev.uplayer;
+	let sameplayerdata = isEmpty(Z.playerdata_changed_for);
+	let myplayerdatachanged = Z.playerdata_changed_for.includes(Z.uplayer);
+
+	//if uplayer is neither host nor trigger nor acting_host, can skip unless own playerdata changed??? =>will still do _autopoll!
+	let specialcase = !i_am_host() && !i_am_acting_host() && !i_am_trigger() && !myplayerdatachanged;
+
+	Z.skip_presentation = sametable && (sameplayerdata || specialcase);
+
+	if (DA.TEST0 && (!sametable || !sameplayerdata)) {
+		console.log('======>Z.skip_presentation', Z.skip_presentation, '\nplayerdata_changed_for', Z.playerdata_changed_for);
+		console.log('_______ *** THE END *** ___________')
+	}
+	// Z.skip_presentation = !FORCE_REDRAW && friendly == Z.prev.friendly && modified <= Z.prev.modified && uplayer == Z.prev.uplayer;
+	// !Z.playerdata_changed_for.includes(uplayer) && 
+	// if (Z.skip_presentation && !isEmpty(Z.playerdata_changed_for) && Z.role != 'active') {
+	// 	//some playerdata have changed, but NOT uplayer's
+	// 	//may make some small adjustments but NOT full_fledged redraw!
+	// 	console.log('skip_presentation but playerdata_changed_for not empty', Z.playerdata_changed_for);
+	// }
+	FORCE_REDRAW = false;
+	//console.log('!!!!!!!!!!!!!!!!!Z.skip_presentation', Z.skip_presentation);
+
+	//if (Z.skip_presentation) { _autopoll(); } else { clear_timeouts(); }
+
+}
+
 function accuse_deck(numpl,hz){
 	let need=numpl*hz;
 	let numbers=Math.ceil(need/2);
@@ -12,10 +617,245 @@ function accuse_deck(numpl,hz){
 }
 
 
-function find_players(){
+function accuse_activate() {
+	//return;
+	let [pldata, stage, A, fen, phase, uplayer, turn] = [Z.playerdata, Z.stage, Z.A, Z.fen, Z.phase, Z.uplayer, Z.turn];
 
+	let donelist = Z.playerdata.filter(x => isDict(x.state) && isdef(x.state.card));
+	let complete = ['hand', 'membership'].includes(stage) && donelist.length >= turn.length || stage == 'round' && firstCond(pldata, x => isDict(x));
+	let resolvable = (uplayer == 'mimi' || uplayer == Z.host) && complete;
+	let waiting = !resolvable && isdef(donelist.find(x => x.name == uplayer)) && turn.length > 1;
+	Z.isWaiting = false;
+
+	if (stage == 'impossible') {
+		console.log('impossible stage!!!!!!!!!!!!')
+	} else if (stage == 'president') {
+		let accuse_action_available = !fen.isprovisional || fen.players[uplayer].hand.length >= 1;
+		let parlay_action_available = get_others_with_at_least_one_hand_card().length >= 1;
+		let actions = ['defect', 'resign'];
+		if (parlay_action_available) actions.unshift('parlay');
+		if (accuse_action_available) actions.unshift('accuse');
+		select_add_items(ui_get_string_items(actions), president_action, 'must select action to play', 1, 1);
+	} else if (stage == 'pay_for_accuse') {
+		select_add_items(ui_get_hand_items(uplayer), pay_for_accuse_action, 'must pay a card for accuse action', 1, 1);
+	} else if (stage == 'accuse_action_select_player') {
+		let plnames = get_keys(fen.players);
+		let validplayers = plnames.filter(x => fen.players[x].hand.length >= 1 && x != uplayer);
+		select_add_items(ui_get_player_items(validplayers), accuse_submit_accused, 'must select player name', 1, 1);
+	} else if (stage == 'accuse_action_select_color') {
+		select_add_items(ui_get_string_items(['red', 'black']), accuse_submit_accused_color, 'must select color', 1, 1);
+	} else if (stage == 'accuse_action_entlarvt') {
+		select_add_items(ui_get_hand_items(uplayer), accuse_replaced_membership, 'must select new alliance', 1, 1);
+	} else if (stage == 'accuse_action_provisional') {
+		select_add_items(ui_get_hand_items(uplayer), accuse_replaced_membership, 'must select new alliance', 1, 1);
+	} else if (stage == 'accuse_action_policy') {
+		select_add_items(ui_get_hand_items(uplayer), accuse_enact_policy, 'may enact a policy', 0, 1);
+	} else if (stage == 'accuse_action_new_president') {
+		set_new_president();
+	} else if (stage == 'parlay_select_player') {
+		let players = get_others_with_at_least_one_hand_card();
+		select_add_items(ui_get_player_items(players), parlay_player_selected, 'must select player to exchange cards with', 1, 1);
+	} else if (stage == 'parlay_select_cards') {
+		select_add_items(ui_get_hand_items(uplayer), parlay_cards_selected, 'may select cards to exchange', 0, fen.maxcards);
+	} else if (stage == 'parlay_opponent_selects') {
+		let n = fen.player_cards.length;
+		select_add_items(ui_get_hand_items(uplayer), parlay_opponent_selected, `must select ${n} cards`, n, n);
+	} else if (stage == 'defect_membership') {
+		select_add_items(ui_get_hand_items(uplayer), defect_resolve, 'may replace your alliance', 0, 1);
+	} else if (waiting) {//} && !startsWith(stage,'handresolve')) {
+		//console.log('WAITING!!', stage, uplayer);
+		//either results are not all in or am NOT the starter (=admin)
+		let mystate = donelist.find(x => x.name == uplayer).state.card;
+		if (!isEmpty(mystate)) {
+			let handui = lookup(UI, ['players', uplayer, 'hand']);
+			//console.log('handui',handui)
+			let items = handui.items;
+			let cardui = items.find(x => x.key == mystate)
+
+			//.items.find(item=>item.a == mystate);
+			//console.log('mystate',mystate,cardui)
+			if (stage == 'hand' && isdef(cardui)) make_card_selected(cardui);
+			else if (stage == 'membership' && isdef(cardui)) make_card_selected(cardui);
+			else mDiv(dTable, {}, null, 'WAITING FOR PLAYERS TO COMPLETE....');
+		}
+		//mDiv(dTable, {}, null, 'WAITING FOR PLAYERS TO COMPLETE....');
+		if (complete) {
+			//turn is transferred to starter
+			Z.turn = [Z.host];
+			if (Z.mode != 'multi') { take_turn_waiting(); return; }
+		}
+
+		if (uplayer == Z.host && there_are_bots()) {
+			//mode for bots also!
+			let bots = get_bots_on_turn();
+			//console.log('bots', bots)
+			for (const bot of bots) { accuse_ai_move(bot); }
+		}
+
+
+		Z.isWaiting = true;
+		autopoll();
+	} else if (stage == 'membership' && resolvable) {
+		assertion(uplayer == Z.host, 'NOT THE STARTER WHO COMPLETES THE STAGE!!!')
+		//console.log('RESOLVING membership!!!!!!!!!!!!!')
+		let histest = [];
+		for (const pldata of Z.playerdata) {
+			let plname = pldata.name;
+			let card = pldata.state.card;
+			assertion(!isEmpty(card), "INVALID MEMBERSHIP SELECTION!!!!!!!!!!!!", uplayer)
+
+			//selected card goes from hand to membership
+			let pl = fen.players[plname];
+			pl.membership = card;
+			removeInPlace(pl.hand, card);
+
+			histest.push(`${plname} ${TESTHISTORY ? card : ''}`); //TODO:KEEP secret!!!!!!!!!!!!!!!!!!!!!!
+		}
+
+		ari_history_list(histest, 'membership');
+		Z.stage = 'hand';
+		fen.cardsrevealed = false;
+		Z.turn = get_valid_voters();
+		take_turn_fen_clear();
+
+	} else if (stage == 'membership') {
+		select_add_items(ui_get_hand_items(uplayer), accuse_submit_membership, 'must select your alliance', 1, 1);
+	} else if (stage == 'hand' && resolvable) {
+		assertion(uplayer == Z.host || uplayer == 'mimi', 'NOT THE STARTER WHO COMPLETES THE STAGE!!!')
+
+		//all the cards in UI.stats[plname].card
+		fen.cardsrevealed = true;
+
+		//console.log('STOP: RESOLVING HAND!!!!!!!!!!!!!', Z.playerdata.map(x => x.state.card));
+		// DA.gobutton = mButton('reveal cards', () => { Z.stage = 'handresolve'; accuse_activate(); }, dTable, { w: 300 });
+		DA.gobutton = mButton('reveal cards', () => { Z.turn = [uplayer]; Z.stage = 'handresolve'; take_turn_fen(); }, dTable, { w: 300 });
+		//Z.stage = 'handresolve'; accuse_activate();
+		return;
+	} else if (stage == 'handresolve') {
+		assertion(uplayer == Z.host || uplayer == 'mimi' && fen.cardsrevealed, 'NOT THE STARTER WHO COMPLETES THE STAGE!!!')
+		DA.gobutton = mButton('evaluate cards', () => { Z.stage = 'handresolve_weiter'; take_turn_fen(); }, dTable, { w: 300 });
+		return;
+	} else if (stage == 'handresolve_weiter') {
+		let votes = [];
+		for (const pldata of Z.playerdata) {
+			let plname = pldata.name;
+			let card = pldata.state.card;
+			if (!isEmpty(card)) votes.push({ plname: plname, card: card });
+			else removeInPlace(fen.validvoters, plname);
+		}
+
+		ari_history_list(votes.map(x => `${x.plname} ${x.card}`), 'poll');
+
+		//resolve votes
+		//0. check if unsuccessful (no votes)
+		if (isEmpty(votes)) {
+			//console.log('STOP! EMPTY VOTES!!!!!!!!!!!!!'); return;
+			//console.log('EMPTY VOTES!!!!!!!!!!!!!');
+			ari_history_list(`no votes!`, 'session ends');
+			accuse_score_update('white')
+
+			Z.turn = jsCopy(Z.plorder);
+			Z.stage = 'round';
+			take_turn_fen_clear();
+			return;
+		}
+		//1. check if all votes same color
+		let color = get_color_of_card(votes[0].card); //['H', 'D'].includes(votes[0].card[1]) ? 'red' : 'black';
+		let allsame = true;
+		for (const v of votes) {
+			let c1 = get_color_of_card(v.card); //['H', 'D'].includes(v.card[1]) ? 'red' : 'black';
+			if (c1 != color) { allsame = false; break; }
+		}
+		if (allsame) {
+			//session ends! consensus
+			//console.log('STOP! CONSENSUS!!!!!!!!!!!!!',color);return;
+			//console.log('...CONSENSUS!!!!!!!!!!!!!', color, votes);
+			ari_history_list(`consensus on ${color}!`, 'session ends');
+
+			//update score
+			accuse_score_update(color);
+
+			Z.turn = jsCopy(Z.plorder);
+			//Z.phase += 1
+			Z.stage = 'round';
+			take_turn_fen_clear();
+			return;
+
+		}
+		//ermittle winner if any
+		//sort votes by rank
+		let ranks = 'KQJT98765432A';
+		let vsorted = sortByFunc(votes, x => ranks.indexOf(x.card[0]));
+		let best = vsorted[0];
+		//schau ob eindeutig!
+		let winning_vote = vsorted[0];
+		if (votes.length > 1 && vsorted[1].card[0] == vsorted[0].card[0]) {
+			winning_vote = null;
+		}
+		if (winning_vote) {
+			let plwinner = winning_vote.plname
+			//console.log('STOP! WINNER PRESIDENT!!!!!!!!!!!!!',plwinner,winning_vote.card); return;
+			//console.log('...WINNER PRESIDENT!!!!!!!!!!!!!', plwinner, winning_vote.card);
+			Z.turn = [plwinner];
+			Z.stage = 'president';
+			//return all non-winning votes zu player hands: done
+			//return all pending cards (from previous votes) to resp hands
+			for (const plname in fen.players) {
+				let pl = fen.players[plname];
+				if (!isEmpty(pl.pending)) pl.pending.map(x => pl.hand.push(x));
+				delete pl.pending;
+			}
+			//discard winning vote
+			removeInPlace(fen.players[plwinner].hand, winning_vote.card);
+			fen.deck_discard.push(winning_vote.card);
+			fen.president = plwinner;
+			fen.isprovisional = false;
+			ari_history_list(`${plwinner} wins presidency!`, 'president');
+			take_turn_fen_clear();
+			return;
+		}
+
+		// console.log('STOP! Tie!!!!!!!!!!!!!', vsorted); return;
+		//console.log('Tie!!!!!!!!!!!!!', vsorted);
+		ari_history_list(`tie!`, 'new poll round');
+		//played cards go into pending
+		for (const v of vsorted) {
+			let plname = v.plname;
+			let pl = fen.players[plname];
+			lookupAddToList(pl, ['pending'], v.card)
+			removeInPlace(pl.hand, v.card);
+		}
+		//stage goes to hand
+		Z.turn = vsorted.map(x => x.plname); //only active voters remain in poll
+		Z.stage = 'hand';
+		fen.cardsrevealed = false;
+		take_turn_fen_clear();
+
+	} else if (stage == 'hand') {
+		select_add_items(ui_get_hand_items(uplayer), accuse_submit_card, 'may select card to play', 0, 1);
+	} else if (stage == 'round' && resolvable) {
+		assertion(uplayer == 'mimi' || uplayer == Z.host, 'NOT THE STARTER WHO COMPLETES THE STAGE!!!')
+		//new session starts here!!!!!
+		Z.turn = jsCopy(Z.plorder);
+		Z.phase = Number(Z.phase) + 1;
+		Z.stage = 'membership';
+		//console.log('REMOVING MEMBERSHIP!!!! SCORING SHOULD BE DONE BY NOW!!!!!')
+		for (const pl in fen.players) { delete fen.players[pl].membership; }
+		accuse_new_session(fen);
+		take_turn_fen_clear();
+	} else if (stage == 'round') {
+		//let d = mDiv(dTable, {}, null, `Session end! ${fen.sessions[fen.phase - 1].color} wins`);
+		show_special_message(`Session end! ${fen.sessions[fen.phase - 1].color} wins`, false, 3000, 0, { top: 67 })
+		if (is_ai_player(uplayer)) accuse_onclick_weiter();
+		else {
+			mLinebreak(dTable, 12)
+			mButton('WEITER', accuse_onclick_weiter, dTable, {}, ['donebutton', 'enabled']);
+		}
+	} else {
+		//console.log('Z',Z)
+		alert('PROBLEM!!!')
+	}
 }
-
 
 function accuse_new_session(fen, players) {
 	let deck_discard = fen.deck_discard = [];

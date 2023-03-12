@@ -1,4 +1,8 @@
 
+function on_empty_votes(){}
+
+
+
 function accuse_ai_move(bot){
 	let [pl,fen,stage]=[Z.fen.players[bot],Z.fen,Z.stage];
 	if (stage == 'hand'){
@@ -91,7 +95,7 @@ function get_policies_to_win(){
 
 	if (isEmpty(fen.policies)) return ['any',fen.policies_needed]; //`${fen.policies_needed} policies of the same color needed!`]
 	//let color = get_color_of_card(arrLast(fen.policies));
-	let revlist = fen.policies.reverse();
+	let revlist = jsCopy(fen.policies).reverse();
 	//console.log('revlist',revlist);
 	let color = get_color_of_card(revlist[0]);
 	let samecolorlist=arrTakeWhile(revlist,x=>get_color_of_card(x)==color);

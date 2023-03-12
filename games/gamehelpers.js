@@ -320,8 +320,13 @@ function get_present_order_accuse() {
 }
 function get_present_order() {
 	let [fen, uplayer, uname] = [Z.fen, Z.uplayer, Z.uname];
-	let uname_plays = fen.plorder.includes(Z.uname);
-	let show_first = uname_plays && Z.mode == 'multi' ? Z.uname : uplayer;
+
+	//assert that if uplayer is a bot, uname must be host!
+	assertion(is_human_player(uplayer) || uname == Z.host,"PRESENT ORDER ME WRONG!!!!!!!!!!!!!")
+
+	let uname_plays = fen.plorder.includes(uname);
+	let is_bot = !is_human_player(uplayer);
+	let show_first = Z.mode == 'multi' && uname_plays && !is_bot ? Z.uname : uplayer;
 	return arrCycle(Z.fen.plorder, Z.fen.plorder.indexOf(show_first));
 }
 function get_waiting_html() { return `<img src="../base/assets/images/active_player.gif" height="30" style="margin:0px 10px" />`; }

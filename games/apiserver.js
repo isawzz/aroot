@@ -215,7 +215,7 @@ function update_table() {
 
 	if (isdef(Serverdata.table)) { copyKeys(Serverdata.table, Z); Z.playerlist = Z.players; copyKeys(Serverdata.table.fen, Z); }
 	assertion(isdef(Z.fen), 'no fen in Z bei cmd=table or startgame!!!', Serverdata);
-	assertion(isdef(Z.host),'TABLE HAS NOT HOST IN UPDATE_TABLE!!!!!!!!!!!!!!')
+	assertion(isdef(Z.host), 'TABLE HAS NOT HOST IN UPDATE_TABLE!!!!!!!!!!!!!!')
 
 	Clientdata.this_turn = Z.turn;
 
@@ -224,41 +224,33 @@ function update_table() {
 	assertion(!isEmpty(Z.turn), 'turn empty!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!', Z.turn);
 
 	//console.log('Z', Z);
-	let fen = Z.fen; //set Z.role
-	Z.role = !is_playing(Z.uname, fen) ? 'spectator' : fen.turn.includes(Z.uname) ? 'active' : 'inactive';
+	let [fen, uname, turn, mode, host] = [Z.fen, Z.uname, Z.fen.turn, Z.mode, Z.host];
+	let role = Z.role = !is_playing(uname, fen) ? 'spectator' : fen.turn.includes(uname) ? 'active' : 'inactive';
 
 	//set Z.uplayer
-	let [uname, turn, mode, host] = [Z.uname, fen.turn, Z.mode, Z.host];
 	//console.log('uname', uname, 'turn', turn, 'mode', mode, 'host', host);
-	let upl = Z.role == 'active' ? uname : turn[0];
+	let upl = role != 'spectator' ? uname : turn[0];
 
-	//console.log('Z',Z)
 	if (Z.game == 'accuse') {
-		if (mode == 'hotseat' && turn.length > 1) { let next = get_next_in_list(Z.prev.uplayer,Z.turn); if (next) upl = next; }
-		if(mode == 'multi' && uname == host){
-			//if upl is host, first move all bots
-			//if upl is bot but there is no other bot, go back to host
+		if (mode == 'hotseat' && turn.length > 1) {
+			let next = get_next_in_list(Z.prev.uplayer, Z.turn); if (next) upl = next;
+		} else if (turn.length > 1 && uname == host) { //hand membership round
 			let bots = turn_has_bots_that_must_move();
-			//console.log('bots on turn that must move',bots);
-			//if (!isEmpty(bots)) assertion(false,"GOT BOTS!!!!!!!!!!!!!!!")
-			if (!isEmpty(bots)) upl=bots[0];
-			
-		} 
-		// console.log('Z.role',Z.role,'turn',turn,'uname',uname,'host',host)
-		// let pld=Z.playerdata.find(x=>x.name == uname);
-		// let hasmoved=isdef(pld) && isDict(pld.state);
-		// let isrobot = Z.fen.players[uname].playmode != 'human';
-		// if (mode == 'multi' && (uname == host || isrobot) && turn.length > 1 && hasmoved) { upl = uname; }
-
+			if (!isEmpty(bots)) upl = bots[0];
+		} else if (uname == host && !is_human_player(turn[0])) {
+			upl = turn[0];
+		} else if (mode == 'hotseat') { upl = turn[0]; }
 	} else {
-		if (mode == 'hotseat' && turn.length > 1) { let next = get_next_in_list(Z.prev.uplayer,Z.turn); if (next) upl = next; }
+		upl = Z.role == 'active' ? uname : turn[0];
+
+		if (mode == 'hotseat' && turn.length > 1) { let next = get_next_in_list(Z.prev.uplayer, Z.turn); if (next) upl = next; }
 		if (mode == 'multi' && Z.role == 'inactive' && (uname != host || is_human_player(upl))) { upl = uname; }
 
 	}
 
 	//console.log('-----------setting', upl,'\nuname',uname,'\nturn',turn,'\nprev',Z.prev.uplayer)
 	set_player(upl, fen); //sets uplayer
-	//console.log('uplayer',Z.uplayer)
+	console.log('___uname:' + uname.toUpperCase(), 'uplayer:' + Z.uplayer.toUpperCase(), `(${mode})`)
 
 	//set playmode and strategy
 	let pl = Z.pl;
