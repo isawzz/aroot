@@ -3,11 +3,11 @@ onload=_start();
 DA.SIMSIM = true; DA.exclusive = true; DA.TESTSTART1 = true; //DA.sendmax = 3; 
 
 async function _start(){
-	Sayings = await route_path_yaml_dict('../base/assets/games/wise/sayings.yaml');
+	Sayings = await route_path_yaml_dict('../base/assets/accuse/wise/sayings.yaml');
 	//console.log('sayings:',Sayings);
 
 	//DB = await route_path_yaml_dict('./base/DB.yaml');	console.log('DB',DB);	return; //OK!
-	Serverdata = await load_assets_fetch('../base/', '../games/'); //war vorher './easy/' !!!!!!!!!!!!!!!!!!!!!!!! 
+	Serverdata = await load_assets_fetch('../base/', '../accuse/'); //war vorher './easy/' !!!!!!!!!!!!!!!!!!!!!!!! 
 	//console.log('Serverdata',Serverdata); return; //OK!
 	let uname = DA.secretuser = 'mimi'; //localStorage.getItem('uname');
 	U = firstCond(Serverdata.users, x => x.name == uname);
