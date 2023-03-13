@@ -1,3 +1,79 @@
+
+function transferToPlayer(plname){
+	//mFadeClearShow('dAdminRight', 300);
+	mClear('dAdminMiddle');
+	stopgame();
+	clear_screen();
+	U = null;
+
+	//jetzt muss ich login mit game
+	U = firstCond(Serverdata.users, x => x.name == plname);
+	//localStorage.setItem('uname', U.name);
+	//DA.secretuser = U.name;
+
+	show_username(true);
+}
+
+
+function host_takes_over(plname) {
+	transferToPlayer(plname); return;
+	console.log('should start with',plname)
+	U = firstCond(Serverdata.users, x => x.name == plname);
+	start_with_assets(true);
+}
+
+function show_takeover_ui() {
+	
+	DA.omnipower = true;
+	let [pldata, stage, A, fen, phase, uplayer, turn, uname, host] = [Z.playerdata, Z.stage, Z.A, Z.fen, Z.phase, Z.uplayer, Z.turn, Z.uname, Z.host];
+	let votes = [];
+	let dTakeover = mBy('dTakeover'); show(dTakeover); mClear(dTakeover);
+	dTakeover.innerHTML = '' + stage + ': ';
+	for (const plname of turn) {
+		if (!has_player_state(plname)) {
+			let pic = get_user_pic(plname, sz = 35, border = 'solid medium white');
+			mStyle(pic, { cursor: 'pointer' })
+			pic.onclick = () => host_takes_over(plname);
+			mAppend(dTakeover, pic);
+		}
+	}
+}
+
+
+function host_takes_over(plname) {
+	//console.log('=>>>',Z.uplayer,'will play for',plname,'!!!!!!!!!!!!!!!!!!!!!');
+	let [pldata, stage, A, fen, phase, uplayer, turn, uname, host] = [Z.playerdata, Z.stage, Z.A, Z.fen, Z.phase, Z.uplayer, Z.turn, Z.uname, Z.host];
+	if (stage == 'membership' || stage == 'hand') {
+		//select a random card for membership for this player
+		let hand = fen.players[plname].hand;
+		let card = rChoose(hand);
+		Z.state = { card: card };
+		Z.uplayer = plname;
+		console.log('...', Z.uplayer, '===>', card, Z.fen.players[Z.uplayer].hand)
+
+		take_turn_multi();
+	} else if (turn.length == 1) {
+		U = firstCond(Serverdata.users, x => x.name == plname);
+		start_with_assets(true);
+	} else {
+		console.log('STAGE NOT IMPLEMENTED', stage)
+	}
+}
+
+function mistmist() {
+	if (isdef(Clientdata.temp)) {
+		let temp = Clientdata.temp;
+		upl = temp.next;
+		if (upl == temp.orig) {
+			console.log('----- Clientdata.temp deleted!')
+			delete Clientdata.temp;
+		} else {
+			temp.next = temp.orig;
+		}
+	}
+
+}
+
 function accuse_activate() {
 	//return;
 	let [pldata, stage, A, fen, phase, uplayer, turn, uname, host] = [Z.playerdata, Z.stage, Z.A, Z.fen, Z.phase, Z.uplayer, Z.turn, Z.uname, Z.host];
@@ -13,7 +89,7 @@ function accuse_activate() {
 	let complete = ['hand', 'membership'].includes(stage) && donelist.length >= turn.length || stage == 'round' && firstCond(pldata, x => isDict(x));
 	let humanscomplete = complete;
 	// if (complete && uname == host){//} && turn.length>!sameList(turn,[Z.host])) {
-	if (complete && !sameList(turn,[Z.host])) {
+	if (complete && !sameList(turn, [Z.host])) {
 		console.log('complete', turn, sameList(turn, [Z.host]), 'uplayer', uplayer);
 		Z.turn = [Z.host];
 		take_turn_fen();
@@ -259,7 +335,7 @@ function accuse_activate() {
 	let complete = ['hand', 'membership'].includes(stage) && donelist.length >= turn.length || stage == 'round' && firstCond(pldata, x => isDict(x));
 	let humanscomplete = complete;
 	// if (complete && uname == host){//} && turn.length>!sameList(turn,[Z.host])) {
-	if (complete && !sameList(turn,[Z.host])) {
+	if (complete && !sameList(turn, [Z.host])) {
 		console.log('complete', turn, sameList(turn, [Z.host]), 'uplayer', uplayer);
 		Z.turn = [Z.host];
 		take_turn_fen();
@@ -529,7 +605,7 @@ function update_table() {
 	if (Z.game == 'accuse') {
 		//upl = Z.role == 'active' ? uname : turn[0];
 		if (mode == 'hotseat' && turn.length > 1) { let next = get_next_in_list(Z.prev.uplayer, Z.turn); if (next) upl = next; }
-		else if (turn.length > 1){
+		else if (turn.length > 1) {
 			//if ()
 		}
 		if (mode == 'multi' && uname == host) {
@@ -603,14 +679,14 @@ function update_table() {
 
 }
 
-function accuse_deck(numpl,hz){
-	let need=numpl*hz;
-	let numbers=Math.ceil(need/2);
-	let ranks=['H','S'];
-	let deck=[];
-	ranks.map(x=>deck.push(`A${x}n`));
-	for(let i=2;i<=numbers;i++){
-		ranks.map(x=>deck.push(`${i}${x}n`));
+function accuse_deck(numpl, hz) {
+	let need = numpl * hz;
+	let numbers = Math.ceil(need / 2);
+	let ranks = ['H', 'S'];
+	let deck = [];
+	ranks.map(x => deck.push(`A${x}n`));
+	for (let i = 2; i <= numbers; i++) {
+		ranks.map(x => deck.push(`${i}${x}n`));
 	}
 	//deck.shuffle();
 	return deck;
@@ -859,7 +935,7 @@ function accuse_activate() {
 
 function accuse_new_session(fen, players) {
 	let deck_discard = fen.deck_discard = [];
-	let deck_ballots = accuse_deck(fen.handsize,players.length); shuffle(deck_ballots);
+	let deck_ballots = accuse_deck(fen.handsize, players.length); shuffle(deck_ballots);
 	let ranks = 'KQJT98765432A';
 	let tb = {
 		5: ['2', 'T', 7],
@@ -873,8 +949,8 @@ function accuse_new_session(fen, players) {
 		13: ['A', 'K', 4],
 	};
 	if (nundef(players)) players = get_keys(fen.players);
-	let N=players.length;
-	let [rmax, rmin, handsize] = isdef(tb[N])?tb[N]:['A','K',Math.min(8,Math.floor(52/N))];
+	let N = players.length;
+	let [rmax, rmin, handsize] = isdef(tb[N]) ? tb[N] : ['A', 'K', Math.min(8, Math.floor(52 / N))];
 
 	// //modiy handsize options.handsize
 	// let hplus=N*Number(fen.inc_handsize_by);
@@ -911,13 +987,13 @@ function accuse_new_session(fen, players) {
 
 }
 
-function accuse_hand_discard(card,plname){
+function accuse_hand_discard(card, plname) {
 	let fen = Z.fen;
 	let pl = fen.players[plname]
-	removeInPlace(pl.hand,card)
+	removeInPlace(pl.hand, card)
 	fen.deck_discard.push(card);
 }
-function accuse_hand_draw(player){
+function accuse_hand_draw(player) {
 	removeInPlace(from,)
 }
 
@@ -1079,7 +1155,7 @@ function accuse_player_stat(d1, plname) {
 	let border = pl.playmode == 'bot' ? `double 5px ${bcolor}` : `solid 5px ${bcolor}`;
 	let rounding = pl.playmode == 'bot' ? '0px' : '50%';
 	let d = mDiv(d1, { margin: 4, align: 'center' });
-	let stats = mDiv(d, { hmax: 14 },null,'hallo'); mCenterFlex(stats);
+	let stats = mDiv(d, { hmax: 14 }, null, 'hallo'); mCenterFlex(stats);
 	// let img=mCreate('img');
 	// img.setAttribute('height',sz);
 	// img.setAttribute('width',sz);
@@ -1087,7 +1163,7 @@ function accuse_player_stat(d1, plname) {
 	// mStyle(img,{rounding:rounding,display:'inline',border:border,box:true});
 	// let dimg=mDiv(d,{align:'center',padding:0},null,img);
 	//let dimg = mDiv(d, {}, null, `<img src='../base/assets/images/${plname}.jpg' style="border-radius:${rounding};display:block;border:${border};box-sizing:border-box" class='img_person' width=${sz} height=${sz}>`);
-	let dimg = mDiv(d, {padding:0}, null, `<img src='../base/assets/images/${plname}.jpg' style="border-radius:${rounding};border:${border};box-sizing:border-box" width=${sz} height=${sz}>`);
+	let dimg = mDiv(d, { padding: 0 }, null, `<img src='../base/assets/images/${plname}.jpg' style="border-radius:${rounding};border:${border};box-sizing:border-box" width=${sz} height=${sz}>`);
 	mCenterFlex(dimg);
 	let card = mDiv(d, { hmin: 40 }); mCenterFlex(card);
 	let x = lookupSetOverride(UI, ['stats', plname], { douter: d, dstats: stats, dimg: dimg, dcard: card });
@@ -1149,7 +1225,7 @@ function accuse_activate() {
 
 	Z.isWaiting = false;
 	if (waiting) {
-		console.log('WAITING!!!!!!!!!',uplayer);
+		console.log('WAITING!!!!!!!!!', uplayer);
 		//either results are not all in or am NOT the starter (=admin)
 		let mystate = donelist.find(x => x.name == uplayer).state.card;
 		if (!isEmpty(mystate)) {
@@ -1161,7 +1237,7 @@ function accuse_activate() {
 			//.items.find(item=>item.a == mystate);
 			//console.log('mystate',mystate,cardui)
 			if (stage == 'hand' && isdef(cardui)) make_card_selected(cardui);
-			else if (stage == 'membership'  && isdef(cardui)) make_card_selected(cardui);
+			else if (stage == 'membership' && isdef(cardui)) make_card_selected(cardui);
 			else mDiv(dTable(''))
 
 
@@ -1217,21 +1293,21 @@ function accuse_activate() {
 		//ermittle winner if any
 		//sort votes by rank
 		let ranks = 'KQJT98765432A';
-		let vsorted = sortByFunc(votes,x=>ranks.indexOf(x.card[0]));
+		let vsorted = sortByFunc(votes, x => ranks.indexOf(x.card[0]));
 		let best = vsorted[0];
 		//schau ob eindeutig!
-		let winning_vote=vsorted[0];
-		if (votes.length > 1 && vsorted[1].card[0]==vsorted[0].card[0]){
-			winning_vote=null;
+		let winning_vote = vsorted[0];
+		if (votes.length > 1 && vsorted[1].card[0] == vsorted[0].card[0]) {
+			winning_vote = null;
 		}
-		if (winning_vote){
+		if (winning_vote) {
 			let plwinner = winning_vote.plname
 			Z.turn = [plwinner];
 			Z.stage = 'president';
 			//return all non-winning votes zu player hands
 			//done
 			//discard winning vote
-			removeInPlace(fen.players[plwinner].hand,winning_vote.card);
+			removeInPlace(fen.players[plwinner].hand, winning_vote.card);
 			//eigentlich soll es zur discard pile!			
 		}
 
@@ -1291,7 +1367,7 @@ function accuse_activate() {
 		assertion(uplayer == fen.starter, 'NOT THE STARTER WHO COMPLETES THE STAGE!!!')
 		//new session starts here!!!!!
 		Z.turn = jsCopy(Z.plorder);
-		Z.phase+=1;
+		Z.phase += 1;
 		Z.stage = 'hand';
 
 		take_turn_fen_clear();
@@ -1340,7 +1416,7 @@ function present_wise_rest() {
 
 
 
-}function _activate_wise() {
+} function _activate_wise() {
 	let [d, stage, A, fen, phase, uplayer] = [Z.form, Z.stage, Z.A, Z.fen, Z.phase, Z.uplayer];
 
 	if (Z.switchStage) {
