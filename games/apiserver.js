@@ -242,16 +242,16 @@ function update_table() {
 function accuse_set_player() {
 
 	let [fen, turn, host, curuname] = [Z.fen, Z.fen.turn, Z.host, Z.uname];
-	console.log('current uname',curuname)
+	//console.log('current uname',curuname)
 	let uname = valf(curuname,U.name);
 	if (DA.HOTSEAT) {
 		uname = (turn.length > 1 && turn.includes(curuname) && !has_player_state(curuname)) ? curuname : null;
-		console.log('...',uname)
+		//console.log('...',uname)
 		if (!uname) {
 			let pls = turn.filter(x => x != curuname && !has_player_state(x));
 			if (isEmpty(pls)) pls = [host];
 			uname = pls[0];
-			console.log('...',uname,pls)
+			//console.log('...',uname,pls)
 		}
 	}
 	let upl = uname;
@@ -264,10 +264,12 @@ function accuse_set_player() {
 		mAppend(d, get_logout_button());
 		mAppend(d, dpic);
 	}
-	let role = Z.role = !is_playing(uname, fen) ? 'spectator' : fen.turn.includes(uname) ? 'active' : 'inactive';
+	let role = !is_playing(uname, fen) ? 'spectator' : fen.turn.includes(uname) ? 'active' : 'inactive';
+	if (role == 'active' && has_player_state(uname)) role = 'inactive'
+	Z.role = role;
 	assertion(role == 'active' || !DA.HOTSEAT, "role is wrong!!!!!!!!!!!!!!!");
 	assertion(uname == upl || !DA.HOTSEAT, `ambiguous player!!! uname=${uname} uplayer=${upl}`);
-	console.log('upl',upl,'fen',fen,'uname',uname)
+	//console.log('upl',upl,'fen',fen,'uname',uname)
 	set_player(upl, fen); //sets Z.uplayer
 
 }

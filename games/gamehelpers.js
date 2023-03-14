@@ -408,7 +408,7 @@ function i_am_host() { return U.name == Z.host; }
 function i_am_acting_host() { return U.name == Z.fen.acting_host; }
 function i_am_trigger() { return is_multi_trigger(U.name); }
 function is_advanced_user() {
-	let advancedUsers = ['mimi', 'bob', 'buddy', 'minnow', 'nimble', 'leo']; //, 'guest', 'felix'];
+	let advancedUsers = ['felix','mimi', 'bob', 'buddy', 'minnow', 'nimble', 'leo']; //, 'guest', 'felix'];
 	console.log('***U', isdef(U) ? U.name : 'undefined!!!', 'secret:', DA.secretuser);
 	return isdef(U) && ((advancedUsers.includes(DA.secretuser) || advancedUsers.includes(U.name)));
 
@@ -546,6 +546,8 @@ function show_admin_ui() {
 	}
 	if (Z.uname == Z.host || Z.uname == 'mimi') show('dHostButtons'); else hide('dHostButtons');
 	if (DA.TEST0 == true) show('dTestButtons'); else hide('dTestButtons');
+	show('bRestartGame');
+	if (Z.game == 'accuse') ['bToggleMode'].map(x=>show(x))
 }
 function show_fleeting_message(s, dParent, styles, id, ms = 2000) {
 	let d = mDiv(dParent, styles, id, s);
@@ -745,6 +747,12 @@ function show_role() {
 
 	let d = mBy('dAdminMiddle');
 	clearElement(d);
+
+	if (Z.game == 'accuse'){
+		
+		return;
+	}
+
 	let hotseatplayer = Z.uname != Z.uplayer && Z.mode == 'hotseat' && Z.host == Z.uname;
 
 	let styles, text;
