@@ -234,6 +234,19 @@ function onclick_tithe_all() {
 
 	proceed_to_newcards_selection();
 }
+function onclick_toggle_mode(){
+	let b = mBy('bToggleMode');
+	let toggle_states = ['just me','takeover','hotseat'];
+
+	let caption = b.innerHTML;
+	let state = toggle_states.indexOf(caption);
+	state += 1; if (state>=toggle_states.length) state=0;
+	caption = b.innerHTML = toggle_states[state];
+
+	let mode = caption == 'just me'?'multi':caption == 'takeover'?'omni':'hotseat';
+	DA.HOSTAKEOVER=DA.HOTSEAT=false;
+	if (mode == 'omni') DA.HOSTAKEOVER = true; else if (mode == 'hotseat') DA.HOTSEAT = true;
+}
 function onclick_user(uname) {
 	//console.log('onclick_user',uname);
 	U = firstCond(Serverdata.users, x => x.name == uname);

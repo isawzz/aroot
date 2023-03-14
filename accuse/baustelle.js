@@ -50,7 +50,7 @@ function accuse_present(dParent) {
 	let order = get_present_order();
 	let me = order[0];
 	//console.log(`me:${me} uplayer:${uplayer}`)
-	assertion(me==uplayer,"MEEEEEEEEEEEEEEE")
+	assertion(me==uplayer,"MEEEEEEEEEEEEEEE",me,uplayer)
 	//assertion(me == uplayer,'order wrong!!!!!!!!')
 	//console.log('order',order)
 	// for(const plname of order){

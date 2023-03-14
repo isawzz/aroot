@@ -322,7 +322,7 @@ function get_present_order() {
 	let [fen, uplayer, uname] = [Z.fen, Z.uplayer, Z.uname];
 
 	//assert that if uplayer is a bot, uname must be host!
-	assertion(is_human_player(uplayer) || uname == Z.host,"PRESENT ORDER ME WRONG!!!!!!!!!!!!!")
+	//assertion(is_human_player(uplayer) || uname == Z.host,"PRESENT ORDER ME WRONG!!!!!!!!!!!!!")
 
 	let uname_plays = fen.plorder.includes(uname);
 	let is_bot = !is_human_player(uplayer);
@@ -536,7 +536,9 @@ function show_admin_ui() {
 	else if (Z.game == 'bluff' && Z.uname == Z.host && Z.stage == 1) show('bClearAck');
 	else if (Z.uname == Z.host && Z.stage == 'round_end') show('bClearAck');
 	else if (Z.game == 'ferro' && Z.uname == 'mimi' && Z.stage != 'card_selection') show('bClearAck');
-	else if (Z.game == 'accuse' && DA.HOSTAKEOVER && (Z.uname == Z.host || Z.uname == 'mimi' || DA.omnipower)) show_takeover_ui();
+	else if (Z.game == 'accuse' && DA.HOSTAKEOVER && (Z.uname == Z.host || Z.uname == 'mimi' || DA.omnipower)) {
+		show_takeover_ui(); //if (show_takeover_ui()==true) return true;
+	}
 
 	if (['ferro', 'bluff', 'aristo', 'a_game'].includes(Z.game) && (Z.role == 'active' || Z.mode == 'hotseat')) {
 		//console.log('random should show because game is', Z.game)

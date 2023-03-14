@@ -322,7 +322,7 @@ function get_present_order() {
 	let [fen, uplayer, uname] = [Z.fen, Z.uplayer, Z.uname];
 
 	//assert that if uplayer is a bot, uname must be host!
-	assertion(is_human_player(uplayer) || uname == Z.host,"PRESENT ORDER ME WRONG!!!!!!!!!!!!!")
+	//assertion(is_human_player(uplayer) || uname == Z.host,"PRESENT ORDER ME WRONG!!!!!!!!!!!!!")
 
 	let uname_plays = fen.plorder.includes(uname);
 	let is_bot = !is_human_player(uplayer);

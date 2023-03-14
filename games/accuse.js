@@ -1,5 +1,5 @@
 const TESTHISTORY = true;
-DA.HOSTAKEOVER = true;
+DA.HOSTAKEOVER =DA.HOTSEAT = false;
 DA.omnipower = false;
 var firsttime = false;
 function accuse() {
