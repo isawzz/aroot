@@ -1,7 +1,6 @@
 
 
-
-function accuse_evaluate_votes(){
+function accuse_evaluate_votes() {
 	let [stage, A, fen, phase, uplayer, turn, uname, host] = [Z.stage, Z.A, Z.fen, Z.phase, Z.uplayer, Z.turn, Z.uname, Z.host];
 	assertion(uplayer == host && fen.cardsrevealed, 'NOT THE STARTER WHO COMPLETES THE STAGE!!!')
 	let votes = [];
@@ -15,25 +14,12 @@ function accuse_evaluate_votes(){
 
 	//resolve votes
 	//0. check if unsuccessful (no votes)
-	if (isEmpty(votes)) {
-		eval_empty_votes(votes); return;
-	}
+	if (isEmpty(votes)) { eval_empty_votes(votes); return; }
+
 	//1. check if all votes same color (consensus)
-	let color = get_color_of_card(votes[0].card); 
-	let allsame = true;
-	for (const v of votes) {
-		let c1 = get_color_of_card(v.card); 
-		if (c1 != color) { allsame = false; break; }
-	}
-	if (allsame) {
-		console.log('...CONSENSUS!!!!!!!!!!!!!', color, votes);
-		ari_history_list(`consensus on ${color}!`, 'session ends');
-		accuse_score_update(color);
-		Z.turn = jsCopy(Z.plorder);
-		Z.stage = 'round';
-		take_turn_fen_clear();
-		return;
-	}
+	let color = arrSame(votes, x => get_color_of_card(x.card));
+	if (color) { eval_consensus(votes, color); return; }
+
 	//2. check single winner if any (presidency)
 	//sort votes by rank
 	let ranks = 'KQJT98765432A';
@@ -83,8 +69,8 @@ function accuse_evaluate_votes(){
 
 }
 
-function accuse_show_selected_state(state){
-	let [fen,uplayer,stage]=[Z.fen,Z.uplayer,Z.stage];
+function accuse_show_selected_state(state) {
+	let [fen, uplayer, stage] = [Z.fen, Z.uplayer, Z.stage];
 	let mystate = state.card;
 	if (!isEmpty(mystate)) {
 		let handui = lookup(UI, ['players', uplayer, 'hand']);

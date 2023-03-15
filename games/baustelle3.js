@@ -1,42 +1,4 @@
 
-function get_player_data(plname) { return firstCond(Z.playerdata, x => x.name == plname); }
-function get_player_state(plname) { let pld = get_player_data(plname); return pld ? pld.state : null; }
-function has_player_state(plname) { let pld = get_player_data(plname); return pld ? pld.state : false; }
-function get_player_card(plname) { let pld = get_player_data(plname); return pld ? pld.state.card : null; }
-
-function show_takeover_ui() {
-
-	DA.omnipower = true;
-	let [pldata, stage, A, fen, phase, uplayer, turn, uname, host, mode] = [Z.playerdata, Z.stage, Z.A, Z.fen, Z.phase, Z.uplayer, Z.turn, Z.uname, Z.host, Z.mode];
-
-	//entweder zeigen wenn uname not in turn
-	//oder wenn uname in turn aber schon gespielt hat
-	if (mode != 'multi') return;
-
-	if (turn.length > 1 && turn.includes(uname) && !has_player_state(uname)) return;
-
-	let dTakeover = mBy('dTakeover'); show(dTakeover); mClear(dTakeover);
-	dTakeover.innerHTML = '' + stage + ': ';
-	let pls = turn.filter(x=>x!=uname && !has_player_state(x));
-	if (isEmpty(pls)) pls=[host];
-	//console.log('host is',host, 'pls is',pls)
-	for (const plname of pls) {
-		let pic = get_user_pic(plname, sz = 35, border = 'solid medium white');
-		mStyle(pic, { cursor: 'pointer' })
-		pic.onclick = () => transferToPlayer(plname);
-		mAppend(dTakeover, pic);
-	}
-}
-
-function transferToPlayer(plname){
-	stopgame();
-	clear_screen();
-	set_user(plname);	//U = firstCond(Serverdata.users, x => x.name == plname);	//localStorage.setItem('uname', U.name); DA.secretuser = U.name;
-	assertion(U.name == plname,'set_user nicht geklappt!!!!!!!')
-	show_username(true);
-}
-
-
 function accuse_ai_move(bot) {
 	let [pl, fen, stage] = [Z.fen.players[bot], Z.fen, Z.stage];
 	if (stage == 'hand') {
@@ -102,6 +64,14 @@ function accuse_show_sitting_order(fen) {
 	}
 
 }
+function arrSame(arr,func){
+	if (isEmpty(arr)) return true;
+	let x=func(arr[0]);
+	for(let i=1;i<arr.length;i++){
+		if (func(arr[i])!=x) return false;
+	}
+	return x;
+}
 function get_bots_on_turn() {
 	let players = Z.turn;
 	return players.filter(x => Z.fen.players[x].playmode != 'human');
@@ -137,10 +107,44 @@ function get_policies_to_win() {
 	//while()
 	return [color, Math.max(0, fen.policies_needed - samecolorlist.length)];
 }
+function get_player_data(plname) { return firstCond(Z.playerdata, x => x.name == plname); }
+function get_player_state(plname) { let pld = get_player_data(plname); return pld ? pld.state : null; }
+function get_player_card(plname) { let pld = get_player_data(plname); return pld ? pld.state.card : null; }
+function has_player_state(plname) { let pld = get_player_data(plname); return pld ? pld.state : false; }
+function show_takeover_ui() {
+
+	DA.omnipower = true;
+	let [pldata, stage, A, fen, phase, uplayer, turn, uname, host, mode] = [Z.playerdata, Z.stage, Z.A, Z.fen, Z.phase, Z.uplayer, Z.turn, Z.uname, Z.host, Z.mode];
+
+	//entweder zeigen wenn uname not in turn
+	//oder wenn uname in turn aber schon gespielt hat
+	if (mode != 'multi') return;
+
+	if (turn.length > 1 && turn.includes(uname) && !has_player_state(uname)) return;
+
+	let dTakeover = mBy('dTakeover'); show(dTakeover); mClear(dTakeover);
+	dTakeover.innerHTML = '' + stage + ': ';
+	let pls = turn.filter(x=>x!=uname && !has_player_state(x));
+	if (isEmpty(pls)) pls=[host];
+	//console.log('host is',host, 'pls is',pls)
+	for (const plname of pls) {
+		let pic = get_user_pic(plname, sz = 35, border = 'solid medium white');
+		mStyle(pic, { cursor: 'pointer' })
+		pic.onclick = () => transferToPlayer(plname);
+		mAppend(dTakeover, pic);
+	}
+}
 function there_are_bots() {
 	let players = get_values(Z.fen.players);
 	return firstCond(players, x => x.playmode != 'human');
 
+}
+function transferToPlayer(plname){
+	stopgame();
+	clear_screen();
+	set_user(plname);	//U = firstCond(Serverdata.users, x => x.name == plname);	//localStorage.setItem('uname', U.name); DA.secretuser = U.name;
+	assertion(U.name == plname,'set_user nicht geklappt!!!!!!!')
+	show_username(true);
 }
 function turn_has_bots_that_must_move() {
 	let [turn, pldata] = [Z.turn, Z.playerdata];

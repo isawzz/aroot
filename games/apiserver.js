@@ -218,7 +218,6 @@ function update_table() {
 	assertion(isdef(Z.host), 'TABLE HAS NOT HOST IN UPDATE_TABLE!!!!!!!!!!!!!!')
 
 	Clientdata.this_turn = Z.turn;
-
 	set_user(U.name); //sets Z.uname
 
 	assertion(!isEmpty(Z.turn), 'turn empty!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!', Z.turn);

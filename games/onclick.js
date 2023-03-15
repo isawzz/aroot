@@ -213,9 +213,9 @@ function onclick_skip_membership_selection(){
 	for(const plname in fen.players){
 		fen.players[plname].membership = '2Hn';
 	}
-	Z.turn=get_valid_voters();
-	Z.stage = 'hand';
-	take_turn_fen();
+	fen.policies = ['QHn'];
+
+	start_new_poll();
 
 }
 function onclick_start_spotit() {

@@ -969,12 +969,33 @@ function ltest0_card() { let c = ari_get_card('QSn'); mAppend(dTable, iDiv(c)); 
 //#endregion
 
 //#region fen (=local) tests
-function fentest5_emptyvotes_add_policies(){
+function fentest5_consensus(){
 	let [game, A, fen, uplayer, plorder] = [Z.game, Z.A, Z.fen, Z.uplayer, Z.plorder];
-	fen.policies = ['QHn'];
 	fen.cardsrevealed = true;
 
-	Z.options.empty_votes='add policy';
+	Z.options.empty_vote='win policy';
+	for(const pld of Z.playerdata){
+		let r=rChoose(toLetters(fen.ranks));
+		let s=rChoose(toLetters('HD'));
+		pld.state={card:`${r}${s}n`};
+	}
+	accuse_evaluate_votes();
+}
+function fentest4_emptyvotes_win_policy(){
+	let [game, A, fen, uplayer, plorder] = [Z.game, Z.A, Z.fen, Z.uplayer, Z.plorder];
+	fen.cardsrevealed = true;
+
+	Z.options.empty_vote='win policy';
+	for(const pld of Z.playerdata){
+		pld.state={card:''}
+	}
+	accuse_evaluate_votes();
+}
+function fentest4_emptyvotes_add_policies(){
+	let [game, A, fen, uplayer, plorder] = [Z.game, Z.A, Z.fen, Z.uplayer, Z.plorder];
+	fen.cardsrevealed = true;
+
+	Z.options.empty_vote='add policy';
 	for(const pld of Z.playerdata){
 		pld.state={card:''}
 	}
@@ -985,7 +1006,7 @@ function fentest4_emptyvotes_no_policies(){
 	fen.policies = [];
 	fen.cardsrevealed = true;
 
-	Z.options.empty_votes='add policy';
+	Z.options.empty_vote='add policy';
 	for(const pld of Z.playerdata){
 		pld.state={card:''}
 	}

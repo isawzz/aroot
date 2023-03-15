@@ -20,7 +20,7 @@ function accuse() {
 		let plorder = fen.plorder;
 		let num = Math.ceil(players.length / 2)
 		let deck_identities = fen.deck_identities = [];
-		let ranks = 'KQJT98765432A';
+		let ranks = fen.ranks = 'KQJT98765432A';
 		for (let i = 0; i < num; i++) { deck_identities.push(ranks[i] + 'Hh'); deck_identities.push(ranks[i] + 'Sh'); }
 		shuffle(deck_identities);
 
