@@ -20,6 +20,7 @@ function show_takeover_ui() {
 	let pls = turn.filter(x=>x!=uname && !has_player_state(x));
 	if (isEmpty(pls)) pls=[host];
 	//console.log('host is',host, 'pls is',pls)
+
 	for (const plname of pls) {
 		let pic = get_user_pic(plname, sz = 35, border = 'solid medium white');
 		mStyle(pic, { cursor: 'pointer' })
@@ -28,6 +29,9 @@ function show_takeover_ui() {
 	}
 }
 
+function transferToHotseat(){
+
+}
 function transferToPlayer(plname){
 	stopgame();
 	clear_screen();

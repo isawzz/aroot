@@ -322,7 +322,7 @@ function get_present_order() {
 	let [fen, uplayer, uname] = [Z.fen, Z.uplayer, Z.uname];
 
 	//assert that if uplayer is a bot, uname must be host!
-	assertion(is_human_player(uplayer) || uname == Z.host,"PRESENT ORDER ME WRONG!!!!!!!!!!!!!")
+	//assertion(is_human_player(uplayer) || uname == Z.host,"PRESENT ORDER ME WRONG!!!!!!!!!!!!!")
 
 	let uname_plays = fen.plorder.includes(uname);
 	let is_bot = !is_human_player(uplayer);
@@ -408,8 +408,8 @@ function i_am_host() { return U.name == Z.host; }
 function i_am_acting_host() { return U.name == Z.fen.acting_host; }
 function i_am_trigger() { return is_multi_trigger(U.name); }
 function is_advanced_user() {
-	let advancedUsers = ['mimi', 'bob', 'buddy', 'minnow', 'nimble', 'leo']; //, 'guest', 'felix'];
-	console.log('***U', isdef(U) ? U.name : 'undefined!!!', 'secret:', DA.secretuser);
+	let advancedUsers = ['felix','mimi', 'bob', 'buddy', 'minnow', 'nimble', 'leo']; //, 'guest', 'felix'];
+	//console.log('***U', isdef(U) ? U.name : 'undefined!!!', 'secret:', DA.secretuser);
 	return isdef(U) && ((advancedUsers.includes(DA.secretuser) || advancedUsers.includes(U.name)));
 
 }
@@ -536,7 +536,10 @@ function show_admin_ui() {
 	else if (Z.game == 'bluff' && Z.uname == Z.host && Z.stage == 1) show('bClearAck');
 	else if (Z.uname == Z.host && Z.stage == 'round_end') show('bClearAck');
 	else if (Z.game == 'ferro' && Z.uname == 'mimi' && Z.stage != 'card_selection') show('bClearAck');
-	else if (Z.game == 'accuse' && DA.HOSTAKEOVER && (Z.uname == Z.host || Z.uname == 'mimi' || DA.omnipower)) show_takeover_ui();
+	else if (Z.game == 'accuse' && DA.HOSTAKEOVER && (Z.uname == Z.host || Z.uname == 'mimi' || DA.omnipower)) {
+		//console.log('halooooooooooooo')
+		show_takeover_ui(); //if (show_takeover_ui()==true) return true;
+	}
 
 	if (['ferro', 'bluff', 'aristo', 'a_game'].includes(Z.game) && (Z.role == 'active' || Z.mode == 'hotseat')) {
 		//console.log('random should show because game is', Z.game)
@@ -544,6 +547,8 @@ function show_admin_ui() {
 	}
 	if (Z.uname == Z.host || Z.uname == 'mimi') show('dHostButtons'); else hide('dHostButtons');
 	if (DA.TEST0 == true) show('dTestButtons'); else hide('dTestButtons');
+	show('bRestartGame');
+	if (Z.game == 'accuse') ['bToggleMode'].map(x=>show(x))
 }
 function show_fleeting_message(s, dParent, styles, id, ms = 2000) {
 	let d = mDiv(dParent, styles, id, s);
@@ -743,6 +748,12 @@ function show_role() {
 
 	let d = mBy('dAdminMiddle');
 	clearElement(d);
+
+	if (Z.game == 'accuse'){
+
+		return;
+	}
+
 	let hotseatplayer = Z.uname != Z.uplayer && Z.mode == 'hotseat' && Z.host == Z.uname;
 
 	let styles, text;
@@ -892,7 +903,7 @@ function show_username(loadTable=false) {
 	if (!TESTING && !DA.running) {
 		if (!loadTable) phpPost({ app: 'easy' }, 'tables'); //else console.log('no tables cmd! DA.running', DA.running);
 		else if (!isEmpty(Serverdata.tables)){
-			console.log('....Serverdata',Serverdata);
+			//console.log('....Serverdata',Serverdata);
 			onclick_table(Serverdata.tables[0].friendly); 
 		}
 	}

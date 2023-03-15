@@ -32,7 +32,7 @@ games:
     defaulthandsorting: none
     options:
       #mode: 'solo,hotseat,multi'
-      mode: 'hotseat,multi'
+      mode: 'multi'
       rounds: 6,2,1,4
       policies_needed: 5,4,3,2
       defected: draw,exchange,remove

@@ -165,6 +165,7 @@ function onclick_remove_host() {
 }
 function onclick_restart() {
 	//old code: nur die fen wird resettet
+	//Z.host = Z.uname;
 	let [game, fen, plorder, host] = [Z.game, Z.fen, Z.plorder, Z.host];
 	Z.scoring = {};
 	if (nundef(fen.original_players)) fen.original_players = fen.players;
@@ -233,6 +234,21 @@ function onclick_tithe_all() {
 	}
 
 	proceed_to_newcards_selection();
+}
+function onclick_toggle_mode(){
+	let b = mBy('bToggleMode');
+	let toggle_states = ['just me','takeover','hotseat'];
+
+	let mode = b.innerHTML;
+	let state = toggle_states.indexOf(mode);
+	state += 1; if (state>=toggle_states.length) state=0;
+	mode = b.innerHTML = toggle_states[state];
+
+	//let mode = caption == 'just me'?'multi':caption == 'takeover'?'omni':'hotseat';
+	DA.HOSTAKEOVER=DA.HOTSEAT=false;
+	if (mode == 'takeover') {DA.HOSTAKEOVER = true; show_takeover_ui(); }
+	else if (mode == 'hotseat') {DA.HOTSEAT = true; if (Z.role != 'active') transferToPlayer(get_takeoverlist()[0]);}
+	else transferToPlayer(DA.secretuser)
 }
 function onclick_user(uname) {
 	//console.log('onclick_user',uname);

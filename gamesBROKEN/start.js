@@ -318,8 +318,7 @@ function stopgame() {
 	DA.noshow = 0;
 	//console.log('STOPGAME',getFunctionsNameThatCalledThisFunction());
 	clear_timeouts();
-	hide('bRestartMove');
-	hide('dHostButtons');
+	['bRestartMove','bRestartGame','bToggleMode','dHostButtons'].map(x=>hide(x));
 	mStyle('dAdmin', { bg: 'white' });
 	mClear('dAdminMiddle')
 	for (const id of ['bSpotitStart', 'bClearAck', 'bRandomMove', 'bSkipPlayer']) hide(id);

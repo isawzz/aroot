@@ -4,40 +4,40 @@
 		<meta charset="UTF-8" />
 		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>accuse</title>
+		<title>games</title>
 		<link rel="icon" href="../base/assets/images/icons/bubble.png" style="height: 40px" />
 		<link rel="stylesheet" href="../base/assets/fonts/fonts.css" />
-		<link rel="stylesheet" href="../accuse/basemin.css" />
+		<link rel="stylesheet" href="../games/basemin.css" />
 		<script src="../base/alibs/jq3.js"></script>
 		<script src="../base/alibs/jsyaml.js"></script>
 
-		<script src="../accuse/basemin.js"></script>
-		<script src="../accuse/legacy.js"></script>
+		<script src="../games/basemin.js"></script>
+		<script src="../games/legacy.js"></script>
 
-		<script src="../accuse/apiserver.js"></script>
-		<script src="../accuse/apisimphp.js"></script>
-		<script src="../accuse/cards.js"></script>
-		<script src="../accuse/gamehelpers.js"></script>
-		<script src="../accuse/onclick.js"></script>
-		<script src="../accuse/select.js"></script>
-		<script src="../accuse/sim.js"></script>
-		<script src="../accuse/test.js"></script>
+		<script src="../games/apiserver.js"></script>
+		<script src="../games/apisimphp.js"></script>
+		<script src="../games/cards.js"></script>
+		<script src="../games/gamehelpers.js"></script>
+		<script src="../games/onclick.js"></script>
+		<script src="../games/select.js"></script>
+		<script src="../games/sim.js"></script>
+		<script src="../games/test.js"></script>
 
-		<script src="../accuse/a_game.js"></script>
-		<script src="../accuse/accuse.js"></script>
-		<script src="../accuse/aristo.js"></script>
-		<script src="../accuse/bluff.js"></script>
-		<script src="../accuse/fritz.js"></script>
-		<script src="../accuse/ferro.js"></script>
-		<script src="../accuse/feedback.js"></script>
-		<script src="../accuse/spotit.js"></script>
-		<script src="../accuse/wise.js"></script>
+		<script src="../games/a_game.js"></script>
+		<script src="../games/accuse.js"></script>
+		<script src="../games/aristo.js"></script>
+		<script src="../games/bluff.js"></script>
+		<script src="../games/fritz.js"></script>
+		<script src="../games/ferro.js"></script>
+		<script src="../games/feedback.js"></script>
+		<script src="../games/spotit.js"></script>
+		<script src="../games/wise.js"></script>
 
-		<script src="../accuse/baustelle.js"></script>
-		<script src="../accuse/baustelle2.js"></script>
-		<script src="../accuse/baustelle3.js"></script>
+		<script src="../games/baustelle.js"></script>
+		<script src="../games/baustelle2.js"></script>
+		<script src="../games/baustelle3.js"></script>
 
-		<script src="../accuse/start.js"></script>
+		<script src="../games/start.js"></script>
 	</head>
 
 	<body>
@@ -88,12 +88,13 @@
 				<button onclick="onclick_restart_move()" id="bRestartMove" style="display: none">RESTART MOVE</button>
 				&nbsp;&nbsp;&nbsp;
 				<span id="dAdvanced1" style="display: none">
+					<button onclick="onclick_restart()" id="bRestartGame" style="display: none">RESTART</button>
 					<button onclick="onclick_reset_all()">delete tables</button>
+					<button onclick="onclick_toggle_mode()" id="bToggleMode" style="display: none">just me</button>
 					<!-- <button onclick="onclick_status()">status?</button> -->
 				</span>
 				<span id="dHostButtons" style="display: none">
 					<button id="bSpotitStart" onclick="onclick_start_spotit()">spotit start</button>
-					<button onclick="onclick_restart()">RESTART</button>
 					<button id="bSkipPlayer" onclick="onclick_skip()">SKIP</button>
 					&nbsp;&nbsp;&nbsp;
 					<button id="bClearAck" onclick="onclick_ack()">CLEAR ACK</button>

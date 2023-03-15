@@ -206,22 +206,82 @@ function update_table() {
 	for (const wichtig of ['playerdata', 'notes', 'uplayer', 'uname', 'friendly', 'step', 'round', 'phase', 'stage', 'timestamp', 'modified', 'stime', 'mode', 'scoring']) {
 		if (isdef(Z[wichtig])) Z.prev[wichtig] = jsCopy(Z[wichtig]);
 	}
-	//console.log('last uplayer was',Z.prev.uplayer)
 	Z.prev.turn = Clientdata.last_turn = Clientdata.this_turn;
 
 	copyKeys(Serverdata, Z);
 
-	//console.log('playerdata', Z.playerdata, 'prev', Z.prev.playerdata);
-
 	if (isdef(Serverdata.table)) { copyKeys(Serverdata.table, Z); Z.playerlist = Z.players; copyKeys(Serverdata.table.fen, Z); }
 	assertion(isdef(Z.fen), 'no fen in Z bei cmd=table or startgame!!!', Serverdata);
 	assertion(isdef(Z.host), 'TABLE HAS NOT HOST IN UPDATE_TABLE!!!!!!!!!!!!!!')
+	assertion(!isEmpty(Z.turn), 'turn empty!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!', Z.turn);
 
 	Clientdata.this_turn = Z.turn;
 
-	set_user(U.name); //sets Z.uname
+	if (Z.game == 'accuse') { accuse_set_player(); } else { orig_set_player(); }
+	//orig_set_player();
 
-	assertion(!isEmpty(Z.turn), 'turn empty!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!', Z.turn);
+	//set playmode and strategy
+	let pl = Z.pl;
+	Z.playmode = pl.playmode; //could be human | ai | hybrid (that's for later!!!)
+	Z.strategy = valf(Clientdata.strategy, pl.strategy); //humans are really hybrids: they have default strategy 'random'
+
+	//determine whether have to present game state!
+	let [uplayer, friendly, modified] = [Z.uplayer, Z.friendly, Z.modified];
+	Z.uplayer_data = firstCond(Z.playerdata, x => x.name == Z.uplayer);
+	let sametable = !FORCE_REDRAW && friendly == Z.prev.friendly && modified <= Z.prev.modified && uplayer == Z.prev.uplayer;
+	let sameplayerdata = isEmpty(Z.playerdata_changed_for);
+	let myplayerdatachanged = Z.playerdata_changed_for.includes(Z.uplayer);
+	let specialcase = !i_am_host() && !i_am_acting_host() && !i_am_trigger() && !myplayerdatachanged;
+	Z.skip_presentation = sametable && (sameplayerdata || specialcase);
+	if (DA.TEST0 && (!sametable || !sameplayerdata)) {
+		console.log('======>Z.skip_presentation', Z.skip_presentation, '\nplayerdata_changed_for', Z.playerdata_changed_for);
+		console.log('_______ *** THE END *** ___________')
+	}
+	FORCE_REDRAW = false;
+
+}
+function get_takeoverlist(){
+	let [turn,host,uname]=[Z.turn,Z.host,Z.uname];
+	let pls = turn.filter(x => x != uname && !has_player_state(x));
+	if (isEmpty(pls)) pls = [host];
+	return pls;
+}
+function accuse_set_player() {
+
+	let [fen, turn, host, curuname] = [Z.fen, Z.fen.turn, Z.host, Z.uname];
+	//console.log('current uname',curuname)
+	let uname = valf(curuname,U.name);
+	if (DA.HOTSEAT) {
+		uname = (turn.length > 1 && turn.includes(curuname) && !has_player_state(curuname)) ? curuname : null;
+		//console.log('...',uname)
+		if (!uname) {
+			let pls = turn.filter(x => x != curuname && !has_player_state(x));
+			if (isEmpty(pls)) pls = [host];
+			uname = pls[0];
+			//console.log('...',uname,pls)
+		}
+	}
+	let upl = uname;
+	set_player(upl, fen); //sets Z.uplayer
+	assertion(uname == upl || !DA.HOTSEAT, `ambiguous player!!! uname=${uname} uplayer=${upl}`);
+
+	if (uname != curuname){
+		set_user(uname); //sets Z.uname
+		let dpic = get_user_pic(uname, 30);
+		let d = mBy('dAdminRight');
+		mClear(d);
+		mAppend(d, get_logout_button());
+		mAppend(d, dpic);
+	}
+	let role = !is_playing(uname, fen) ? 'spectator' : fen.turn.includes(uname) ? 'active' : 'inactive';
+	if (role == 'active' && has_player_state(uname)) role = 'inactive';
+	Z.role = role;
+	assertion(role == 'active' || !DA.HOTSEAT, "role is wrong!!!!!!!!!!!!!!!");
+	//console.log('upl',upl,'fen',fen,'uname',uname)
+
+}
+function orig_set_player() {
+	set_user(U.name); //sets Z.uname
 
 	//console.log('Z', Z);
 	let [fen, uname, turn, mode, host] = [Z.fen, Z.uname, Z.fen.turn, Z.mode, Z.host];
@@ -239,9 +299,9 @@ function update_table() {
 			if (!isEmpty(bots)) upl = bots[0];
 		} else if (uname == host && !is_human_player(turn[0])) {
 			upl = turn[0];
-		} else if (mode == 'hotseat') { 
-			upl = turn[0]; 
-		} 
+		} else if (mode == 'hotseat') {
+			upl = turn[0];
+		}
 	} else {
 		upl = Z.role == 'active' ? uname : turn[0];
 
@@ -253,7 +313,9 @@ function update_table() {
 	//console.log('-----------setting', upl,'\nuname',uname,'\nturn',turn,'\nprev',Z.prev.uplayer)
 	set_player(upl, fen); //sets uplayer
 	console.log('___uname:' + uname.toUpperCase(), 'uplayer:' + Z.uplayer.toUpperCase(), `(${mode})`)
+}
 
+function _orig_set_playmode_and_skip_presentation() {
 	//set playmode and strategy
 	let pl = Z.pl;
 	Z.playmode = pl.playmode; //could be human | ai | hybrid (that's for later!!!)
