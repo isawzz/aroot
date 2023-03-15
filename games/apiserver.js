@@ -252,7 +252,7 @@ function update_table() {
 
 	//console.log('-----------setting', upl,'\nuname',uname,'\nturn',turn,'\nprev',Z.prev.uplayer)
 	set_player(upl, fen); //sets uplayer
-	console.log('___uname:' + uname.toUpperCase(), 'uplayer:' + Z.uplayer.toUpperCase(), `(${mode})`)
+	//console.log('___uname:' + uname.toUpperCase(), 'uplayer:' + Z.uplayer.toUpperCase(), `(${mode})`)
 
 	//set playmode and strategy
 	let pl = Z.pl;

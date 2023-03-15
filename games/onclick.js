@@ -208,6 +208,16 @@ function onclick_skip() {
 		take_turn_fen();
 	}
 }
+function onclick_skip_membership_selection(){
+	let [game, A, fen, uplayer, plorder] = [Z.game, Z.A, Z.fen, Z.uplayer, Z.plorder];
+	for(const plname in fen.players){
+		fen.players[plname].membership = '2Hn';
+	}
+	Z.turn=get_valid_voters();
+	Z.stage = 'hand';
+	take_turn_fen();
+
+}
 function onclick_start_spotit() {
 	let [game, fen, uplayer, turn, stage] = [Z.game, Z.fen, Z.uplayer, Z.turn, Z.stage];
 	Z.stage = 'move';

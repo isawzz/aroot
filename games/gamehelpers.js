@@ -409,7 +409,7 @@ function i_am_acting_host() { return U.name == Z.fen.acting_host; }
 function i_am_trigger() { return is_multi_trigger(U.name); }
 function is_advanced_user() {
 	let advancedUsers = ['mimi', 'bob', 'buddy', 'minnow', 'nimble', 'leo']; //, 'guest', 'felix'];
-	console.log('***U', isdef(U) ? U.name : 'undefined!!!', 'secret:', DA.secretuser);
+	//console.log('***U', isdef(U) ? U.name : 'undefined!!!', 'secret:', DA.secretuser);
 	return isdef(U) && ((advancedUsers.includes(DA.secretuser) || advancedUsers.includes(U.name)));
 
 }
@@ -892,7 +892,7 @@ function show_username(loadTable=false) {
 	if (!TESTING && !DA.running) {
 		if (!loadTable) phpPost({ app: 'easy' }, 'tables'); //else console.log('no tables cmd! DA.running', DA.running);
 		else if (!isEmpty(Serverdata.tables)){
-			console.log('....Serverdata',Serverdata);
+			//console.log('....Serverdata',Serverdata);
 			onclick_table(Serverdata.tables[0].friendly); 
 		}
 	}

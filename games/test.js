@@ -969,6 +969,41 @@ function ltest0_card() { let c = ari_get_card('QSn'); mAppend(dTable, iDiv(c)); 
 //#endregion
 
 //#region fen (=local) tests
+function fentest5_emptyvotes_add_policies(){
+	let [game, A, fen, uplayer, plorder] = [Z.game, Z.A, Z.fen, Z.uplayer, Z.plorder];
+	fen.policies = ['QHn'];
+	fen.cardsrevealed = true;
+
+	Z.options.empty_votes='add policy';
+	for(const pld of Z.playerdata){
+		pld.state={card:''}
+	}
+	accuse_evaluate_votes();
+}
+function fentest4_emptyvotes_no_policies(){
+	let [game, A, fen, uplayer, plorder] = [Z.game, Z.A, Z.fen, Z.uplayer, Z.plorder];
+	fen.policies = [];
+	fen.cardsrevealed = true;
+
+	Z.options.empty_votes='add policy';
+	for(const pld of Z.playerdata){
+		pld.state={card:''}
+	}
+	accuse_evaluate_votes();
+}
+function fentest3_clear_players() {
+	let [game, A, fen, uplayer, plorder] = [Z.game, Z.A, Z.fen, Z.uplayer, Z.plorder];
+	take_turn_fen_clear();
+
+	// let pl = fen.players[plorder[0]];
+	// pl.hand = ['3Hn','3Hn', '3Hn', '3Hn'];
+	// pl = fen.players[plorder[1]];
+	// pl.journeys = [['3Cn','3Hn', '3Hn', '3Hn']];
+	// pl.goals['4'] = true;
+	// pl.hand = ['3Hn','KSn'];
+	// take_turn_fen();
+
+}
 function fentest2_accuse(){
 	TESTING = true; DA.testing = true; DA.test = { mods: [], iter: 0, maxiter: 200, running: false, step: true, suiteRunning: false, number: 0, list: [0] };
 	DA.test.end = () => { };

@@ -16,13 +16,7 @@ function accuse_evaluate_votes(){
 	//resolve votes
 	//0. check if unsuccessful (no votes)
 	if (isEmpty(votes)) {
-		console.log('EMPTY VOTES!!!!!!!!!!!!!');
-		ari_history_list(`no votes!`, 'session ends');
-		accuse_score_update('white')
-		Z.turn = jsCopy(Z.plorder);
-		Z.stage = 'round';
-		take_turn_fen_clear();
-		return;
+		eval_empty_votes(votes); return;
 	}
 	//1. check if all votes same color (consensus)
 	let color = get_color_of_card(votes[0].card); 

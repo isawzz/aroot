@@ -34,8 +34,10 @@ games:
       #mode: 'solo,hotseat,multi'
       mode: 'hotseat,multi'
       rounds: 6,2,1,4
-      policies_needed: 5,4,3,2
-      defected: draw,exchange,remove
+      policies_needed: 2,3,4,5
+      consensus: 'session,policy'
+      empty_vote: 'blank,win policy,add policy'
+      defected: 'draw,exchange,remove'
       #handsize: '+3,+2,+1,default'
   aristo:
     friendly: Aristocracy
