@@ -969,46 +969,92 @@ function ltest0_card() { let c = ari_get_card('QSn'); mAppend(dTable, iDiv(c)); 
 //#endregion
 
 //#region fen (=local) tests
-function fentest5_consensus(){
+function fentest5_coupdetat_maybe() {
 	let [game, A, fen, uplayer, plorder] = [Z.game, Z.A, Z.fen, Z.uplayer, Z.plorder];
 	fen.cardsrevealed = true;
-
-	Z.options.empty_vote='win policy';
-	for(const pld of Z.playerdata){
-		let r=rChoose(toLetters(fen.ranks));
-		let s=rChoose(toLetters('HD'));
-		pld.state={card:`${r}${s}n`};
+	for (const pld of Z.playerdata) {
+		let r = rChoose(['A','Q','K','J']);
+		let s = rChoose(toLetters('HD'));
+		pld.state = { item: `${r}${s}n` };
 	}
 	accuse_evaluate_votes();
 }
-function fentest4_emptyvotes_win_policy(){
+function fentest5_no_coupdetat() {
 	let [game, A, fen, uplayer, plorder] = [Z.game, Z.A, Z.fen, Z.uplayer, Z.plorder];
 	fen.cardsrevealed = true;
-
-	Z.options.empty_vote='win policy';
-	for(const pld of Z.playerdata){
-		pld.state={card:''}
+	Z.options.empty_vote = 'win policy';
+	Z.options.consensus = "coupdetat";
+	for (const pld of Z.playerdata) {
+		let r = 'K'; //all players tied!!!
+		let s = rChoose(toLetters('HD'));
+		pld.state = { item: `${r}${s}n` };
 	}
 	accuse_evaluate_votes();
 }
-function fentest4_emptyvotes_add_policies(){
+function fentest5_coupdetat() {
 	let [game, A, fen, uplayer, plorder] = [Z.game, Z.A, Z.fen, Z.uplayer, Z.plorder];
 	fen.cardsrevealed = true;
-
-	Z.options.empty_vote='add policy';
-	for(const pld of Z.playerdata){
-		pld.state={card:''}
+	Z.options.empty_vote = 'win policy';
+	Z.options.consensus = "coupdetat";
+	for (const pld of Z.playerdata) {
+		let r = 'A'; //all players tied!!!
+		let s = rChoose(toLetters('HD'));
+		pld.state = { item: `${r}${s}n` };
 	}
 	accuse_evaluate_votes();
 }
-function fentest4_emptyvotes_no_policies(){
+function fentest5_tied_consensus() {
+	let [game, A, fen, uplayer, plorder] = [Z.game, Z.A, Z.fen, Z.uplayer, Z.plorder];
+	fen.cardsrevealed = true;
+	Z.options.empty_vote = 'win policy';
+	Z.options.consensus = 'policy';
+	for (const pld of Z.playerdata) {
+		let r = 'Q'; //all players tied!!!
+		let s = rChoose(toLetters('HD'));
+		pld.state = { item: `${r}${s}n` };
+	}
+	accuse_evaluate_votes();
+}
+function fentest5_consensus() {
+	let [game, A, fen, uplayer, plorder] = [Z.game, Z.A, Z.fen, Z.uplayer, Z.plorder];
+	fen.cardsrevealed = true;
+
+	Z.options.empty_vote = 'win policy';
+	for (const pld of Z.playerdata) {
+		let r = rChoose(toLetters(fen.ranks));
+		let s = rChoose(toLetters('HD'));
+		pld.state = { item: `${r}${s}n` };
+	}
+	accuse_evaluate_votes();
+}
+function fentest4_emptyvotes_win_policy() {
+	let [game, A, fen, uplayer, plorder] = [Z.game, Z.A, Z.fen, Z.uplayer, Z.plorder];
+	fen.cardsrevealed = true;
+
+	Z.options.empty_vote = 'win policy';
+	for (const pld of Z.playerdata) {
+		pld.state = { item: '' }
+	}
+	accuse_evaluate_votes();
+}
+function fentest4_emptyvotes_add_policies() {
+	let [game, A, fen, uplayer, plorder] = [Z.game, Z.A, Z.fen, Z.uplayer, Z.plorder];
+	fen.cardsrevealed = true;
+
+	Z.options.empty_vote = 'add policy';
+	for (const pld of Z.playerdata) {
+		pld.state = { item: '' }
+	}
+	accuse_evaluate_votes();
+}
+function fentest4_emptyvotes_no_policies() {
 	let [game, A, fen, uplayer, plorder] = [Z.game, Z.A, Z.fen, Z.uplayer, Z.plorder];
 	fen.policies = [];
 	fen.cardsrevealed = true;
 
-	Z.options.empty_vote='add policy';
-	for(const pld of Z.playerdata){
-		pld.state={card:''}
+	Z.options.empty_vote = 'add policy';
+	for (const pld of Z.playerdata) {
+		pld.state = { item: '' }
 	}
 	accuse_evaluate_votes();
 }
@@ -1025,58 +1071,58 @@ function fentest3_clear_players() {
 	// take_turn_fen();
 
 }
-function fentest2_accuse(){
+function fentest2_accuse() {
 	TESTING = true; DA.testing = true; DA.test = { mods: [], iter: 0, maxiter: 200, running: false, step: true, suiteRunning: false, number: 0, list: [0] };
 	DA.test.end = () => { };
 	DA.auto_moves = [];
 	let numplayers = 5;
-	let list = jsCopy(Serverdata.users).map(x=>x.name);
-	let list1 = arrWithout(list,['mimi','felix']);
+	let list = jsCopy(Serverdata.users).map(x => x.name);
+	let list1 = arrWithout(list, ['mimi', 'felix']);
 	//console.log('list1',list1)
-	let playernames = arrTake(list1,numplayers-2);
-	playernames = ['mimi','felix'].concat(playernames);
-	startgame('accuse',playernames.map(x => ({ name: x, playmode: ['mimi','felix'].includes(x)?'human':'bot' })), { mode: 'hotseat' });
+	let playernames = arrTake(list1, numplayers - 2);
+	playernames = ['mimi', 'felix'].concat(playernames);
+	startgame('accuse', playernames.map(x => ({ name: x, playmode: ['mimi', 'felix'].includes(x) ? 'human' : 'bot' })), { mode: 'hotseat' });
 }
-function fentest_accuse(){
+function fentest_accuse() {
 	TESTING = true; DA.testing = true; DA.test = { mods: [], iter: 0, maxiter: 200, running: false, step: true, suiteRunning: false, number: 0, list: [0] };
 	DA.test.end = () => { };
 	DA.auto_moves = [];
 	let numplayers = 12;
-	let list = jsCopy(Serverdata.users).map(x=>x.name);
-	let list1 = arrWithout(list,['mimi','felix']);
-	console.log('list1',list1)
+	let list = jsCopy(Serverdata.users).map(x => x.name);
+	let list1 = arrWithout(list, ['mimi', 'felix']);
+	console.log('list1', list1)
 	//let list = jsCopy(Serverdata.users);
 	//['mimi','felix'].map(x=>removeInPlace(list,x));
 
-	let playernames = arrTake(list1,numplayers-2);
-	playernames = ['mimi','felix'].concat(playernames);
+	let playernames = arrTake(list1, numplayers - 2);
+	playernames = ['mimi', 'felix'].concat(playernames);
 	//playernames.unshift(U.name); //[U.name, 'felix'];
 
 	//startgame('aristo', playernames.map(x => ({ name: x, playmode: 'human' })), { mode: 'hotseat' });
-	startgame('accuse',playernames.map(x => ({ name: x, playmode: ['mimi','felix'].includes(x)?'human':'bot' })), { mode: 'multi' });
+	startgame('accuse', playernames.map(x => ({ name: x, playmode: ['mimi', 'felix'].includes(x) ? 'human' : 'bot' })), { mode: 'multi' });
 
 }
 
-function fentest_wise(){
+function fentest_wise() {
 	TESTING = true; DA.testing = true; DA.test = { mods: [], iter: 0, maxiter: 200, running: false, step: true, suiteRunning: false, number: 0, list: [0] };
 	DA.test.end = () => { };
 	DA.auto_moves = [];
 	let playernames = [U.name, 'felix'];
 
 	//startgame('aristo', playernames.map(x => ({ name: x, playmode: 'human' })), { mode: 'hotseat' });
-	startgame('wise',playernames.map(x => ({ name: x, playmode: 'human' })), { mode: 'hotseat' });
+	startgame('wise', playernames.map(x => ({ name: x, playmode: 'human' })), { mode: 'hotseat' });
 
 }
 function fentest10_ferro_end_of_round_goals() {
 	let [game, A, fen, uplayer, plorder] = [Z.game, Z.A, Z.fen, Z.uplayer, Z.plorder];
 
 	let pl = fen.players[plorder[0]];
-	pl.hand = ['3Hn','3Hn', '3Hn', '3Hn'];
+	pl.hand = ['3Hn', '3Hn', '3Hn', '3Hn'];
 
 	pl = fen.players[plorder[1]];
-	pl.journeys = [['3Cn','3Hn', '3Hn', '3Hn']];
+	pl.journeys = [['3Cn', '3Hn', '3Hn', '3Hn']];
 	pl.goals['4'] = true;
-	pl.hand = ['3Hn','KSn'];
+	pl.hand = ['3Hn', 'KSn'];
 
 	take_turn_fen();
 

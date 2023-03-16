@@ -6,7 +6,7 @@ function accuse_evaluate_votes() {
 	let votes = [];
 	for (const pldata of Z.playerdata) {
 		let plname = pldata.name;
-		let card = pldata.state.card;
+		let card = pldata.state.item;
 		if (!isEmpty(card)) votes.push({ plname: plname, card: card });
 		else removeInPlace(fen.validvoters, plname);
 	}
@@ -71,7 +71,7 @@ function accuse_evaluate_votes() {
 
 function accuse_show_selected_state(state) {
 	let [fen, uplayer, stage] = [Z.fen, Z.uplayer, Z.stage];
-	let mystate = state.card;
+	let mystate = state.item;
 	if (!isEmpty(mystate)) {
 		let handui = lookup(UI, ['players', uplayer, 'hand']);
 		let items = handui.items;

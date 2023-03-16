@@ -3,7 +3,7 @@ function accuse_ai_move(bot) {
 	let [pl, fen, stage] = [Z.fen.players[bot], Z.fen, Z.stage];
 	if (stage == 'hand') {
 		//this is where hand card or empty can be played
-		pl.move = { state: { card: '' } }
+		pl.move = { state: { item: '' } }
 	} else if (stage == 'membership') {
 		//this is where a membership card has to be chosen
 	}
@@ -64,11 +64,11 @@ function accuse_show_sitting_order(fen) {
 	}
 
 }
-function arrSame(arr,func){
+function arrSame(arr, func) {
 	if (isEmpty(arr)) return true;
-	let x=func(arr[0]);
-	for(let i=1;i<arr.length;i++){
-		if (func(arr[i])!=x) return false;
+	let x = func(arr[0]);
+	for (let i = 1; i < arr.length; i++) {
+		if (func(arr[i]) != x) return false;
 	}
 	return x;
 }
@@ -109,8 +109,15 @@ function get_policies_to_win() {
 }
 function get_player_data(plname) { return firstCond(Z.playerdata, x => x.name == plname); }
 function get_player_state(plname) { let pld = get_player_data(plname); return pld ? pld.state : null; }
-function get_player_card(plname) { let pld = get_player_data(plname); return pld ? pld.state.card : null; }
+function get_player_card(plname) { let pld = get_player_data(plname); return pld ? pld.state.item : null; }
+function getRankOf(ckey, ranks) {
+	if (is_nc_card(ckey)) return Number(stringBefore(x, '_'));
+	if (nundef(ranks)) ranks = valf(lookup(Z, ['fen', 'ranks']), 'A23456789TJQK');
+	return ckey[0];
+}
 function has_player_state(plname) { let pld = get_player_data(plname); return pld ? pld.state : false; }
+function is_ace(ckey){return ckey[0]=='A' || firstNumber(ckey)==1;}
+function is_nc_card(ckey) { return ckey.includes('_'); }
 function show_takeover_ui() {
 
 	DA.omnipower = true;
@@ -124,8 +131,8 @@ function show_takeover_ui() {
 
 	let dTakeover = mBy('dTakeover'); show(dTakeover); mClear(dTakeover);
 	dTakeover.innerHTML = '' + stage + ': ';
-	let pls = turn.filter(x=>x!=uname && !has_player_state(x));
-	if (isEmpty(pls)) pls=[host];
+	let pls = turn.filter(x => x != uname && !has_player_state(x));
+	if (isEmpty(pls)) pls = [host];
 	//console.log('host is',host, 'pls is',pls)
 	for (const plname of pls) {
 		let pic = get_user_pic(plname, sz = 35, border = 'solid medium white');
@@ -134,16 +141,36 @@ function show_takeover_ui() {
 		mAppend(dTakeover, pic);
 	}
 }
+function sortCardsByRank(arr, ranks) {
+	if (isEmpty(arr)) return [];
+	if (is_nc_card(arr[0])) return sortByFunc(arr, x => Number(stringBefore(x, '_')));
+	if (nundef(ranks)) ranks = valf(lookup(Z, ['fen', 'ranks']), 'A23456789TJQK');
+	return sortByFunc(arr, x => ranks.indexOf(x[0]));
+}
+function sortCardsByRankDesc(arr, ranks) {
+	let res = sortCardsByRank(arr, ranks);
+	return arrReverse(res);
+}
+function sortCardObjectsByRank(arr, ranks, ckeyprop) {
+	if (isEmpty(arr)) return [];
+	if (is_nc_card(arr[0][ckeyprop])) return sortByFunc(arr, x => Number(stringBefore(x[ckeyprop], '_')));
+	if (nundef(ranks)) ranks = valf(lookup(Z, ['fen', 'ranks']), 'A23456789TJQK');
+	return sortByFunc(arr, x => ranks.indexOf(x[ckeyprop][0]));
+}
+function sortCardObjectsByRankDesc(arr, ranks, ckeyprop) {
+	let res = sortCardObjectsByRank(arr, ranks, ckeyprop);
+	return arrReverse(res);
+}
 function there_are_bots() {
 	let players = get_values(Z.fen.players);
 	return firstCond(players, x => x.playmode != 'human');
 
 }
-function transferToPlayer(plname){
+function transferToPlayer(plname) {
 	stopgame();
 	clear_screen();
 	set_user(plname);	//U = firstCond(Serverdata.users, x => x.name == plname);	//localStorage.setItem('uname', U.name); DA.secretuser = U.name;
-	assertion(U.name == plname,'set_user nicht geklappt!!!!!!!')
+	assertion(U.name == plname, 'set_user nicht geklappt!!!!!!!')
 	show_username(true);
 }
 function turn_has_bots_that_must_move() {

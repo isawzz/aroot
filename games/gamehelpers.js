@@ -229,6 +229,15 @@ function collect_game_specific_options(game) {
 	if (nundef(poss)) return;
 	let di = {};
 	for (const p in poss) {
+
+		let key = p;
+		let vals = poss[p];
+		if (isString(vals) && vals.split(',').length <= 1){
+			//set option directly
+			di[p] = isNumber(vals) ? Number(vals) : vals;
+			continue;
+		}
+
 		let fs = mBy(`d_${p}`);
 		//console.log('fs',fs, 'key',p);
 		let val = get_checked_radios(fs)[0];
@@ -579,6 +588,10 @@ function show_game_options(dParent, game) {
 		let val = poss[p];
 		if (isString(val)) {
 			let list = val.split(','); // make a list 
+
+			//if list only contains 1 item, this option is set without displaying the options!
+			if (list.length <= 1) continue;
+
 			let fs = mRadioGroup(dParent, {}, `d_${key}`, key);
 			//let func = pool=='mode'?adjust_playmodes:null;
 			for (const v of list) { mRadio(v, isNumber(v) ? Number(v) : v, key, fs, { cursor: 'pointer' }, null, key, true); }

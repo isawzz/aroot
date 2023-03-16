@@ -4510,8 +4510,6 @@ class Karte {
 		let di2 = { spades: 'spade suit', hearts: 'heart suit', diamonds: 'diamond suit', clubs: 'club suit' };
 		if (isdef(di2[key])) key = di2[key];
 		let info = Syms[key];
-		//return Karte.c1(info, 2, 'black', 300); MUELL
-		//return Karte.card(info, 2, 'black', 300); MUELL
 		return Karte.get(key, 300, rank, fg);
 		let fz = info.family == 'emoNoto' ? 750 : 1000;
 	}
