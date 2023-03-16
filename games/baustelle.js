@@ -27,9 +27,9 @@ function eval_consensus(votes, color) {
 		if (!end) { start_new_poll(); }
 	} else if (opt == "coupdetat") {
 		let ace_present = vsorted.find(x => is_ace(x.card));
-		console.log('ace_present', ace_present);
+		//console.log('ace_present', ace_present);
 		if (isdef(ace_present)) {
-			ari_history_list(`coup d'etat succeeded! session to ${color}!`, 'session ends');
+			ari_history_list(`coup succeeded! session to ${color}!`, 'session ends');
 			accuse_score_update(color);
 			Z.turn = jsCopy(Z.plorder);
 			Z.stage = 'round';

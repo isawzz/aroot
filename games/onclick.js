@@ -213,7 +213,7 @@ function onclick_skip_membership_selection(){
 	for(const plname in fen.players){
 		fen.players[plname].membership = '2Hn';
 	}
-	fen.policies = ['QHn'];
+	//fen.policies = ['QHn'];
 
 	start_new_poll();
 
