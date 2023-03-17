@@ -1,4 +1,14 @@
 
+function consensus_vote_payer() {
+	let [A, uplayer, fen] = [Z.A, Z.uplayer, Z.fen];
+	let plname = A.items[A.selected[0]].a;
+	console.log('player', Z.uplayer, 'selects', plname);
+	Z.state = { item: plname };
+	ari_history_list(`${uplayer} selects ${plname}`, 'consensus tie');
+	take_turn_multi();
+
+}
+
 function sort_by_rank(olist,prop='card',ranks='KQJT98765432A'){
 
 }
