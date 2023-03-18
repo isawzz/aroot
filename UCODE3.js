@@ -1,4 +1,46 @@
 
+function presentcards_old(h) {
+	if (startsWith(Z.stage, 'hand')) {
+		let donelist = Z.playerdata.filter(x => isDict(x.state) && isdef(x.state.item));
+		//let reveal = donelist.length >= turn.length
+		for (const pld of donelist) {
+			let plname = pld.name;
+			let plui = lookup(UI, ['stats', plname]);
+			let dcard = plui.dcard;
+
+			if (isEmpty(arrChildren(dcard))) {
+				// console.log('dcard',dcard)
+				let card = pld.state.item;
+				let actualcard = plui.actualcard = !isEmpty(card)
+				let card1 = plui.card = ari_get_card(actualcard ? card : 'AHn', h)
+				mAppend(dcard, iDiv(card1));
+			}
+			if (!Z.fen.cardsrevealed || !plui.actualcard) face_down(plui.card);
+		}
+	}
+}
+
+function presentcards(h) {
+	if (startsWith(Z.stage, 'hand')) {
+		let donelist = Z.playerdata.filter(x => isDict(x.state) && isdef(x.state.item));
+		//let reveal = donelist.length >= turn.length
+		for (const pld of donelist) {
+			let plname = pld.name;
+			let plui = lookup(UI, ['stats', plname]);
+			let dcard = plui.dcard;
+
+			if (isEmpty(arrChildren(dcard))) {
+				// console.log('dcard',dcard)
+				let card = pld.state.item;
+				let actualcard = plui.actualcard = !isEmpty(card)
+				let card1 = plui.card = ari_get_card(actualcard ? card : 'AHn', h)
+				mAppend(dcard, iDiv(card1));
+			}
+			if (!Z.fen.cardsrevealed || !plui.actualcard) face_down(plui.card);
+		}
+	}
+}
+
 function consensus_vote_payer() {
 	let [A, uplayer, fen] = [Z.A, Z.uplayer, Z.fen];
 	let plname = A.items[A.selected[0]].a;

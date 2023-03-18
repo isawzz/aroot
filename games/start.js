@@ -339,7 +339,7 @@ function take_turn_fen() { take_turn(); }
 
 function take_turn_spotit() { take_turn(true, true); }
 
-function take_turn_fen_clear() { take_turn(true, false, true); }
+function take_turn_fen_clear() { take_turn(true, false, true);  }
 
 function take_turn_fen_write() { take_turn(true, true); }
 
@@ -357,7 +357,7 @@ function take_turn(write_fen = true, write_player = false, clear_players = false
 	if (isdef(Z.fen)) o.fen = Z.fen;
 	if (write_fen) { assertion(isdef(Z.fen) && isdef(Z.fen.turn), 'write_fen without fen!!!!'); o.write_fen = true; }
 	if (write_player) { o.write_player = true; o.state = Z.state; } //console.log('writing playerstate for', Z.uplayer, Z.state); }
-	if (clear_players) {o.clear_players = true;delete Z.playerdata;}
+	if (clear_players) {o.clear_players = true;delete Z.playerdata;delete o.fen.pldata;}
 	o.player_status = player_status;
 	let cmd = 'table';
 	//console.log('sending',o)

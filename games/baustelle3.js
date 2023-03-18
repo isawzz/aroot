@@ -12,13 +12,13 @@ function accuse_evaluate_votes() {
 	let [stage, A, fen, phase, uplayer, turn, uname, host] = [Z.stage, Z.A, Z.fen, Z.phase, Z.uplayer, Z.turn, Z.uname, Z.host];
 	assertion(uplayer == host && fen.cardsrevealed, 'NOT THE STARTER WHO COMPLETES THE STAGE!!!')
 	let votes = [];
-	for (const pldata of Z.playerdata) {
+	for (const pldata of fen.pldata) { //Z.playerdata) {
 		let plname = pldata.name;
 		let card = pldata.state.item;
 		if (!isEmpty(card)) votes.push({ plname: plname, card: card });
 		else removeInPlace(fen.validvoters, plname);
 	}
-	ari_history_list(votes.map(x => `${x.plname} ${x.card}`), 'poll');
+	ari_history_list(votes.map(x => `${x.plname} ${x.card}`), 'votes');
 
 	//resolve votes
 	//0. check if unsuccessful (no votes)
@@ -29,50 +29,9 @@ function accuse_evaluate_votes() {
 	if (color) { eval_consensus(votes, color); return; }
 
 	//2. check single winner if any (presidency)
-	//sort votes by rank
-	let ranks = 'KQJT98765432A';
-	let vsorted = sortByFunc(votes, x => ranks.indexOf(x.card[0]));
-	//schau ob eindeutig!
-	let winning_vote = vsorted[0];
-	if (votes.length > 1 && vsorted[1].card[0] == vsorted[0].card[0]) {
-		winning_vote = null;
-	}
-	if (winning_vote) {
-		let plwinner = winning_vote.plname;
-		console.log('...WINNER PRESIDENT!!!!!!!!!!!!!', plwinner, winning_vote.card);
-		//return all pending cards (from previous votes) to resp hands
-		for (const plname in fen.players) {
-			let pl = fen.players[plname];
-			if (!isEmpty(pl.pending)) pl.pending.map(x => pl.hand.push(x));
-			delete pl.pending;
-		}
-		//discard winning vote
-		removeInPlace(fen.players[plwinner].hand, winning_vote.card);
-		fen.deck_discard.push(winning_vote.card);
-		fen.president = plwinner;
-		fen.isprovisional = false;
-		ari_history_list(`${plwinner} wins presidency!`, 'president');
-		Z.turn = [plwinner];
-		Z.stage = 'president';
-		take_turn_fen_clear();
-		return;
-	}
-
-	// console.log('STOP! Tie!!!!!!!!!!!!!', vsorted); return;
-	//console.log('Tie!!!!!!!!!!!!!', vsorted);
-	ari_history_list(`tie!`, 'new poll round');
-	//played cards go into pending
-	for (const v of vsorted) {
-		let plname = v.plname;
-		let pl = fen.players[plname];
-		lookupAddToList(pl, ['pending'], v.card)
-		removeInPlace(pl.hand, v.card);
-	}
-	//stage goes to hand
-	Z.turn = get_valid_voters(); //vsorted.map(x => x.plname); //only active voters remain in poll
-	Z.stage = 'hand';
-	fen.cardsrevealed = false;
-	take_turn_fen_clear();
+	let max_votes = get_max_votes(votes);
+	if (max_votes.length == 1) { eval_president(max_votes[0]); }
+	else { eval_tie(max_votes, votes); }
 
 
 }
@@ -158,9 +117,9 @@ function check_enough_policies() {
 	let arr = arrTakeLast(fen.policies, fen.stability);
 	let color = arrAllSame(arr, get_color_of_card);
 	if (color && arr.length >= fen.stability) {
-		//session ends here!!! 
+		//generation ends here!!! 
 		fen.dominance = true;
-		ari_history_list(`${color} dominance reached!`, 'session ends')
+		ari_history_list(`${color} dominance reached!`, 'generation ends')
 
 		//update score
 		accuse_score_update(color);
@@ -175,75 +134,13 @@ function check_enough_policies() {
 	}
 
 }
-function eval_consensus(votes, color) {
-	let [stage, A, fen, phase, uplayer, turn, uname, host] = [Z.stage, Z.A, Z.fen, Z.phase, Z.uplayer, Z.turn, Z.uname, Z.host];
-
-	//check ob es eindeutiges maximum rank gibt
-	let vsorted = sortCardObjectsByRankDesc(votes, fen.ranks, 'card');
-	//console.log(vsorted.map(x => x.card));
-	//console.log('...CONSENSUS!!!!!!!!!!!!!', color, votes);
-
-	let opt = valf(Z.options.consensus, 'policy');
-
-	if (opt == 'policy') {
-		fen.policies.push(color == 'red' ? 'QDn' : 'QSn'); //last_policy);
-		fen.validvoters = jsCopy(Z.plorder);
-		let end = check_enough_policies();
-		//console.log('enough policies', end)
-		if (!end) { start_new_poll(); }
-	} else if (opt == "coupdetat") {
-		let ace_present = vsorted.find(x => is_ace(x.card));
-		//console.log('ace_present', ace_present);
-		if (isdef(ace_present)) {
-			ari_history_list(`coup succeeded! session to ${color}!`, 'session ends');
-			accuse_score_update(color);
-			Z.turn = jsCopy(Z.plorder);
-			Z.stage = 'round';
-			take_turn_fen_clear();
-		} else { //just add a policy
-			fen.policies.push(color == 'red' ? 'QDn' : 'QSn'); 
-			fen.validvoters = jsCopy(Z.plorder);
-			let end = check_enough_policies();
-			if (!end) { start_new_poll(); }
-		}
-	} else if (opt == 'session') {
-		ari_history_list(`consensus on ${color}!`, 'session ends');
-		accuse_score_update(color);
-		Z.turn = jsCopy(Z.plorder);
-		Z.stage = 'round';
-		take_turn_fen_clear();
-	} else if (opt == 'playerpolicy') { // opt == 'policy'
-		//what if there is a tie?
-		let tie = vsorted.length > 1 && getRankOf(vsorted[0].card) == getRankOf(vsorted[1].card);
-		if (tie) {
-			//need to go into a dialogue: each of the tied players must select a victim (tied player) who will pay!
-			let maxrank = getRankOf(vsorted[0].card);
-			let tied_votes = arrTakeWhile(vsorted, x => getRankOf(x.card) == maxrank);
-			let tied_players = tied_votes.map(x => x.plname);
-			console.log('tied', tied_votes, tied_players);
-			Z.turn = tied_players;
-			Z.stage = 'tied_consensus';
-			fen.tied_votes = tied_votes;
-			take_turn_fen_clear();
-		} else {
-			let winner = vsorted[0];
-			//remove winning vote from player hand and add it to policies!
-			fen.policies.push(winner.card);
-			removeInPlace(fen.players[winner.plname].hand, winner.card);
-			fen.validvoters = jsCopy(Z.plorder);
-			let end = check_enough_policies();
-			//console.log('enough policies', end)
-			if (!end) { start_new_poll(); }
-		}
-	}
-}
 function eval_empty_votes(votes) {
 	let [stage, A, fen, phase, uplayer, turn, uname, host] = [Z.stage, Z.A, Z.fen, Z.phase, Z.uplayer, Z.turn, Z.uname, Z.host];
 	//console.log('pldata', Z.playerdata.map(x => x.state))
 	//console.log('EMPTY VOTES!!!!!!!!!!!!!');
 	let opt = valf(Z.options.empty_vote, 'add policy');
 	if (opt == 'blank' || isEmpty(fen.policies)) {
-		ari_history_list(`no votes!`, 'session ends blank');
+		ari_history_list(`no votes!`, 'generation ends blank');
 		accuse_score_update('white')
 		Z.turn = jsCopy(Z.plorder);
 		Z.stage = 'round';
@@ -253,12 +150,13 @@ function eval_empty_votes(votes) {
 		console.log('add policy, last:', last_policy)
 		fen.policies.push(last_policy);
 		fen.validvoters = jsCopy(Z.plorder);
-		let end = check_enough_policies();
-		console.log('enough policies', end)
-		if (!end) { start_new_poll(); }
-	} else { //session end: last policy color wins!
+		check_enough_policies_or_start_new_poll(`no one voted: policy repeat`);
+		// let end = check_enough_policies();
+		// console.log('enough policies', end)
+		// if (!end) { start_new_poll(); }
+	} else { //generation end: last policy color wins!
 		let color = get_color_of_card(arrLast(fen.policies))
-		ari_history_list(`no votes!`, `session ends ${color}`);
+		ari_history_list(`no votes!`, `generation ends ${color}`);
 		accuse_score_update(color)
 		Z.turn = jsCopy(Z.plorder);
 		Z.stage = 'round';
@@ -310,7 +208,7 @@ function getRankOf(ckey, ranks) {
 	return ckey[0];
 }
 function has_player_state(plname) { let pld = get_player_data(plname); return pld ? pld.state : false; }
-function is_ace(ckey){return ckey[0]=='A' || firstNumber(ckey)==1;}
+function is_ace(ckey) { return ckey[0] == 'A' || firstNumber(ckey) == 1; }
 function is_nc_card(ckey) { return ckey.includes('_'); }
 function show_takeover_ui() {
 
@@ -354,14 +252,6 @@ function sortCardObjectsByRank(arr, ranks, ckeyprop) {
 function sortCardObjectsByRankDesc(arr, ranks, ckeyprop) {
 	let res = sortCardObjectsByRank(arr, ranks, ckeyprop);
 	return arrReverse(res);
-}
-function start_new_poll() {
-	Z.stage = 'hand';
-	Z.fen.cardsrevealed = false;
-	Z.turn = get_valid_voters();
-	//console.log('...turn', Z.turn)
-	take_turn_fen_clear();
-
 }
 function there_are_bots() {
 	let players = get_values(Z.fen.players);

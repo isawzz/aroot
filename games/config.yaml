@@ -35,7 +35,7 @@ games:
       mode: 'hotseat,multi'
       rounds: 6,2,1,4
       stability: 2,3,4,5
-      consensus: "policy,coupdetat" # 'session,playerpolicy,policy'
+      consensus: "policy,coupdetat" # 'generation,playerpolicy,policy'
       empty_vote: 'blank,win policy,add policy'
       defected: remove #'draw,exchange,remove'
       #handsize: '+3,+2,+1,default'

@@ -208,15 +208,45 @@ function onclick_skip() {
 		take_turn_fen();
 	}
 }
-function onclick_skip_membership_selection(){
+function onclick_skip_membership_selection() {
 	let [game, A, fen, uplayer, plorder] = [Z.game, Z.A, Z.fen, Z.uplayer, Z.plorder];
-	for(const plname in fen.players){
-		fen.players[plname].membership = '2Hn';
+	for (const pld of Z.playerdata) {
+		if (isDict(pld.state)) continue;
+		let plname = pld.name;
+		let pl = fen.players[plname];
+		pld.state = { item: rChoose(pl.hand) };
 	}
-	//fen.policies = ['QHn'];
 
-	start_new_poll();
+	relegate_to_host(Z.playerdata);
+	//accuse_evaluate_votes();
+	// let [game, A, fen, uplayer, plorder] = [Z.game, Z.A, Z.fen, Z.uplayer, Z.plorder];
+	// for (const plname in fen.players) {
+	// 	fen.players[plname].membership = '2Hn';
+	// }
+	// //fen.policies = ['QHn'];
+	// start_new_poll();
 
+}
+function onclick_vote_empty() {
+	let [game, A, fen, uplayer, plorder] = [Z.game, Z.A, Z.fen, Z.uplayer, Z.plorder];
+	for (const pld of Z.playerdata) {
+		if (isDict(pld.state)) continue;
+		pld.state = { item: '' };
+	}
+
+	relegate_to_host(Z.playerdata);
+	//accuse_evaluate_votes();
+}
+function onclick_vote_random() {
+	let [game, A, fen, uplayer, plorder] = [Z.game, Z.A, Z.fen, Z.uplayer, Z.plorder];
+	for (const pld of Z.playerdata) {
+		if (isDict(pld.state)) continue;
+		let plname = pld.name;
+		let pl = fen.players[plname];
+		pld.state = { item: (coin() ? '' : rChoose(pl.hand)) };
+	}
+	relegate_to_host(Z.playerdata);
+	//accuse_evaluate_votes();
 }
 function onclick_start_spotit() {
 	let [game, fen, uplayer, turn, stage] = [Z.game, Z.fen, Z.uplayer, Z.turn, Z.stage];
@@ -256,12 +286,12 @@ function onclick_user(uname) {
 	mFadeClear('dUsers', 300);
 
 }
-function onclick_view_buildings(){
+function onclick_view_buildings() {
 	let [game, fen, uplayer, turn, stage] = [Z.game, Z.fen, Z.uplayer, Z.turn, Z.stage];
 	let buildings = UI.players[uplayer].buildinglist;
 
-	for(const b of buildings) b.items.map(x=>face_up(x));
-	TO.buildings = setTimeout(hide_buildings,5000);
+	for (const b of buildings) b.items.map(x => face_up(x));
+	TO.buildings = setTimeout(hide_buildings, 5000);
 	//console.log('buildings',buildings);
 }
 
