@@ -2,16 +2,21 @@ function accuse_get_card(ckey, h, w, ov = .3) {
 	//console.log('ckey', ckey);
 	let type = ckey[2];
 	let sz = { largecard: 100, smallcard: 50 };
-	let info = to_aristocard(ckey, sz.largecard, BLUE);
+
+	let info = get_c52j_info(ckey);
+
 	let card = cardFromInfo(info, h, w, ov);
 	return card;
 }
-function accuse_get_card_func(hcard=80,backcolor=BLUE) {
+
+function accuse_get_card_func(hcard = 80, backcolor = BLUE) {
 	return (ckey, h, w, ov = .3) => {
 		//console.log('ckey', ckey);
 		let type = ckey[2];
 		let sz = { largecard: 100, smallcard: 50 };
-		let info = to_aristocard(ckey, hcard, backcolor);
+
+		let info = get_c52j_info(ckey);
+
 		let card = cardFromInfo(info, hcard, w, ov);
 		return card;
 	}
@@ -187,6 +192,45 @@ function find_jolly_rank(j, rankstr = 'A23456789TJQKA') {
 function get_color_of_card(ckey) { return ['H', 'D'].includes(ckey[1]) ? 'red' : 'black'; }
 function get_group_rank(j) { let non_jolly_key = firstCond(j, x => !is_jolly(x)); return non_jolly_key[0]; }
 function get_sequence_suit(j) { let non_jolly_key = firstCond(j, x => !is_jolly(x)); return non_jolly_key[1]; }
+function get_c52j_info(ckey,backcolor){
+	// let info = to_aristocard(ckey, sz.largecard, BLUE);
+	let info;
+	if (ckey[1]=='J'){
+		info={
+			c52key: `card_${ckey[0]}J`,
+			color: backcolor, //"#e6194B",
+			friendly: "Joker",
+			key: ckey, //'*Hn',
+			h: 100,
+			irank: 14,
+			isort: 100,
+			isuit: 3,
+			ov: 0.25,
+			rank: ckey[0],
+			short: "J",
+			suit: ckey[0]=='0'?'H':'S',
+			sz: 100,
+			val: 0,
+			w: 70,
+		}
+
+	}else{
+		info=jsCopy(C52Cards[ckey.substring(0, 2)]);
+
+	}
+	info.key = ckey;
+	info.cardtype = ckey[2];
+	let [r, s] = [info.rank, info.suit];
+	info.val = r == 'A' ? 1 : 'TJQK'.includes(r) ? 10 : Number(r);
+	info.color = BLUE;
+	info.sz = info.h = sz;
+	info.w = valf(w, sz * .7);
+	let ranks = valf(lookup(Z, ['fen', 'ranks']), '01A23456789TJQK'); //Z.fen.ranks;
+	info.irank = ranks.indexOf(r);
+	info.isuit = 'SHCD'.indexOf(s);
+	info.isort = info.isuit * ranks.length + info.irank;
+	return info;
+}
 function get_joker_info() {
 	return {
 		c52key: `card_0J`, //'card_1J', //`card_${1+n%2}`,

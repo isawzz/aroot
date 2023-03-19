@@ -114,7 +114,7 @@ function arrSame(arr, func) {
 function check_enough_policies() {
 	let [stage, A, fen, phase, uplayer, turn, uname, host] = [Z.stage, Z.A, Z.fen, Z.phase, Z.uplayer, Z.turn, Z.uname, Z.host];
 	//look if last X policies are same color =>dominance
-	let arr = arrTakeLast(fen.policies, fen.stability);
+	let arr = arrTakeLast(fen.policies, fen.stability - fen.crisis);
 	let color = arrAllSame(arr, get_color_of_card);
 	if (color && arr.length >= fen.stability) {
 		//generation ends here!!! 
@@ -136,33 +136,13 @@ function check_enough_policies() {
 }
 function eval_empty_votes(votes) {
 	let [stage, A, fen, phase, uplayer, turn, uname, host] = [Z.stage, Z.A, Z.fen, Z.phase, Z.uplayer, Z.turn, Z.uname, Z.host];
-	//console.log('pldata', Z.playerdata.map(x => x.state))
-	//console.log('EMPTY VOTES!!!!!!!!!!!!!');
-	let opt = valf(Z.options.empty_vote, 'add policy');
-	if (opt == 'blank' || isEmpty(fen.policies)) {
-		ari_history_list(`no votes!`, 'generation ends blank');
-		accuse_score_update('white')
-		Z.turn = jsCopy(Z.plorder);
-		Z.stage = 'round';
-		take_turn_fen_clear();
-	} else if (opt == 'add policy') {
-		let last_policy = arrLast(fen.policies);
-		console.log('add policy, last:', last_policy)
+	let last_policy = arrLast(fen.policies);
+	if (last_policy) {
+		// console.log('add policy, last:', last_policy)
 		fen.policies.push(last_policy);
-		fen.validvoters = jsCopy(Z.plorder);
-		check_enough_policies_or_start_new_poll(`no one voted: policy repeat`);
-		// let end = check_enough_policies();
-		// console.log('enough policies', end)
-		// if (!end) { start_new_poll(); }
-	} else { //generation end: last policy color wins!
-		let color = get_color_of_card(arrLast(fen.policies))
-		ari_history_list(`no votes!`, `generation ends ${color}`);
-		accuse_score_update(color)
-		Z.turn = jsCopy(Z.plorder);
-		Z.stage = 'round';
-		take_turn_fen_clear();
 	}
-
+	fen.validvoters = jsCopy(Z.plorder);
+	check_enough_policies_or_start_new_poll(`no one voted: policy repeat`);
 }
 function get_bots_on_turn() {
 	let players = Z.turn;
@@ -220,6 +200,8 @@ function show_takeover_ui() {
 	if (mode != 'multi') return;
 
 	if (turn.length > 1 && turn.includes(uname) && !has_player_state(uname)) return;
+
+	if (turn.length == 1 && turn[0] == uplayer) return;
 
 	let dTakeover = mBy('dTakeover'); show(dTakeover); mClear(dTakeover);
 	dTakeover.innerHTML = '' + stage + ': ';

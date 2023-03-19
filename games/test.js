@@ -969,11 +969,23 @@ function ltest0_card() { let c = ari_get_card('QSn'); mAppend(dTable, iDiv(c)); 
 //#endregion
 
 //#region fen (=local) tests
+function fentest7_jokers() {
+	mClear(dTable);
+	for (const k of [0, 1]) {
+		let card = accuse_get_card(`${k}Jn`, 140);
+		mAppend(dTable, iDiv(card));
+		console.log('svg',iDiv(card))
+	}
+}
+function fentest6_start5() { start_game_with_players(5); }
+function fentest6_start8() { start_game_with_players(8); }
+function fentest6_start14() { start_game_with_players(14); }
+
 function fentest5_coupdetat_maybe() {
 	let [game, A, fen, uplayer, plorder] = [Z.game, Z.A, Z.fen, Z.uplayer, Z.plorder];
 	fen.cardsrevealed = true;
 	for (const pld of Z.playerdata) {
-		let r = rChoose(['A','Q','K','J']);
+		let r = rChoose(['A', 'Q', 'K', 'J']);
 		let s = rChoose(toLetters('HD'));
 		pld.state = { item: `${r}${s}n` };
 	}

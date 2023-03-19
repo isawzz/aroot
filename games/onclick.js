@@ -248,6 +248,18 @@ function onclick_vote_random() {
 	relegate_to_host(Z.playerdata);
 	//accuse_evaluate_votes();
 }
+function onclick_vote_red() {
+	let [game, A, fen, uplayer, plorder] = [Z.game, Z.A, Z.fen, Z.uplayer, Z.plorder];
+	for (const pld of Z.playerdata) {
+		if (isDict(pld.state)) continue;
+		let plname = pld.name;
+		let pl = fen.players[plname];
+		let list = pl.hand.filter(x=>get_color_of_card(x)=='red');
+		pld.state = { item: isEmpty(list)?'':rChoose(list) };
+	}
+	relegate_to_host(Z.playerdata);
+	//accuse_evaluate_votes();
+}
 function onclick_start_spotit() {
 	let [game, fen, uplayer, turn, stage] = [Z.game, Z.fen, Z.uplayer, Z.turn, Z.stage];
 	Z.stage = 'move';

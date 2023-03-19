@@ -20,7 +20,7 @@ function accuse() {
 		let plorder = fen.plorder;
 		let num = Math.ceil(players.length / 2)
 		let deck_identities = fen.deck_identities = [];
-		let ranks = fen.ranks = 'A23456789TJQK'; //'KQJT98765432A';
+		let ranks = fen.ranks = '01A23456789TJQK'; //'KQJT98765432A';
 		for (let i = 0; i < num; i++) { deck_identities.push(ranks[i] + 'Hh'); deck_identities.push(ranks[i] + 'Sh'); }
 		shuffle(deck_identities);
 
@@ -193,7 +193,7 @@ function accuse_activate() {
 	//if (!isEmpty(donelist)) console.log('.................donelist',donelist)
 	let complete = ['hand', 'membership', 'tied_consensus'].includes(stage) && donelist.length >= turn.length || stage == 'round' && firstCond(pldata, x => isDict(x.state));
 	if (complete && !sameList(turn, [Z.host])) {
-		console.log('COMPLETE! donelist',donelist)
+		console.log('COMPLETE! donelist', donelist)
 		relegate_to_host(donelist);
 		return;
 	}
@@ -246,14 +246,14 @@ function accuse_activate() {
 		take_turn_fen_clear();
 	} else if (stage == 'president') {
 		let parley_action_available = get_others_with_at_least_one_hand_card().length >= 1;
-		if (parley_action_available){
-			select_add_items(ui_get_string_items(['parley']), president_parley, 'may parley cards', 0, 1);	
-		}else{
+		if (parley_action_available) {
+			select_add_items(ui_get_string_items(['parley']), president_parley, 'may parley cards', 0, 1);
+		} else {
 			//proceed to president_2
 			Z.stage = 'president_2';
 			accuse_activate();
 		}
-	}else if (stage == 'president_2'){
+	} else if (stage == 'president_2') {
 		let accuse_action_available = !fen.isprovisional || fen.players[uplayer].hand.length >= 1;
 		let actions = ['defect', 'resign'];
 		if (accuse_action_available) actions.unshift('accuse');
@@ -298,7 +298,7 @@ function accuse_activate() {
 		}
 	} else {
 		//console.log('Z',Z)
-		alert('PROBLEM!!!')
+		alert(`PROBLEM!!! unknown stage ${stage}`)
 	}
 }
 
@@ -365,6 +365,7 @@ function accuse_submit_accused_color() {
 		Z.turn = [accused];
 		//console.log(fen.players[uplayer], fen.players[uplayer].hand, card)
 		fen.players[uplayer].hand.push(card);
+		fen.wrong_guesses = 0;
 		delete fen.players[accused].membership;
 		Z.stage = 'accuse_action_entlarvt';
 		take_turn_fen();
@@ -372,6 +373,7 @@ function accuse_submit_accused_color() {
 		//console.log('PRESIDENT GUESSES WRONG!!!!!!!!!!!!');
 		Z.turn = [accused];
 		fen.players[accused].hand.push(card);
+		fen.wrong_guesses += 1;
 		//fen.president = accused;
 		//fen.isprovisional = true;
 		delete fen.players[accused].membership;
@@ -435,22 +437,31 @@ function accuse_enact_policy() {
 }
 function set_new_president() {
 	let fen = Z.fen;
-	fen.president = fen.newpresident;
-	delete fen.newpresident;
-	fen.isprovisional = true;
-	Z.stage = 'president';
-	Z.turn = [fen.president];
-	ari_history_list(`new president is ${fen.president}`, 'provisional president')
-	take_turn_fen();
+
+	if (fen.wrong_guesses >= 3) {
+		//at this point it is still old president's turn!
+		ari_history_list(`too many wrong guesses!!!`, 'abort');
+		president_end();
+
+	} else {
+		fen.president = fen.newpresident;
+		delete fen.newpresident;
+		fen.isprovisional = true;
+		Z.stage = 'president';
+		Z.turn = [fen.president];
+		ari_history_list(`new president is ${fen.president}`, 'provisional president')
+		take_turn_fen();
+	}
+
 }
 
-function president_parley(){
+function president_parley() {
 	let [A, uplayer, fen] = [Z.A, Z.uplayer, Z.fen];
-	if (!isEmpty(A.selected)){
-		console.log('president selected parley',Z.uplayer);
+	if (!isEmpty(A.selected)) {
+		console.log('president selected parley', Z.uplayer);
 		Z.stage = 'parley_select_player';
 		accuse_activate();
-	}else{
+	} else {
 		Z.stage = 'president_2';
 		accuse_activate();
 	}
@@ -618,8 +629,8 @@ function get_valid_voters() {
 }
 function presentcards(h) {
 	let [pldata, stage, A, fen, phase, uplayer, turn, uname, host] = [Z.playerdata, Z.stage, Z.A, Z.fen, Z.phase, Z.uplayer, Z.turn, Z.uname, Z.host];
-	let donelist = isdef(fen.pldata)?fen.pldata:Z.playerdata.filter(x => isDict(x.state) && isdef(x.state.item));
-	if (!startsWith(stage,'hand') && !startsWith(stage,'membership')) return;
+	let donelist = isdef(fen.pldata) ? fen.pldata : Z.playerdata.filter(x => isDict(x.state) && isdef(x.state.item));
+	if (!startsWith(stage, 'hand') && !startsWith(stage, 'membership')) return;
 	for (const pld of donelist) {
 		let plname = pld.name;
 		let plui = lookup(UI, ['stats', plname]);
@@ -629,8 +640,8 @@ function presentcards(h) {
 			// console.log('dcard',dcard)
 			let card = pld.state.item;
 			let actualcard = plui.actualcard = !isEmpty(card);
-			console.log('card',card)
-			let card1 = plui.card = ari_get_card(actualcard ? card : 'AHn', h)
+			//console.log('card', card)
+			let card1 = plui.card = accuse_get_card(actualcard ? card : 'AHn', h)
 			mAppend(dcard, iDiv(card1));
 		}
 		if (!Z.fen.cardsrevealed || !plui.actualcard) face_down(plui.card);
@@ -648,16 +659,83 @@ function redraw_hand() {
 
 }
 function relegate_to_host(list) {
-	console.log('***',list)
+	//console.log('***', list)
 	let [stage, A, fen, phase, uplayer, turn, uname, host] = [Z.stage, Z.A, Z.fen, Z.phase, Z.uplayer, Z.turn, Z.uname, Z.host];
 	//console.log('complete', turn, sameList(turn, [Z.host]), 'uplayer', uplayer);
 	if (stage == 'hand') fen.cardsrevealed = true;
 	Z.turn = [Z.host];
 	fen.pldata = list;
-	
+
 	Z.stage = Z.stage + 'resolve';
 	take_turn_fen();
 	return;
+
+}
+function start_new_generation(fen, players, options) {
+	let deck_discard = fen.deck_discard = [];
+	let ranks = fen.ranks; 
+	let tb = {
+		5: ['4', 'T', 6, 2, 1],
+		6: ['2', 'T', 6, 0, 1],
+		7: ['A', 'T', 6, 2, 1],
+		8: ['2', 'K', 6, 0, 1],
+		9: ['A', 'K', 6, 0, 1],
+		10: ['2', 'K', 5, 2, 1],
+		11: ['A', 'K', 5, 3, 1],
+		12: ['2', '8', 5, 4, 2],
+		13: ['2', '9', 5, 2, 2],
+		14: ['2', '9', 5, 2, 2], //add 4 10s
+	};
+	if (nundef(players)) players = get_keys(fen.players);
+	let N = players.length;
+
+	let deck_ballots = [];
+	let [r0, r1, handsize, jo, numdecks] = tb[N];
+
+	for (let i = ranks.indexOf(r0); i <= ranks.indexOf(r1); i++) {
+		for (let nd = 0; nd < numdecks; nd++) {
+			let c = ranks[i];
+			for (const suit of 'SHDC') { deck_ballots.push(c + suit + 'n'); }
+		}
+	}
+	if (N == 14) { for (const suit of 'SHDC') { deck_ballots.push('T' + suit + 'n'); } }
+	// for (let i = 0; i < jo; i++) { deck_ballots.push('A' + (i % 2 ? 'H' : 'S') + 'n'); }  //'' + (i%2) + 'J' + 'n');
+	for (let i = 0; i < jo; i++) { deck_ballots.push('' + (i%2) + 'J' + 'n'); } 
+
+	shuffle(deck_ballots);	//console.log('deck', deck_ballots);
+	fen.deck_ballots = deck_ballots;
+	fen.handsize = handsize;
+	//console.log('deck_ballots:::',deck_ballots.length);
+	for (const plname in fen.players) {
+		let pl = fen.players[plname];
+		pl.hand = deck_deal(deck_ballots, handsize);
+	}
+	console.log('phase',fen.phase)
+	let gens = lookup(fen,['generations']);
+	let last_winning_color = gens && gens.length>=1?arrLast(gens).color:null;
+	fen.policies = []; 
+	if (last_winning_color && ['red','black'].includes(last_winning_color)) {
+		fen.policies.push('Q'+(last_winning_color=='red'?'H':'S')+'n');
+	}
+	fen.validvoters = jsCopy(players)
+	fen.crisis = 0;
+	delete fen.president;
+	delete fen.newpresident;
+	delete fen.isprovisional;
+	delete fen.player_cards;
+	delete fen.accused;
+	delete fen.dominance;
+
+	//ari_history_list(`*** generation ${fen.phase} starts ***`,'',fen)
+
+}
+function start_new_poll() {
+	Z.stage = 'hand';
+	Z.fen.cardsrevealed = false;
+	Z.fen.wrong_guesses = 0;
+	Z.turn = get_valid_voters();
+	//console.log('...turn', Z.turn)
+	take_turn_fen_clear();
 
 }
 

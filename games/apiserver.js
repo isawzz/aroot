@@ -140,8 +140,6 @@ function processServerdata(obj, cmd) {
 			//console.log('playerdata for', o.name, 'changed', changed);
 			if (changed) {
 				Serverdata.playerdata_changed_for.push(o.name);
-				// console.log('______playerdata for', o.name, 'changed');
-				// console.log('old state',nundef(old)?'null':old.state,'\nnew state',o.state,'\nold player_status',nundef(old)?'null':old.player_status,'\nnew player_status',o.player_status)
 			}
 
 		}

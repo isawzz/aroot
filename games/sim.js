@@ -929,7 +929,6 @@ function inno_ut1_create_staged() {
 	elem_from_to('metalworking', deck1, leo.hand);
 	elem_from_to('soap', deck2, leo.hand);
 
-	//stage_moves('mimi.hand.agriculture','leo.hand.soap','mimi.board.yellow.agriculture');
 	DA.staged_moves = ['mimi.hand.agriculture', 'leo.hand.metalworking', 'mimi.board.yellow.agriculture', 'mimi.hand.comb'];//,'mimi.hand.comb','leo.board.red.metalworking'];
 	DA.iter = 13;
 	return [fen, player_names];
@@ -952,7 +951,6 @@ function inno_ut2_create_staged() {
 	elem_from_to('metalworking', deck1, leo.hand);
 	elem_from_to('soap', deck2, leo.hand);
 
-	//stage_moves('mimi.hand.agriculture','leo.hand.soap','mimi.board.yellow.agriculture');
 	DA.staged_moves = ['mimi.hand.agriculture', 'leo.hand.metalworking'];
 	DA.iter = 100;
 	return [fen, player_names];
@@ -977,7 +975,6 @@ function inno_ut3_create_staged() {
 	elem_from_to('pottery', deck1, amanda.hand);
 	elem_from_to('dice', deck2, amanda.hand);
 
-	//stage_moves('mimi.hand.agriculture','leo.hand.soap','mimi.board.yellow.agriculture');
 	DA.staged_moves = ['mimi.hand.wheel', 'leo.hand.metalworking', 'felix.hand.agriculture', 'amanda.hand.dice'];
 	DA.iter = 100;
 	return [fen, player_names];
@@ -1002,7 +999,6 @@ function inno_ut4_create_staged() {
 	elem_from_to('agriculture', deck1, felix.hand);
 	elem_from_to('chopsticks', deck2, felix.hand);
 
-	//stage_moves('mimi.hand.agriculture','leo.hand.soap','mimi.board.yellow.agriculture');
 	DA.staged_moves = ['mimi.hand.pottery', 'leo.hand.soap', 'felix.hand.agriculture'];
 	DA.iter = 100;
 	return [fen, player_names];
@@ -1027,7 +1023,6 @@ function inno_ut5_create_staged() {
 	elem_from_to('agriculture', deck1, felix.hand);
 	elem_from_to('chopsticks', deck2, felix.hand);
 
-	//stage_moves('mimi.hand.agriculture','leo.hand.soap','mimi.board.yellow.agriculture');
 	DA.staged_moves = ['mimi.hand.wheel', 'leo.hand.metalworking', 'felix.hand.agriculture', 'draw.decks.B.1'];
 	DA.iter = 100;
 	return [fen, player_names];
@@ -1050,7 +1045,6 @@ function inno_ut6_create_staged() {
 	elem_from_to('metalworking', deck1, leo.hand);
 	elem_from_to('soap', deck2, leo.hand);
 
-	//stage_moves('mimi.hand.agriculture','leo.hand.soap','mimi.board.yellow.agriculture');
 	DA.staged_moves = ['mimi.hand.wheel', 'leo.hand.soap'];//,'draw.decks.B.1'];
 	DA.iter = 100;
 	return [fen, player_names];
@@ -1073,7 +1067,6 @@ function inno_ut7_create_staged() {
 	elem_from_to('metalworking', deck1, leo.hand);
 	elem_from_to('soap', deck2, leo.hand);
 
-	//stage_moves('mimi.hand.agriculture','leo.hand.soap','mimi.board.yellow.agriculture');
 	DA.staged_moves = ['mimi.hand.wheel', 'leo.hand.soap', 'decks.E.1', 'decks.B.1', 'decks.B.1'];//,'draw.decks.B.1'];
 	DA.iter = 100;
 	return [fen, player_names];
@@ -1156,7 +1149,6 @@ function inno_ut10_create_staged() {
 	elem_from_to('metalworking', deck1, leo.hand);
 	elem_from_to('soap', deck2, leo.hand);
 
-	//stage_moves('mimi.hand.agriculture','leo.hand.soap','mimi.board.yellow.agriculture');
 	DA.staged_moves = ['mimi.hand.agriculture', 'leo.hand.metalworking', 'draw', 'draw', 'draw', 'draw'];
 	DA.iter = 100;
 	return [fen, player_names];
@@ -1179,7 +1171,6 @@ function inno_ut11_create_staged() {
 	elem_from_to('metalworking', deck1, leo.hand);
 	elem_from_to('soap', deck2, leo.hand);
 
-	//stage_moves('mimi.hand.agriculture','leo.hand.soap','mimi.board.yellow.agriculture');
 	DA.staged_moves = ['mimi.hand.agriculture', 'leo.hand.metalworking', 'draw', 'draw', 'draw', 'draw', 'meld', 'meld', 'draw', 'draw', 'meld', 'meld'];
 	//wo kommen eigentlich die meld actions (hand_actions) hin? gleich die ersten provided hand hat cards!
 	DA.iter = 100;
@@ -1203,7 +1194,6 @@ function inno_ut12_create_staged() {
 	elem_from_to('sailing', deck1, leo.hand);
 	elem_from_to('soap', deck2, leo.hand);
 
-	//stage_moves('mimi.hand.agriculture','leo.hand.soap','mimi.board.yellow.agriculture');
 	DA.staged_moves = ['mimi.hand.code_of_laws', 'leo.hand.sailing', 'mimi.board.purple.code_of_laws', 'leo.hand.soap', 'mimi.hand.puppet'];//,'mimi.hand.comb','leo.board.red.metalworking'];
 	DA.iter = 100;
 	return [fen, player_names];
@@ -1212,12 +1202,6 @@ function inno_ut12_create_staged() {
 
 //unit test helpers
 
-// function test_engine(){
-// 	DA.test.list=[100,101,102];
-
-// 	//wie starte ich die tests?
-// 	test_engine_run_next(DA.test.list);
-// }
 function test_engine_run_next(list) {
 	if (nundef(list)) {
 		list = DA.test.list = arrRange(100, DA.test.number - 1); //[101, 102, 103];
@@ -1253,38 +1237,8 @@ function verify_unit_test(otree) {
 	return true;
 }
 function add_to_chain(list) { DA.chain = DA.chain.concat(list); }
-function old_stage_moves() {
-	for (const a of arguments) {
-		let [uname, x, cardname] = a.split('.');
 
-		DA.chain.push(() => {
-			//console.log('player',pl,'selects',a);
-			let g = Session;
-			let state = { selected: {} }; //{ id: a }
-			state.selected[uname] = [a];
-			let o = { uname: uname, tid: g.table.id, state: state, player_status: 'joined' };
-			//console.log('sending to server',o)
-			to_server(o, 'turn_send_move');
 
-		})
-	}
-}
-function stage_moves() {
-	for (const a of arguments) {
-		let [uname, x, cardname] = a.split('.');
-
-		DA.chain.push(() => {
-			//console.log('player',pl,'selects',a);
-			let g = Session;
-			let state = { selected: {} }; //{ id: a }
-			state.selected[uname] = [a];
-			let o = { uname: uname, tid: g.table.id, state: state, player_status: 'joined' };
-			//console.log('sending to server',o)
-			to_server(o, 'turn_update');
-
-		})
-	}
-}
 //#region ARI test staging helpers
 function arisim_stage_3(fen) {
 	//move 2 cards from deck to market

@@ -1,5 +1,4 @@
 onload = start; var FirstLoad = true;//document.onBlur = stopPolling;//onblur = stopPolling;//onfocus = onclick_reload_after_switching;
-
 //DA.SIMSIM = true; //DA.exclusive = true; DA.TESTSTART1 = true; //DA.sendmax = 3; 
 //DA.TEST0 = true; 
 //DA.TEST1 = true; DA.TEST1Counter = 0;
@@ -10,7 +9,6 @@ function start() {
 	if (isdef(uname)) U = { name: uname }; 
 	phpPost({ app: 'simple' }, 'assets'); 
 }
-//function start() { let uname = null; if (isdef(uname)) U = { name: uname }; phpPost({ app: 'simple' }, 'assets'); }
 function start_with_assets(reload=false) {
 	//console.log('.......................',Serverdata.users);
 
@@ -36,7 +34,6 @@ function start_with_assets(reload=false) {
 	//test2_onclick_user(); //test3_show_tables(); //test1_show_users(); //test0_aristo_setup();
 	//#endregion
 }
-
 function startgame(game, players, options = {}) {
 	//game ... name of game, players ... list of {name:x,playmode:y}, options ... {some or all poss options}
 	//ensure game
@@ -85,6 +82,17 @@ function startgame(game, players, options = {}) {
 	ensure_polling(); // macht einfach nur Pollmode = 'auto'
 	phpPost(o, 'startgame');
 }
+function start_game_with_players(n,game='accuse'){
+	let numplayers = n;
+	let list = jsCopy(Serverdata.users).map(x => x.name);
+	let list1 = arrWithout(list, ['mimi', 'felix']);
+	let playernames = arrTake(list1, numplayers - 2);
+	playernames = ['mimi', 'felix'].concat(playernames);
+	let playmodes = playernames.map(x=>'human'); 
+	let players = [];
+	for(let i=0;i<n;i++) players.push({name:playernames[i],playmode:playmodes[i]});
+	startgame(game, players, { mode: 'multi' });
+}
 function gamestep() {
 	show_admin_ui();
 	DA.running = true; clear_screen(); dTable = mBy('dTable'); mClass('dTexture', 'wood');
@@ -117,12 +125,8 @@ function gamestep() {
 		Z.func.activate_ui();
 		//console.log('Z.waiting:', Z.isWaiting);
 		if (Z.isWaiting == true || Z.mode != 'multi') staticTitle(); else animatedTitle();
-		//console.log('player_status',Z.uplayer_data.player_status);
-
-		//let doNOTpoll = Z.options.zen_mode == 'yes' || Z.mode == 'hotseat' || ;
-		//functioniert das folgende?
 		
-		if (Z.options.zen_mode != 'yes' && Z.mode != 'hotseat' && Z.fen.keeppolling && Z.uplayer_data.player_status != 'stop') {
+		if (Z.options.zen_mode != 'yes' && Z.mode != 'hotseat' && Z.fen.keeppolling) {
 			autopoll();
 			console.log('gamestep autopoll'); 
 		}
@@ -346,10 +350,6 @@ function take_turn_fen_write() { take_turn(true, true); }
 function take_turn_multi() { if (isdef(Z.state)) take_turn(false, true); else take_turn(false, false); }
 function take_turn_write() { take_turn_multi(); }
 function take_turn_waiting() { take_turn(true,false,false,null); }
-
-//next 2 can be eliminated: stay on client during partial playerdata writes!
-// function take_turn_write_partial() { if (isdef(Z.state)) take_turn(false, true, false, 'stop'); else take_turn(false, false, false, 'stop'); }
-// function take_turn_write_complete() { take_turn(false, true, false, null); } //if (isdef(Z.state)) else take_turn(false, true, false, null); }
 
 function take_turn(write_fen = true, write_player = false, clear_players = false, player_status = null) {
 	prep_move();

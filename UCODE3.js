@@ -1,4 +1,169 @@
 
+
+function start() { let uname = null; if (isdef(uname)) U = { name: uname }; phpPost({ app: 'simple' }, 'assets'); }
+
+function test_engine(){
+	DA.test.list=[100,101,102];
+
+	//wie starte ich die tests?
+	test_engine_run_next(DA.test.list);
+}
+
+function stage_moves() {
+	for (const a of arguments) {
+		let [uname, x, cardname] = a.split('.');
+
+		DA.chain.push(() => {
+			//console.log('player',pl,'selects',a);
+			let g = Session;
+			let state = { selected: {} }; //{ id: a }
+			state.selected[uname] = [a];
+			let o = { uname: uname, tid: g.table.id, state: state, player_status: 'joined' };
+			//console.log('sending to server',o)
+			to_server(o, 'turn_update');
+
+		})
+	}
+}
+function old_stage_moves() {
+	for (const a of arguments) {
+		let [uname, x, cardname] = a.split('.');
+
+		DA.chain.push(() => {
+			//console.log('player',pl,'selects',a);
+			let g = Session;
+			let state = { selected: {} }; //{ id: a }
+			state.selected[uname] = [a];
+			let o = { uname: uname, tid: g.table.id, state: state, player_status: 'joined' };
+			//console.log('sending to server',o)
+			to_server(o, 'turn_send_move');
+
+		})
+	}
+}
+function _ui_game_menu_item_dep(g, g_tables = []) {
+	function runderkreis(color, id) {
+		return `<div id=${id} style='width:20px;height:20px;border-radius:50%;background-color:${color};color:white;position:absolute;left:0px;top:0px;'>` + '' + "</div>";
+	}
+	let [sym, bg, color, id] = [Syms[g.logo], g.color, null, getUID()];
+	if (!isEmpty(g_tables)) {
+		let t = g_tables[0]; //most recent table of that game
+		let have_another_move = t.player_status == 'joined';
+		color = have_another_move ? 'green' : 'red';
+		id = `rk_${t.id}`;
+	}
+	return `
+	<div onclick="onclick_game_menu_item(event)" gamename=${g.id} style='cursor:pointer;border-radius:10px;margin:10px;padding:5px;padding-top:15px;min-width:120px;height:90px;display:inline-block;background:${bg};position:relative;'>
+	${nundef(color) ? '' : runderkreis(color, id)}
+	<span style='font-size:50px;font-family:${sym.family}'>${sym.text}</span><br>${g.friendly.toString()}</div>
+	`;
+}
+
+
+
+function eval_empty_votes(votes) {
+	let [stage, A, fen, phase, uplayer, turn, uname, host] = [Z.stage, Z.A, Z.fen, Z.phase, Z.uplayer, Z.turn, Z.uname, Z.host];
+	//console.log('pldata', Z.playerdata.map(x => x.state))
+	//console.log('EMPTY VOTES!!!!!!!!!!!!!');
+	let opt = valf(Z.options.empty_vote, 'add policy');
+	if (opt == 'blank' || isEmpty(fen.policies)) {
+		ari_history_list(`no votes!`, 'generation ends blank');
+		accuse_score_update('white')
+		Z.turn = jsCopy(Z.plorder);
+		Z.stage = 'round';
+		take_turn_fen_clear();
+	} else if (opt == 'add policy') {
+		let last_policy = arrLast(fen.policies);
+		if (last_policy) {
+			console.log('add policy, last:', last_policy)
+			fen.policies.push(last_policy);
+		}
+		fen.validvoters = jsCopy(Z.plorder);
+		check_enough_policies_or_start_new_poll(`no one voted: policy repeat`);
+		// let end = check_enough_policies();
+		// console.log('enough policies', end)
+		// if (!end) { start_new_poll(); }
+	} else { //generation end: last policy color wins!
+		let last_policy = arrLast(fen.policies);
+		
+		let color = get_color_of_card(arrLast(fen.policies))
+		ari_history_list(`no votes!`, `generation ends ${color}`);
+		accuse_score_update(color)
+		Z.turn = jsCopy(Z.plorder);
+		Z.stage = 'round';
+		take_turn_fen_clear();
+	}
+
+}
+
+function start_new_generation(fen, players) {
+	let deck_discard = fen.deck_discard = [];
+	//let deck_ballots = create_fen_deck('n'); shuffle(deck_ballots);
+	let ranks = fen.ranks; 
+	let tb = {
+		5: ['4', 'T', 6, 2, 1],
+		6: ['2', 'T', 6, 0, 1],
+		7: ['A', 'T', 6, 2, 1],
+		8: ['2', 'K', 6, 0, 1],
+		9: ['A', 'K', 6, 0, 1],
+		10: ['2', 'K', 5, 2, 1],
+		11: ['A', 'K', 5, 3, 1],
+		12: ['2', '8', 5, 4, 2],
+		13: ['2', '9', 5, 2, 2],
+		14: ['2', '9', 5, 2, 2], //add 4 10s
+	};
+	if (nundef(players)) players = get_keys(fen.players);
+	let N = players.length;
+
+	let deck_ballots = [];
+	let [r0, r1, handsize, jo, numdecks] = tb[N];
+
+	for (let i = ranks.indexOf(r0); i <= ranks.indexOf(r1); i++) {
+		for (let nd = 0; nd < numdecks; nd++) {
+			let c = ranks[i];
+			for (const suit of 'SHDC') { deck_ballots.push(c + suit + 'n'); }
+		}
+	}
+	if (N == 14) { for (const suit of 'SHDC') { deck_ballots.push('T' + suit + 'n'); } }
+	// for (let i = 0; i < jo; i++) { deck_ballots.push('A' + (i % 2 ? 'H' : 'S') + 'n'); }  //'' + (i%2) + 'J' + 'n');
+	for (let i = 0; i < jo; i++) { deck_ballots.push('' + (i%2) + 'J' + 'n'); } 
+
+	//#region old
+	// let [rmax, rmin, handsize] = isdef(tb[N]) ? tb[N] : ['A', 'K', Math.min(8, Math.floor(52 / N))];
+
+	// //modiy handsize options.handsize
+	// //handsize += Number(fen.inc_handsize_by);
+
+	// let [imin, imax] = [ranks.indexOf(rmin), ranks.indexOf(rmax)];
+	// //console.log('N',players.length,'minrank',imin,'maxrank',imax)
+	// deck_ballots = deck_ballots.filter(x => {
+	// 	let i = ranks.indexOf(x[0])
+	// 	return i >= imin && i <= imax;
+	// });
+	//#endregion
+
+	shuffle(deck_ballots);	console.log('deck', deck_ballots);
+	fen.deck_ballots = deck_ballots;
+	fen.handsize = handsize;
+	//console.log('deck_ballots:::',deck_ballots.length);
+	for (const plname in fen.players) {
+		let pl = fen.players[plname];
+		pl.hand = deck_deal(deck_ballots, handsize);
+		//hzcontrol(pl.hz=handsize;
+	}
+	fen.policies = [];
+	fen.validvoters = jsCopy(players)
+	delete fen.president;
+	delete fen.newpresident;
+	delete fen.isprovisional;
+	delete fen.player_cards;
+	delete fen.accused;
+	delete fen.dominance;
+
+	//ari_history_list(`*** generation ${fen.phase} starts ***`,'',fen)
+
+}
+
 function presentcards_old(h) {
 	if (startsWith(Z.stage, 'hand')) {
 		let donelist = Z.playerdata.filter(x => isDict(x.state) && isdef(x.state.item));
