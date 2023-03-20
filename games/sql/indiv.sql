@@ -12,6 +12,8 @@ CREATE TABLE `indiv` (
   `player_status` varchar(8) DEFAULT NULL,
   `score` int(11) DEFAULT NULL,
   `state` text DEFAULT NULL,
+  `state1` text DEFAULT NULL,
+  `state2` text DEFAULT NULL,
   `checked` bigint(20) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 

@@ -136,6 +136,8 @@ function processServerdata(obj, cmd) {
 			let old = di[o.name];
 			//console.log('o.state', o.state, 'old', old);
 			o.state = isEmpty(o.state) ? '' : if_stringified(o.state);
+			o.state1 = isEmpty(o.state1) ? '' : if_stringified(o.state1);
+			o.state2 = isEmpty(o.state2) ? '' : if_stringified(o.state2);
 			let changed = nundef(old) ? true : !simpleCompare(old, o);
 			//console.log('playerdata for', o.name, 'changed', changed);
 			if (changed) {

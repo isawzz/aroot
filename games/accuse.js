@@ -29,6 +29,7 @@ function accuse() {
 			//console.log('plname', plname)
 			let pl = fen.players[plname] = {
 				score: 0,
+				experience: 0,
 				name: plname,
 				idleft: deck_deal(deck_identities, 1)[0],
 				color: get_user_color(plname),
@@ -93,7 +94,7 @@ function accuse_present(dParent) {
 
 	let [hlg, hsm] = [80, 50];
 	let [hpolcard, hvotecard, himg, hstatfz, hnetcard, hhandcard, gap] = [hsm, hlg, 50, 8, hsm, hlg, 4];
-	let [hpol, hstat, hhand] = [hpolcard + 30, hvotecard + himg + hstatfz * 3 + gap * 2, hhandcard + 30];
+	let [hpol, hstat, hhand] = [hpolcard + 30, hvotecard + himg + hstatfz * 5 + gap * 2, hhandcard + 30];
 	let [d1, d2, d3, d4, d5] = [mDiv(dt), mDiv(dt), mDiv(dt), mDiv(dt), mDiv(dt)];
 	//for (const d of [d1, d2, d3, d4, d5]) { mCenterCenterFlex(d); mStyle(d, { gap:10, w: '100%', hmin: h }) }
 
@@ -188,12 +189,11 @@ function accuse_present(dParent) {
 
 function accuse_activate() {
 	let [pldata, stage, A, fen, phase, uplayer, turn, uname, host] = [Z.playerdata, Z.stage, Z.A, Z.fen, Z.phase, Z.uplayer, Z.turn, Z.uname, Z.host];
-
 	let donelist = Z.playerdata.filter(x => isDict(x.state) && isdef(x.state.item));
 	//if (!isEmpty(donelist)) console.log('.................donelist',donelist)
 	let complete = ['hand', 'membership', 'tied_consensus'].includes(stage) && donelist.length >= turn.length || stage == 'round' && firstCond(pldata, x => isDict(x.state));
 	if (complete && !sameList(turn, [Z.host])) {
-		console.log('COMPLETE! donelist', donelist)
+		//console.log('COMPLETE! donelist', donelist)
 		relegate_to_host(donelist);
 		return;
 	}
@@ -202,23 +202,19 @@ function accuse_activate() {
 	assertion(!complete || sameList(turn, [Z.host]), 'complete hat nicht zu host uebergeben!!!!!!!!!!')
 	assertion(!complete || !waiting, 'ERROR WAITING WHEN COMPLETE!!!')
 	Z.isWaiting = waiting; //das ist nur fuer page tab title animated vs static
+
+	assertion(turn.length == 1 || ['membership','hand','round'].includes(stage),"FALSCHE ASSUMPTION!!!!!!!!!!!!!");
+	if (turn.length == 1) check_experience_states();
+
 	if (waiting) {
-		console.log('WAITING!!', stage, uplayer);
+		//console.log('WAITING!!', stage, uplayer);
 		accuse_show_selected_state(donelist.find(x => x.name == uplayer).state);
 		if (Z.mode != 'multi') { take_turn_waiting(); return; }
 		autopoll();
 	} else if (stage == 'handresolve') {
 		assertion(uplayer == Z.host && fen.cardsrevealed, 'NOT THE STARTER WHO COMPLETES THE STAGE!!!')
 		//console.log('RESOLVING votes on click!!!!!!!!!!!!!')
-		DA.gobutton = mButton('evaluate cards', accuse_evaluate_votes, dTable, { w: 300 }); // () => { Z.stage = 'handresolve_weiter'; take_turn_fen(); }, dTable, { w: 300 });
-		// } else if (stage == 'tied_consensus') {
-		// 	console.log('TIED CONSENSUS!!!',turn,fen.tied_votes);
-		// 	select_add_items(ui_get_player_items(turn), consensus_vote_payer, 'must select player name', 1, 1);
-		// 	//DA.gobutton = mButton('evaluate cards', accuse_evaluate_votes, dTable, { w: 300 }); // () => { Z.stage = 'handresolve_weiter'; take_turn_fen(); }, dTable, { w: 300 });
-		// } else if (stage == 'tied_consensusresolve') {
-		// 	console.log('RESOLVE TIED CONSENSUS!!!',turn,donelist.map(x=>x.state.item));
-		// 	//select_add_items(ui_get_player_items(turn), consensus_vote_payer, 'must select player name', 1, 1);
-		// 	//DA.gobutton = mButton('evaluate cards', accuse_evaluate_votes, dTable, { w: 300 }); // () => { Z.stage = 'handresolve_weiter'; take_turn_fen(); }, dTable, { w: 300 });
+		DA.gobutton = mButton('evaluate cards', accuse_evaluate_votes, dTable, { w: 300 }); 
 	} else if (stage == 'membershipresolve') {
 		assertion(uplayer == Z.host, 'NOT THE STARTER WHO COMPLETES THE STAGE!!!')
 		//console.log('RESOLVING membership!!!!!!!!!!!!!')
@@ -368,7 +364,7 @@ function accuse_submit_accused_color() {
 		fen.wrong_guesses = 0;
 		delete fen.players[accused].membership;
 		Z.stage = 'accuse_action_entlarvt';
-		take_turn_fen();
+		take_turn_fen_clear(); //!!!!clear added!!!!
 	} else {
 		//console.log('PRESIDENT GUESSES WRONG!!!!!!!!!!!!');
 		Z.turn = [accused];
@@ -378,7 +374,7 @@ function accuse_submit_accused_color() {
 		//fen.isprovisional = true;
 		delete fen.players[accused].membership;
 		Z.stage = 'accuse_action_provisional';
-		take_turn_fen();
+		take_turn_fen_clear(); //!!!!clear added!!!!
 
 	}
 
@@ -397,7 +393,7 @@ function accuse_replaced_membership() {
 	Z.turn = [fen.president];
 	Z.stage = Z.stage == 'accuse_action_entlarvt' ? 'accuse_action_policy' : 'accuse_action_new_president';
 	ari_history_list(`${accused} chooses new membership` + (TESTHISTORY ? ` ${card}` : ''), 'accuse');
-	take_turn_fen();
+	take_turn_fen_clear(); //!!!!clear added!!!!
 
 }
 function accuse_enact_policy() {
@@ -450,7 +446,7 @@ function set_new_president() {
 		Z.stage = 'president';
 		Z.turn = [fen.president];
 		ari_history_list(`new president is ${fen.president}`, 'provisional president')
-		take_turn_fen();
+		take_turn_fen_clear(); //!!!!clear added!!!!
 	}
 
 }
@@ -458,7 +454,7 @@ function set_new_president() {
 function president_parley() {
 	let [A, uplayer, fen] = [Z.A, Z.uplayer, Z.fen];
 	if (!isEmpty(A.selected)) {
-		console.log('president selected parley', Z.uplayer);
+		//console.log('president selected parley', Z.uplayer);
 		Z.stage = 'parley_select_player';
 		accuse_activate();
 	} else {
@@ -478,7 +474,7 @@ function parley_cards_selected() {
 	let player_cards = fen.player_cards = A.selected.map(x => A.items[x].a);
 	Z.turn = [fen.other];
 	Z.stage = 'parley_opponent_selects';
-	take_turn_fen();
+	take_turn_fen_clear(); //!!!!clear added!!!!
 }
 function parley_opponent_selected() {
 	let [A, uplayer, fen] = [Z.A, Z.uplayer, Z.fen];
@@ -667,7 +663,7 @@ function relegate_to_host(list) {
 	fen.pldata = list;
 
 	Z.stage = Z.stage + 'resolve';
-	take_turn_fen();
+	take_turn_fen(); //das ist ein fen override in multiturn!!!!!!!
 	return;
 
 }
@@ -710,7 +706,7 @@ function start_new_generation(fen, players, options) {
 		let pl = fen.players[plname];
 		pl.hand = deck_deal(deck_ballots, handsize);
 	}
-	console.log('phase',fen.phase)
+	//console.log('phase',fen.phase)
 	let gens = lookup(fen,['generations']);
 	let last_winning_color = gens && gens.length>=1?arrLast(gens).color:null;
 	fen.policies = []; 

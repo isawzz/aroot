@@ -109,8 +109,6 @@ function wise_activate() {
 				fen.players[selected].score += 1;
 			}
 			fen.result[selecting] = { plname: selected, text: text };
-			//that player gets a point
-			//selections.push({ plname: plname, text: text.toLowerCase() });
 
 		}
 		delete fen.sentences;

@@ -72,6 +72,18 @@ function onclick_by_suit() {
 	//let sorted = items.sort((a, b) => a.o.rank - b.o.rank);
 }
 function onclick_cancelmenu() { hide('dMenu'); }
+function onclick_experience(){
+	//muss sagen wieviel und zu wem
+	//muss auch checken ob ueberhaupt experience habe!
+	let [fen,uplayer] = [Z.fen,Z.uplayer];
+	let plnames = get_other_players();
+	let nums = range(3); // range(fen.players[uplayer].experience);
+	if (isEmpty(nums)) {show_special_message('you dont have any experience points!'); return;}
+
+	//console.log('plnames',plnames,'nums',nums)
+	show_special_popup('select player and number of experience points to gift:',send_experience_points,{},plnames,nums);
+	//mQuestionPopup()
+}
 function onclick_game_menu_item(ev) {
 	let gamename = ev_to_gname(ev);
 	stopgame();

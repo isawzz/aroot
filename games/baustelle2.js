@@ -19,7 +19,7 @@ function eval_president(winning_vote){
 	let [stage, A, fen, phase, uplayer, turn, uname, host] = [Z.stage, Z.A, Z.fen, Z.phase, Z.uplayer, Z.turn, Z.uname, Z.host];
 
 	let plwinner = winning_vote.plname;
-	console.log('...WINNER PRESIDENT!!!!!!!!!!!!!', plwinner, winning_vote.card);
+	//console.log('...WINNER PRESIDENT!!!!!!!!!!!!!', plwinner, winning_vote.card);
 	//return all pending cards (from previous votes) to resp hands
 	for (const plname in fen.players) {
 		let pl = fen.players[plname];
@@ -30,6 +30,7 @@ function eval_president(winning_vote){
 	removeInPlace(fen.players[plwinner].hand, winning_vote.card);
 	fen.deck_discard.push(winning_vote.card);
 	fen.president = plwinner;
+	fen.players[plwinner].experience+=1;
 	fen.isprovisional = false;
 	ari_history_list(`${plwinner} wins presidency!`, 'president');
 	Z.turn = [plwinner];

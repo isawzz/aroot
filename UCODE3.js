@@ -1,5 +1,105 @@
 
 
+
+function show_item_selector(dParent, items) {
+	let A = Z.A;
+	select_clear_previous_level();
+	A.level++; A.items = items; A.callback = callback; A.selected = []; A.minselected = min; A.maxselected = max;
+	//console.log('A.level', A.level)
+	show_progress();
+	let dInstruction = mBy('dSelections0');
+	mClass(dInstruction, 'instruction');
+	mCenterCenterFlex(dInstruction);
+	// dInstruction.innerHTML = '<div>' + ((Z.role == 'active' ? `${get_waiting_html()}<span style="color:red;font-weight:bold;max-height:25px">You </span>` : `${Z.uplayer} `)) + "&nbsp;" + instruction; // + '</div>';
+	dInstruction.innerHTML = (Z.role == 'active' ? `${get_waiting_html()}<span style="color:red;font-weight:bold;max-height:25px">You</span>` : `${Z.uplayer}`) + "&nbsp;" + instruction; // + '</div>';
+	//console.log('A',A)
+	if (too_many_string_items(A)) { mLinebreak(dInstruction, 4); } //console.log('triggered!!!') }
+	//prep items and link to ui
+	//console.log('haaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaA.items',items,A.items); //return;
+
+	let has_submit_items = false;
+	let buttonstyle = { maleft: 10, vmargin: 2, rounding: 6, padding: '4px 12px 5px 12px', border: '0px solid transparent', outline: 'none' }
+	for (const item of A.items) {
+		let type = item.itemtype = is_card(item) ? 'card' : is_player(item.a) ? 'player' : isdef(item.o) ? 'container' : is_color(item.a) ? 'color' : 'string'; // nundef(item.submit_on_click) ? 'string' : 'submit';
+		if (isdef(item.submit_on_click)) { has_submit_items = true; }
+		//if (type == 'submit') has_submit_items = true;
+		let id = item.id = lookup(item, ['o', 'id']) ? item.o.id : getUID(); A.di[id] = item;
+		if (type == 'string' || type == 'color') { //make button for this item!
+			let handler = ev => select_last(item, isdef(item.submit_on_click) ? callback : select_toggle, ev);
+			item.div = mButton(item.a, handler, dInstruction, buttonstyle, null, id);
+			if (type == 'color') mStyle(item.div, { bg: item.a, fg: 'contrast' });
+		} else {
+			let ui = item.div = iDiv(item.o);
+			ui.onclick = ev => select_last(item, select_toggle, ev); // show_submit_button ? _select_toggle : select_finalize;
+			ui.id = id;
+		}
+	}
+
+	//show_submit_button = show_submit_button && A.minselected != A.maxselected || !A.autosubmit; { bg: 'red', fg: 'white', maleft: 10 }
+	let show_submit_button = !has_submit_items && (A.minselected != A.maxselected || !A.autosubmit);
+	if (show_submit_button) { mButton('submit', callback, dInstruction, buttonstyle, 'selectable_button', 'bSubmit'); }
+
+	let show_restart_button = A.level > 1; //show_submit_button && A.level > 1;
+	if (show_restart_button) { mButton('restart', onclick_reload, dInstruction, buttonstyle, 'selectable_button', 'bReload'); }
+
+	//now, mark all items for selection
+	dParent = window[`dActions${A.level}`];
+	for (const item of A.items) { ari_make_selectable(item, dParent, dInstruction); }
+
+	//ich muss alle hand containers identifizieren!
+	//let handcontainers = 
+
+	//activate ui or automatic selection
+	assertion(A.items.length >= min, 'less options than min selection!!!!', A.items.length, 'min is', min); //TODO: sollte das passieren, check in ari_pre_action die mins!!!
+	if (A.items.length == min && !is_ai_player() && !prevent_autoselect) {
+		//all items need to be selected!
+		for (const item of A.items) { A.selected.push(item.index); ari_make_selected(item); }
+		if (A.autosubmit) {
+			//console.log('items.length==min und autosubmit!!!!!!!!!!!!!!!!!!')
+			loader_on();
+			//console.log('autosubmit because item.length == min items (so would have to select all items anyway)')
+			setTimeout(() => { if (callback) callback(); loader_off(); }, 800);
+		}
+	} else if (is_ai_player()) {
+		//console.log('ist ein BOT!!!');
+		ai_move();
+	} else if (TESTING && isdef(DA.test)) {
+		if (DA.test.iter >= DA.auto_moves.length) {
+			//console.log('test end');
+			if (isdef(DA.test.end)) DA.test.end();
+			activate_ui();
+			return;
+		}
+		let selection = DA.auto_moves[DA.test.iter++];
+		if (selection) {
+			deactivate_ui();
+			let numbers = [];
+			for (const el of selection) {
+				if (el == 'last') {
+					numbers.push(A.items.length - 1);
+				} else if (el == 'random') {
+					numbers.push(rNumber(0, A.items.length - 1));
+				} else if (isString(el)) {
+					//this is a command!
+					let commands = A.items.map(x => x.key);
+					let idx = commands.indexOf(el);
+					//console.log('idx of', el, 'is', idx)
+					numbers.push(idx);
+				} else numbers.push(el);
+			}
+			selection = numbers;
+			A.selected = selection;
+			if (selection.length == 1) A.command = A.items[A.selected[0]].key;
+			A.last_selected = A.items[A.selected[0]];
+			select_highlight();
+			//console.log('DA.testing: selection', selection);
+			setTimeout(() => {
+				if (A.callback) A.callback();
+			}, 1000);
+		} else { activate_ui(); }
+	} else { activate_ui(); }
+}
+
 function start() { let uname = null; if (isdef(uname)) U = { name: uname }; phpPost({ app: 'simple' }, 'assets'); }
 
 function test_engine(){

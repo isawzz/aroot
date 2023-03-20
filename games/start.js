@@ -15,8 +15,11 @@ function start_with_assets(reload=false) {
 	//console.log(`browser name: ${navigator.appName}, or ${navigator.userAgent}`);
 	DA.isFirefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1; if (DA.isFirefox) console.log('using Firefox!')
 	show_home_logo();
+
+	//U=null;
 	if (nundef(U)) { show_users(); return; } 
 	
+	reload=true;
 	show_username(reload);
 	if (DA.TEST0) show('dTestButtons');
 
@@ -348,6 +351,8 @@ function take_turn_fen_clear() { take_turn(true, false, true);  }
 function take_turn_fen_write() { take_turn(true, true); }
 
 function take_turn_multi() { if (isdef(Z.state)) take_turn(false, true); else take_turn(false, false); }
+function take_turn_state1() { if (isdef(Z.state1)) take_turn(false, true); else take_turn(false, false); }
+function take_turn_state2() { if (isdef(Z.state2)) take_turn(false, true); else take_turn(false, false); }
 function take_turn_write() { take_turn_multi(); }
 function take_turn_waiting() { take_turn(true,false,false,null); }
 
@@ -356,8 +361,17 @@ function take_turn(write_fen = true, write_player = false, clear_players = false
 	let o = { uname: Z.uplayer, friendly: Z.friendly };
 	if (isdef(Z.fen)) o.fen = Z.fen;
 	if (write_fen) { assertion(isdef(Z.fen) && isdef(Z.fen.turn), 'write_fen without fen!!!!'); o.write_fen = true; }
-	if (write_player) { o.write_player = true; o.state = Z.state; } //console.log('writing playerstate for', Z.uplayer, Z.state); }
-	if (clear_players) {o.clear_players = true;delete Z.playerdata;delete o.fen.pldata;}
+	if (write_player) { 
+		o.write_player = true; 
+		if (isdef(Z.state)) o.state = Z.state; 
+		if (isdef(Z.state1)) o.state1 = Z.state1; 
+		if (isdef(Z.state2)) o.state2 = Z.state2; 
+		//console.log('writing playerstate for', Z.uplayer, Z.state, Z.state1, Z.state2); 
+	} 
+	if (clear_players) {
+		//console.log('clear by',o.uname)
+		o.clear_players = true;delete Z.playerdata;delete o.fen.pldata;
+	}
 	o.player_status = player_status;
 	let cmd = 'table';
 	//console.log('sending',o)

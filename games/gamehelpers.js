@@ -540,13 +540,13 @@ function shield_off() {
 function show_admin_ui() {
 	//console.log('show_admin_ui');
 	//game specific buttons hide or show
-	for (const id of ['bSpotitStart', 'bClearAck', 'bRandomMove', 'bSkipPlayer', 'bRestartMove', 'dTakeover']) hide(id);
+	for (const id of ['bSpotitStart', 'bClearAck', 'bRandomMove', 'bSkipPlayer', 'bRestartMove', 'dTakeover', 'bExperience']) hide(id);
 	if (Z.game == 'spotit' && Z.uname == Z.host && Z.stage == 'init') show('bSpotitStart');
 	else if (Z.game == 'bluff' && Z.uname == Z.host && Z.stage == 1) show('bClearAck');
 	else if (Z.uname == Z.host && Z.stage == 'round_end') show('bClearAck');
 	else if (Z.game == 'ferro' && Z.uname == 'mimi' && Z.stage != 'card_selection') show('bClearAck');
 	else if (Z.game == 'accuse' && DA.HOSTAKEOVER && (Z.uname == Z.host || Z.uname == 'mimi' || DA.omnipower)) show_takeover_ui();
-
+	if (Z.game == 'accuse') show('bExperience');
 	if (['ferro', 'bluff', 'aristo', 'a_game'].includes(Z.game) && (Z.role == 'active' || Z.mode == 'hotseat')) {
 		//console.log('random should show because game is', Z.game)
 		show('bRandomMove');

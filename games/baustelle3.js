@@ -49,20 +49,23 @@ function accuse_player_stat(dParent, plname, hvotecard, himg, hstatfz, gap) {
 	//let d = mDiv(dParent); mCenterFlex(d); //, { margin: 4, align: 'center' });
 	let card = mDiv(d, { hmin: hvotecard + gap, bg: 'transparent', mabottom: gap, paright: 4 }); mCenterFlex(card);
 
-	let dcombine = mDiv(d, { w: sz, margin: 'auto' }); //,{padding:6});
+	let wstats=sz*1.3;
+	let dcombine = mDiv(d, { w: wstats, margin: 'auto' }); //,{padding:6});
 
 	let dimg = mDiv(dcombine, { padding: 0 }, null, `<img src='../base/assets/images/${plname}.jpg' style="border-radius:${rounding};border:${border};box-sizing:border-box" width=${sz} height=${sz}>`); mCenterFlex(dimg);
-	let stats = mDiv(dcombine, { align: 'center', w: sz, bg: 'silver', rounding: 10 }); mCenterFlex(stats);
+	let stats = mDiv(dcombine, { align: 'center', w: wstats, bg: 'silver', rounding: 10 }); mCenterFlex(stats);
 	let x = lookupSetOverride(UI, ['stats', plname], { douter: d, dcombi: dcombine, dstats: stats, dimg: dimg, dcard: card });
-	accuse_player_stat_count('star', pl.score, stats, { sz: hstatfz });
-	accuse_player_stat_count('hand with fingers splayed', pl.hand.length, stats, { sz: hstatfz });
+	let numcols=3;
+	accuse_player_stat_count('star', pl.score, stats, { sz: hstatfz },numcols);
+	accuse_player_stat_count('hand with fingers splayed', pl.hand.length, stats, { sz: hstatfz },numcols);
+	accuse_player_stat_count('eye', pl.experience, stats, { sz: hstatfz },numcols);
 
 	return x;
 }
-function accuse_player_stat_count(key, n, dParent, styles = {}) {
+function accuse_player_stat_count(key, n, dParent, styles = {},numcols) {
 	//mStyle(dParent,{align:'center'});
 	let sz = valf(styles.sz, 8);
-	let d = mDiv(dParent, { w: '50%', align: 'center' });
+	let d = mDiv(dParent, { w: `${100/numcols}%`, align: 'center' });
 	let dsym;
 	if (isdef(Syms[key])) dsym = mSym(key, d, { h: sz, 'line-height': sz, w: '100%' });
 	else dsym = mText(key, d, { h: sz, fz: sz, w: '100%' });
@@ -182,6 +185,7 @@ function get_policies_to_win() {
 function get_player_data(plname) { return firstCond(Z.playerdata, x => x.name == plname); }
 function get_player_state(plname) { let pld = get_player_data(plname); return pld ? pld.state : null; }
 function get_player_card(plname) { let pld = get_player_data(plname); return pld ? pld.state.item : null; }
+function get_other_players(){return get_keys(Z.fen.players).filter(x=>x!=Z.uplayer);}
 function getRankOf(ckey, ranks) {
 	if (is_nc_card(ckey)) return Number(stringBefore(x, '_'));
 	if (nundef(ranks)) ranks = valf(lookup(Z, ['fen', 'ranks']), 'A23456789TJQK');

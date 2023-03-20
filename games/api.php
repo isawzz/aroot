@@ -14,20 +14,33 @@ if ($cmd == 'table'){
 	$result->status = "table";
 	if (isset ($data->clear_players)){
 		$modified = get_now();
-		$qw = "UPDATE `indiv` SET `state`='',`player_status`=NULL,`checked`=$modified WHERE `friendly` = '$friendly'";
+		$qw = "UPDATE `indiv` SET `state`='',`state1`='',`state2`='',`player_status`=NULL,`checked`=$modified WHERE `friendly` = '$friendly'";
 		$qr = "SELECT * FROM indiv WHERE `friendly` = '$friendly'"; 
 		$res=db_write_read_all($qw,$qr);
 		$result->playerdata = $res;
 		$result->status = "clear_players";
-	}else if (isset($data->write_player) && isset($data->state)){ 
-		$state = json_encode($data->state);
+	}else if (isset($data->write_player) && (isset($data->state) || isset($data->state1) || isset($data->state2))){ 
+		$qw = "UPDATE `indiv` SET ";
+		if (isset($data->state)){ $state = json_encode($data->state); $qw = $qw . "`state`='$state',"; }
+		if (isset($data->state1)){ $state1 = json_encode($data->state1); $qw = $qw . "`state1`='$state1',"; }
+		if (isset($data->state2)){ $state2 = json_encode($data->state2); $qw = $qw . "`state2`='$state2',"; }
+		// $state = json_encode($data->state);
 		$player_status = isset($data->player_status)? $data->player_status : '';
 		$modified = get_now();
-		$qw = "UPDATE `indiv` SET `state`='$state',`player_status`='$player_status',`checked`=$modified WHERE `friendly` = '$friendly' and `name` = '$uname'";
+		$qw = $qw . "`player_status`='$player_status',`checked`=$modified WHERE `friendly` = '$friendly' and `name` = '$uname'";
 		$qr = "SELECT * FROM indiv WHERE `friendly` = '$friendly'"; 
 		$res=db_write_read_all($qw,$qr);
 		$result->playerdata = $res;
 		$result->status = "write_player";
+	// }else if (isset($data->write_player) && isset($data->state)){ 
+	// 	$state = json_encode($data->state);
+	// 	$player_status = isset($data->player_status)? $data->player_status : '';
+	// 	$modified = get_now();
+	// 	$qw = "UPDATE `indiv` SET `state`='$state',`player_status`='$player_status',`checked`=$modified WHERE `friendly` = '$friendly' and `name` = '$uname'";
+	// 	$qr = "SELECT * FROM indiv WHERE `friendly` = '$friendly'"; 
+	// 	$res=db_write_read_all($qw,$qr);
+	// 	$result->playerdata = $res;
+	// 	$result->status = "write_player";
 	}else{
 		$qr = "SELECT * FROM indiv WHERE `friendly` = '$friendly'"; 
 		$playerdata = db_read($qr);
