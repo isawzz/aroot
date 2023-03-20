@@ -77,7 +77,7 @@ function onclick_experience(){
 	//muss auch checken ob ueberhaupt experience habe!
 	let [fen,uplayer] = [Z.fen,Z.uplayer];
 	let plnames = get_other_players();
-	let nums = range(3); // range(fen.players[uplayer].experience);
+	let nums = range(1,fen.players[uplayer].experience);
 	if (isEmpty(nums)) {show_special_message('you dont have any experience points!'); return;}
 
 	//console.log('plnames',plnames,'nums',nums)
@@ -246,6 +246,16 @@ function onclick_vote_empty() {
 		pld.state = { item: '' };
 	}
 
+	relegate_to_host(Z.playerdata);
+	//accuse_evaluate_votes();
+}
+function onclick_vote_president() {
+	let [game, A, fen, uplayer, plorder] = [Z.game, Z.A, Z.fen, Z.uplayer, Z.plorder];
+	let pls=rChoose(Z.turn,2);
+	let pld0=	Z.playerdata.find(x=>x.name == pls[0]);
+	let pld1=	Z.playerdata.find(x=>x.name == pls[1]);
+	pld0.state = { item: 'KSn' };
+	pld1.state = { item: '2Hn' };
 	relegate_to_host(Z.playerdata);
 	//accuse_evaluate_votes();
 }

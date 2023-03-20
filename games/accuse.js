@@ -242,6 +242,7 @@ function accuse_activate() {
 		take_turn_fen_clear();
 	} else if (stage == 'president') {
 		let parley_action_available = get_others_with_at_least_one_hand_card().length >= 1;
+		addIf(fen.presidents_poll,fen.president);
 		if (parley_action_available) {
 			select_add_items(ui_get_string_items(['parley']), president_parley, 'may parley cards', 0, 1);
 		} else {
@@ -258,7 +259,7 @@ function accuse_activate() {
 		select_add_items(ui_get_hand_items(uplayer), pay_for_accuse_action, 'must pay a card for accuse action', 1, 1);
 	} else if (stage == 'accuse_action_select_player') {
 		let plnames = get_keys(fen.players);
-		let validplayers = plnames.filter(x => fen.players[x].hand.length >= 1 && x != uplayer);
+		let validplayers = plnames.filter(x => fen.players[x].hand.length >= 1 && x != uplayer && !fen.presidents_poll.includes(x));
 		select_add_items(ui_get_player_items(validplayers), accuse_submit_accused, 'must select player name', 1, 1);
 	} else if (stage == 'accuse_action_select_color') {
 		select_add_items(ui_get_string_items(['red', 'black']), accuse_submit_accused_color, 'must select color', 1, 1);
@@ -305,7 +306,8 @@ function president_action() {
 	//console.log('president', Z.uplayer, 'selects action', action)
 
 	if (action == 'accuse') {
-		Z.stage = fen.isprovisional ? 'pay_for_accuse' : 'accuse_action_select_player';
+		//Z.stage = fen.isprovisional ? 'pay_for_accuse' : 'accuse_action_select_player';
+		Z.stage = 'accuse_action_select_player'; //provisional does NOT pay anymore
 		accuse_activate();
 
 	} else if (action == 'parley') {
@@ -390,6 +392,7 @@ function accuse_replaced_membership() {
 	pl.membership = card;
 	removeInPlace(pl.hand, card);
 	fen.newpresident = Z.stage == 'accuse_action_entlarvt' ? null : accused;
+	delete fen.msg;
 	Z.turn = [fen.president];
 	Z.stage = Z.stage == 'accuse_action_entlarvt' ? 'accuse_action_policy' : 'accuse_action_new_president';
 	ari_history_list(`${accused} chooses new membership` + (TESTHISTORY ? ` ${card}` : ''), 'accuse');
@@ -729,6 +732,7 @@ function start_new_poll() {
 	Z.stage = 'hand';
 	Z.fen.cardsrevealed = false;
 	Z.fen.wrong_guesses = 0;
+	Z.fen.presidents_poll=[];
 	Z.turn = get_valid_voters();
 	//console.log('...turn', Z.turn)
 	take_turn_fen_clear();
