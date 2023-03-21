@@ -91,9 +91,9 @@ function start_game_with_players(n,game='accuse'){
 	removeInPlace(list,'mimi');
 	removeInPlace(list,'felix');
 	//let list1 = arrWithout(list, ['mimi', 'felix']);
-	console.log('list',list)
+	//console.log('list',list)
 	let playernames = rChoose(list, numplayers - 2);
-	console.log('playernames',playernames);
+	//console.log('playernames',playernames);
 	playernames = ['mimi', 'felix'].concat(playernames);
 	let playmodes = playernames.map(x=>'human'); 
 	let players = [];
