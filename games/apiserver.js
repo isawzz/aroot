@@ -279,7 +279,7 @@ function update_table() {
 
 	Z.skip_presentation = sametable && (sameplayerdata || specialcase);
 
-	if (DA.TEST0 && (!sametable || !sameplayerdata)) {
+	if (DA.TEST1 && DA.TEST0 && (!sametable || !sameplayerdata)) {
 		console.log('======>Z.skip_presentation', Z.skip_presentation, '\nplayerdata_changed_for', Z.playerdata_changed_for);
 		console.log('_______ *** THE END *** ___________')
 	}

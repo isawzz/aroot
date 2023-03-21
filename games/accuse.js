@@ -521,7 +521,6 @@ function president_end() {
 	delete fen.isprovisional;
 	delete fen.player_cards;
 	delete fen.accused;
-	delete fen.msg;
 
 	fen.validvoters = jsCopy(fen.plorder);
 

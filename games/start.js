@@ -1,6 +1,6 @@
 onload = start; var FirstLoad = true;//document.onBlur = stopPolling;//onblur = stopPolling;//onfocus = onclick_reload_after_switching;
 //DA.SIMSIM = true; //DA.exclusive = true; DA.TESTSTART1 = true; //DA.sendmax = 3; 
-//DA.TEST0 = true; 
+DA.TEST0 = true; 
 //DA.TEST1 = true; DA.TEST1Counter = 0;
 function start() { 
 	//console.log('.......................'); return;
@@ -88,8 +88,12 @@ function startgame(game, players, options = {}) {
 function start_game_with_players(n,game='accuse'){
 	let numplayers = n;
 	let list = jsCopy(Serverdata.users).map(x => x.name);
-	let list1 = arrWithout(list, ['mimi', 'felix']);
-	let playernames = arrTake(list1, numplayers - 2);
+	removeInPlace(list,'mimi');
+	removeInPlace(list,'felix');
+	//let list1 = arrWithout(list, ['mimi', 'felix']);
+	console.log('list',list)
+	let playernames = rChoose(list, numplayers - 2);
+	console.log('playernames',playernames);
 	playernames = ['mimi', 'felix'].concat(playernames);
 	let playmodes = playernames.map(x=>'human'); 
 	let players = [];
