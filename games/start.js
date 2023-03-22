@@ -19,10 +19,9 @@ function start_with_assets(reload=false) {
 	//U=null;
 	if (nundef(U)) { show_users(); return; } 
 	
-	//reload=TESTHISTORY;
+	reload=TESTHISTORY;
 	show_username(reload);
 	if (DA.TEST0) show('dTestButtons');
-
 	
 	//startgame('accuse',)
 	//startgame('ferro'); 
@@ -102,6 +101,9 @@ function start_game_with_players(n,game='accuse', opts={}){
 	startgame(game, players, opts);
 }
 function gamestep() {
+
+	show_card('12_green'); return;
+
 	show_admin_ui();
 	DA.running = true; clear_screen(); dTable = mBy('dTable'); mClass('dTexture', 'wood');
 	//transition animation:

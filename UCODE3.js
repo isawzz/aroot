@@ -1,4 +1,101 @@
 
+
+function show_left_netcard(plname,order) {
+	let dx = lookup(UI, ['stats', plname]);
+	dx=dx.douter;
+
+	//need player next to plname in order
+	let next = get_next_in_list(plname,order);
+	let dx1=lookup(UI, ['stats', next]);
+	dx1=dx1.douter;
+
+	let r=getRect(dx);
+	let r1=getRect(dx1);
+	console.log('r',r)
+	let xcenter = r.r+(r1.l-r.r)/2;
+
+	let sz=40;
+	let wsz=sz*.7;
+	let dmark=mDiv(dTable,{position:'absolute',top:r.t+r.h/2-sz*1.5,left:xcenter-wsz/2,h:sz,w:wsz+1});//,bg:GREEN})
+
+	let pl = Z.fen.players[plname];
+	let idleft = get_color_card(pl.idleft, sz);
+	let d = iDiv(idleft);
+	mAppend(dmark, d)
+}
+
+function accuse_present(dParent) {
+	//console.log('options',Z.options)
+	mStyle(mBy('dTitle'), { display: 'grid', 'grid-template-columns': 'auto 1fr auto', h: 32 });
+
+	DA.no_shield = true;
+	let [fen, ui, stage, uplayer] = [Z.fen, UI, Z.stage, Z.uplayer];
+	if (firsttime) { fen = Z.fen = getfen1(); firsttime = false; }
+	let [dOben, dOpenTable, dMiddle, dRechts] = tableLayoutMR(dParent, 1, 0);
+	let dt = dTable = dOpenTable; clearElement(dt); mCenterFlex(dt); mStyle(dt, { hmin: 700 })
+
+	show_history(fen, dRechts);
+	if (isdef(fen.msg)) { show_message(fen.msg, true); }
+
+	let [hlg, hsm] = [80, 50];
+	let [hpolcard, hvotecard, himg, hstatfz, hnetcard, hhandcard, gap] = [hsm, hlg, 50, 8, hsm, hlg, 4];
+	let [hpol, hstat, hhand] = [hpolcard + 25, hvotecard + himg + hstatfz * 5 + gap * 2, hhandcard + 25];
+	let [d1, d2, d3, d4, d5] = [mDiv(dt), mDiv(dt), mDiv(dt), mDiv(dt), mDiv(dt)];
+
+	// *** d1 policies ***
+	let [color, n] = get_policies_to_win();
+	UI.policies = ui_type_accuse_hand(fen.policies, d1, { h: hpol }, '', 'policies', accuse_get_card_func(hsm, GREEN), false);
+	mStyle(d1, { h: isEmpty(fen.policies) ? 40 : hpol, w: '90%', display: 'flex', gap: 12 })
+	let msg = color == 'any' ? `${n} policies are needed to win!` : n <= 0 ? `${capitalize(color)} wins generation ${fen.generations.length}!` : `${capitalize(color)} needs ${n} more policies`
+	let x = mDiv(d1, { h: isEmpty(fen.policies) ? 40 : hpolcard }, null, msg); mCenterCenterFlex(x)
+
+	let [wgap, hgap] = [20, 12];
+	let players = fen.players;
+	let wneeded = (himg + wgap) * fen.plorder.length + wgap;
+	let wouter = '95%';
+	let order = get_present_order();
+	let me = order[0];
+
+	// *** d2 players ***
+	if (Z.phase > Z.options.rounds) show_playerstats_over(d2); else show_playerstats_orig(d2);
+
+
+	// *** d3 me ***
+	mStyle(d3, { hmin: hstat, w: wouter }); mCenterFlex(d3);
+	let dnet = mDiv(d3, { w: wneeded });
+	let wrest = wneeded - 2 * himg;
+	dnet.style.gridTemplateColumns = `64px 1fr 64px`;
+	dnet.style.display = 'inline-grid';
+	dnet.style.padding = `${hgap}px ${wgap}px`;
+
+	let pl = fen.players[me];
+
+	let par = (64 - hnetcard * .7) / 2;
+	let d_idright = mDiv(dnet, { w: 64, padding: par });
+	let idright = get_color_card(pl.idright, hnetcard); mAppend(d_idright, iDiv(idright))
+
+	let dme_stats = mDiv(dnet, { display: 'flex', 'justify-content': 'center', 'align-items': 'space-evenly' });
+	let dx = accuse_player_stat(dme_stats, me, hvotecard, himg, hstatfz, gap);
+	let d_idleft = mDiv(dnet, { w: 64, padding: par });
+	let idleft = get_color_card(pl.idleft, hnetcard); mAppend(d_idleft, iDiv(idleft))
+
+	// *** d4 hand ***
+	mStyle(d4, { margin: 10, h: hhand, w: '90%' }); mCenterFlex(d4);
+	let handui = ui_type_accuse_hand(pl.hand, d4, {}, `players.${uplayer}.hand`, 'hand', accuse_get_card_func(hhandcard));
+	lookupSetOverride(ui, ['players', uplayer, 'hand'], handui);
+
+	presentcards(hvotecard);
+
+	// *** show membership color for me (or in 'round' stage for all)
+	let plnames = stage == 'round'||stage == 'gameover' ? order : [me];
+	plnames.map(x => show_membership_color(x, hnetcard, himg));
+
+	// if (Z.phase > Number(Z.options.rounds)) {
+	// 	order.slice(1, order.length - 1).map(x => show_left_netcard(x,order));
+	// 	order.map(x => show_membership_color(x, hnetcard, himg));
+	// }
+}
+
 function show_left_netcard(plname,order) {
 
 	console.log('hallo!!!!!!!!!!')
