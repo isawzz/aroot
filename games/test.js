@@ -969,6 +969,15 @@ function ltest0_card() { let c = ari_get_card('QSn'); mAppend(dTable, iDiv(c)); 
 //#endregion
 
 //#region fen (=local) tests
+function fentest7_cards(){
+	mClear('dTable');
+	dTable = mBy('dTable'); mStyle(dTable,{gap:10});mCenterFlex(dTable);
+
+	for(let i=0;i<10;i++){
+		show_card_1(`${rNumber(1,999)}_${rColor()}`,100);
+	}
+
+}
 function fentest7_jokers() {
 	mClear(dTable);
 	for (const k of [0, 1]) {

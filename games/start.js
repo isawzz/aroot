@@ -2,14 +2,14 @@ onload = start; var FirstLoad = true;//document.onBlur = stopPolling;//onblur = 
 //DA.SIMSIM = true; //DA.exclusive = true; DA.TESTSTART1 = true; //DA.sendmax = 3; 
 //DA.TEST0 = true; 
 //DA.TEST1 = true; DA.TEST1Counter = 0;
-function start() { 
+function start() {
 	//console.log('.......................'); return;
 
-	let uname = DA.secretuser = localStorage.getItem('uname'); 
-	if (isdef(uname)) U = { name: uname }; 
-	phpPost({ app: 'simple' }, 'assets'); 
+	let uname = DA.secretuser = localStorage.getItem('uname');
+	if (isdef(uname)) U = { name: uname };
+	phpPost({ app: 'simple' }, 'assets');
 }
-function start_with_assets(reload=false) {
+function start_with_assets(reload = false) {
 	//console.log('.......................',Serverdata.users);
 
 	//console.log(`browser name: ${navigator.appName}, or ${navigator.userAgent}`);
@@ -17,12 +17,12 @@ function start_with_assets(reload=false) {
 	show_home_logo();
 
 	//U=null;
-	if (nundef(U)) { show_users(); return; } 
-	
-	reload=TESTHISTORY;
+	if (nundef(U)) { show_users(); return; }
+
+	reload = TESTHISTORY;
 	show_username(reload);
 	if (DA.TEST0) show('dTestButtons');
-	
+
 	//startgame('accuse',)
 	//startgame('ferro'); 
 	//#region TESTING
@@ -84,25 +84,26 @@ function startgame(game, players, options = {}) {
 	ensure_polling(); // macht einfach nur Pollmode = 'auto'
 	phpPost(o, 'startgame');
 }
-function start_game_with_players(n,game='accuse', opts={}){
+function start_game_with_players(n, game = 'accuse', opts = {}) {
 	let numplayers = n;
 	let list = jsCopy(Serverdata.users).map(x => x.name);
-	removeInPlace(list,'mimi');
-	removeInPlace(list,'felix');
+	removeInPlace(list, 'mimi');
+	removeInPlace(list, 'felix');
 	//let list1 = arrWithout(list, ['mimi', 'felix']);
 	//console.log('list',list)
 	let playernames = rChoose(list, numplayers - 2);
 	//console.log('playernames',playernames);
 	playernames = ['mimi', 'felix'].concat(playernames);
-	let playmodes = playernames.map(x=>'human'); 
+	let playmodes = playernames.map(x => 'human');
 	let players = [];
-	for(let i=0;i<n;i++) players.push({name:playernames[i],playmode:playmodes[i]});
-	addKeys({ mode: 'multi' },opts);
+	for (let i = 0; i < n; i++) players.push({ name: playernames[i], playmode: playmodes[i] });
+	addKeys({ mode: 'multi' }, opts);
 	startgame(game, players, opts);
 }
 function gamestep() {
 
-	show_card('12_green'); return;
+	fentest7_cards();
+	return;
 
 	show_admin_ui();
 	DA.running = true; clear_screen(); dTable = mBy('dTable'); mClass('dTexture', 'wood');
@@ -135,14 +136,14 @@ function gamestep() {
 		Z.func.activate_ui();
 		//console.log('Z.waiting:', Z.isWaiting);
 		if (Z.isWaiting == true || Z.mode != 'multi') staticTitle(); else animatedTitle();
-		
+
 		if (Z.options.zen_mode != 'yes' && Z.mode != 'hotseat' && Z.fen.keeppolling) {
 			autopoll();
-			console.log('gamestep autopoll'); 
+			console.log('gamestep autopoll');
 		}
 
 	}
-	
+
 	if (TESTING == true) landing();	//DA.max=100;DA.runs=valf(DA.runs+1,0);if (DA.runs<DA.max) onclick_restart();
 }
 
@@ -249,9 +250,9 @@ function ai_move(ms = 100) {
 	let [A, fen] = [valf(Z.A, {}), Z.fen];
 	let selitems;
 
-	if (Z.game == 'accuse' && Z.stage == 'hand'){
-		selitems=[];
-	}else	if (Z.game == 'ferro') {
+	if (Z.game == 'accuse' && Z.stage == 'hand') {
+		selitems = [];
+	} else if (Z.game == 'ferro') {
 		//console.log('ferro ai_move', A.items);
 		if (Z.stage == 'card_selection') {
 			let uplayer = Z.uplayer;
@@ -353,7 +354,7 @@ function take_turn_fen() { take_turn(); }
 
 function take_turn_spotit() { take_turn(true, true); }
 
-function take_turn_fen_clear() { take_turn(true, false, true);  }
+function take_turn_fen_clear() { take_turn(true, false, true); }
 
 function take_turn_fen_write() { take_turn(true, true); }
 
@@ -361,23 +362,23 @@ function take_turn_multi() { if (isdef(Z.state)) take_turn(false, true); else ta
 function take_turn_state1() { if (isdef(Z.state1)) take_turn(false, true); else take_turn(false, false); }
 function take_turn_state2() { if (isdef(Z.state2)) take_turn(false, true); else take_turn(false, false); }
 function take_turn_write() { take_turn_multi(); }
-function take_turn_waiting() { take_turn(true,false,false,null); }
+function take_turn_waiting() { take_turn(true, false, false, null); }
 
 function take_turn(write_fen = true, write_player = false, clear_players = false, player_status = null) {
 	prep_move();
 	let o = { uname: Z.uplayer, friendly: Z.friendly };
 	if (isdef(Z.fen)) o.fen = Z.fen;
 	if (write_fen) { assertion(isdef(Z.fen) && isdef(Z.fen.turn), 'write_fen without fen!!!!'); o.write_fen = true; }
-	if (write_player) { 
-		o.write_player = true; 
-		if (isdef(Z.state)) o.state = Z.state; 
-		if (isdef(Z.state1)) o.state1 = Z.state1; 
-		if (isdef(Z.state2)) o.state2 = Z.state2; 
+	if (write_player) {
+		o.write_player = true;
+		if (isdef(Z.state)) o.state = Z.state;
+		if (isdef(Z.state1)) o.state1 = Z.state1;
+		if (isdef(Z.state2)) o.state2 = Z.state2;
 		//console.log('writing playerstate for', Z.uplayer, Z.state, Z.state1, Z.state2); 
-	} 
+	}
 	if (clear_players) {
 		//console.log('clear by',o.uname)
-		o.clear_players = true;delete Z.playerdata;delete o.fen.pldata;
+		o.clear_players = true; delete Z.playerdata; delete o.fen.pldata;
 	}
 	o.player_status = player_status;
 	let cmd = 'table';
@@ -408,8 +409,8 @@ function send_or_sim(o, cmd) {
 	Counter.server += 1; //console.log('send_or_sim '+Counter.server);
 	//if (Counter.server > 10) return;
 	//if (nundef(Z) || is_multi_stage()) o.read_players = true; das wird jetzt IMMER gemacht!!!
-	
-	
+
+
 	//if (DA.simulate) phpPostSimulate(o, cmd); else phpPost(o, cmd);
 	phpPost(o, cmd);
 }
