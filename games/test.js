@@ -977,7 +977,7 @@ function fentest7_jokers() {
 		console.log('svg',iDiv(card))
 	}
 }
-function fentest6_start4() { start_game_with_players(4, 'accuse',{stability:1}); }
+function fentest6_start4() { start_game_with_players(4, 'accuse',{stability:1,rounds:1}); }
 function fentest6_start5() { start_game_with_players(5, 'accuse',{stability:2}); }
 function fentest6_start8() { start_game_with_players(8); }
 function fentest6_start14() { start_game_with_players(14); }
