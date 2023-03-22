@@ -1,10 +1,26 @@
-function accuse_get_card(ckey, h, w, backcolor = BLUE, ov = .3) {
-	let info = get_c52j_info(ckey, backcolor);
+function accuse_get_card(ckey, h, w, ov = .3) {
+	//console.log('ckey', ckey);
+	let type = ckey[2];
+	let sz = { largecard: 100, smallcard: 50 };
+
+	let info = get_c52j_info(ckey);
+
 	let card = cardFromInfo(info, h, w, ov);
 	return card;
 }
-function accuse_get_card_func(hcard = 80, backcolor = BLUE) { return ckey => accuse_get_card(ckey, hcard, null, backcolor); }
 
+function accuse_get_card_func(hcard = 80, backcolor = BLUE) {
+	return (ckey, h, w, ov = .3) => {
+		//console.log('ckey', ckey);
+		let type = ckey[2];
+		let sz = { largecard: 100, smallcard: 50 };
+
+		let info = get_c52j_info(ckey);
+
+		let card = cardFromInfo(info, hcard, w, ov);
+		return card;
+	}
+}
 function aggregate_player_hands_by_rank(fen) {
 	//fen.akku will contain all player hand cards! 
 	//returns di {rank:count}
@@ -57,7 +73,7 @@ function cardFromInfo(info, h, w, ov) {
 	//console.log('ckey', ckey, info.rank, info.suit, get_color_of_card(ckey));
 	if (info.rank == '*') {
 		let color = get_color_of_card(ckey);
-		if (color != 'red') svgCode = colored_jolly(color);
+		if (color != 'red') svgCode = colored_jolly(color); 
 	}
 	svgCode = '<div>' + svgCode + '</div>';
 	let el = mCreateFrom(svgCode);
@@ -78,8 +94,8 @@ function calc_hand_value(hand, card_func = ferro_get_card) {
 	return sum;
 }
 function colored_jolly(color) {
-	let id = `J_${color}`;
-	let svg = `
+	let id=`J_${color}`;
+	let svg =`
 		<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" class="card" face="1J" 
 		height="100%" preserveAspectRatio="none" viewBox="-120 -168 240 336" width="100%">
 		<symbol id="J11" preserveAspectRatio="none" viewBox="0 0 1300 2000">
@@ -101,7 +117,7 @@ function colored_jolly(color) {
 		<use width="202.8" height="312" x="-101.4" y="-156" xlink:href="#J13"></use>
 		<use width="202.8" height="312" x="-101.4" y="-156" xlink:href="#J14"></use>
 		</svg>
-	`;
+	`;	
 	return svg;
 
 }

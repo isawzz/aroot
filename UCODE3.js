@@ -1,4 +1,51 @@
 
+function show_left_netcard(plname,order) {
+
+	console.log('hallo!!!!!!!!!!')
+
+	let dx = lookup(UI, ['stats', plname]);
+	dx=dx.douter;
+	console.log('dx', dx, plname);
+
+	//return;
+
+	//need player next to plname in order
+	let next = get_next_in_list(plname,order);
+	let dx1=lookup(UI, ['stats', next]);
+	dx1=dx1.douter;
+
+	let r=getRect(dx);
+	let r1=getRect(dx1);
+	console.log('r',r)
+	let xcenter = r.r+(r1.l-r.r)/2;
+	let ycenter = r.t;//+(r.h/2);
+	let ybot=r.t+r.h;
+	console.log('center',xcenter,ycenter)
+
+	let sz=40;
+	let wsz=sz*.7;
+	let dmark=mDiv(dTable,{position:'absolute',top:r.t+r.h/2-sz*1.5,left:xcenter-wsz/2,h:sz,w:wsz+1});//,bg:GREEN})
+
+	let pl = Z.fen.players[plname];
+	let idleft = get_color_card(pl.idleft, sz);
+	let d = iDiv(idleft);
+	mAppend(dmark, d)
+
+	//now place 
+
+	return;
+
+	// let pl = Z.fen.players[plname];
+	// let dParent = dx.douter;
+	// mStyle(dParent, { position: 'relative' })
+
+	// let dnew = mDiv(dParent, {});
+	// let idleft = get_color_card(pl.idleft, 40);
+	// let d = iDiv(idleft);
+	// mAppend(dnew, d)
+	// mPos(dnew, 82, 92)
+}
+
 function accuse_present(dParent) {
 	//console.log('options',Z.options)
 	mStyle(mBy('dTitle'), { display: 'grid', 'grid-template-columns': 'auto 1fr auto' });
