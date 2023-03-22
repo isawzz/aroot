@@ -1,6 +1,6 @@
 onload = start; var FirstLoad = true;//document.onBlur = stopPolling;//onblur = stopPolling;//onfocus = onclick_reload_after_switching;
 //DA.SIMSIM = true; //DA.exclusive = true; DA.TESTSTART1 = true; //DA.sendmax = 3; 
-DA.TEST0 = true; 
+//DA.TEST0 = true; 
 //DA.TEST1 = true; DA.TEST1Counter = 0;
 function start() { 
 	//console.log('.......................'); return;
@@ -19,7 +19,7 @@ function start_with_assets(reload=false) {
 	//U=null;
 	if (nundef(U)) { show_users(); return; } 
 	
-	reload=true;
+	reload=TESTHISTORY;
 	show_username(reload);
 	if (DA.TEST0) show('dTestButtons');
 
@@ -85,7 +85,7 @@ function startgame(game, players, options = {}) {
 	ensure_polling(); // macht einfach nur Pollmode = 'auto'
 	phpPost(o, 'startgame');
 }
-function start_game_with_players(n,game='accuse'){
+function start_game_with_players(n,game='accuse', opts={}){
 	let numplayers = n;
 	let list = jsCopy(Serverdata.users).map(x => x.name);
 	removeInPlace(list,'mimi');
@@ -98,7 +98,8 @@ function start_game_with_players(n,game='accuse'){
 	let playmodes = playernames.map(x=>'human'); 
 	let players = [];
 	for(let i=0;i<n;i++) players.push({name:playernames[i],playmode:playmodes[i]});
-	startgame(game, players, { mode: 'multi' });
+	addKeys({ mode: 'multi' },opts);
+	startgame(game, players, opts);
 }
 function gamestep() {
 	show_admin_ui();

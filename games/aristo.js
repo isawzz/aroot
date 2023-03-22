@@ -1876,8 +1876,6 @@ function ari_history_list(lines, title = '', fen) {
 	if (nundef(fen.history)) fen.history = [];
 	if (isString(lines)) lines = [lines];
 
-	// let html = beautify_history(lines,title, fen,Z.uplayer);
-	// fen.history.push(html);
 	fen.history.push({ title: title, lines: lines });
 
 	//lookupSetOverride(Z.fen,['history',title],lines);

@@ -358,7 +358,7 @@ function mAnimateTo(elem, prop, val, callback, msDuration = 1000, easing = 'cubi
 }
 function mAnimateList(elem, ogoal, callback, msDuration = 1000, easing = 'cubic-bezier(1,-0.03,.86,.68)', delay = 0) {
 	//usage: mAnimateTo(elem, 'opacity', 1, somefunc, 2000, 'ease-in', 1000);
-	for(const k in ogoal) {
+	for (const k in ogoal) {
 		ogoal[k] = isString(ogoal[k]) || k == 'opacity' ? ogoal[k] : '' + ogoal[k] + 'px';
 	}
 	let kflist = [ogoal];
@@ -414,7 +414,14 @@ function mCard(dParent, styles, classtr = '', id = null) {
 	// console.log('classes', classes);
 	return mDiv(dParent, styles, id, null, classes);
 }
-function mCardText(ckey, sz, color) { return is_jolly(ckey) ? '<span style="font-family:Algerian">jolly</span>' : `${ckey[0]}${mSuit(ckey, sz, color)}`; }
+function mCardText(ckey, sz, color) {
+	//console.log('hhhhhhhhhhhh',color)
+	let j=is_jolly(ckey);
+	if (nundef(color)) color = get_color_of_card(ckey);
+	return is_jolly(ckey) ?
+		`<span style="font-size:12px;font-family:Algerian;color:${color}">jolly</span>` :
+		`${ckey[0]}${mSuit(ckey, sz, color)}`;
+}
 function mCenterFlex(d, hCenter = true, vCenter = false, wrap = true) {
 	let styles = { display: 'flex' };
 	if (hCenter) styles['justify-content'] = 'center';
@@ -970,7 +977,7 @@ function mRadioGroup(dParent, styles, id, legend, legendstyles) {
 		let l = mCreate('legend');
 		l.innerHTML = legend;
 		mAppend(f, l);
-		if (isdef(legendstyles)) {mStyle(l, legendstyles);}
+		if (isdef(legendstyles)) { mStyle(l, legendstyles); }
 	}
 	mAppend(dParent, f);
 	return f;
@@ -1455,7 +1462,7 @@ function mFade(d, ms = 800, callback = null) { return mAnimateTo(d, 'opacity', 0
 function mFadeRemove(d, ms = 800, callback = null) { return mAnimateTo(d, 'opacity', 0, () => { mRemove(d); if (callback) callback(); }, ms); }
 function mFadeClear(d, ms = 800, callback = null) { return mAnimateTo(d, 'opacity', 0, () => { mClear(d); if (callback) callback(); }, ms); }
 function mFadeClearShow(d, ms = 800, callback = null) { return mAnimate(d, 'opacity', [1, 0], () => { mClear(d); if (callback) callback(); }, ms); }
-function mFall(d, ms = 800, dist=50) { toElem(d).animate([{ opacity: 0, transform: `translateY(-${dist}px)` }, { opacity: 1, transform: 'translateY(0px)' },], { fill: 'both', duration: ms, easing: 'ease' }); }
+function mFall(d, ms = 800, dist = 50) { toElem(d).animate([{ opacity: 0, transform: `translateY(-${dist}px)` }, { opacity: 1, transform: 'translateY(0px)' },], { fill: 'both', duration: ms, easing: 'ease' }); }
 function mPulse(d, ms, callback = null) { mClass(d, 'onPulse'); TO[getUID()] = setTimeout(() => { mClassRemove(d, 'onPulse'); if (callback) callback(); }, ms); }
 function mPulse1(d, callback) { mPulse(d, 1000, callback); }
 function mPulse2(d, callback) { mPulse(d, 2000, callback); }
@@ -1481,12 +1488,12 @@ function mTranslate(child, newParent, ms = 800, callback = null) {
 	//let anim = toElem(child).animate([{ transform: `scale(${1},${1})` }, { transform: `scale(${x},${y})` },], { fill: 'both', duration: ms, easing: 'ease' });
 	//anim.onfinish = callback;
 }
-function mTranslateBy(elem,x,y, ms = 800, callback = null) {
+function mTranslateBy(elem, x, y, ms = 800, callback = null) {
 	mAnimate(elem, 'transform', [`translateX(${x}px) translateY(${y}px)`], callback, ms, 'ease'); //translate(${dx}px,${dy}px)`
 	//let anim = toElem(child).animate([{ transform: `scale(${1},${1})` }, { transform: `scale(${x},${y})` },], { fill: 'both', duration: ms, easing: 'ease' });
 	//anim.onfinish = callback;
 }
-function mTranslateByFade(elem,x,y, ms = 800, callback = null) {
+function mTranslateByFade(elem, x, y, ms = 800, callback = null) {
 
 	mAnimate(elem, 'transform', [`translateX(${x}px) translateY(${y}px)`], callback, ms, 'ease'); //translate(${dx}px,${dy}px)`
 	let a = toElem(elem).animate([{ opacity: .25 }, { opacity: 1 },], { fill: 'both', duration: ms, easing: 'ease' });
@@ -1790,7 +1797,7 @@ function arrBuckets(arr, func, sortbystr) {
 }
 function arrClear(arr) { arr.length = 0; }
 function arrChildren(elem) { return [...toElem(elem).children]; }
-function arrCount(arr,func){ return arr.filter(func).length; }
+function arrCount(arr, func) { return arr.filter(func).length; }
 function arrCycle(arr, count) { return arrRotate(arr, count); }
 function arrExtend(arr, list) { list.map(x => arr.push(x)); return arr; }
 function arrFirst(arr) { return arr.length > 0 ? arr[0] : null; }
@@ -2202,10 +2209,10 @@ function alphaToHex(zero1) {
 	//console.log('alpha from', zero1, 'to', hex);
 	return hex;
 }
-function colorDark(c, percent=50, log = true) {
+function colorDark(c, percent = 50, log = true) {
 	if (nundef(c)) c = rColor(); else c = colorFrom(c);
 
-	let zero1=-percent/100;
+	let zero1 = -percent / 100;
 	return pSBC(zero1, c, undefined, !log);
 }
 function colorFrom(cAny, a, allowHsl = false) {
@@ -2414,12 +2421,12 @@ function colorIdealText(bg, grayPreferred = false) {
 	return foreColor;
 	// return 'white';
 }
-function colorLight(c, percent=20, log = true) {
+function colorLight(c, percent = 20, log = true) {
 	if (nundef(c)) {
 		return colorFromHSL(rHue(), 100, 85);
 	} else c = colorFrom(c);
 	// if (nundef(c)) c = colorFrom(rChoose(['yellow', 'skyblue', 'orange', 'violet', 'pink', 'GREEN', 'lime']));//rPrimaryColor();
-	let zero1=percent/100;
+	let zero1 = percent / 100;
 	return pSBC(zero1, c, undefined, !log);
 }
 function colorRGB(cAny, asObject = false) {
@@ -3423,7 +3430,7 @@ function clearFleetingMessage() {
 	if (isdef(dFleetingMessage)) {
 		dFleetingMessage.remove();
 		dFleetingMessage = null;
-		clearTimeout(TOFleetingMessage); 
+		clearTimeout(TOFleetingMessage);
 	}
 }
 function showFleetingMessage(msg, dParent, styles = {}, ms = 3000, msDelay = 0, fade = true) {
@@ -4268,7 +4275,7 @@ async function load_assets_fetch(basepath, baseminpath) {
 	console.assert(isdef(Config), 'NO Config!!!!!!!!!!!!!!!!!!!!!!!!');
 	return { users: dict2list(DB.users, 'name'), games: dict2list(Config.games, 'name'), tables: [] };
 }
-async function load_syms(path){
+async function load_syms(path) {
 	//sollten in base/assets/allSyms.yaml sein!
 	if (nundef(path)) path = './base/assets/';
 	Syms = await route_path_yaml_dict(path + 'allSyms.yaml');

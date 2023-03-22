@@ -977,7 +977,8 @@ function fentest7_jokers() {
 		console.log('svg',iDiv(card))
 	}
 }
-function fentest6_start5() { start_game_with_players(5); }
+function fentest6_start4() { start_game_with_players(4, 'accuse',{stability:1}); }
+function fentest6_start5() { start_game_with_players(5, 'accuse',{stability:2}); }
 function fentest6_start8() { start_game_with_players(8); }
 function fentest6_start14() { start_game_with_players(14); }
 
@@ -2140,8 +2141,6 @@ function make_long_history(o) {
 	for (let i = 0; i < 100; i++) {
 		let lines = [`${rChoose(get_keys(fen.players))} discards ${rCard()}`];
 		let title = 'discard';
-		//let html = beautify_history(lines, title, fen, uplayer);
-		//fen.history.push(html);
 		fen.history.push({ title: title, lines: lines });
 	}
 }

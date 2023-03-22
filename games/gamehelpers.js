@@ -73,7 +73,7 @@ function staticTitle() {
 	let loc = url.includes('telecave') ? 'telecave' : 'local';
 	// let game = isdef(Z) ? Config.games[Z.game].friendly : '♠ GAMES ♠'
 	let game = isdef(Z) ? stringAfter(Z.friendly, 'of ') : '♠ GAMES ♠';
-	document.title = `(${loc}) ${game}`; // DA.TEST0 == true? `poll: ${DA.pollCounter}` : `(${loc}) ${game}`; // ${DA.TEST0 == true ? DA.pollCounter : ''}`;
+	document.title = `(${loc}) ${game}`; 
 }
 //#endregion title (tab)
 
@@ -552,7 +552,7 @@ function show_admin_ui() {
 		show('bRandomMove');
 	}
 	if (Z.uname == Z.host || Z.uname == 'mimi') show('dHostButtons'); else hide('dHostButtons');
-	if (DA.TEST0 == true) show('dTestButtons'); else hide('dTestButtons');
+	if (DA.showTestButtons == true) show('dTestButtons'); else hide('dTestButtons');
 }
 function show_fleeting_message(s, dParent, styles, id, ms = 2000) {
 	let d = mDiv(dParent, styles, id, s);
