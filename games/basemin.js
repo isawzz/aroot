@@ -416,11 +416,13 @@ function mCard(dParent, styles, classtr = '', id = null) {
 }
 function mCardText(ckey, sz, color) {
 	//console.log('hhhhhhhhhhhh',color)
-	let j=is_jolly(ckey);
+	let j = is_jolly(ckey);
 	if (nundef(color)) color = get_color_of_card(ckey);
 	return is_jolly(ckey) ?
 		`<span style="font-size:12px;font-family:Algerian;color:${color}">jolly</span>` :
-		`${ckey[0]}${mSuit(ckey, sz, color)}`;
+		is_color(ckey) ? `<span style="font-weight:bold;color:${color}">${ckey}</span>` :
+			is_color(stringAfter(ckey, '_')) ? `<span style="font-size:16px;font-family:Algerian;color:${color}">${stringBefore(ckey, '_')}</span>` :
+				`${ckey[0]}${mSuit(ckey, sz, color)}`;
 }
 function mCenterFlex(d, hCenter = true, vCenter = false, wrap = true) {
 	let styles = { display: 'flex' };
@@ -1063,7 +1065,7 @@ function mStamp(d1, text, color, sz) {
 	mStyle(d1, { position: 'relative' });
 	let r = getRect(d1);
 	let [w, h] = [r.w, r.h];
-	color = valf(color, 'black'); 
+	color = valf(color, 'black');
 	sz = valf(sz, r.h / 7);
 	//console.log('r', r, 'sz', sz);
 	let [padding, border, rounding, angle] = [sz / 10, sz / 6, sz / 8, rChoose([-16, -14, -10, 10, 14])];

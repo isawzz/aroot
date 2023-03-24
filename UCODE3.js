@@ -35,6 +35,68 @@ function ui_type_gcHand(list, dParent) {
 
 //#endregion
 
+function rest() {
+	let ranks = fen.ranks;
+	let tb = {
+		4: ['4', '5', 5, 12, 1],
+		5: ['4', 'T', 6, 2, 1],
+		6: ['2', 'T', 6, 0, 1],
+		7: ['A', 'T', 6, 2, 1],
+		8: ['2', 'K', 6, 0, 1],
+		9: ['A', 'K', 6, 0, 1],
+		10: ['2', 'K', 5, 2, 1],
+		11: ['A', 'K', 5, 3, 1],
+		12: ['2', '8', 5, 4, 2],
+		13: ['2', '9', 5, 2, 2],
+		14: ['2', '9', 5, 2, 2], //add 4 10s
+	};
+	if (nundef(players)) players = get_keys(fen.players);
+	let N = players.length;
+
+	let deck_ballots = [];
+	let [r0, r1, handsize, jo, numdecks] = tb[N];
+
+	for (let i = ranks.indexOf(r0); i <= ranks.indexOf(r1); i++) {
+		for (let nd = 0; nd < numdecks; nd++) {
+			let c = ranks[i];
+			for (const suit of 'SHDC') { deck_ballots.push(c + suit + 'n'); }
+		}
+	}
+	if (N == 14) { for (const suit of 'SHDC') { deck_ballots.push('T' + suit + 'n'); } }
+
+	// *** jokers ***
+	// for (let i = 0; i < jo; i++) { deck_ballots.push('A' + (i % 2 ? 'H' : 'S') + 'n'); }  //'' + (i%2) + 'J' + 'n');
+	// for (let i = 0; i < jo; i++) { deck_ballots.push('' + (i%2) + 'J' + 'n'); } 
+	for (let i = 0; i < jo; i++) { deck_ballots.push('*' + (i % 2 ? 'H' : 'S') + 'n'); }
+
+	shuffle(deck_ballots);	//console.log('deck', deck_ballots);
+	fen.deck_ballots = deck_ballots;
+	fen.handsize = handsize;
+	//console.log('deck_ballots:::',deck_ballots.length);
+	for (const plname in fen.players) {
+		let pl = fen.players[plname];
+		pl.hand = deck_deal(deck_ballots, handsize);
+	}
+	//console.log('phase',fen.phase)
+	let gens = lookup(fen, ['generations']);
+	let last_winning_color = gens && gens.length >= 1 ? arrLast(gens).color : null;
+	fen.policies = [];
+	if (last_winning_color && fen.colors.includes(last_winning_color)) {
+		fen.policies.push(get_color_card(last_winning_color));
+	}
+	fen.validvoters = jsCopy(players)
+	fen.crisis = 0;
+	delete fen.president;
+	delete fen.newpresident;
+	delete fen.isprovisional;
+	delete fen.player_cards;
+	delete fen.accused;
+	delete fen.dominance;
+
+	//ari_history_list(`*** generation ${fen.phase} starts ***`,'',fen)
+
+}
+
 function start_new_generation(fen, players, options) {
 	let deck_discard = fen.deck_discard = [];
 

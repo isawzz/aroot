@@ -417,7 +417,7 @@ function i_am_host() { return U.name == Z.host; }
 function i_am_acting_host() { return U.name == Z.fen.acting_host; }
 function i_am_trigger() { return is_multi_trigger(U.name); }
 function is_advanced_user() {
-	let advancedUsers = ['mimi', 'bob', 'buddy', 'minnow', 'nimble', 'leo']; //, 'guest', 'felix'];
+	let advancedUsers = ['mimi', 'felix', 'bob', 'buddy', 'minnow', 'nimble', 'leo']; //, 'guest', 'felix'];
 	//console.log('***U', isdef(U) ? U.name : 'undefined!!!', 'secret:', DA.secretuser);
 	return isdef(U) && ((advancedUsers.includes(DA.secretuser) || advancedUsers.includes(U.name)));
 
@@ -546,12 +546,12 @@ function show_admin_ui() {
 	else if (Z.uname == Z.host && Z.stage == 'round_end') show('bClearAck');
 	else if (Z.game == 'ferro' && Z.uname == 'mimi' && Z.stage != 'card_selection') show('bClearAck');
 	else if (Z.game == 'accuse' && DA.HOSTAKEOVER && (Z.uname == Z.host || Z.uname == 'mimi' || DA.omnipower)) show_takeover_ui();
-	if (Z.game == 'accuse') show('bExperience');
+	if (Z.game == 'accuse' && lookup(Z,['fen','players',Z.uplayer,'experience'])>0) show('bExperience');
 	if (['ferro', 'bluff', 'aristo', 'a_game'].includes(Z.game) && (Z.role == 'active' || Z.mode == 'hotseat')) {
 		//console.log('random should show because game is', Z.game)
 		show('bRandomMove');
 	}
-	if (Z.uname == Z.host || Z.uname == 'mimi') show('dHostButtons'); else hide('dHostButtons');
+	if (Z.uname == Z.host || Z.uname == 'mimi' || Z.uname == 'felix') show('dHostButtons'); else hide('dHostButtons');
 	if (DA.showTestButtons == true) show('dTestButtons'); else hide('dTestButtons');
 }
 function show_fleeting_message(s, dParent, styles, id, ms = 2000) {

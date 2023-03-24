@@ -113,7 +113,8 @@ function accuse_present(dParent) {
 
 	// *** d1 policies ***
 	let [color, n] = get_policies_to_win();
-	UI.policies = ui_type_accuse_hand(fen.policies, d1, { h: hpol }, '', 'policies', accuse_get_card_func(hsm, GREEN), false);
+	UI.policies = ui_type_accuse_policies(fen.policies, d1, { h: hpol }, '', 'policies', accuse_get_card_func(hsm, GREEN), false);
+	//UI.policies.items.map(x=>mStyle(iDiv(x),{border:x.bg,bg:'silver'})); //:.75}))
 	mStyle(d1, { h: isEmpty(fen.policies) ? 40 : hpol, w: '90%', display: 'flex', gap: 12 })
 	let msg = color == 'any' ? `${n} policies are needed to win!` : n <= 0 ? `${capitalize(color)} wins generation ${fen.generations.length}!` : `${capitalize(color)} needs ${n} more policies`
 	let x = mDiv(d1, { h: isEmpty(fen.policies) ? 40 : hpolcard }, null, msg); mCenterCenterFlex(x)
@@ -150,7 +151,7 @@ function accuse_present(dParent) {
 
 	// *** d4 hand ***
 	mStyle(d4, { margin: 10, h: hhand, w: '90%' }); mCenterFlex(d4);
-	let handui = ui_type_accuse_hand(pl.hand, d4, {}, `players.${uplayer}.hand`, 'hand', accuse_get_card_func(hhandcard));
+	let handui = ui_type_accuse_hand(pl.hand, d4, {h:hhand}, `players.${uplayer}.hand`, 'hand', accuse_get_card_func(hhandcard));
 	lookupSetOverride(ui, ['players', uplayer, 'hand'], handui);
 
 	presentcards(hvotecard);
@@ -382,7 +383,7 @@ function accuse_enact_policy() {
 
 	//this card is chosen as a policy
 	if (!isEmpty(card)) {
-		lookupAddToList(fen, ['policies'], card);
+		lookupAddToList(fen, ['policies'], get_color_of_card(card));
 		removeInPlace(fen.players[uplayer].hand, card);
 		ari_history_list(`${uplayer} enacts a ${get_color_of_card(card)} policy`, 'policy')
 
@@ -446,7 +447,7 @@ function president_parley() {
 function parley_player_selected() {
 	let [A, uplayer, fen] = [Z.A, Z.uplayer, Z.fen];
 	let other = fen.other = A.items[A.selected[0]].a;
-	fen.maxcards = Math.max(fen.players[other].hand.length, fen.players[uplayer].hand.length);
+	fen.maxcards = Math.min(fen.players[other].hand.length, fen.players[uplayer].hand.length);
 	Z.stage = 'parley_select_cards'
 	accuse_activate();
 }
@@ -536,63 +537,6 @@ function accuse_evaluate_votes() {
 	else { eval_tie(max_votes, votes); }
 
 
-}
-function eval_consensus(votes, color) {
-	let [stage, A, fen, phase, uplayer, turn, uname, host] = [Z.stage, Z.A, Z.fen, Z.phase, Z.uplayer, Z.turn, Z.uname, Z.host];
-
-	//check ob es eindeutiges maximum rank gibt
-	let vsorted = sortCardObjectsByRankDesc(votes, fen.ranks, 'card');
-	//console.log(vsorted.map(x => x.card));
-	//console.log('...CONSENSUS!!!!!!!!!!!!!', color, votes);
-
-	let opt = valf(Z.options.consensus, 'policy');
-
-	if (opt == 'policy') {
-		fen.policies.push(get_color_card(color)); //color == 'red' ? 'QDn' : 'QSn'); //last_policy);
-		fen.validvoters = jsCopy(Z.plorder);
-		check_enough_policies_or_start_new_poll(`consensus on ${color}`);
-	} else if (opt == "coupdetat") {
-		let ace_present = vsorted.find(x => is_ace(x.card));
-		//console.log('ace_present', ace_present);
-		if (isdef(ace_present)) {
-			ari_history_list(`coup succeeded! ${color} wins!`, 'generation ends');
-			accuse_score_update(color);
-			Z.turn = jsCopy(Z.plorder);
-			Z.stage = 'round';
-			take_turn_fen_clear();
-		} else { //just add a policy
-			fen.policies.push(get_color_card(color)); //color == 'red' ? 'QDn' : 'QSn'); 
-			fen.validvoters = jsCopy(Z.plorder);
-			check_enough_policies_or_start_new_poll(`consensus on ${color}`);
-		}
-	} else if (opt == 'generation') {
-		ari_history_list(`consensus on ${color}!`, 'generation ends');
-		accuse_score_update(color);
-		Z.turn = jsCopy(Z.plorder);
-		Z.stage = 'round';
-		take_turn_fen_clear();
-	} else if (opt == 'playerpolicy') { // opt == 'policy'
-		//what if there is a tie?
-		let tie = vsorted.length > 1 && getRankOf(vsorted[0].card) == getRankOf(vsorted[1].card);
-		if (tie) {
-			//need to go into a dialogue: each of the tied players must select a victim (tied player) who will pay!
-			let maxrank = getRankOf(vsorted[0].card);
-			let tied_votes = arrTakeWhile(vsorted, x => getRankOf(x.card) == maxrank);
-			let tied_players = tied_votes.map(x => x.plname);
-			console.log('tied', tied_votes, tied_players);
-			Z.turn = tied_players;
-			Z.stage = 'tied_consensus';
-			fen.tied_votes = tied_votes;
-			take_turn_fen_clear();
-		} else {
-			let winner = vsorted[0];
-			//remove winning vote from player hand and add it to policies!
-			fen.policies.push(winner.card);
-			removeInPlace(fen.players[winner.plname].hand, winner.card);
-			fen.validvoters = jsCopy(Z.plorder);
-			check_enough_policies_or_start_new_poll(`consensus on ${color}`);
-		}
-	}
 }
 function eval_empty_votes(votes) {
 	let [stage, A, fen, phase, uplayer, turn, uname, host] = [Z.stage, Z.A, Z.fen, Z.phase, Z.uplayer, Z.turn, Z.uname, Z.host];
@@ -883,6 +827,8 @@ function arrSame(arr, func) {
 	return x;
 }
 function arrAllSame(arr, func) {
+	if (isEmpty(arr)) return false;
+	console.log('arr',arr)
 	let arr1 = arr.map(x => func(x));
 	let sample = arr1[0];
 	for (let i = 1; i < arr1.length; i++) if (arr1[i] != sample) return false;
@@ -893,6 +839,7 @@ function check_enough_policies_or_start_new_poll(msg_new_poll) {
 	//look if last X policies are same color =>dominance
 	let policies_needed = fen.stability - fen.crisis;
 	let arr = arrTakeLast(fen.policies, policies_needed);
+	//console.log('arr',arr)
 	let color = arrAllSame(arr, get_color_of_card);
 	if (color && arr.length >= policies_needed) {
 		//generation ends here!!! 
@@ -955,6 +902,7 @@ function get_policies_to_win() {
 	let fen = Z.fen;
 	let policies_needed = fen.stability - fen.crisis;
 	if (isEmpty(fen.policies)) return ['any', policies_needed];
+	//console.log('fen.policies',fen.policies)
 	let revlist = jsCopy(fen.policies).reverse();
 	let color = get_color_of_card(revlist[0]);
 	let samecolorlist = arrTakeWhile(revlist, x => get_color_of_card(x) == color);
@@ -973,7 +921,7 @@ function get_others_with_at_least_one_hand_card() {
 	return get_keys(Z.fen.players).filter(x => x != Z.uplayer && Z.fen.players[x].hand.length >= 1);
 }
 function getRankOf(ckey, ranks) {
-	console.log('ckey',ckey,ranks)
+	//console.log('ckey',ckey,ranks)
 	if (is_nc_card(ckey)) return Number(stringBefore(ckey, '_'));
 	if (nundef(ranks)) ranks = valf(lookup(Z, ['fen', 'ranks']), 'A23456789TJQK');
 	return ckey[0];
@@ -1215,7 +1163,7 @@ function ui_type_accuse_hand(list, dParent, styles = {}, path = 'hand', title = 
 	let cont = ui_make_container(dParent, styles); 
 	let items = list.map(x => get_card_func(x));
 	let cardcont = mDiv(cont);
-	let card = isEmpty(items) ? { w: 1, h: Config.ui.card.h, ov: 0 } : items[0];
+	let card = isEmpty(items) ? { w: 1, h: valf(styles.h,Config.ui.card.h), ov: 0 } : items[0];
 	let splay = 2;
 	mContainerSplay(cardcont, splay, card.w, card.h, items.length, card.ov * card.w);
 	ui_add_cards_to_hand_container(cardcont, items, list);

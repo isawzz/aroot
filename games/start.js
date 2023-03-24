@@ -21,7 +21,7 @@ function start_with_assets(reload = false) {
 
 	//reload = TESTHISTORY;
 	show_username(reload);
-	if (DA.TEST0) show('dTestButtons');
+	if (DA.TEST0 || TESTHISTORY) show('dTestButtons');
 
 	//startgame('accuse',)
 	//startgame('ferro'); 
@@ -69,9 +69,6 @@ function startgame(game, players, options = {}) {
 		options.mode = 'hotseat';
 	}
 
-	//console.log('players', fen.players);
-
-	//console.log('start fen players',fen.players.mimi)
 	//transform number options
 	for (const k in options) { if (isNumber(options[k])) options[k] = parseInt(options[k]); }
 
@@ -94,6 +91,13 @@ function start_game_with_players(n, game = 'accuse', opts = {}) {
 	let playernames = rChoose(list, numplayers - 2);
 	//console.log('playernames',playernames);
 	playernames = ['mimi', 'felix'].concat(playernames);
+
+	//need to place actual host first!!!!
+	let uname = U.name;
+	console.log(':::::uname',uname);
+	removeInPlace(playernames,uname);
+	playernames.unshift(uname);
+
 	let playmodes = playernames.map(x => 'human');
 	let players = [];
 	for (let i = 0; i < n; i++) players.push({ name: playernames[i], playmode: playmodes[i] });

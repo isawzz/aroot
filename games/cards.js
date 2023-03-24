@@ -1,6 +1,8 @@
 function accuse_get_card(ckey, h, w, backcolor = BLUE, ov = .3) {
 	//console.log('ckey', ckey)
-	if (ckey.length > 3) {
+	if (is_color(ckey)) {
+		return get_color_card(ckey,h)
+	} else if (ckey.length > 3) {
 		return get_number_card(ckey, h, null, backcolor, ov);
 	} else {
 		let info = get_c52j_info(ckey, backcolor);
@@ -212,7 +214,7 @@ function find_jolly_rank(j, rankstr = 'A23456789TJQKA') {
 		return rank_needed;
 	}
 }
-function get_color_of_card(ckey) { return is_color(ckey)? ckey: ckey.length == 3? ['H', 'D'].includes(ckey[1]) ? 'red' : 'black': stringAfter(ckey,'_'); }
+function get_color_of_card(ckey) { return is_color(ckey) ? ckey : ckey.length == 3 ? ['H', 'D'].includes(ckey[1]) ? 'red' : 'black' : stringAfter(ckey, '_'); }
 function get_group_rank(j) { let non_jolly_key = firstCond(j, x => !is_jolly(x)); return non_jolly_key[0]; }
 function get_sequence_suit(j) { let non_jolly_key = firstCond(j, x => !is_jolly(x)); return non_jolly_key[1]; }
 function get_c52j_info(ckey, backcolor = BLUE) {
@@ -277,7 +279,7 @@ function heritage_card_deco(card) {
 	let d1 = mDiv(d, { fg: 'silver', fz: 11, family: 'tangerine', position: 'absolute', right: '36%', top: 1 }, null, 'heritage');
 }
 function is_card_key(ckey, rankstr = '*A23456789TJQK', suitstr = 'SHCD') {
-	return rankstr.includes(ckey[0]) && suitstr.includes(ckey[1]);
+	return is_nc_card(ckey) || is_color(ckey) || rankstr.includes(ckey[0]) && suitstr.includes(ckey[1]);
 }
 function is_jolly(ckey) { return ckey[0] == '*'; }
 function is_joker(card) { return is_jolly(card.key); }

@@ -257,7 +257,6 @@ function onclick_vote_president() {
 	pld0.state = { item: get_random_ballot_card() };
 	pld1.state = { item: get_random_ballot_card() };
 	relegate_to_host(Z.playerdata);
-	//accuse_evaluate_votes();
 }
 function onclick_vote_random() {
 	let [game, A, fen, uplayer, plorder] = [Z.game, Z.A, Z.fen, Z.uplayer, Z.plorder];
@@ -269,6 +268,13 @@ function onclick_vote_random() {
 	}
 	relegate_to_host(Z.playerdata);
 	//accuse_evaluate_votes();
+}
+function onclick_vote_1() {
+	let [game, A, fen, uplayer, plorder] = [Z.game, Z.A, Z.fen, Z.uplayer, Z.plorder];
+	let pld=Z.playerdata.filter(x=>!isDict(x.state));
+	let pld1 = rChoose(pld);
+	pld1.state = { item: rChoose(fen.players[pld1.name].hand) };
+	relegate_to_host(Z.playerdata);
 }
 function onclick_vote_red() {
 	let [game, A, fen, uplayer, plorder] = [Z.game, Z.A, Z.fen, Z.uplayer, Z.plorder];

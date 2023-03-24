@@ -1,5 +1,6 @@
 
 function get_nc_color_array(){ return ['red', 'black', 'blue', 'green', 'gold', 'hotpink', 'cyan']}
+function get_nc_complement_array(color){ return {red:'#ff9999', black:'#999', blue:BLUE, green:GREEN, gold:'lightgoldenrodyellow', hotpink:'pink', cyan:TEAL}[color];}
 
 function get_number_card(ckey,h=100,w=null,backcolor=BLUE,ov=.3){
 	let info={};
@@ -51,6 +52,11 @@ function get_number_card(ckey,h=100,w=null,backcolor=BLUE,ov=.3){
 	if (isdef(ov)) res.ov = ov;
 
 	return res;
+}
+function get_random_ballot_card() {
+	let [fen] = [Z.fen];
+	//console.log('fen.cardtype', fen.cardtype, '\nranks', fen.ranks);
+	return fen.cardtype == 'num' ? `${rChoose(fen.ranks)}_${rChoose(fen.colors)}` : `${rCard('n', fen.ranks, 'SHDC')}`;
 }
 
 
