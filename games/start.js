@@ -19,7 +19,7 @@ function start_with_assets(reload = false) {
 	//U=null;
 	if (nundef(U)) { show_users(); return; }
 
-	reload = TESTHISTORY;
+	//reload = TESTHISTORY;
 	show_username(reload);
 	if (DA.TEST0) show('dTestButtons');
 
@@ -102,8 +102,7 @@ function start_game_with_players(n, game = 'accuse', opts = {}) {
 }
 function gamestep() {
 
-	fentest7_cards();
-	return;
+	//fentest7_cards(); return;
 
 	show_admin_ui();
 	DA.running = true; clear_screen(); dTable = mBy('dTable'); mClass('dTexture', 'wood');

@@ -1,7 +1,12 @@
 function accuse_get_card(ckey, h, w, backcolor = BLUE, ov = .3) {
-	let info = get_c52j_info(ckey, backcolor);
-	let card = cardFromInfo(info, h, w, ov);
-	return card;
+	//console.log('ckey', ckey)
+	if (ckey.length > 3) {
+		return get_number_card(ckey, h, null, backcolor, ov);
+	} else {
+		let info = get_c52j_info(ckey, backcolor);
+		let card = cardFromInfo(info, h, w, ov);
+		return card;
+	}
 }
 function accuse_get_card_func(hcard = 80, backcolor = BLUE) { return ckey => accuse_get_card(ckey, hcard, null, backcolor); }
 
@@ -207,7 +212,7 @@ function find_jolly_rank(j, rankstr = 'A23456789TJQKA') {
 		return rank_needed;
 	}
 }
-function get_color_of_card(ckey) { return ['H', 'D'].includes(ckey[1]) ? 'red' : 'black'; }
+function get_color_of_card(ckey) { return is_color(ckey)? ckey: ckey.length == 3? ['H', 'D'].includes(ckey[1]) ? 'red' : 'black': stringAfter(ckey,'_'); }
 function get_group_rank(j) { let non_jolly_key = firstCond(j, x => !is_jolly(x)); return non_jolly_key[0]; }
 function get_sequence_suit(j) { let non_jolly_key = firstCond(j, x => !is_jolly(x)); return non_jolly_key[1]; }
 function get_c52j_info(ckey, backcolor = BLUE) {
@@ -344,12 +349,16 @@ function remove_card_shadow(c) { iDiv(c).firstChild.setAttribute('class', null);
 function set_card_border(item, thickness = 1, color = 'black', dasharray) {
 	//console.log('set_card_border', item, thickness, color);
 	let d = iDiv(item);
+	console.log('item', item)
 	let rect = lastDescendantOfType('rect', d);
-	assertion(rect, 'NO RECT FOUND IN ELEM', d);
+	console.log('rect', rect);
+	//assertion(rect, 'NO RECT FOUND IN ELEM', d);
 	if (rect) {
 		rect.setAttribute('stroke-width', thickness);
 		rect.setAttribute('stroke', color);
 		if (isdef(dasharray)) rect.setAttribute('stroke-dasharray', dasharray);
+	} else {
+		mStyle(d, { border: `solid ${1}px ${color}` })
 	}
 }
 function set_card_style(item, styles = {}, className) {
@@ -716,7 +725,6 @@ function ui_type_deck(list, dParent, styles = {}, path = 'deck', title = 'deck',
 }
 function ui_type_hand(list, dParent, styles = {}, path = 'hand', title = 'hand', get_card_func = ari_get_card, show_if_empty = false) {
 
-	//copyKeys({wmin:500,bg:'red'},styles); //testing wmin
 	let cont = ui_make_container(dParent, get_container_styles(styles));
 
 	//mStyle(cont,{bg:'lime'})
@@ -747,7 +755,6 @@ function ui_type_hand(list, dParent, styles = {}, path = 'hand', title = 'hand',
 }
 function ui_type_lead_hand(list, dParent, styles = {}, path = 'hand', title = 'hand', get_card_func = ari_get_card, show_if_empty = false) {
 
-	//copyKeys({wmin:500,bg:'red'},styles); //testing wmin
 	let hcard = isdef(styles.h) ? styles.h - 30 : Config.ui.card.h;
 	addKeys(get_container_styles(styles), styles);
 	let cont = ui_make_container(dParent, styles);
@@ -806,8 +813,6 @@ function ui_type_rank_count(list, dParent, styles, path, title, get_card_func, s
 		let c = get_card_func(o.key);
 		mAppend(d, iDiv(c));
 		remove_card_shadow(c);
-		//set_card_style(c, { shadow:'blue' });  //bg: 'orange', fg:'red' }, null);
-		// set_card_style(c, { border: '2px solid grey', rounding: 4, h: 25, w: 12 }, null);
 		d.innerHTML += `<span style="font-weight:bold">${o.count}</span>`;
 		let item = { card: c, count: o.count, div: d };
 		items.push(item);
@@ -840,8 +845,6 @@ function ui_type_church(list, dParent, styles = {}, path = 'trick', title = '', 
 		if (ckey != arrLast(list)) face_down(c);
 		mAppend(d, iDiv(c));
 		remove_card_shadow(c);
-		//set_card_style(c, { shadow:'blue' });  //bg: 'orange', fg:'red' }, null);
-		// set_card_style(c, { border: '2px solid grey', rounding: 4, h: 25, w: 12 }, null);
 		let item = { card: c, div: d };
 		items.push(item);
 		rotation += inc;

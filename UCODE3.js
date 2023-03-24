@@ -1,4 +1,89 @@
 
+//#region gc SUPERCARDS
+
+function gcTest() {
+	let deck = gcDeck('num', 5 * 5, 2, ['green', 'orange', 'violet']);
+	mClear('dTable'); dTable = mBy('dTable'); mStyle(dTable, { gap: 10 }); mCenterFlex(dTable);
+	let hand = deck.deal(10);
+	ui_type_gcHand(hand, dTable);
+}
+
+function gcDeck(type = 'c52', total = 52, repeat = 1, colors = ['red', 'black'], opts = {}) {
+	let ranks, suits, letter=valf(opts.letter,'n');
+	if (type == 'c52') {
+		addKeys({ lowAce: true, lowJoker: true, numJokers: 0 }, opts)
+		//if (isdef(opts.jokers)) ranks='*';
+		ranks = opts.lowAce ? 'A23456789TJQK' : '23456789TJQKA';
+		if (opts.numJokers > 0) ranks = opts.lowJoker ? ('*' + ranks) : (ranks + '*');
+		suits = 'SHDC';
+	} else if (type == 'num') {
+
+	}
+	return {
+		ckeys: ckeys,
+		colors: colors,
+		ctype: type,
+		letter: letter,
+		ranks: ranks,
+		suits: suits,
+	}
+}
+
+function ui_type_gcHand(list, dParent) {
+
+}
+
+//#endregion
+
+function start_new_generation(fen, players, options) {
+	let deck_discard = fen.deck_discard = [];
+
+	//how many players are there
+	if (nundef(players)) players = get_keys(fen.players);
+	let N = players.length;
+
+	//console.log('.....',options)
+	//how many cards each player should get? options: 5 or 6 cards
+	let handsize = fen.handsize;
+
+	let ncards = handsize * N;
+	let colors = ['red', 'black'];
+	let n = 1;
+	let deck_ballots = [];
+	while (deck_ballots.length < ncards) {
+		for (const c of colors) {
+			for (const i of range(2)) {
+				deck_ballots.push(`${n}_${c}`);
+			}
+		}
+		n++;
+	}
+	fen.ranks = n;
+	//console.log('deck', deck_ballots);
+	shuffle(deck_ballots);	//console.log('deck', deck_ballots);
+	fen.deck_ballots = deck_ballots;
+	fen.handsize = handsize;
+	//console.log('deck_ballots:::',deck_ballots.length);
+	for (const plname in fen.players) {
+		let pl = fen.players[plname];
+		pl.hand = deck_deal(deck_ballots, handsize);
+	}
+	//console.log('phase',fen.phase)
+	let gens = lookup(fen, ['generations']);
+	let last_winning_color = gens && gens.length >= 1 ? arrLast(gens).color : null;
+	fen.policies = [];
+	if (last_winning_color && ['red', 'black'].includes(last_winning_color)) {
+		fen.policies.push('Q' + (last_winning_color == 'red' ? 'H' : 'S') + 'n');
+	}
+	fen.validvoters = jsCopy(players)
+	fen.crisis = 0;
+	delete fen.president;
+	delete fen.newpresident;
+	delete fen.isprovisional;
+	delete fen.player_cards;
+	delete fen.accused;
+	delete fen.dominance;
+}
 
 function show_left_netcard(plname,order) {
 	let dx = lookup(UI, ['stats', plname]);

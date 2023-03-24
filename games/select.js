@@ -52,7 +52,6 @@ function select_add_items(items, callback = null, instruction = null, min = 0, m
 	for (const item of A.items) {
 		let type = item.itemtype = is_card(item) ? 'card' : is_player(item.a)? 'player': isdef(item.o) ? 'container' : is_color(item.a)? 'color' : 'string'; // nundef(item.submit_on_click) ? 'string' : 'submit';
 		if (isdef(item.submit_on_click)) { has_submit_items = true; }
-		//if (type == 'submit') has_submit_items = true;
 		let id = item.id = lookup(item, ['o', 'id']) ? item.o.id : getUID(); A.di[id] = item;
 		if (type == 'string' || type == 'color') { //make button for this item!
 			let handler = ev => select_last(item, isdef(item.submit_on_click) ? callback : select_toggle, ev);
@@ -60,24 +59,20 @@ function select_add_items(items, callback = null, instruction = null, min = 0, m
 			if (type == 'color') mStyle(item.div,{bg:item.a,fg:'contrast'});
 		} else {
 			let ui = item.div = iDiv(item.o);
-			ui.onclick = ev => select_last(item, select_toggle, ev); // show_submit_button ? _select_toggle : select_finalize;
+			ui.onclick = ev => select_last(item, select_toggle, ev); 
 			ui.id = id;
 		}
 	}
 
-	//show_submit_button = show_submit_button && A.minselected != A.maxselected || !A.autosubmit; { bg: 'red', fg: 'white', maleft: 10 }
 	let show_submit_button = !has_submit_items && (A.minselected != A.maxselected || !A.autosubmit);
 	if (show_submit_button) { mButton('submit', callback, dInstruction, buttonstyle, 'selectable_button', 'bSubmit'); }
 
-	let show_restart_button = A.level > 1; //show_submit_button && A.level > 1;
+	let show_restart_button = A.level > 1; 
 	if (show_restart_button) { mButton('restart', onclick_reload, dInstruction, buttonstyle, 'selectable_button', 'bReload'); }
 
 	//now, mark all items for selection
 	let dParent = window[`dActions${A.level}`];
 	for (const item of A.items) { ari_make_selectable(item, dParent, dInstruction); }
-
-	//ich muss alle hand containers identifizieren!
-	//let handcontainers = 
 
 	//activate ui or automatic selection
 	assertion(A.items.length >= min, 'less options than min selection!!!!', A.items.length, 'min is', min); //TODO: sollte das passieren, check in ari_pre_action die mins!!!
@@ -347,12 +342,8 @@ function make_card_selectable(item) {
 
 function make_card_unselectable(item) { let d = iDiv(item.o); d.onclick = null; mClassRemove(d, 'selectable'); mClassRemove(d.parentNode, 'selectable_parent'); spread_hand(item.path); }
 function make_card_selected(item) {
-
-	//console.log('index', item.o.key,item.o.index);
-
 	//selection color can be set bei game!
 	let color = isdef(Z.func.get_selection_color) ? Z.func.get_selection_color(item) : 'red';
-
 	set_card_border(item, 13, color);
 	if (DA.magnify_on_select) mClass(iDiv(item.o), 'mag');
 }

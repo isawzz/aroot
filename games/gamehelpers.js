@@ -636,19 +636,10 @@ function ari_show_handsorting_buttons_for(plname) {
 }
 function show_view_buildings_button(plname) {
 	if (Z.role == 'spectator' || isdef(mBy('dPlayerButtons'))) return;
-
-	//let fen = Z.fen;
-	//let pl = fen.players[plname];
-	//console.log('buildings empty',isEmpty(UI.players[plname].buildinglist));
 	if (isEmpty(UI.players[plname].buildinglist)) return;
-
-	//let d = mBy(`d_${plname}`); mStyle(d,{bg:'red'});
 	let d1 = iDiv(UI.players[plname]); mStyle(d1, { position: 'relative' });
 	let d2 = mDiv(d1, { position: 'absolute', top: 8, left: 50, height: 25 }, 'dPlayerButtons');
-	//mStyle(d,{position:'relative'});
-	//let dPlayerButtons = mDiv(d, { position: 'absolute', top: 8, left: 52, height: 25, width: 200, bg:'green' }, 'dPlayerButtons');
 	show_player_button('view buildings', d2, onclick_view_buildings);
-
 }
 function show_history(fen, dParent) {
 	if (!isEmpty(fen.history)) {
@@ -781,11 +772,7 @@ function show_role() {
 		assertion(Z.role == 'inactive', 'role is not active or inactive or spectating ' + Z.role);
 		styles = normalstyle;
 		text = `(${Z.turn[0]}'s turn)`;
-		//text = `(${Z.turn[0]}'s turn ${location})`;
 	}
-
-	// let styles = Z.role == 'active' || hotseatplayer ? { fg: 'red', weight: 'bold', fz: 20 } : { fg: 'black', weight: null, fz: null };
-	// let text = hotseatplayer ? `you turn for ${Z.uplayer}` : Z.role == 'active' ? `It's your turn!` : Z.role == 'spectator' ? "(spectating)" : `(${Z.turn[0]}'s turn)`;
 	d.innerHTML = location + text;
 	mStyle(d, styles);
 }
@@ -948,7 +935,6 @@ function show_winners() {
 		</div>
 	`;
 	show_message(msg, true);
-	//mStyle(d,{fg:'red',weight:'bold',fz:24})
 	mShield(dTable);
 	hide('bRestartMove');
 
@@ -974,8 +960,6 @@ function tableLayoutMR(dParent, m = 7, r = 1) {
 }
 function ui_player_info(dParent, outerStyles = { dir: 'column' }, innerStyles = {}) {
 	let fen = Z.fen;
-	// let players = dict2list(fen.players, 'name');
-	// players = sortByFunc(players, x => fen.plorder.indexOf(x.name));
 	if (nundef(outerStyles.display)) outerStyles.display = 'flex';
 	mStyle(dParent, outerStyles);
 
@@ -1000,15 +984,6 @@ function ui_player_info(dParent, outerStyles = { dir: 'column' }, innerStyles = 
 			copyKeys({ rounding: '50%', border: `solid 2px white` }, picstyle);
 		}
 		let img = mImage(imgPath, d, picstyle, 'img_person');
-
-		// let d1=mDiv(d,{w: 50, h: 50});
-		// if (pl.playmode == 'bot') {
-		// 	//console.log('d', d, d.children[0]); let img = d.children[0];
-		// 	let d2 = mText('B', d1, { fg: 'red', fz: 20, position:'absolute',top:'50%',left:'50%'});
-		// 	//mPlace(d2, 'cc');
-		// }
-
-
 		items[uname] = item;
 	}
 	if (DA.SIMSIM || is_advanced_user()) activate_playerstats(items)

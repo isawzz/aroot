@@ -969,12 +969,12 @@ function ltest0_card() { let c = ari_get_card('QSn'); mAppend(dTable, iDiv(c)); 
 //#endregion
 
 //#region fen (=local) tests
-function fentest7_cards(){
+function fentest7_cards() {
 	mClear('dTable');
-	dTable = mBy('dTable'); mStyle(dTable,{gap:10});mCenterFlex(dTable);
+	dTable = mBy('dTable'); mStyle(dTable, { gap: 10 }); mCenterFlex(dTable);
 
-	for(let i=0;i<10;i++){
-		show_card_1(`${rNumber(1,999)}_${rColor()}`,100);
+	for (let i = 0; i < 10; i++) {
+		show_card_1(`${rNumber(1, 999)}_${rColor()}`, 100);
 	}
 
 }
@@ -983,12 +983,14 @@ function fentest7_jokers() {
 	for (const k of [0, 1]) {
 		let card = accuse_get_card(`${k}Jn`, 140);
 		mAppend(dTable, iDiv(card));
-		console.log('svg',iDiv(card))
+		console.log('svg', iDiv(card))
 	}
 }
-function fentest6_start4() { start_game_with_players(4, 'accuse',{stability:1,rounds:1}); }
-function fentest6_start5() { start_game_with_players(5, 'accuse',{stability:2}); }
-function fentest6_start8() { start_game_with_players(8); }
+function fentest6_start4() { start_game_with_players(4, 'accuse', { stability: 1, cardtype: 'c52', rounds: 1 }); }
+function fentest6_start5() { start_game_with_players(5, 'accuse', { stability: 2, cardtype: 'num' }); }
+function fentest6_start6() { start_game_with_players(6, 'accuse', { stability: 2, cardtype: 'c52' }); }
+function fentest6_start8() { start_game_with_players(8, 'accuse', { stability: 2, cardtype: 'c52' }); }
+function fentest6_start11() { start_game_with_players(11, 'accuse', { stability: 2, rounds: 2, cardtype: 'num', colors: 3 }); }
 function fentest6_start14() { start_game_with_players(14); }
 
 function fentest5_coupdetat_maybe() {
@@ -1852,26 +1854,6 @@ function drawcard(key, dParent, sz) {
 	d1 = mDiv(d, { position: 'absolute', bottom: bottom, left: left, opacity: .5 }, null, html);
 	let dt = mDiv(d, { family: 'Algerian' }, null, 'luxury');
 	mPlace(dt, 'tc', 0, '50%')
-
-
-	// let wc=sz*0.6;
-	// let hc=wc/5; 
-	// let offx=card.w-hc;
-	// console.log('wc',wc,'hc',hc);
-	// let html = `<img width=${wc} height=${hc} src="./base/assets/images/icons/deco_v.png">`;
-	// d1 = mDiv(d, {position:'absolute',top:0,left:0, bg:'blue'}, null, html); 
-	// d1 = mDiv(d, {position:'absolute',bg:'red',top:hc,left:0}, null, html); 
-	//d1 = mDiv(d, {position:'absolute','transform-origin':'top right',transform:`rotate(-90deg)`,top:card.h/4,right:card.w}, null, html); 
-
-
-
-	//let d1=mDiv(d,{'transform-origin':'0px 0px',transform:'rotate(90deg)'},null,`<img height=${sz/3} src="./base/assets/images/icons/ornamenth.png">`); //,rounding:h/2,border:'5px solid gold',bg:'transparent'});
-	//let d1 = mDiv(d, {}, null, html); //,rounding:h/2,border:'5px solid gold',bg:'transparent'});
-	//let d1 = mDiv(d, {transform:'rotate(-90deg) translateX(-50%) translateY(-328%)'}, null, html);
-	// let d1 = mDiv(d, {'transform-origin':'center', transform:'rotate(-90deg)'}, null, html);
-	// let rect=getRect(d1);
-	//mPlace(d1, 'cc');
-
 }
 function each_hand_of_one(o) {
 	let [fen, uplayer] = [o.fen, o.fen.turn[0]];

@@ -13,16 +13,24 @@ function accuse() {
 	function setup(players, options) {
 		//console.log('SETUP!!!!!!!!!!!!!!!!!!!')
 		//console.log('players', players, 'options', options)
-		let fen = { players: {}, plorder: jsCopy(players), history: [{ title: '*** game start ***', lines: [] }], rounds: options.rounds, stability: options.stability };
-		//console.log(options)
-		//fen.inc_handsize_by=options.handsize=="default"?0:Number(options.handsize);
-		//console.log('increment handsize by',fen.inc_handsize_by)
+		let fen = {
+			players: {}, plorder: jsCopy(players),
+			history: [{ title: '*** game start ***', lines: [] }],
+			rounds: options.rounds, stability: options.stability, cardtype: options.cardtype,
+			handsize: Number(options.handsize) + (players.length > 9 ? 0 : 1),
+			colors: arrTake(get_nc_color_array(), Number(options.colors)),
+		};
 		shuffle(fen.plorder);
 		let plorder = fen.plorder;
-		let num = Math.ceil(players.length / 2)
+		let num = Math.max(7, Math.ceil(players.length / 2));
+
 		let deck_identities = fen.deck_identities = [];
-		let ranks = fen.ranks = '*A23456789TJQK'; //'KQJT98765432A';
-		for (let i = 0; i < num; i++) { deck_identities.push(ranks[i] + 'Hh'); deck_identities.push(ranks[i] + 'Sh'); }
+		for (let i = 0; i < num; i++) {
+			for (const c of fen.colors) {
+				deck_identities.push(c);
+			}
+			// deck_identities.push(ranks[i] + 'Hh'); deck_identities.push(ranks[i] + 'Sh'); 
+		}
 		shuffle(deck_identities);
 
 		//console.log('plorder', plorder)
@@ -44,10 +52,10 @@ function accuse() {
 		}
 
 		[fen.phase, fen.stage, fen.step, fen.turn] = ['1', 'membership', 0, jsCopy(fen.plorder)];
-		start_new_generation(fen);
+		start_new_generation(fen, fen.plorder, options);
 
 		//show_sitting_order
-		accuse_show_sitting_order(fen);
+		//accuse_show_sitting_order(fen);
 
 		return fen;
 	}
@@ -148,7 +156,7 @@ function accuse_present(dParent) {
 	presentcards(hvotecard);
 
 	// *** show membership color for me (or in 'round' stage for all)
-	let plnames = stage == 'round'||stage == 'gameover' ? order : [me];
+	let plnames = stage == 'round' || stage == 'gameover' ? order : [me];
 	plnames.map(x => show_membership_color(x, hnetcard, himg));
 
 }
@@ -205,8 +213,8 @@ function accuse_activate() {
 		stage = Z.stage = Z.phase > fen.rounds ? 'gameover' : 'membership';
 
 		if (stage == 'membership') {
-			for (const pl in fen.players) { delete fen.players[pl].membership; } 
-			start_new_generation(fen);
+			for (const pl in fen.players) { delete fen.players[pl].membership; }
+			start_new_generation(fen, Z.plorder, Z.options);
 		}
 		take_turn_fen_clear();
 	} else if (stage == 'president') {
@@ -231,7 +239,7 @@ function accuse_activate() {
 		let validplayers = plnames.filter(x => fen.players[x].hand.length >= 1 && x != uplayer && !fen.presidents_poll.includes(x));
 		select_add_items(ui_get_player_items(validplayers), accuse_submit_accused, 'must select player name', 1, 1);
 	} else if (stage == 'accuse_action_select_color') {
-		select_add_items(ui_get_string_items(['red', 'black']), accuse_submit_accused_color, 'must select color', 1, 1);
+		select_add_items(ui_get_string_items(fen.colors), accuse_submit_accused_color, 'must select color', 1, 1);
 	} else if (stage == 'accuse_action_entlarvt') {
 		select_add_items(ui_get_hand_items(uplayer), accuse_replaced_membership, 'must select new alliance', 1, 1);
 	} else if (stage == 'accuse_action_provisional') {
@@ -462,7 +470,10 @@ function parley_opponent_selected() {
 
 	ari_history_list(`president ${fen.president} exchanged ${opp_cards.length} cards with ${uplayer}`, 'parley')
 
-	president_end();
+	Z.stage = 'president_2';
+	Z.turn = [fen.president];
+	take_turn_fen_clear();
+	//president_end();
 }
 
 function defect_resolve() {
@@ -537,7 +548,7 @@ function eval_consensus(votes, color) {
 	let opt = valf(Z.options.consensus, 'policy');
 
 	if (opt == 'policy') {
-		fen.policies.push(color == 'red' ? 'QDn' : 'QSn'); //last_policy);
+		fen.policies.push(get_color_card(color)); //color == 'red' ? 'QDn' : 'QSn'); //last_policy);
 		fen.validvoters = jsCopy(Z.plorder);
 		check_enough_policies_or_start_new_poll(`consensus on ${color}`);
 	} else if (opt == "coupdetat") {
@@ -550,7 +561,7 @@ function eval_consensus(votes, color) {
 			Z.stage = 'round';
 			take_turn_fen_clear();
 		} else { //just add a policy
-			fen.policies.push(color == 'red' ? 'QDn' : 'QSn');
+			fen.policies.push(get_color_card(color)); //color == 'red' ? 'QDn' : 'QSn'); 
 			fen.validvoters = jsCopy(Z.plorder);
 			check_enough_policies_or_start_new_poll(`consensus on ${color}`);
 		}
@@ -912,11 +923,12 @@ function get_bots_on_turn() {
 function get_color_card(ckey, h, opts = {}) {
 	//console.log('ckey', ckey);
 	let color;
-	if (nundef(ckey)) color = 'transparent'; else color = get_color_of_card(ckey);
+	if (nundef(ckey)) color = 'transparent'; else color = is_color(ckey)? ckey: get_color_of_card(ckey);
+	//console.log('color',color)
 	let type = 'color';
 	let info = { friendly: color, color: valf(opts.bg, BLUE) }
 	info.ckey = color;
-	let el = mDiv(null, { bg: color == 'black' ? '#222' : color, rounding: h / 10 });
+	let el = mDiv(null, { bg: color == 'black' ? '#222' : color, rounding: h / 10, border:'silver' });
 	h = valf(h, valf(info.h, 100));
 	w = valf(opts.w, h * .7);
 	mSize(el, w, h);
@@ -961,7 +973,8 @@ function get_others_with_at_least_one_hand_card() {
 	return get_keys(Z.fen.players).filter(x => x != Z.uplayer && Z.fen.players[x].hand.length >= 1);
 }
 function getRankOf(ckey, ranks) {
-	if (is_nc_card(ckey)) return Number(stringBefore(x, '_'));
+	console.log('ckey',ckey,ranks)
+	if (is_nc_card(ckey)) return Number(stringBefore(ckey, '_'));
 	if (nundef(ranks)) ranks = valf(lookup(Z, ['fen', 'ranks']), 'A23456789TJQK');
 	return ckey[0];
 }
@@ -1055,13 +1068,13 @@ function show_playerstats_over(d2) {
 	dstats.style.padding = dstats.style.gap = `${hgap}px ${wgap}px`;
 	assertion(me == uplayer, "MEEEEEEEEEEEEEEE")
 	for (const plname of order.slice(1)) {
-		let dshell1=mDiv(dstats); mCenterCenterFlex(dshell1)
+		let dshell1 = mDiv(dstats); mCenterCenterFlex(dshell1)
 		accuse_player_stat(dshell1, plname, hvotecard, himg, hstatfz, gap);
 		//if game is over and this is NOT the last one in order, show his left net card!!!
-		if(plname == arrLast(order)) break;
-		let dshell2=mDiv(dstats); mCenterCenterFlex(dshell2)
+		if (plname == arrLast(order)) break;
+		let dshell2 = mDiv(dstats); mCenterCenterFlex(dshell2)
 		let dncshell = mDiv(dshell2); //,{bg:'green'}); //{h:141,patop:90,bg:GREEN});
-		let dummy=mDiv(dncshell,{h:50,bg:'transparent'})
+		let dummy = mDiv(dncshell, { h: 50, bg: 'transparent' })
 		let netcard = get_color_card(fen.players[plname].idright, 50);
 		mAppend(dncshell, iDiv(netcard));
 	}
@@ -1135,68 +1148,6 @@ function sortCardObjectsByRankDesc(arr, ranks, ckeyprop) {
 	let res = sortCardObjectsByRank(arr, ranks, ckeyprop);
 	return arrReverse(res);
 }
-function start_new_generation(fen, players, options) {
-	let deck_discard = fen.deck_discard = [];
-	let ranks = fen.ranks;
-	let tb = {
-		4: ['4', '5', 5, 12, 1],
-		5: ['4', 'T', 6, 2, 1],
-		6: ['2', 'T', 6, 0, 1],
-		7: ['A', 'T', 6, 2, 1],
-		8: ['2', 'K', 6, 0, 1],
-		9: ['A', 'K', 6, 0, 1],
-		10: ['2', 'K', 5, 2, 1],
-		11: ['A', 'K', 5, 3, 1],
-		12: ['2', '8', 5, 4, 2],
-		13: ['2', '9', 5, 2, 2],
-		14: ['2', '9', 5, 2, 2], //add 4 10s
-	};
-	if (nundef(players)) players = get_keys(fen.players);
-	let N = players.length;
-
-	let deck_ballots = [];
-	let [r0, r1, handsize, jo, numdecks] = tb[N];
-
-	for (let i = ranks.indexOf(r0); i <= ranks.indexOf(r1); i++) {
-		for (let nd = 0; nd < numdecks; nd++) {
-			let c = ranks[i];
-			for (const suit of 'SHDC') { deck_ballots.push(c + suit + 'n'); }
-		}
-	}
-	if (N == 14) { for (const suit of 'SHDC') { deck_ballots.push('T' + suit + 'n'); } }
-
-	// *** jokers ***
-	// for (let i = 0; i < jo; i++) { deck_ballots.push('A' + (i % 2 ? 'H' : 'S') + 'n'); }  //'' + (i%2) + 'J' + 'n');
-	// for (let i = 0; i < jo; i++) { deck_ballots.push('' + (i%2) + 'J' + 'n'); } 
-	for (let i = 0; i < jo; i++) { deck_ballots.push('*' + (i % 2 ? 'H' : 'S') + 'n'); }
-
-	shuffle(deck_ballots);	//console.log('deck', deck_ballots);
-	fen.deck_ballots = deck_ballots;
-	fen.handsize = handsize;
-	//console.log('deck_ballots:::',deck_ballots.length);
-	for (const plname in fen.players) {
-		let pl = fen.players[plname];
-		pl.hand = deck_deal(deck_ballots, handsize);
-	}
-	//console.log('phase',fen.phase)
-	let gens = lookup(fen, ['generations']);
-	let last_winning_color = gens && gens.length >= 1 ? arrLast(gens).color : null;
-	fen.policies = [];
-	if (last_winning_color && ['red', 'black'].includes(last_winning_color)) {
-		fen.policies.push('Q' + (last_winning_color == 'red' ? 'H' : 'S') + 'n');
-	}
-	fen.validvoters = jsCopy(players)
-	fen.crisis = 0;
-	delete fen.president;
-	delete fen.newpresident;
-	delete fen.isprovisional;
-	delete fen.player_cards;
-	delete fen.accused;
-	delete fen.dominance;
-
-	//ari_history_list(`*** generation ${fen.phase} starts ***`,'',fen)
-
-}
 function start_new_poll() {
 	Z.stage = 'hand';
 	Z.fen.cardsrevealed = false;
@@ -1261,21 +1212,13 @@ function ui_get_player_items(playernames) {
 }
 function ui_type_accuse_hand(list, dParent, styles = {}, path = 'hand', title = 'hand', get_card_func = ari_get_card, show_if_empty = false) {
 
-	//copyKeys({wmin:500,bg:'red'},styles); //testing wmin
-	let cont = ui_make_container(dParent, styles); //get_container_styles(styles));
-
-	//mStyle(cont,{bg:'lime'})
-
+	let cont = ui_make_container(dParent, styles); 
 	let items = list.map(x => get_card_func(x));
-
 	let cardcont = mDiv(cont);
-	//if (!isEmpty(items)) {
 	let card = isEmpty(items) ? { w: 1, h: Config.ui.card.h, ov: 0 } : items[0];
-	//console.log('card',card)
 	let splay = 2;
 	mContainerSplay(cardcont, splay, card.w, card.h, items.length, card.ov * card.w);
 	ui_add_cards_to_hand_container(cardcont, items, list);
-	//}
 	let dtitle = ui_add_accuse_container_title(title, cont, items, show_if_empty);
 
 	//console.log('hand container',cont, cardcont)

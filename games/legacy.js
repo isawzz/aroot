@@ -2250,7 +2250,6 @@ class MazeGraph extends AGraph {
 	setItemBorder(item, dir) {
 		let prop = getBorderPropertyForDirection(dir);
 		iDiv(item).style[prop] = `${this.gap}px solid black`;
-		//mStyle(cell,{bg:'red'}); cell.innerHTML = dir;
 	}
 	setItemColor(item, color) { mStyle(iDiv(item), { bg: color }); }
 	setItemContent(item, text) { iDiv(item).innerHTML = text; }
@@ -2284,9 +2283,6 @@ class MazeGraph extends AGraph {
 		}
 	}
 	colorComponents() {
-		//this.showGraph();
-		// let g = this.graph;
-
 		let comps = this.getComponents();
 		//get hue wheel!!!
 		let wheel = getColorWheel('red', comps.length);
@@ -2661,7 +2657,6 @@ function inno_get_object_keys(otree) {
 	let keys = {}; for (const k in InnoById) keys[k] = true;
 	for (const k of otree.plorder) keys[k] = true;
 	for (const k of ['decks', 'board', 'splays', 'hand', 'green', 'purple', 'blue', 'red', 'yellow', 'forecast', 'scored', 'artifact', 'special_achievements', 'achievements']) keys[k] = true;
-	// for (const k of get_keys(DB.users)) keys[k] = true;
 	let decknames = 'ABCEF';
 	for (let i = 0; i < decknames.length; i++) { keys[decknames[i]] = true; }
 	for (let age = 1; age <= 10; age++) { keys['' + age] = true; }
@@ -3225,6 +3220,9 @@ function cBlank(dParent, styles = {}, id) {
 	if (nundef(styles.rounding)) styles.rounding = sz * .05;
 
 	let d = mDiv(dParent, styles, id, null, 'card');
+	console.log('styles',styles)
+
+	return d;
 
 	let item = mItem(null, { div: d }, { type: 'card', sz: sz, rounding: styles.rounding });
 	copyKeys(styles, item);
@@ -3360,29 +3358,18 @@ function mFillText(text, box, padding = 10, perleft = 10, pertop = 20) {
 }
 
 function mRowsX(dParent, arr, itemStyles = { bg: 'random' }, rowStyles, colStyles, akku) {
-
-	//mStyle(dParent,{h:500});
 	let d0 = mDiv100(dParent, { display: 'flex', dir: 'column', 'justify-content': 'space-between' });//,'align-items':'center'});
-	//let d0 = mDiv(dParent, { w:'100%',h:'150%',display: 'flex', dir: 'column', 'justify-content': 'space-between' });//,'align-items':'center'});
 	if (isdef(rowStyles)) mStyle(d0, rowStyles);
-
-	//dParent.style.background='red';
-	//d0.style.maxHeight = '300px';
-	//console.log('card',dParent);	throw('interrupt!');
 	for (let i = 0; i < arr.length; i++) {
-		// let d1=mDiv(d0,{bg:'random',h:randomNumber(30,80),w:'100%'},null,randomName());
 		let content = arr[i];
 		if (isList(content)) {
-			let d1 = mDiv(d0); //,null,randomName());
+			let d1 = mDiv(d0); 
 			mColsX(d1, content, itemStyles, rowStyles, colStyles, akku);
 		} else {
-			d1 = mContentX(content, d0, itemStyles); //mDiv(d0, styles, null, content);
+			d1 = mContentX(content, d0, itemStyles); 
 			akku.push(d1);
-			// let d1 = mDiv(d0, { bg: 'random' }, null, content);
 		}
-
 	}
-
 }
 function mColsX(dParent, arr, itemStyles = { bg: 'random' }, rowStyles, colStyles, akku) {
 	let d0 = mDiv100(dParent, { display: 'flex', 'justify-content': 'space-between' }); //,'align-items':'center'});
@@ -3407,15 +3394,8 @@ function mContentX(content, dParent, styles = { sz: Card.sz / 5, fg: 'random' })
 	return dResult;
 }
 function mRows(dParent, arr, itemStyles = { bg: 'random' }, rowStyles, colStyles, akku) {
-
-	//mStyle(dParent,{h:500});
 	let d0 = mDiv100(dParent, { display: 'flex', dir: 'column', 'justify-content': 'space-between' });//,'align-items':'center'});
-	//let d0 = mDiv(dParent, { w:'100%',h:'150%',display: 'flex', dir: 'column', 'justify-content': 'space-between' });//,'align-items':'center'});
 	if (isdef(rowStyles)) mStyle(d0, rowStyles);
-
-	//dParent.style.background='red';
-	//d0.style.maxHeight = '300px';
-	//console.log('card',dParent);	throw('interrupt!');
 	for (let i = 0; i < arr.length; i++) {
 		// let d1=mDiv(d0,{bg:'random',h:randomNumber(30,80),w:'100%'},null,randomName());
 		let content = arr[i];
@@ -3429,7 +3409,6 @@ function mRows(dParent, arr, itemStyles = { bg: 'random' }, rowStyles, colStyles
 		}
 
 	}
-
 }
 function mCols(dParent, arr, itemStyles = { bg: 'random' }, rowStyles, colStyles, akku) {
 	let d0 = mDiv100(dParent, { display: 'flex', 'justify-content': 'space-between' }); //,'align-items':'center'});
@@ -4359,12 +4338,8 @@ function cardInno1(key, wCard = 420) {
 		d1.style.marginBottom = '' + vGapTxt + 'px';
 		//mLinebreak(d);
 	}
-
 	let syms = []; let d1;
-
 	szSym -= gap;
-
-	//info.syms = info.resources.map(x => x == 'clock' ? 'watch' : x); //if (key == 'clock') key='watch';
 	let sdict = {
 		tower: { k: 'white-tower', bg: 'dimgray' }, clock: { k: 'watch', bg: 'navy' }, crown: { k: 'crown', bg: 'black' },
 		tree: { k: 'tree', bg: GREEN },
@@ -4518,7 +4493,7 @@ class Karte {
 		let info = Syms[sym];
 		n = 2;
 		ensureColorNames();
-		if (nundef(fg)) fg = sym == 'spades' || sym == 'clubs' ? 'black' : sym == 'hearts' || sym == 'diamonds' ? 'red' : chooseRandom(Object.keys(ColorNames)); //coin()?'red':'black'; //randomDarkColor();
+		if (nundef(fg)) fg = sym == 'spades' || sym == 'clubs' ? 'black' : sym == 'hearts' || sym == 'diamonds' ? 'red' : chooseRandom(Object.keys(ColorNames)); 
 		let cardKey = info.family == 'emoNoto' ? 'card0' : 'card52';
 		let basic = {
 			card0: `
@@ -4769,7 +4744,7 @@ function show_advanced_ui() {
 }
 function show_status_orig(msg = '', stay) {
 	if (isdef(stay)) showFleetingMessage(msg, mBy('dStatus'), { fg: 'red' }, 1000, 0, false);
-	else showFleetingMessage(msg, mBy('dStatus'), { fg: 'black' });  //let d = mBy('dStatus'); d.innerHTML = msg; 
+	else showFleetingMessage(msg, mBy('dStatus'), { fg: 'black' });  
 }
 
 function mTableCommands(rowitems, di) {

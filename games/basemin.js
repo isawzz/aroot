@@ -1063,7 +1063,7 @@ function mStamp(d1, text, color, sz) {
 	mStyle(d1, { position: 'relative' });
 	let r = getRect(d1);
 	let [w, h] = [r.w, r.h];
-	color = valf(color, 'black'); // ['green','red','blue'].includes(color)?color:'black';
+	color = valf(color, 'black'); 
 	sz = valf(sz, r.h / 7);
 	//console.log('r', r, 'sz', sz);
 	let [padding, border, rounding, angle] = [sz / 10, sz / 6, sz / 8, rChoose([-16, -14, -10, 10, 14])];
