@@ -351,9 +351,9 @@ function remove_card_shadow(c) { iDiv(c).firstChild.setAttribute('class', null);
 function set_card_border(item, thickness = 1, color = 'black', dasharray) {
 	//console.log('set_card_border', item, thickness, color);
 	let d = iDiv(item);
-	console.log('item', item)
+	//console.log('item', item)
 	let rect = lastDescendantOfType('rect', d);
-	console.log('rect', rect);
+	//console.log('rect', rect);
 	//assertion(rect, 'NO RECT FOUND IN ELEM', d);
 	if (rect) {
 		rect.setAttribute('stroke-width', thickness);

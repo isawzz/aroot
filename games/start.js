@@ -94,7 +94,7 @@ function start_game_with_players(n, game = 'accuse', opts = {}) {
 
 	//need to place actual host first!!!!
 	let uname = U.name;
-	console.log(':::::uname',uname);
+	//console.log(':::::uname',uname);
 	removeInPlace(playernames,uname);
 	playernames.unshift(uname);
 

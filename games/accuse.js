@@ -828,7 +828,7 @@ function arrSame(arr, func) {
 }
 function arrAllSame(arr, func) {
 	if (isEmpty(arr)) return false;
-	console.log('arr',arr)
+	//console.log('arr',arr)
 	let arr1 = arr.map(x => func(x));
 	let sample = arr1[0];
 	for (let i = 1; i < arr1.length; i++) if (arr1[i] != sample) return false;
