@@ -1,4 +1,19 @@
 
+function toggle_visibility(elem) {
+	//returns new visibility (true or false)
+	elem = toElem(elem);
+	if (nundef(elem)) return;
+	let vis = elem.style.display;
+	if (vis == 'none') { show(elem); return true; } else { hide(elem); return false; }
+}
+function get_advanced_menu_button() {
+	let html = `<a id="aAdvancedMenu" href="javascript:onclick_advanced_menu()">≡</a>`;
+	let b = mCreateFrom(html);
+	mStyle(b, { bg: 'silver', hpadding: 10, maright: 10, rounding: 4 });
+	mClass(b, 'hop1')
+	return b;
+}
+
 function accuse_activate() {
 	let [pldata, stage, A, fen, phase, uplayer, turn, uname, host] = [Z.playerdata, Z.stage, Z.A, Z.fen, Z.phase, Z.uplayer, Z.turn, Z.uname, Z.host];
 	let donelist = Z.playerdata.filter(x => isDict(x.state) && isdef(x.state.item));

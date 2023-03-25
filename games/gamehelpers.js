@@ -978,6 +978,7 @@ function show_username(loadTable = false) {
 	let dpic = get_user_pic(uname, 30);
 	let d = mBy('dAdminRight');
 	mClear(d);
+	if (['felix','mimi','lauren','amanda'].includes(uname)) mAppend(d, get_advanced_menu_button());
 	mAppend(d, get_logout_button());
 	mAppend(d, dpic);
 

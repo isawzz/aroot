@@ -27,6 +27,7 @@ function onclick_ack() {
 	Z.func.clear_ack();
 	//if (!is_sending) take_turn_single();
 }
+function onclick_advanced_menu() { DA.showTestButtons = toggle_visibility('dTestButtons'); }
 function onclick_by_rank() {
 
 	//console.log('onclick_by_rank');
@@ -72,19 +73,19 @@ function onclick_by_suit() {
 	//let sorted = items.sort((a, b) => a.o.rank - b.o.rank);
 }
 function onclick_cancelmenu() { hide('dMenu'); }
-function onclick_experience(){
+function onclick_experience() {
 	//muss sagen wieviel und zu wem
 	//muss auch checken ob ueberhaupt experience habe!
-	let [fen,uplayer] = [Z.fen,Z.uplayer];
+	let [fen, uplayer] = [Z.fen, Z.uplayer];
 	let plnames = get_other_players();
-	let nums = range(1,fen.players[uplayer].experience);
-	if (isEmpty(nums)) {show_special_message('you dont have any experience points!'); return;}
+	let nums = range(1, fen.players[uplayer].experience);
+	if (isEmpty(nums)) { show_special_message('you dont have any experience points!'); return; }
 
 	//console.log('plnames',plnames,'nums',nums)
-	show_special_popup('select player and number of experience points to gift:',send_experience_points,{},plnames,nums);
+	show_special_popup('select player and number of experience points to gift:', send_experience_points, {}, plnames, nums);
 	//mQuestionPopup()
 }
-function onclick_game_menu_item(ev) {	show_game_menu(ev_to_gname(ev));}
+function onclick_game_menu_item(ev) { show_game_menu(ev_to_gname(ev)); }
 function onclick_home() { stopgame(); start_with_assets(); }
 function onclick_logout() {
 	mFadeClearShow('dAdminRight', 300);
@@ -204,9 +205,9 @@ function onclick_vote_empty() {
 }
 function onclick_vote_president() {
 	let [game, A, fen, uplayer, plorder] = [Z.game, Z.A, Z.fen, Z.uplayer, Z.plorder];
-	let pls=rChoose(Z.turn,2);
-	let pld0=	Z.playerdata.find(x=>x.name == pls[0]);
-	let pld1=	Z.playerdata.find(x=>x.name == pls[1]);
+	let pls = rChoose(Z.turn, 2);
+	let pld0 = Z.playerdata.find(x => x.name == pls[0]);
+	let pld1 = Z.playerdata.find(x => x.name == pls[1]);
 	pld0.state = { item: get_random_ballot_card() };
 	pld1.state = { item: get_random_ballot_card() };
 	relegate_to_host(Z.playerdata);
@@ -224,7 +225,7 @@ function onclick_vote_random() {
 }
 function onclick_vote_1() {
 	let [game, A, fen, uplayer, plorder] = [Z.game, Z.A, Z.fen, Z.uplayer, Z.plorder];
-	let pld=Z.playerdata.filter(x=>!isDict(x.state));
+	let pld = Z.playerdata.filter(x => !isDict(x.state));
 	let pld1 = rChoose(pld);
 	pld1.state = { item: rChoose(fen.players[pld1.name].hand) };
 	relegate_to_host(Z.playerdata);
@@ -235,8 +236,8 @@ function onclick_vote_red() {
 		if (isDict(pld.state)) continue;
 		let plname = pld.name;
 		let pl = fen.players[plname];
-		let list = pl.hand.filter(x=>get_color_of_card(x)=='red');
-		pld.state = { item: isEmpty(list)?'':rChoose(list) };
+		let list = pl.hand.filter(x => get_color_of_card(x) == 'red');
+		pld.state = { item: isEmpty(list) ? '' : rChoose(list) };
 	}
 	relegate_to_host(Z.playerdata);
 }
