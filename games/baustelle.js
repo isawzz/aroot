@@ -1,99 +1,118 @@
 
-function ui_type_accuse_policies(list, dParent, styles = {}, path = 'hand', title = 'hand', get_card_func = ari_get_card, show_if_empty = false) {
-
-	let cont = ui_make_container(dParent, styles);
-	let items = list.map(x => get_card_func(x));
-
-	for (const item of items) {
-		let d = iDiv(item);
-		//console.log('item', item)
-		let color = item.ckey;
-		let c = get_nc_complement_array(color); //colorMix((color,.7)
-		mStyle(d, { bg: c, border: color }); //`solid 2px ${color}`,box:true}); //color,thickness:3,box:true}); //'#ddd',border:item.ckey});
-		// mStyle(d,{bg:'#eee',border:`solid 2px ${color}`,box:true}); //color,thickness:3,box:true}); //'#ddd',border:item.ckey});
-		// mStyle(d,{bg:'#eee',border:`solid 2px ${color}`,box:true}); //color,thickness:3,box:true}); //'#ddd',border:item.ckey});
+function accuse_activate() {
+	let [pldata, stage, A, fen, phase, uplayer, turn, uname, host] = [Z.playerdata, Z.stage, Z.A, Z.fen, Z.phase, Z.uplayer, Z.turn, Z.uname, Z.host];
+	let donelist = Z.playerdata.filter(x => isDict(x.state) && isdef(x.state.item));
+	//if (!isEmpty(donelist)) console.log('.................donelist',donelist)
+	let complete = ['hand', 'membership', 'tied_consensus'].includes(stage) && donelist.length >= turn.length || stage == 'round' && firstCond(pldata, x => isDict(x.state));
+	if (complete && !sameList(turn, [Z.host])) {
+		//console.log('COMPLETE! donelist', donelist)
+		relegate_to_host(donelist);
+		return;
 	}
+	//if still here and multiturn: it cannot be complete or Z.host is only player on turn now!
+	let waiting = isdef(donelist.find(x => x.name == uplayer)) && turn.length > 1;
+	assertion(!complete || sameList(turn, [Z.host]), 'complete hat nicht zu host uebergeben!!!!!!!!!!')
+	assertion(!complete || !waiting, 'ERROR WAITING WHEN COMPLETE!!!')
+	Z.isWaiting = waiting; //das ist nur fuer page tab title animated vs static
 
-	let cardcont = mDiv(cont);
-	let card = isEmpty(items) ? { w: 1, h: valf(styles.h, Config.ui.card.h), ov: 0 } : items[0];
-	let splay = 2;
-	mContainerSplay(cardcont, splay, card.w, card.h, items.length, card.ov * card.w);
-	ui_add_cards_to_hand_container(cardcont, items, list);
-	let dtitle = ui_add_accuse_container_title(title, cont, items, show_if_empty);
+	assertion(turn.length == 1 || ['membership', 'hand', 'round'].includes(stage), "FALSCHE ASSUMPTION!!!!!!!!!!!!!");
+	if (turn.length == 1) check_experience_states();
 
-	//console.log('hand container',cont, cardcont)
-
-	return {
-		ctype: 'hand',
-		list: list,
-		path: path,
-		container: cont,
-		cardcontainer: cardcont,
-		splay: splay,
-		items: items,
-		dtitle: dtitle,
-	};
-}
-
-function eval_consensus(votes, color) {
-	let [stage, A, fen, phase, uplayer, turn, uname, host] = [Z.stage, Z.A, Z.fen, Z.phase, Z.uplayer, Z.turn, Z.uname, Z.host];
-
-	//check ob es eindeutiges maximum rank gibt
-	let vsorted = sortCardObjectsByRankDesc(votes, fen.ranks, 'card');
-	//console.log(vsorted.map(x => x.card));
-	//console.log('...CONSENSUS!!!!!!!!!!!!!', color, votes);
-
-	let opt = valf(Z.options.consensus, 'policy');
-
-	if (opt == 'policy') {
-		fen.policies.push(color); //get_color_card(color)); //color == 'red' ? 'QDn' : 'QSn'); //last_policy);
-		fen.validvoters = jsCopy(Z.plorder);
-		check_enough_policies_or_start_new_poll(`consensus on ${color}`);
-	} else if (opt == "coupdetat") {
-		let ace_present = vsorted.find(x => is_ace(x.card));
-		//console.log('ace_present', ace_present);
-		if (isdef(ace_present)) {
-			ari_history_list(`coup succeeded! ${color} wins!`, 'generation ends');
-			accuse_score_update(color);
-			Z.turn = jsCopy(Z.plorder);
-			Z.stage = 'round';
-			take_turn_fen_clear();
-		} else { //just add a policy
-			fen.policies.push(color); //get_color_card(color)); //color == 'red' ? 'QDn' : 'QSn'); 
-			fen.validvoters = jsCopy(Z.plorder);
-			check_enough_policies_or_start_new_poll(`consensus on ${color}`);
+	if (waiting) {
+		//console.log('WAITING!!', stage, uplayer);
+		accuse_show_selected_state(donelist.find(x => x.name == uplayer).state);
+		if (Z.mode != 'multi') { take_turn_waiting(); return; }
+		autopoll();
+	} else if (stage == 'handresolve') {
+		assertion(uplayer == Z.host && fen.cardsrevealed, 'NOT THE STARTER WHO COMPLETES THE STAGE!!!')
+		//console.log('RESOLVING votes on click!!!!!!!!!!!!!')
+		DA.gobutton = mButton('evaluate cards', accuse_evaluate_votes, dTable, {}, ['donebutton', 'enabled']);
+	} else if (stage == 'membershipresolve') {
+		assertion(uplayer == Z.host, 'NOT THE STARTER WHO COMPLETES THE STAGE!!!')
+		//console.log('RESOLVING membership!!!!!!!!!!!!!')
+		let histest = [];
+		for (const pldata of fen.pldata) { //Z.playerdata) {
+			let plname = pldata.name;
+			let card = pldata.state.item;
+			assertion(!isEmpty(card), "INVALID MEMBERSHIP SELECTION!!!!!!!!!!!!", uplayer)
+			//selected card goes from hand to membership
+			let pl = fen.players[plname];
+			pl.membership = card;
+			removeInPlace(pl.hand, card);
+			histest.push(`${plname} ${TESTHISTORY ? card : ''}`); //TODO:KEEP secret!!!!!!!!!!!!!!!!!!!!!!
 		}
-	} else if (opt == 'generation') {
-		ari_history_list(`consensus on ${color}!`, 'generation ends');
-		accuse_score_update(color);
+		ari_history_list(histest, 'membership');
+		start_new_poll();
+	} else if (stage == 'roundresolve') {
+		assertion(uplayer == Z.host, 'NOT THE STARTER WHO COMPLETES THE STAGE!!!')
+		//console.log('RESOLVING round => new generation!!!!!!!!!!!!!')
 		Z.turn = jsCopy(Z.plorder);
-		Z.stage = 'round';
-		take_turn_fen_clear();
-	} else if (opt == 'playerpolicy') { // opt == 'policy'
-		//what if there is a tie?
-		let tie = vsorted.length > 1 && getRankOf(vsorted[0].card) == getRankOf(vsorted[1].card);
-		if (tie) {
-			//need to go into a dialogue: each of the tied players must select a victim (tied player) who will pay!
-			let maxrank = getRankOf(vsorted[0].card);
-			let tied_votes = arrTakeWhile(vsorted, x => getRankOf(x.card) == maxrank);
-			let tied_players = tied_votes.map(x => x.plname);
-			console.log('tied', tied_votes, tied_players);
-			Z.turn = tied_players;
-			Z.stage = 'tied_consensus';
-			fen.tied_votes = tied_votes;
-			take_turn_fen_clear();
-		} else {
-			let winner = vsorted[0];
-			//remove winning vote from player hand and add it to policies!
-			fen.policies.push(winner.card);
-			removeInPlace(fen.players[winner.plname].hand, winner.card);
-			fen.validvoters = jsCopy(Z.plorder);
-			check_enough_policies_or_start_new_poll(`consensus on ${color}`);
+		Z.phase = Number(Z.phase) + 1;
+		stage = Z.stage = Z.phase > fen.rounds ? 'gameover' : 'membership';
+
+		if (stage == 'membership') {
+			for (const pl in fen.players) { delete fen.players[pl].membership; }
+			start_new_generation(fen, Z.plorder, Z.options);
 		}
+		take_turn_fen_clear();
+	} else if (stage == 'president') {
+		let parley_action_available = get_others_with_at_least_one_hand_card().length >= 1;
+		addIf(fen.presidents_poll, fen.president);
+		if (parley_action_available) {
+			select_add_items(ui_get_string_items(['parley']), president_parley, 'may parley cards', 0, 1);
+		} else {
+			//proceed to president_2
+			Z.stage = 'president_2';
+			accuse_activate();
+		}
+	} else if (stage == 'president_2') {
+		let accuse_action_available = !fen.isprovisional || fen.players[uplayer].hand.length >= 1;
+		let actions = ['defect', 'resign'];
+		if (accuse_action_available) actions.unshift('accuse');
+		select_add_items(ui_get_string_items(actions), president_action, 'must select action to play', 1, 1);
+	} else if (stage == 'pay_for_accuse') {
+		select_add_items(ui_get_hand_items(uplayer), pay_for_accuse_action, 'must pay a card for accuse action', 1, 1);
+	} else if (stage == 'accuse_action_select_player') {
+		let plnames = get_keys(fen.players);
+		let validplayers = plnames.filter(x => fen.players[x].hand.length >= 1 && x != uplayer && !fen.presidents_poll.includes(x));
+		select_add_items(ui_get_player_items(validplayers), accuse_submit_accused, 'must select player name', 1, 1);
+	} else if (stage == 'accuse_action_select_color') {
+		select_add_items(ui_get_string_items(fen.colors), accuse_submit_accused_color, 'must select color', 1, 1);
+	} else if (stage == 'accuse_action_entlarvt') {
+		select_add_items(ui_get_hand_items(uplayer), accuse_replaced_membership, 'must select new alliance', 1, 1);
+	} else if (stage == 'accuse_action_provisional') {
+		select_add_items(ui_get_hand_items(uplayer), accuse_replaced_membership, 'must select new alliance', 1, 1);
+	} else if (stage == 'accuse_action_policy') {
+		select_add_items(ui_get_hand_items(uplayer), accuse_enact_policy, 'may enact a policy', 0, 1);
+	} else if (stage == 'accuse_action_new_president') {
+		set_new_president();
+	} else if (stage == 'parley_select_player') {
+		let players = get_others_with_at_least_one_hand_card();
+		select_add_items(ui_get_player_items(players), parley_player_selected, 'must select player to exchange cards with', 1, 1);
+	} else if (stage == 'parley_select_cards') {
+		select_add_items(ui_get_hand_items(uplayer), parley_cards_selected, 'may select cards to exchange', 0, fen.maxcards);
+	} else if (stage == 'parley_opponent_selects') {
+		let n = fen.player_cards.length;
+		select_add_items(ui_get_hand_items(uplayer), parley_opponent_selected, `must select ${n} cards`, n, n);
+	} else if (stage == 'defect_membership') {
+		select_add_items(ui_get_hand_items(uplayer), defect_resolve, 'may replace your alliance', 0, 1);
+	} else if (stage == 'membership') {
+		select_add_items(ui_get_hand_items(uplayer), accuse_submit_membership, 'must select your alliance', 1, 1);
+	} else if (stage == 'hand') {
+		select_add_items(ui_get_hand_items(uplayer), accuse_submit_card, 'may select card to play', 0, 1);
+	} else if (stage == 'round') {
+		//let d = mDiv(dTable, {}, null, `generation end! ${fen.generations[fen.phase - 1].color} wins`);
+		show_special_message(`generation end! ${fen.generations[fen.phase - 1].color} wins`, false, 3000, 0, { top: 67 })
+		if (is_ai_player(uplayer)) accuse_onclick_weiter();
+		else {
+			mLinebreak(dTable, 12)
+			mButton('WEITER', accuse_onclick_weiter, dTable, {}, ['donebutton', 'enabled']);
+		}
+	} else {
+		//console.log('Z',Z)
+		alert(`PROBLEM!!! unknown stage ${stage}`)
 	}
 }
-
-
 
 
 

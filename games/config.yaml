@@ -33,12 +33,12 @@ games:
     options:
       #mode: 'solo,hotseat,multi'
       mode: 'hotseat,multi'
-      rounds: 6,2,1,4
+      rounds: 1,2,6,4
       stability: 2,3,4,5
       handsize: 4,6,7,5
       cardtype: 'c52,num'
       consensus: "coupdetat,policy" # 'generation,playerpolicy,policy'
-      colors: '3,2'
+      colors: '4,3,2'
       empty_vote: 'add policy' #'blank,win policy,add policy'
       defected: remove #'draw,exchange,remove'
   aristo:

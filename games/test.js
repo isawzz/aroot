@@ -974,7 +974,7 @@ function fentest7_cards() {
 	dTable = mBy('dTable'); mStyle(dTable, { gap: 10 }); mCenterFlex(dTable);
 
 	for (let i = 0; i < 10; i++) {
-		show_card_1(`${rNumber(1, 999)}_${rColor()}`, 100);
+		show_number_card(`${rNumber(1, 999)}_${rColor()}`, 100);
 	}
 
 }

@@ -3220,7 +3220,7 @@ function cBlank(dParent, styles = {}, id) {
 	if (nundef(styles.rounding)) styles.rounding = sz * .05;
 
 	let d = mDiv(dParent, styles, id, null, 'card');
-	console.log('styles',styles)
+	//console.log('styles',styles)
 
 	return d;
 

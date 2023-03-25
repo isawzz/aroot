@@ -73,7 +73,7 @@ function staticTitle() {
 	let loc = url.includes('telecave') ? 'telecave' : 'local';
 	// let game = isdef(Z) ? Config.games[Z.game].friendly : '♠ GAMES ♠'
 	let game = isdef(Z) ? stringAfter(Z.friendly, 'of ') : '♠ GAMES ♠';
-	document.title = `(${loc}) ${game}`; 
+	document.title = `(${loc}) ${game}`;
 }
 //#endregion title (tab)
 
@@ -221,6 +221,16 @@ function beautify_history(lines, title, fen, uplayer) {
 	return html;
 }
 function deactivate_ui() { uiActivated = false; DA.ai_is_moving = true; }
+function clearPlayers(){
+	for(const item of DA.allPlayers){
+		if (item.isSelected && !is_loggedin(item.uname)){
+			style_not_playing(item,'',DA.playerlist);
+			
+		}
+	}
+	assertion(!isEmpty(DA.playerlist),"uname removed from playerlist!!!!!!!!!!!!!!!")
+	DA.lastName = DA.playerlist[0].uname; // DA.allPlayers.find(x=>x.uname == DA.playerlist[0]);
+}
 function clear_status() { if (nundef(mBy('dStatus'))) return; clearTimeout(TO.fleeting); mRemove("dStatus"); }
 //function clear_table() { clear_status(); clear_title(); mStyle(document.body, { bg: 'white', fg: '#111111' }) }
 function clear_title() { mClear('dTitleMiddle'); mClear('dTitleLeft'); mClear('dTitleRight'); }
@@ -232,7 +242,7 @@ function collect_game_specific_options(game) {
 
 		let key = p;
 		let vals = poss[p];
-		if (isString(vals) && vals.split(',').length <= 1){
+		if (isString(vals) && vals.split(',').length <= 1) {
 			//set option directly
 			di[p] = isNumber(vals) ? Number(vals) : vals;
 			continue;
@@ -324,14 +334,14 @@ function get_next_human_player(plname) {
 function get_present_order_accuse() {
 	let [fen, uplayer] = [Z.fen, Z.uplayer];
 	let show_first = uplayer;
-	console.log('uplayer',uplayer)
+	console.log('uplayer', uplayer)
 	return arrCycle(Z.fen.plorder, Z.fen.plorder.indexOf(show_first));
 }
 function get_present_order() {
 	let [fen, uplayer, uname] = [Z.fen, Z.uplayer, Z.uname];
 
 	//assert that if uplayer is a bot, uname must be host!
-	assertion(is_human_player(uplayer) || uname == Z.host,"PRESENT ORDER ME WRONG!!!!!!!!!!!!!")
+	assertion(is_human_player(uplayer) || uname == Z.host, "PRESENT ORDER ME WRONG!!!!!!!!!!!!!")
 
 	let uname_plays = fen.plorder.includes(uname);
 	let is_bot = !is_human_player(uplayer);
@@ -416,6 +426,7 @@ function hFunc(content, funcname, arg1, arg2, arg3) {
 function i_am_host() { return U.name == Z.host; }
 function i_am_acting_host() { return U.name == Z.fen.acting_host; }
 function i_am_trigger() { return is_multi_trigger(U.name); }
+function is_loggedin(name){return isdef(U) && U.name == name;}
 function is_advanced_user() {
 	let advancedUsers = ['mimi', 'felix', 'bob', 'buddy', 'minnow', 'nimble', 'leo']; //, 'guest', 'felix'];
 	//console.log('***U', isdef(U) ? U.name : 'undefined!!!', 'secret:', DA.secretuser);
@@ -432,8 +443,8 @@ function is_multi_stage() { return isdef(Z.fen.trigger); }
 function is_playerdata_set(plname) {
 	return isdef(Z.playerdata) && !isEmpty(Z.playerdata) && !isEmpty(Z.playerdata.find(x => x.name == plname).state);
 }
-function is_color(s){return isdef(ColorDi[s.toLowerCase()]);}
-function is_player(s){return isdef(Z.fen.players[s]);}
+function is_color(s) { return isdef(ColorDi[s.toLowerCase()]); }
+function is_player(s) { return isdef(Z.fen.players[s]); }
 function is_playing(pl, fen) {
 	//returns true is pl is in fen.plorder or in fen.roundorder
 	return isList(fen.plorder) && fen.plorder.includes(pl) || isList(fen.roundorder) && fen.roundorder.includes(pl) || Z.game == 'feedback' && isdef(Z.fen.players[pl]);
@@ -546,7 +557,7 @@ function show_admin_ui() {
 	else if (Z.uname == Z.host && Z.stage == 'round_end') show('bClearAck');
 	else if (Z.game == 'ferro' && Z.uname == 'mimi' && Z.stage != 'card_selection') show('bClearAck');
 	else if (Z.game == 'accuse' && DA.HOSTAKEOVER && (Z.uname == Z.host || Z.uname == 'mimi' || DA.omnipower)) show_takeover_ui();
-	if (Z.game == 'accuse' && lookup(Z,['fen','players',Z.uplayer,'experience'])>0) show('bExperience');
+	if (Z.game == 'accuse' && lookup(Z, ['fen', 'players', Z.uplayer, 'experience']) > 0) show('bExperience');
 	if (['ferro', 'bluff', 'aristo', 'a_game'].includes(Z.game) && (Z.role == 'active' || Z.mode == 'hotseat')) {
 		//console.log('random should show because game is', Z.game)
 		show('bRandomMove');
@@ -578,6 +589,92 @@ function show_games(ms = 500) {
 		mLinebreak(d1);
 		mDiv(d1, { fz: 18, align: 'center' }, null, g.friendly);
 	}
+}
+function show_game_menu(gamename) {
+	stopgame();
+	show('dMenu'); mClear('dMenu');
+	let dMenu = mBy('dMenu');
+	let dForm = mDiv(dMenu, { align: 'center' }, 'fMenuInput');
+	let dInputs = mDiv(dForm, {}, 'dMenuInput');
+	let dButtons = mDiv(dForm, {}, 'dMenuButtons');
+	let bstart = mButton('start', () => {
+		let players = DA.playerlist.map(x => ({ name: x.uname, playmode: x.playmode }));
+		//console.log('players are', players);
+		let game = gamename;
+		let options = collect_game_specific_options(game);
+		for (const pl of players) { if (isEmpty(pl.strategy)) pl.strategy = valf(options.strategy, 'random'); }
+		//console.log('options nach collect',options)
+		startgame(game, players, options); hide('dMenu');
+	}, dButtons, {}, ['button', 'enabled']);
+	let bcancel = mButton('cancel', () => { hide('dMenu'); }, dButtons, {}, ['button', 'enabled']);
+	let bclear = mButton('clear players', clearPlayers, dButtons, {}, ['button', 'enabled']);
+	let d = dInputs; mClear(d); mCenterFlex(d);
+
+	let dPlayers = mDiv(d, { gap: 6 });
+	mCenterFlex(dPlayers);
+
+	//show players
+	DA.playerlist = [];
+	DA.allPlayers = [];
+	DA.lastName = null;
+	let params = [gamename, DA.playerlist];
+	let funcs = [style_not_playing, style_playing_as_human, style_playing_as_bot];
+	for (const u of Serverdata.users) {
+		//if (['ally', 'bob', 'leo'].includes(u.name) && (nundef(U) || u.name!=U.name)) continue; //lass die aus wenn nicht Uname!
+		let d = get_user_pic_and_name(u.name, dPlayers, 40);
+		mStyle(d, { w: 60, cursor: 'pointer' })
+		let item = { uname: u.name, div: d, state: 0, strategy: '', isSelected: false };
+		DA.allPlayers.push(item);
+
+		//katzen sind bots per default! (select twice!)
+		// if (['nimble', 'guest', 'minnow', 'buddy'].includes(u.name)) { toggle_select(item, funcs, gamename, DA.playerlist); toggle_select(item, funcs, gamename, DA.playerlist); }
+
+		//host spielt als human mit per default
+		if (is_loggedin(u.name)) { toggle_select(item, funcs, gamename, DA.playerlist); DA.lastName = U.name; }
+		//else d.onclick = () => toggle_select(item, funcs, gamename, DA.playerlist);
+		else d.onclick = ev => {
+			if (ev.shiftKey) {
+				//console.log('SHIFT!!!!',ev.target);
+
+				let list = Serverdata.users;
+				if (nundef(DA.lastName)) DA.lastName = list[0].name;
+
+				//suche index of DA.lastName in Serverdata.users
+				let x1 = list.find(x => x.name == DA.lastName);
+				let i1 = list.indexOf(x1);
+
+				let x2 = list.find(x => x.name == item.uname);
+				let i2 = list.indexOf(x2);
+
+				//put i1,i2 in correct order!
+				if (i1 == i2) return;
+				if (i1 > i2) [i1, i2] = [i2, i1];
+
+				//select all items between i1 and i2
+				assertion(i1 < i2, "NOT IN CORRECT ORDER!!!!!")
+				for (let i = i1; i <= i2; i++) {
+					let xitem = DA.allPlayers[i];
+					if (xitem.isSelected) continue;
+					style_playing_as_human(xitem, gamename, DA.playerlist);
+				}
+				DA.lastName = item.uname;
+
+
+			} else {
+				toggle_select(item, funcs, gamename, DA.playerlist);
+				if (item.isSelected) DA.lastName = item.uname;
+			}
+		}
+
+	}
+
+	// mDiv(d,{h:40,matop:10,fz:11,fg:'silver',rounding:10,bg:'beige'},null,'use SHIFT to multi-select players'); //'SHIFT<br>multiselect');
+	mDiv(d,{w:'100%',fz:11,fg:'#444'},null,'(use SHIFT to multi-select players)'); //'SHIFT<br>multiselect');
+	mLinebreak(d, 1);
+	show_game_options(d, gamename);
+
+	mFall('dMenu');
+
 }
 function show_game_options(dParent, game) {
 	mRemoveChildrenFromIndex(dParent, 2);
@@ -651,7 +748,7 @@ function show_history(fen, dParent) {
 			//for (const line of arr) { html += `<p>${line}</p>`; }
 		}
 		// let dHistory =  mDiv(dParent, { padding: 6, margin: 4, bg: '#ffffff80', fg: 'black', hmax: 400, 'overflow-y': 'auto', wmin: 240, rounding: 12 }, null, html); //JSON.stringify(fen.history));
-		let dHistory = mDiv(dParent, { maright:10, hpadding: 12, bg: colorLight('#EDC690', 50), box: true, matop: 4, rounding: 10, patop: 10, pabottom: 10, hmax: `calc( 100vh - 250px )`, 'overflow-y': 'auto', w: 260 }, null, html); //JSON.stringify(fen.history));
+		let dHistory = mDiv(dParent, { maright: 10, hpadding: 12, bg: colorLight('#EDC690', 50), box: true, matop: 4, rounding: 10, patop: 10, pabottom: 10, hmax: `calc( 100vh - 250px )`, 'overflow-y': 'auto', w: 260 }, null, html); //JSON.stringify(fen.history));
 		// let dHistory =  mDiv(dParent, { padding: 6, margin: 4, bg: '#ffffff80', fg: 'black', hmax: 400, 'overflow-y': 'auto', wmin: 240, rounding: 12 }, null, html); //JSON.stringify(fen.history));
 		//mNode(fen.history, dHistory, 'history');
 		UI.dHistoryParent = dParent;
@@ -872,11 +969,11 @@ function show_tables(ms = 500) {
 	//mRise('dScreen', 1000); 
 }
 function show_title() {
-	settingsOn=Z.func.state_info(mBy('dTitleLeft'));
+	settingsOn = Z.func.state_info(mBy('dTitleLeft'));
 	if (nundef(settingsOn) || settingsOn) show_settings(mBy('dTitleRight'));
 	mBy('dTablename').innerHTML = Z.friendly;
 }
-function show_username(loadTable=false) {
+function show_username(loadTable = false) {
 	let uname = U.name;
 	let dpic = get_user_pic(uname, 30);
 	let d = mBy('dAdminRight');
@@ -891,9 +988,9 @@ function show_username(loadTable=false) {
 
 	if (!TESTING && !DA.running) {
 		if (!loadTable) phpPost({ app: 'easy' }, 'tables'); //else console.log('no tables cmd! DA.running', DA.running);
-		else if (!isEmpty(Serverdata.tables)){
+		else if (!isEmpty(Serverdata.tables)) {
 			//console.log('....Serverdata',Serverdata);
-			onclick_table(Serverdata.tables[0].friendly); 
+			onclick_table(Serverdata.tables[0].friendly);
 		}
 	}
 }

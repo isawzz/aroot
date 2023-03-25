@@ -84,54 +84,7 @@ function onclick_experience(){
 	show_special_popup('select player and number of experience points to gift:',send_experience_points,{},plnames,nums);
 	//mQuestionPopup()
 }
-function onclick_game_menu_item(ev) {
-	let gamename = ev_to_gname(ev);
-	stopgame();
-	show('dMenu'); mClear('dMenu');
-	let dMenu = mBy('dMenu');
-
-	let dForm = mDiv(dMenu, { align: 'center' }, 'fMenuInput');
-	let dInputs = mDiv(dForm, {}, 'dMenuInput');
-	let dButtons = mDiv(dForm, {}, 'dMenuButtons');
-	let bstart = mButton('start', () => {
-		let players = DA.playerlist.map(x => ({ name: x.uname, playmode: x.playmode }));
-		//console.log('players are', players);
-		let game = gamename;
-		let options = collect_game_specific_options(game);
-		for (const pl of players) { if (isEmpty(pl.strategy)) pl.strategy = valf(options.strategy, 'random'); }
-		//console.log('options nach collect',options)
-		startgame(game, players, options); hide('dMenu');
-	}, dButtons, {}, 'button');
-	let bcancel = mButton('cancel', () => { hide('dMenu'); }, dButtons, {}, 'button');
-
-	let d = dInputs; mClear(d); mCenterFlex(d);
-	let dParent = mDiv(d, { gap: 6 });
-	mCenterFlex(dParent);
-	DA.playerlist = [];
-
-	//show players
-	DA.playerlist = [];
-	let params = [gamename, DA.playerlist];
-	let funcs = [style_not_playing, style_playing_as_human, style_playing_as_bot];
-	for (const u of Serverdata.users) {
-		if (['ally', 'bob', 'leo'].includes(u.name)) continue; //lass die aus!!!!
-		let d = get_user_pic_and_name(u.name, dParent, 40); mStyle(d, { w: 60 })
-		let item = { uname: u.name, div: d, state: 0, strategy: '', inlist: false, isSelected: false };
-
-		//host spielt als human mit per default
-		if (isdef(U) && u.name == U.name) { toggle_select(item, funcs, gamename, DA.playerlist); }
-
-		//katzen sind bots per default! (select twice!)
-		// if (['nimble', 'guest', 'minnow', 'buddy'].includes(u.name)) { toggle_select(item, funcs, gamename, DA.playerlist); toggle_select(item, funcs, gamename, DA.playerlist); }
-
-		d.onclick = () => toggle_select(item, funcs, gamename, DA.playerlist);
-		mStyle(d, { cursor: 'pointer' });
-	}
-	mLinebreak(d, 10);
-	show_game_options(d, gamename);
-
-	mFall('dMenu');
-}
+function onclick_game_menu_item(ev) {	show_game_menu(ev_to_gname(ev));}
 function onclick_home() { stopgame(); start_with_assets(); }
 function onclick_logout() {
 	mFadeClearShow('dAdminRight', 300);
@@ -340,11 +293,12 @@ function toggle_select(item, funcs) {
 	let ifunc = (valf(item.ifunc, 0) + 1) % funcs.length; let f = funcs[ifunc]; f(item, ...params.slice(2));
 }
 function style_not_playing(item, game, list) {
-	console.log('item', item, 'game', game, 'list', list)
+	//console.log('item', item, 'game', game, 'list', list)
 	let ui = iDiv(item); let uname = ui.getAttribute('username');
 	mStyle(ui, { bg: 'transparent', fg: 'black' });
 	arrLast(arrChildren(ui)).innerHTML = uname;
 	item.ifunc = 0; item.playmode = 'none'; removeInPlace(list, item);
+	item.isSelected = false;
 }
 function style_playing_as_human(item, game, list) {
 	//console.log('item', item, 'game', game, 'list', list)
@@ -352,6 +306,8 @@ function style_playing_as_human(item, game, list) {
 	mStyle(ui, { bg: get_user_color(uname), fg: colorIdealText(get_user_color(uname)) });
 	arrLast(arrChildren(ui)).innerHTML = uname;
 	item.ifunc = 1; item.playmode = 'human'; list.push(item);
+	item.isSelected = true;
+
 }
 function style_playing_as_bot(item, game, list) {
 	//console.log('item', item, 'game', game, 'list', list)
@@ -359,6 +315,8 @@ function style_playing_as_bot(item, game, list) {
 	mStyle(ui, { bg: bg, fg: colorIdealText(bg) });
 	arrLast(arrChildren(ui)).innerHTML = uname.substring(0, 3) + 'bot';
 	item.ifunc = 2; item.playmode = 'bot';
+	item.isSelected = true;
+
 }
 
 
