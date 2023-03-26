@@ -556,7 +556,8 @@ function show_admin_ui() {
 	else if (Z.game == 'bluff' && Z.uname == Z.host && Z.stage == 1) show('bClearAck');
 	else if (Z.uname == Z.host && Z.stage == 'round_end') show('bClearAck');
 	else if (Z.game == 'ferro' && Z.uname == 'mimi' && Z.stage != 'card_selection') show('bClearAck');
-	else if (Z.game == 'accuse' && DA.HOSTAKEOVER && (Z.uname == Z.host || Z.uname == 'mimi' || DA.omnipower)) show_takeover_ui();
+	//else if (Z.game == 'accuse' && DA.HOSTAKEOVER && (Z.uname == Z.host || Z.uname == 'mimi' || DA.omnipower)) show_takeover_ui();
+	
 	if (Z.game == 'accuse' && lookup(Z, ['fen', 'players', Z.uplayer, 'experience']) > 0) show('bExperience');
 	if (['ferro', 'bluff', 'aristo', 'a_game'].includes(Z.game) && (Z.role == 'active' || Z.mode == 'hotseat')) {
 		//console.log('random should show because game is', Z.game)
@@ -564,6 +565,7 @@ function show_admin_ui() {
 	}
 	if (Z.uname == Z.host || Z.uname == 'mimi' || Z.uname == 'felix') show('dHostButtons'); else hide('dHostButtons');
 	if (DA.showTestButtons == true) show('dTestButtons'); else hide('dTestButtons');
+	//if (isdef(mBy('dAdvancedUI'))) show_advanced_ui_buttons();
 }
 function show_fleeting_message(s, dParent, styles, id, ms = 2000) {
 	let d = mDiv(dParent, styles, id, s);
@@ -841,6 +843,7 @@ function show_polling_signal() {
 
 }
 function show_role() {
+	if (Z.game == 'accuse'){show_role_accuse(); return;}
 
 	let d = mBy('dAdminMiddle');
 	clearElement(d);
@@ -978,7 +981,7 @@ function show_username(loadTable = false) {
 	let dpic = get_user_pic(uname, 30);
 	let d = mBy('dAdminRight');
 	mClear(d);
-	if (['felix','mimi','lauren','amanda'].includes(uname)) mAppend(d, get_advanced_menu_button());
+	if (['felix','mimi','lauren','amanda'].includes(uname)) add_advanced_ui(d); //mAppend(d, get_advanced_menu_buttons());
 	mAppend(d, get_logout_button());
 	mAppend(d, dpic);
 

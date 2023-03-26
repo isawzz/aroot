@@ -19,9 +19,9 @@ function start_with_assets(reload = false) {
 	//U=null;
 	if (nundef(U)) { show_users(); return; }
 
-	//reload = TESTHISTORY;
+	//reload = DA.showTestButtons;
 	show_username(reload);
-	if (DA.TEST0 || TESTHISTORY) show('dTestButtons');
+	if (DA.TEST0 || DA.showTestButtons) show('dTestButtons');
 
 	//startgame('accuse',)
 	//startgame('ferro'); 

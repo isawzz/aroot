@@ -9,7 +9,7 @@ function accuse_replaced_membership() {
 	accuse_discard(pl.membership)
 	pl.membership = card;
 	removeInPlace(pl.hand, card);
-	ari_history_list(`${accused} chooses new membership` + (TESTHISTORY ? ` ${card}` : ''), 'accuse');
+	ari_history_list(`${accused} chooses new membership` + (DA.showTestButtons ? ` ${card}` : ''), 'accuse');
 	delete fen.msg;
 	if (stage == 'accuse_action_entlarvt'){
 		Z.turn = [fen.president];

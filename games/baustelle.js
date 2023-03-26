@@ -1,4 +1,94 @@
 
+function show_role_accuse() {
+	let d = mBy('dAdminMiddle');
+	clearElement(d);
+	let [role, pldata, stage, fen, phase, uplayer, turn, uname, host, mode] = [Z.role, Z.playerdata, Z.stage, Z.fen, Z.phase, Z.uplayer, Z.turn, Z.uname, Z.host, Z.mode];
+	let styles, text;
+	let boldstyle = { fg: 'red', weight: 'bold', fz: 20 };
+	let normalstyle = { fg: 'black', weight: null, fz: null };
+	if (mode == 'hotseat') {
+		// let dpics = mDiv(d,{gap:10}); mCenterCenterFlex(dpics);
+		// let pic = get_user_pic(uplayer, sz = 30, border = 'solid medium white');
+		// mStyle(pic, { cursor: 'pointer' });
+		text = `hotseat: <span style='color:${get_user_color(uplayer)}'>${uplayer}</span>`;
+		styles = boldstyle;
+		styles.wmin=220;
+		// let d1=mDiv(dpics,styles,text); mCenterCenterFlex(d1);
+		d.innerHTML = text; mStyle(d, styles);
+		// mAppend(dpics, pic);
+	} else if (role == 'spectator') {
+		styles = normalstyle;
+		text = `(spectating)`;
+		d.innerHTML = text; mStyle(d, styles);
+	} else if (role == 'inactive' && !DA.showTestButtons) {
+		styles = normalstyle;
+		text = `(${turn[0]}'s turn)`;
+		d.innerHTML = text; mStyle(d, styles);
+	} else if (role == 'active' && turn.length > 1 && !has_player_state(uplayer)) {
+		styles = boldstyle;
+		text = `It's your turn!!!`;
+		d.innerHTML = text; mStyle(d, styles);
+	} else if (role == 'active' && turn.length == 1) {
+		styles = boldstyle;
+		text = `It's your turn!!!`;
+		d.innerHTML = text; mStyle(d, styles);
+	} else if (DA.showTestButtons) {
+		let pls = turn.filter(x => x != uname && !has_player_state(x));
+		if (isEmpty(pls)) pls = [host];
+		let dpics = mDiv(d,{gap:10}); mCenterCenterFlex(dpics);
+		//console.log('host is',host, 'pls is',pls)
+		for (const plname of pls) {
+			let pic = get_user_pic(plname, sz = 30, border = 'solid medium white');
+			mStyle(pic, { cursor: 'pointer' })
+			pic.onclick = () => transferToPlayer(plname);
+			mAppend(dpics, pic);
+		}
+	} else {
+		styles = normalstyle;
+		text = `(waiting for other players)`;
+		d.innerHTML = text; mStyle(d, styles);
+	}
+}
+function rest_show_role() {
+	let hotseatplayer = Z.uname != Z.uplayer && Z.mode == 'hotseat' && Z.host == Z.uname;
+
+	let styles, text;
+	let boldstyle = { fg: 'red', weight: 'bold', fz: 20 };
+	let normalstyle = { fg: 'black', weight: null, fz: null };
+	let location = ''; //`<span style="color:dimgray;font-family:Algerian">${Z.friendly}  </span>`; // `in ${stringAfter(Z.friendly,'of ')}`;
+	if (hotseatplayer) {
+		styles = boldstyle;
+		text = `your turn for ${Z.uplayer}`;
+		// text = `your turn for ${Z.uplayer} ${location}`;
+	} else if (Z.role == 'spectator') {
+		styles = normalstyle;
+		text = `(spectating)`;
+		//text = `(spectating  ${location})`;
+	} else if (Z.role == 'active') {
+		styles = boldstyle;
+		text = `It's your turn!!!`;
+		//text = `It's your turn  ${location}!`;
+	} else if (Z.role == 'waiting') {
+		text = `waiting for players to complete their moves...`;
+		//text = `waiting for players to complete their moves ${location}...`;
+	} else {
+		assertion(Z.role == 'inactive', 'role is not active or inactive or spectating ' + Z.role);
+		styles = normalstyle;
+		text = `(${Z.turn[0]}'s turn)`;
+	}
+	d.innerHTML = text;
+	mStyle(d, styles);
+}
+
+function toggle_mode(){
+	let mode = valf(Clientdata.mode,Z.mode);
+	let newmode = mode == 'multi'?'hotseat':'multi';
+	let b=mBy('dAdvancedUI').children[1];
+	if (newmode == 'multi'){b.innerHTML = 'M';mStyle(b,{fg:'blue'})}
+	else{b.innerHTML = 'H';mStyle(b,{fg:'red'})}
+	return newmode;
+
+}
 function toggle_visibility(elem) {
 	//returns new visibility (true or false)
 	elem = toElem(elem);
@@ -6,10 +96,67 @@ function toggle_visibility(elem) {
 	let vis = elem.style.display;
 	if (vis == 'none') { show(elem); return true; } else { hide(elem); return false; }
 }
+function get_advanced_menu_buttons() {
+	// let html = `<a id="aAdvancedMenu" href="javascript:onclick_advanced_menu()">≡</a>`;
+	let html = `<a href="javascript:onclick_advanced_test()">T</a>`;
+	let btest = mCreateFrom(html);
+	let mode = 'multi';
+	html = `<a href="javascript:onclick_advanced_mode()">${mode[0].toUpperCase()}</a>`;
+	let bmode = mCreateFrom(html);
+	let d=mCreate('div');
+	mAppend(d,btest);
+	mAppend(d,bmode);
+	let styles = { bg: 'silver', wmin:25,h:25,rounding:'50%', maright: 10, align:'center' };
+	mStyle(btest,styles);
+	mStyle(bmode,styles);
+	//mStyle(b, { bg: 'silver', hpadding: 6, maright: 10, rounding: 4 });
+	// mStyle(b, { bg: 'silver', hpadding: 6, maright: 10, rounding: 4 });
+	mClass(btest, 'hop1')
+	mClass(bmode, 'hop1')
+	return d;
+}
+function add_advanced_ui(dParent) {
+	mDiv(dParent,{},'dAdvancedUI');
+	show_advanced_ui_buttons();
+}
+function show_advanced_ui_buttons(){
+	let dParent = mBy('dAdvancedUI');
+	//if (nundef(dParent)) return;
+	mClear(dParent)
+	let sz=20;
+	let styles = { bg: 'silver', wmin:sz,h:sz,rounding:'50%', maright: 10, align:'center' };
+	mButton(' ',onclick_advanced_test,dParent,styles,'enabled');
+	style_advanced_button();
+	//let mode = Z.mode;
+	//mButton(mode[0].toUpperCase(),onclick_advanced_mode,dParent,styles,'enabled');
+}
+function restrest(){
+	console.log('Z',Z)
+	console.log('mode',isdef(Z)?Z.mode:'no Z available!'); //valf(Z.mode,Cliendata.mode,''));
+	return;
+	// let html = `<a id="aAdvancedMenu" href="javascript:onclick_advanced_menu()">≡</a>`;
+	let html = `<a href="javascript:onclick_advanced_test()">T</a>`;
+	let btest = mCreateFrom(html);
+	let mode = 'multi';
+	html = `<a href="javascript:onclick_advanced_mode()">${mode[0].toUpperCase()}</a>`;
+	let bmode = mCreateFrom(html);
+	let d=mCreate('div');
+	mAppend(d,btest);
+	mAppend(d,bmode);
+	mStyle(btest,styles);
+	mStyle(bmode,styles);
+	//mStyle(b, { bg: 'silver', hpadding: 6, maright: 10, rounding: 4 });
+	// mStyle(b, { bg: 'silver', hpadding: 6, maright: 10, rounding: 4 });
+	mClass(btest, 'hop1')
+	mClass(bmode, 'hop1')
+	return d;
+}
 function get_advanced_menu_button() {
-	let html = `<a id="aAdvancedMenu" href="javascript:onclick_advanced_menu()">≡</a>`;
+	// let html = `<a id="aAdvancedMenu" href="javascript:onclick_advanced_menu()">≡</a>`;
+	let html = `<a id="aAdvancedMenu" href="javascript:onclick_advanced_menu()">T</a>`;
 	let b = mCreateFrom(html);
-	mStyle(b, { bg: 'silver', hpadding: 10, maright: 10, rounding: 4 });
+	mStyle(b, { bg: 'silver', hpadding: 6, maright: 10, rounding: 4 });
+	mStyle(b, { bg: 'silver', hpadding: 6, maright: 10, rounding: 4 });
 	mClass(b, 'hop1')
 	return b;
 }
@@ -54,7 +201,7 @@ function accuse_activate() {
 			let pl = fen.players[plname];
 			pl.membership = card;
 			removeInPlace(pl.hand, card);
-			histest.push(`${plname} ${TESTHISTORY ? card : ''}`); //TODO:KEEP secret!!!!!!!!!!!!!!!!!!!!!!
+			histest.push(`${plname} ${DA.showTestButtons ? card : ''}`); //TODO:KEEP secret!!!!!!!!!!!!!!!!!!!!!!
 		}
 		ari_history_list(histest, 'membership');
 		start_new_poll();

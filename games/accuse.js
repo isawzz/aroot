@@ -1,6 +1,4 @@
-const TESTHISTORY = true;DA.HOSTAKEOVER = true;DA.showTestButtons = true;
-
-DA.omnipower = false;
+DA.showTestButtons = true; //DA.HOSTAKEOVER = true; DA.omnipower = false;
 var firsttime = false;
 function accuse() {
 	function state_info(dParent) {

@@ -231,6 +231,9 @@ function update_table() {
 	let upl = role != 'spectator' ? uname : turn[0];
 
 	if (Z.game == 'accuse') {
+
+		if (isdef(Clientdata.mode)) Z.mode = Clientdata.mode;
+
 		if (mode == 'hotseat' && turn.length > 1) {
 			let next = get_next_in_list(Z.prev.uplayer, Z.turn); if (next) upl = next;
 		} else if (turn.length > 1 && uname == host) { //hand membership round

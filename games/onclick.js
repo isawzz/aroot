@@ -28,6 +28,17 @@ function onclick_ack() {
 	//if (!is_sending) take_turn_single();
 }
 function onclick_advanced_menu() { DA.showTestButtons = toggle_visibility('dTestButtons'); }
+function onclick_advanced_test() {
+	DA.showTestButtons = toggle_visibility('dTestButtons');
+	style_advanced_button();
+}
+function style_advanced_button(){
+	let b = mBy('dAdvancedUI').children[0];
+	if (DA.showTestButtons) { b.innerHTML = ' '; mStyle(b, { bg:GREEN,opacity:1 });} //fg: 'green' }) }
+	else { b.innerHTML = ' '; mStyle(b, { bg:'silver',opacity:.5 });} //fg: 'black' }) }
+
+}
+function onclick_advanced_mode() { Clientdata.mode = toggle_mode(); } //onclick_reload(); }
 function onclick_by_rank() {
 
 	//console.log('onclick_by_rank');
