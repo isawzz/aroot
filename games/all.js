@@ -5203,13 +5203,12 @@ var brd_PvArray = new Array(MAXDEPTH);
 var brd_searchHistory = new Array(14 * BRD_SQ_NUM);
 var brd_searchKillers = new Array(3 * MAXDEPTH);
 var dHistory;
-var MyEasing = 'cubic-bezier(1,-0.03,.86,.68)';
+var MyEasing = 'cubic-bezier(1;
 var SHAPEFUNCS = {
   'circle': agCircle,
   'hex': agHex,
   'rect': agRect,
 }
-var verbose = false;
 //#endregion
 class _grid {
   constructor(o, pool, boardInfo, fieldInfo) {
