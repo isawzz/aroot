@@ -35,6 +35,58 @@ function ui_type_gcHand(list, dParent) {
 
 //#endregion
 
+function restrest(){
+	console.log('Z',Z)
+	console.log('mode',isdef(Z)?Z.mode:'no Z available!'); //valf(Z.mode,Cliendata.mode,''));
+	return;
+	// let html = `<a id="aAdvancedMenu" href="javascript:onclick_advanced_menu()">≡</a>`;
+	let html = `<a href="javascript:onclick_advanced_test()">T</a>`;
+	let btest = mCreateFrom(html);
+	let mode = 'multi';
+	html = `<a href="javascript:onclick_advanced_mode()">${mode[0].toUpperCase()}</a>`;
+	let bmode = mCreateFrom(html);
+	let d=mCreate('div');
+	mAppend(d,btest);
+	mAppend(d,bmode);
+	mStyle(btest,styles);
+	mStyle(bmode,styles);
+	//mStyle(b, { bg: 'silver', hpadding: 6, maright: 10, rounding: 4 });
+	// mStyle(b, { bg: 'silver', hpadding: 6, maright: 10, rounding: 4 });
+	mClass(btest, 'hop1')
+	mClass(bmode, 'hop1')
+	return d;
+}
+function rest_show_role() {
+	let hotseatplayer = Z.uname != Z.uplayer && Z.mode == 'hotseat' && Z.host == Z.uname;
+
+	let styles, text;
+	let boldstyle = { fg: 'red', weight: 'bold', fz: 20 };
+	let normalstyle = { fg: 'black', weight: null, fz: null };
+	let location = ''; //`<span style="color:dimgray;font-family:Algerian">${Z.friendly}  </span>`; // `in ${stringAfter(Z.friendly,'of ')}`;
+	if (hotseatplayer) {
+		styles = boldstyle;
+		text = `your turn for ${Z.uplayer}`;
+		// text = `your turn for ${Z.uplayer} ${location}`;
+	} else if (Z.role == 'spectator') {
+		styles = normalstyle;
+		text = `(spectating)`;
+		//text = `(spectating  ${location})`;
+	} else if (Z.role == 'active') {
+		styles = boldstyle;
+		text = `It's your turn!!!`;
+		//text = `It's your turn  ${location}!`;
+	} else if (Z.role == 'waiting') {
+		text = `waiting for players to complete their moves...`;
+		//text = `waiting for players to complete their moves ${location}...`;
+	} else {
+		assertion(Z.role == 'inactive', 'role is not active or inactive or spectating ' + Z.role);
+		styles = normalstyle;
+		text = `(${Z.turn[0]}'s turn)`;
+	}
+	d.innerHTML = text;
+	mStyle(d, styles);
+}
+
 function accuse_replaced_membership() {
 	let [A, uplayer, fen, accused] = [Z.A, Z.uplayer, Z.fen, Z.fen.accused];
 
