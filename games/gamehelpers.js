@@ -988,10 +988,8 @@ function show_username(loadTable = false) {
 	if (is_advanced_user()) { show('dAdvanced1'); } else { hide('dAdvanced'); hide('dAdvanced1'); }
 	//if (TESTING) show('dAdvanced');
 
-	//console.log('DA.running',DA.running); //'Z',Z,'dTable',dTable,mBy('dTable'),isVisible('dTable'));
-
 	if (!TESTING && !DA.running) {
-		if (!loadTable) phpPost({ app: 'easy' }, 'tables'); //else console.log('no tables cmd! DA.running', DA.running);
+		if (!loadTable) phpPost({ app: 'easy' }, 'tables'); 
 		else if (!isEmpty(Serverdata.tables)) {
 			//console.log('....Serverdata',Serverdata);
 			onclick_table(Serverdata.tables[0].friendly);

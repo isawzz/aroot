@@ -56,7 +56,6 @@ function start_tests() {
 //stubs & helpers
 function get_texture(name) { return `url(/./base/assets/images/textures/${name}.png)`; }
 function _poll() { return; }
-//function clear_screen() { } //console.log('...clear_screen'); }
 function stopgame() { console.log('...stopgame',getFunctionsNameThatCalledThisFunction()); }
 
 
