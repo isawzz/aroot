@@ -23,6 +23,8 @@ function loadCodebaseResult(result){
 	DA.allcode = jsyaml.load(obj.allcode);
 	DA.allhistory = jsyaml.load(obj.allhistory);
 	//console.log('all',DA.all);
+	dTable = mBy('dTable');
+	show_code();
 }
 
 
