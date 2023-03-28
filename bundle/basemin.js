@@ -10,6 +10,7 @@ var dTable, dHistory; //, dTitle; //, dUsers, dGames, dTables, dLogo, dLoggedIn,
 var Config, Syms, SymKeys, ByGroupSubgroup, KeySets, C52, Cinno, C52Cards;
 var FORCE_REDRAW = false, TESTING = false;
 var ColorThiefObject, SelectedItem, SelectedColor;
+var FirstLoad = true;
 
 //#endregion
 //#region color const
@@ -1510,7 +1511,7 @@ function mShrinkTranslate(child, scale, newParent, ms = 800, callback) {
 	mAnimate(child, 'transform', [`translateX(${dx}px) translateY(${dy}px) scale(${scale})`], callback, ms, 'ease');
 }
 
-var MyEasing = 'cubic-bezier(1,-0.03,.86,.68)';
+var MyEasing = 'ease'; //cubic-bezier(1,-0.03,.86,.68)';
 function animateProperty(elem, prop, start, middle, end, msDuration, forwards) {
 	let kflist = [];
 	for (const v of [start, middle, end]) {

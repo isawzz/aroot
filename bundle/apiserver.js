@@ -1,9 +1,7 @@
-let verbose = false;
 function handle_result(result, cmd) {
 
 	//if (cmd == 'table') {console.log('result', result); } //return;}
 
-	if (verbose) console.log('cmd', cmd, '\nresult', result); //return;
 	if (result.trim() == "") return;
 	let obj;
 	try { obj = JSON.parse(result); } catch { console.log('ERROR:', result); }
@@ -317,6 +315,17 @@ function _poll() {
 		//muss periodisch die fen updaten!
 		send_or_sim({ friendly: Z.friendly, uname: Z.uplayer, fen: Z.fen, write_fen: true, auto: true }, 'table');
 	} else send_or_sim({ friendly: Z.friendly, uname: Z.uplayer, auto: true }, 'table');
+}
+
+function send_or_sim(o, cmd) {
+
+	Counter.server += 1; //console.log('send_or_sim '+Counter.server);
+	//if (Counter.server > 10) return;
+	//if (nundef(Z) || is_multi_stage()) o.read_players = true; das wird jetzt IMMER gemacht!!!
+
+
+	//if (DA.simulate) phpPostSimulate(o, cmd); else phpPost(o, cmd);
+	phpPost(o, cmd);
 }
 
 
