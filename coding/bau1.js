@@ -32,9 +32,9 @@ function create_left_side() {
 	let dm = mDom(dft, {}, { html: 'Edit Code:' });
 	let r = getRect(dm);
 	console.log(r.y + r.h);
-	let h = `calc( 100vh - ${r.y + r.h} )`;
-	h = window.innerHeight - (r.y + r.h + 4); mStyle(dfta, { h: h });
-	AU.ta = mDom(dfta, { fz: 18, family: 'consolas', w100: true, box: true, h: '100%', bg: 'white', fg: 'black' }, { tag: 'textarea', id: 'ta', className: 'plain' });
+	//let h = `calc( 100vh - ${r.y + r.h} )`;
+	h = window.innerHeight - (r.y + r.h + 4); mStyle(dfta, { h: h,box:true,padding:4 });
+	AU.ta = mDom(dfta, { fz: 18, family: 'consolas', w100: true, box: true, h: '99%', bg: 'white', fg: 'black' }, { tag: 'textarea', id: 'ta', className: 'plain' });
 
 
 }
