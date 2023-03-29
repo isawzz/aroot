@@ -1,26 +1,41 @@
 
+function show_sidebar(list, handler) {
+	dSidebar = mBy('dSidebar'); 
+	mClear(dSidebar); 
+	//mStyle(dSidebar, { w: 200, h: window.innerHeight - 68, overy: 'auto' });
+	for (const k of list) {
+		let d = mDiv(dSidebar, { cursor: 'pointer', wmin: 100 }, null, k, 'hop1')
+		if (isdef(handler)) d.onclick = handler;
+	}
+}
 function test_ui() {
 	mClear(document.body);
 	let d1 = mDom(document.body, {}, { classes: 'fullpage airport' });
 	let [dl, dr] = mColFlex(d1, [7, 2]);
+	for (const d of [dl, dr]) mStyle(d, { bg: rColor('blue', 'green', .5) })
 
-	dSidebar=mDiv(dr,{h:window.innerHeight},'dSidebar')
-
+	mStyle(dr, { h: '100vh', fg: 'white' })
+	dSidebar = mDiv100(dr,{wmax:240,overy:'auto',overx:'hidden'},'dSidebar'); //,{h:window.innerHeight},'dSidebar')
+	dLeft = dl;
+	onresize = create_left_side;
+	create_left_side();
+}
+function create_left_side() {
+	let dl = dLeft;
+	mClear(dLeft);
 	let [dt, dse, dsb, dft, dfta] = [mDiv(dl), mDiv(dl), mDiv(dl), mDiv(dl), mDiv(dl)];
 
-	for (const d of [dl, dr]) mStyle(d, { bg: rColor('blue', 'green', .5) })
 	for (const d of [dt, dse, dsb, dft, dfta]) mStyle(d, { padding: 4, hmin: 10 })
 
 	mSearch('keywords', mySearch, dse, { hmargin: 6 }, { selectOnClick: true });
 
-	let dm=mDom(dft, {}, { html: 'Edit Code:' });
-	let r=getRect(dm);
-	console.log(r.y+r.h);
-	let h=`calc( 100vh - ${r.y+r.h} )`;
-	h= window.innerHeight-(r.y+r.h+4);mStyle(dfta, { h: h });
+	let dm = mDom(dft, {}, { html: 'Edit Code:' });
+	let r = getRect(dm);
+	console.log(r.y + r.h);
+	let h = `calc( 100vh - ${r.y + r.h} )`;
+	h = window.innerHeight - (r.y + r.h + 4); mStyle(dfta, { h: h });
 	AU.ta = mDom(dfta, { fz: 18, family: 'consolas', w100: true, box: true, h: '100%', bg: 'white', fg: 'black' }, { tag: 'textarea', id: 'ta', className: 'plain' });
 
-	onresize=test_ui;
 
 }
 function _test_ui() {
