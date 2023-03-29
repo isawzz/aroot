@@ -5,8 +5,8 @@
     "baseUrl": ".",
     // Relative to "baseUrl"
     "paths": {
-      "@/*": ["../coding/*"],
 			"~/*": ["./src/*"]
 		}
-  }
+  },
+	"exclude": ["cb2"]
 }

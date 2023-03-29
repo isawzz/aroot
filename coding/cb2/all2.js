@@ -22650,7 +22650,7 @@ function mRowsX(dParent, arr, itemStyles = { bg: 'random' }, rowStyles, colStyle
 }
 function mScale(d, scale) { mStyle(d, { 'transform-origin': 'top', transform: `scale(${scale})` }); }
 function mScreen(dParent, styles) { let d = mDover(dParent); if (isdef(styles)) mStyleX(d, styles); return d; }
-function mSearch(handler, dParent, styles, classes) {
+function mSearch_(handler, dParent, styles, classes) {
 	let html = `
 				<form id="fSearch" action="javascript:void(0);" class='form'>
 						<label>Keywords:</label>
@@ -22661,6 +22661,25 @@ function mSearch(handler, dParent, styles, classes) {
 	let elem = mCreateFrom(html);
 	mAppend(dParent, elem);
 	elem.onsubmit = handler;
+	return elem;
+}
+function mSearch(label, handler, dParent, styles = {}, opts = {}) {
+	let html = `
+    <form action="javascript:void(0);" autocomplete="off">
+		<label>${label}</label>
+    </form>
+  `;
+	let elem = mCreateFrom(html);
+	mAppend(dParent, elem);
+	mStyle(elem, { display: 'grid', 'align-items': 'center', w100: true, gap: 4, 'grid-template-columns': 'auto 1fr auto' });
+	//mStyle(elem, { display: 'grid', w100: true, gap: 4, 'grid-template-columns': 'auto 1fr auto' });
+
+	let inp = mInput(elem, styles, opts);
+
+	let myhandler = () => handler(mBy(inp.id).value.trim()); // handler(toWords(mBy(inp.id).value));
+	mButton('GO', myhandler, elem);
+	elem.onsubmit = myhandler;
+
 	return elem;
 }
 function mSection(styles = {}, id, inner, tag, classes) {

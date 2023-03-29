@@ -336,6 +336,7 @@ const DIBOA = {
 };
 var BG_CARD_BACK = randomColor();
 var dSettings = mBy('dSettings');
+const SHAPEFUNCS = { 'circle': agCircle, 'hex': agHex, 'rect': agRect, };
 
 
 
