@@ -34193,6 +34193,7 @@ function rrto(r1, r2) {
 	r.y -= r2.y; r.t -= r2.y; r.b -= r2.y;
 	return r;
 }
+function rsgUpdate() {  return {info: mNodeChangeContent};}
 function RsortIds(workingSpec, R) {
 	let hasid = {};
 	let noid = {};
@@ -49916,7 +49917,7 @@ function updateNode(n, upd, R) {
 		let prop = upd.prop;
 		let oldval = o[prop];
 		o[prop] = upd.newval;
-		let f = RUPDATE[n.type];
+		let f = rsgUpdate()[n.type];
 		if (isdef(f)) {
 			let ui = n.ui;
 			let data = n.data;

@@ -10428,6 +10428,17 @@ const:
     datetime: 2023-02-16-07-16
     timestamp: 1676560603006.736
     size: 3325209
+  RUPDATE:
+    name: RUPDATE
+    sig: const RUPDATE;
+    region: const
+    filename: allcode.js
+    type: const
+    fname: allcode.js
+    path: C:\D\a04\allcode.js
+    datetime: 2023-02-16-07-16
+    timestamp: 1676560603006.736
+    size: 3325209
   SEND_MOUSE_MOVE_EVERY:
     name: SEND_MOUSE_MOVE_EVERY
     sig: const SEND_MOUSE_MOVE_EVERY;
@@ -71917,17 +71928,6 @@ func:
     region: func
     filename: allcode.js
     type: func
-    fname: allcode.js
-    path: C:\D\a04\allcode.js
-    datetime: 2023-02-16-07-16
-    timestamp: 1676560603006.736
-    size: 3325209
-  rsgUpdate:
-    name: rsgUpdate
-    sig: function rsgUpdate();
-    region: const
-    filename: allcode.js
-    type: const
     fname: allcode.js
     path: C:\D\a04\allcode.js
     datetime: 2023-02-16-07-16

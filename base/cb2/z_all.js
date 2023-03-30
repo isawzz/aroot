@@ -55,7 +55,9 @@ const SHOW_SERVERDATA = false;
 const USER_SERVERDATA_STUB = false;
 const DEF_ORIENTATION = 'v';
 const DEF_SPLIT = 0.5;
-function rsgUpdate() {  return {info: mNodeChangeContent};}
+const RUPDATE = {
+  info: mNodeChangeContent,
+};
 const MAX_RECURSIONS = 200;
 const RCREATE = {
   card52: mCard52,
@@ -611,7 +613,7 @@ const GFUNC = {
     startGame: startGameSPA, startLevel: startLevelSPA, startRound: startRoundSPA, trialPrompt: trialPromptSPA, prompt: promptSPA, activate: activateSPA, eval: evalSPA
   },
 }
-const CRIMSON = 'crimson';
+const CRIMSON = colorDarker('crimson', .25);
 const ALLTESTS = {
   0: {
     0: {
@@ -89561,7 +89563,7 @@ function updateNode(n, upd, R) {
     let prop = upd.prop;
     let oldval = o[prop];
     o[prop] = upd.newval;
-    let f = rsgUpdate()[n.type];
+    let f = RUPDATE[n.type];
     if (isdef(f)) {
       let ui = n.ui;
       let data = n.data;

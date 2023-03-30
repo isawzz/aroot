@@ -130,6 +130,7 @@ const BLUE = '#4363d8';
 const BROWN = '#96613d';
 const GREEN = '#3cb44b';
 const BLUEGREEN = '#004054';
+const CRIMSON = 'crimson';
 const FIREBRICK = '#800000';
 const LIGHTGREEN = '#afff45'; //'#bfef45';
 const LIGHTBLUE = '#42d4f4';

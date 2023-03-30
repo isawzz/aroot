@@ -5,6 +5,7 @@ async function start() {
 	await load_Codebase('../coding/cb2');
 	await load_assets_fetch('../base/', '../games/')
 	console.log('CODE', CODE, '\nDB', DB, '\nConfig', Config)
+
 }
 
 

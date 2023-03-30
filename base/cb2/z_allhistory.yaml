@@ -7820,6 +7820,10 @@ getRandomFromArray:
 getText:
   - C:\D\a04\_stuff\_versions\v4\game\allcode.js
   - C:\D\a04\allcode.js
+GFUNC:
+  - C:\D\a00\git_archive\asstest\SIMPLE\_work.js
+  - C:\D\a04\_stuff\_versions\v4\game\allcode.js
+  - C:\D\a04\allcode.js
 GirlNames:
   - C:\xampp\htdocs\aroot\_other\chatas\js\globals.js
   - C:\xampp\htdocs\aroot\belinda\js\globals.js
@@ -8624,11 +8628,6 @@ RSGTYPES:
   - C:\D\a00\vid\vid2\rsg\structures.js
   - C:\D\a04\_stuff\_versions\v4\game\allcode.js
   - C:\D\a04\allcode.js
-rsgUpdate:
-  - C:\Users\tawzz\OneDrive\dev\CBII\CODE_SAFE\CODE\js\binding.js
-  - C:\D\a00\git_archive\gsmTester\RSG\js\R\binding.js
-  - C:\D\a04\_stuff\_versions\v4\game\allcode.js
-  - C:\D\a04\allcode.js
 RUNTEST:
   - C:\DATA\dev_2020\CBII\zLastVid\vid0\static\front\js\_config.js
   - C:\D\a00\vid\vid0\static\front\js\_config.js
@@ -8639,6 +8638,11 @@ RUNTEST:
   - C:\D\a00\FLASK\step4\base\js\_config.js
   - C:\D\a00\git_archive\vid\frontend\static\front\js\_config.js
   - C:\D\a00\git_archive\dycon_ui_test\base\js\_config.js
+  - C:\D\a04\_stuff\_versions\v4\game\allcode.js
+  - C:\D\a04\allcode.js
+RUPDATE:
+  - C:\Users\tawzz\OneDrive\dev\CBII\CODE_SAFE\CODE\js\binding.js
+  - C:\D\a00\git_archive\gsmTester\RSG\js\R\binding.js
   - C:\D\a04\_stuff\_versions\v4\game\allcode.js
   - C:\D\a04\allcode.js
 SEND_MOUSE_MOVE_EVERY:

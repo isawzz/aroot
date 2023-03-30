@@ -8181,7 +8181,7 @@ createTextStyle: "const createTextStyle = function (feature, resolution, dom)
   \  });\r
 
   };"
-CRIMSON: const CRIMSON = 'crimson';
+CRIMSON: const CRIMSON = colorDarker('crimson', .25);
 crowd: const crowd = []
 DARKBLUE: const DARKBLUE = '#04041b';
 DD: "const DD = {\r
@@ -8271,9 +8271,9 @@ DIBOA: "const DIBOA = {\r
 
   \  bw_info: {\r
 
-  \    boa: { userid: 'gleem@gmail.com', pwd: rPassword(20) },\r
+  \    boa: { userid: 'gleem@gmail.com', pwd: 'asffdghsjdfkhdfjfh' },\r
 
-  \    authy: { userid: 'gleem@gmail.com', pwd: rPassword(20) },\r
+  \    authy: { userid: 'gleem@gmail.com', pwd: 'dfgsgbfgbskdgsbg' },\r
 
   \  },\r
 
@@ -8724,6 +8724,57 @@ getText: "const getText = function (feature, resolution, dom) {\r
   \  return text;\r
 
   };"
+GFUNC: "const GFUNC = {\r
+
+  \  gTouchPic: {\r
+
+  \    startGame: startGameTP, startLevel: startLevelTP, startRound:
+  startRoundTP, trialPrompt: trialPromptTP, prompt: promptTP, activate:
+  activateTP, eval: evalTP\r
+
+  \  },\r
+
+  \  gTouchColors: {\r
+
+  \    startGame: startGameTC, startLevel: startLevelTC, startRound:
+  startRoundTC, trialPrompt: trialPromptTC, prompt: promptTC, activate:
+  activateTC, eval: evalTC\r
+
+  \  },\r
+
+  \  gWritePic: {\r
+
+  \    startGame: startGameWP, startLevel: startLevelWP, startRound:
+  startRoundWP, trialPrompt: trialPromptWP, prompt: promptWP, activate:
+  activateWP, eval: evalWP\r
+
+  \  },\r
+
+  \  gMissingLetter: {\r
+
+  \    startGame: startGameML, startLevel: startLevelML, startRound:
+  startRoundML, trialPrompt: trialPromptML, prompt: promptML, activate:
+  activateML, eval: evalML\r
+
+  \  },\r
+
+  \  gSayPic: {\r
+
+  \    startGame: startGameSP, startLevel: startLevelSP, startRound:
+  startRoundSP, trialPrompt: trialPromptSP, prompt: promptSP, activate:
+  activateSP, eval: evalSP\r
+
+  \  },\r
+
+  \  gSayPicAuto: {\r
+
+  \    startGame: startGameSPA, startLevel: startLevelSPA, startRound:
+  startRoundSPA, trialPrompt: trialPromptSPA, prompt: promptSPA, activate:
+  activateSPA, eval: evalSPA\r
+
+  \  },\r
+
+  }"
 GirlNames: "const GirlNames = ['afia', 'ally', 'amanda', 'angela', 'anna',
   'annabel', 'birgit', 'bona', 'carmen', 'cassandra',\r
 
@@ -9928,6 +9979,11 @@ rgbToHexCOOL: "const rgbToHexCOOL = (pixel) => {\r
   };"
 RSGTYPES: "const RSGTYPES = { board: 1, hand: 2, field: 101, edge: 102, corner: 103 };"
 RUNTEST: const RUNTEST = false;
+RUPDATE: "const RUPDATE = {\r
+
+  \  info: mNodeChangeContent,\r
+
+  };"
 SEND_MOUSE_MOVE_EVERY: const SEND_MOUSE_MOVE_EVERY = 200;
 SERVER_URL: "const SERVER_URL = IS_MIRROR ? 'http://localhost:5555/' : FLASK ?
   (NGROK ? NGROK : 'http://localhost:' + PORT + '/') :
@@ -149204,11 +149260,6 @@ rrto: "function rrto(r1, r2) {\r
   \  return r;\r
 
   }"
-rsgUpdate: "function rsgUpdate() {\r
-
-  \  return {info: mNodeChangeContent}\r
-
-  }"
 RsortIds: "function RsortIds(workingSpec, R) {\r
 
   \  let hasid = {};\r
@@ -181961,7 +182012,7 @@ updateNode: "function updateNode(n, upd, R) {\r
 
   \    o[prop] = upd.newval;\r
 
-  \    let f = rsgUpdate()[n.type];\r
+  \    let f = RUPDATE[n.type];\r
 
   \    if (isdef(f)) {\r
 

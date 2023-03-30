@@ -5,6 +5,60 @@ function addDummy(dParent) {
 	dummy.id = 'dummy';
 
 }
+function create_left_side() {
+	let dl = dLeft;
+	mClear(dLeft);
+	let [dt, dse, dsb, dft, dfta] = [mDiv(dl), mDiv(dl), mDiv(dl), mDiv(dl), mDiv(dl)];
+
+	for (const d of [dt, dse, dsb, dft, dfta]) mStyle(d, { padding: 4, hmin: 10 })
+
+	mSearch('keywords', mySearch, dse, { hmargin: 6 }, { selectOnClick: true });
+
+	let dm = mDom(dft, {}, { html: 'Edit Code:' });
+	let r = getRect(dm);
+	console.log(r.y + r.h);
+	//let h = `calc( 100vh - ${r.y + r.h} )`;
+	h = window.innerHeight - (r.y + r.h + 4); mStyle(dfta, { h: h, box: true, padding: 4 });
+	AU.ta = mDom(dfta, { fz: 18, family: 'consolas', w100: true, box: true, h: '99%', bg: 'white', fg: 'black' }, { tag: 'textarea', id: 'ta', className: 'plain' });
+
+
+}
+function execute_on_control_enter(ev) {
+	if (ev.ctrlKey && ev.key == 'Enter') {
+		console.log('!!!')
+		x = runcode(mBy('ta').value)
+		//console.log('TEST!', x)
+	}
+}
+async function load_Codebase(dir) {
+	let path_js = isdef(dir) ? (dir + '/z_all.js') : '../allcode.js';
+	dir = isdef(dir) ? dir : '../basejs';
+
+	let text = CODE.text = await route_path_text(path_js);
+
+	let keysSorted = [];
+	let lines = text.split('\r\n');
+	for (const l of lines) {
+		if (['var', 'const', 'cla', 'func'].some(x => l.startsWith(x))) {
+			let key = firstWordAfter(l, ' ', true);
+			keysSorted.push(key);
+		}
+	}
+	CODE.keysSorted = keysSorted;
+	//console.log('keysSorted',keysSorted);
+
+	CODE.di = await route_path_yaml_dict(dir + '/z_all.yaml');
+	CODE.justcode = await route_path_yaml_dict(dir + '/z_allcode.yaml');
+	CODE.codelist = dict2list(CODE.justcode, 'key');
+	CODE.history = await route_path_yaml_dict(dir + '/z_allhistory.yaml');
+	let keys = {};
+	for (const k in CODE.di) { for (const k1 in CODE.di[k]) keys[k1] = CODE.di[k][k1]; }
+	CODE.all = keys;
+	CODE.keylist = Object.keys(keys)
+	//let inter = intersection(Object.keys(keys), Object.keys(window));
+	//console.log('intersection',inter);
+	//7748 in intersection, also ca 400 jeweils extra, ergibt total of 8500 keys ca.
+}
 function loadCodebase(o = {}) {
 	o = JSON.stringify(o);
 	var xml = new XMLHttpRequest();
@@ -102,6 +156,31 @@ function mDom100(dParent, styles, opts) {
 	if (nundef(styles.w) && nundef(styles.wrest)) addKeys({ w100: true }, styles);
 	if (nundef(styles.h) && nundef(styles.hrest)) addKeys({ h100: true }, styles);
 	return mDom(dParent, styles, opts);
+}
+function mGridFrom(d, m, cols, rows, cellstyles = {}) {
+	let gta = '';
+	let words = [];
+	for (const line of m) {
+		gta = gta + `'${line}' `;
+		let warr = toWords(line);
+		//console.log('warr',warr)
+		for (const w of warr) if (!words.includes(w)) words.push(w);
+		//w.map(x => addIf(words, w));
+
+	}
+	//console.log('gta',gta);
+	//console.log('words', words);
+	let dParent = mDom100(d, { display: 'grid', 'grid-template-areas': gta });
+	dParent.style.gridTemplateColumns = cols;
+	dParent.style.gridTemplateRows = rows;
+	for (const w of words) {
+		let st = copyKeys({ 'grid-area': w }, cellstyles);
+		let cell = window[w] = mDom(dParent, st, { id: w });//	,html:w.substring(1)})
+
+
+	}
+	//console.log('dParent',dParent); return;
+	return dParent;
 }
 function mInput(dParent, styles = {}, opts = {}) {
 	addKeys({ fz: 'inherit', fg: 'inherit', 'flex-grow': 1, bg: '#00000080', hpadding: 10, vpadding: 4, rounding: 8 }, styles);
@@ -298,6 +377,15 @@ function show_coding_ui() {
 	//mDom(dTable, {margin:10,bg:'#222'}, { html: 'HAAAAAAAAAALLLLLLLLLOOOOOO', editable: true, selectOnClick: true });
 	//dUnten = mDiv(dTable, {box:true,w:'100%',h:400,bg:'#222'});
 }
+function show_sidebar(list, handler) {
+	dSidebar = mBy('dSidebar');
+	mClear(dSidebar);
+	//mStyle(dSidebar, { w: 200, h: window.innerHeight - 68, overy: 'auto' });
+	for (const k of list) {
+		let d = mDiv(dSidebar, { cursor: 'pointer', wmin: 100 }, null, k, 'hop1')
+		if (isdef(handler)) d.onclick = handler;
+	}
+}
 function sortClassKeys(di) {
 	let classes = dict2list(di.cla, 'key');
 	let classesWithoutExtends = classes.filter(x => !x.code.includes(' extends '));
@@ -363,6 +451,18 @@ function sortConstKeys(di) {
 }
 function stringMinusLast(s, n = 1) {
 	return s.substring(0, s.length - n);
+}
+function test_ui() {
+	mClear(document.body);
+	let d1 = mDom(document.body, {}, { classes: 'fullpage airport' });
+	let [dl, dr] = mColFlex(d1, [7, 2]);
+	for (const d of [dl, dr]) mStyle(d, { bg: rColor('blue', 'green', .5) })
+
+	mStyle(dr, { h: '100vh', fg: 'white' })
+	dSidebar = mDiv100(dr, { wmax: 240, overy: 'auto', overx: 'hidden' }, 'dSidebar'); //,{h:window.innerHeight},'dSidebar')
+	dLeft = dl;
+	onresize = create_left_side;
+	create_left_side();
 }
 function toWordsX(s, sAllow = '_') {
 	let special = ['-', '.', '*', '?', '!'];

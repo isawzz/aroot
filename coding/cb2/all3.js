@@ -1,6 +1,4 @@
-const RUPDATE = {
-	info: mNodeChangeContent,
-};
+
 const RCREATE = {
 	card52: mCard52,
 	card: mCard,
@@ -32,7 +30,6 @@ const GFUNC = {
 		startGame: startGameSPA, startLevel: startLevelSPA, startRound: startRoundSPA, trialPrompt: trialPromptSPA, prompt: promptSPA, activate: activateSPA, eval: evalSPA
 	},
 }
-const CRIMSON = colorDarker('crimson', .25);
 const ALLTESTS = {
 	0: {
 		0: {
