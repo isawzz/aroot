@@ -25,25 +25,7 @@ const BoyNames = ['aaron', 'andy', 'bill', 'blade', 'bob', 'buddy', 'creed', 'da
   'sebastian', 'stanley', 'stitch', 'toby', 'tom', 'vladimir', 'wolf', 'wolfgang'];
 const BRAUN = '#331606';
 const BROWN = '#96613d';
-const buildRgb = (imageData) => {
-  const rgbValues = [];
-  for (let i = 0; i < imageData.length; i += 4) {
-    const rgb = {
-      r: imageData[i],
-      g: imageData[i + 1],
-      b: imageData[i + 2],
-    };
-    rgbValues.push(rgb);
-  }
-  return rgbValues;
-};
 const CACHE_INITDATA = true;
-const calculateColorDifference = (color1, color2) => {
-  const rDifference = Math.pow(color2.r - color1.r, 2);
-  const gDifference = Math.pow(color2.g - color1.g, 2);
-  const bDifference = Math.pow(color2.b - color1.b, 2);
-  return rDifference + gDifference + bDifference;
-};
 const CARD_SZ = 80;
 const clientData = {};
 const CODE = {};
@@ -60,10 +42,6 @@ const COLORPARAMNAMES = {
   highlight1: true,
   highlight1: true,
 }
-const complementaryColor = color => {
-  const hexColor = color.replace('#', '0x');
-  return `#${('000000' + ('0xffffff' ^ hexColor).toString(16)).slice(-6)}`;
-};
 const config = {
   src: 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/175711/open-peeps-sheet.png',
   rows: 15,
@@ -103,44 +81,6 @@ const DOMCATS = { rect: 'g', g: 'g', circle: 'g', text: 'g', polygon: 'g', line:
 const DSPEC_VERSION = 3;
 const EXTENDED_COLORS = ['red', 'green', 'yellow', 'blue', 'pink', 'indigo', 'gray', 'sienna', 'olive'];
 const FIELD_SZ = 40;
-const fieldSorter = fields => (a, b) =>
-  fields
-    .map(o => {
-      let dir = 1;
-      if (o[0] === '-') {
-        dir = -1;
-        o = o.substring(1);
-      }
-      return a[o] > b[o] ? dir : a[o] < b[o] ? -dir : 0;
-    })
-    .reduce((p, n) => (p ? p : n), 0);
-const findBiggestColorRange = (rgbValues) => {
-  let rMin = Number.MAX_VALUE;
-  let gMin = Number.MAX_VALUE;
-  let bMin = Number.MAX_VALUE;
-  let rMax = Number.MIN_VALUE;
-  let gMax = Number.MIN_VALUE;
-  let bMax = Number.MIN_VALUE;
-  rgbValues.forEach((pixel) => {
-    rMin = Math.min(rMin, pixel.r);
-    gMin = Math.min(gMin, pixel.g);
-    bMin = Math.min(bMin, pixel.b);
-    rMax = Math.max(rMax, pixel.r);
-    gMax = Math.max(gMax, pixel.g);
-    bMax = Math.max(bMax, pixel.b);
-  });
-  const rRange = rMax - rMin;
-  const gRange = gMax - gMin;
-  const bRange = bMax - bMin;
-  const biggestRange = Math.max(rRange, gRange, bRange);
-  if (biggestRange === rRange) {
-    return "r";
-  } else if (biggestRange === gRange) {
-    return "g";
-  } else {
-    return "b";
-  }
-};
 const FIREBRICK = '#800000';
 const FLASK = true;
 const GENERATE_EMPTY_MESSAGES = true;
@@ -162,20 +102,6 @@ const BLUEGREEN = '#004054';
 const GT = {};
 const hasClickedMask = 1 << 2;
 const HEROKU = false;
-const hslToHexCOOL = (hslColor) => {
-  const hslColorCopy = { ...hslColor };
-  hslColorCopy.l /= 100;
-  const a =
-    (hslColorCopy.s * Math.min(hslColorCopy.l, 1 - hslColorCopy.l)) / 100;
-  const f = (n) => {
-    const k = (n + hslColorCopy.h / 30) % 12;
-    const color = hslColorCopy.l - a * Math.max(Math.min(k - 3, 9 - k, 1), -1);
-    return Math.round(255 * color)
-      .toString(16)
-      .padStart(2, "0");
-  };
-  return `#${f(0)}${f(8)}${f(4)}`.toUpperCase();
-};
 const img = document.createElement('img')
 const immediateStart = true;
 const INCREMENTAL_UPDATE = true;
@@ -320,12 +246,6 @@ const MAX_RECURSIONS = 200;
 const MAXNODES = 5;
 const messages = [];
 const messageTypes = { LEFT: 'left', RIGHT: 'right', LOGIN: 'login' };
-const displayMessages = () => {
-  const messagesHTML = messages
-    .map(message => createMessageHTML(message))
-    .join('');
-  messagesList.innerHTML = messagesHTML;
-};
 const MIN_CARD_HEIGHT = 60;
 const MOUSED = 15;
 const myDom = {
@@ -504,39 +424,8 @@ const NATURE = {
 };
 const NGROK = false; //'http://849aec381695.ngrok.io/'; // MUSS / am ende!!!
 const OLIVE = '#808000';
-const OPS = {
-  'first': { cmd: 'add', link: 'to', wr: '+', sp: 'plus', f: (a, b) => (a + b), min: 20, max: 100 },
-  'plus': { cmd: 'add', link: 'to', wr: '+', sp: 'plus', f: (a, b) => (a + b), min: 3, max: 30 },
-  'minus': { cmd: 'subtract', link: 'from', wr: '-', sp: 'minus', f: (a, b) => (a - b), min: 1, max: 10 },
-  'div': { cmd: 'divide', link: 'by', wr: ':', sp: 'divided by', f: (a, b) => (a / b), min: 2, max: 10 },
-  'intdiv': { cmd: 'divide', link: 'by', wr: 'div', sp: 'divided by', f: (a, b) => (Math.floor(a / b)), min: 1, max: 10 },
-  'mult': { cmd: 'multiply', link: 'by', wr: 'x', sp: 'times', f: (a, b) => (a * b), min: 2, max: 10 },
-  'pow': { cmd: 'build', link: 'to the power of', wr: '^', sp: 'to the power of', f: (a, b) => (Math.pow(a, b)), min: 0, max: 20 },
-  'mod': { cmd: 'build', link: 'modulo', wr: '%', sp: 'modulo', f: (a, b) => (a % b), min: 0, max: 20 },
-  'l': { cmd: 'true or false?', link: 'less than', wr: '<', sp: 'less than', f: (a, b) => (a < b) },
-  'g': { cmd: 'true or false?', link: 'greater than', wr: '>', sp: 'greater than', f: (a, b) => (a > b) },
-  'leq': { cmd: 'true or false?', link: 'less or equal', wr: '<=', sp: 'less or equal', f: (a, b) => (a <= b) },
-  'geq': { cmd: 'true or false?', link: 'greater or equal', wr: '>=', sp: 'greater or equal', f: (a, b) => (a >= b) },
-  'eq': { cmd: 'true or false?', link: 'equal', wr: '=', sp: 'equal', f: (a, b) => (a == b) },
-  'neq': { cmd: 'true or false?', link: 'unequal', wr: '#', sp: 'unequal', f: (a, b) => (a != b) },
-  'and': { cmd: 'true or false?', link: 'and', wr: '&&', sp: 'and', f: (a, b) => (a && b) },
-  'or': { cmd: 'true or false?', link: 'or', wr: '||', sp: 'or', f: (a, b) => (a || b) },
-  'nand': { cmd: 'true or false?', link: 'nand', wr: 'nand', sp: 'nand', f: (a, b) => (!(a && b)) },
-  'nor': { cmd: 'true or false?', link: 'nor', wr: 'nor', sp: 'nor', f: (a, b) => (!(a || b)) },
-  'xor': { cmd: 'true or false?', link: 'xor', wr: 'xor', sp: 'xor', f: (a, b) => (a && !b || !a && b) },
-}
 const ORANGE = '#f58231';
 const NEONORANGE = '#ff6700';
-const orderByLuminance = (rgbValues) => {
-  const calculateLuminance = (p) => {
-    return 0.2126 * p.r + 0.7152 * p.g + 0.0722 * p.b;
-  };
-  return rgbValues.sort((p1, p2) => {
-    return calculateLuminance(p2) - calculateLuminance(p1);
-  });
-};
-const overwriteMerge = (destinationArray, sourceArray, options) => sourceArray
-const _overwriteMerge = (destinationArray, sourceArray, options) => sourceArray
 const PARAMCSS = {
   bg: 'background-color',
   fg: 'color',
@@ -556,20 +445,6 @@ const PARAMRSG_T = {
 };
 const PERLEN_DATA_PATH = './public/PERLENDATA/';
 const PERLENPATH_FRONT = './PERLENDATA/';
-const Perlin = {
-  PERLIN_YWRAPB: 4,
-  PERLIN_YWRAP: 1 << 4,
-  PERLIN_ZWRAPB: 8,
-  PERLIN_ZWRAP: 1 << 8,
-  PERLIN_SIZE: 4095,
-  perlin_octaves: 4,
-  perlin_amp_falloff: 0.5,
-  scaled_cosine: i => 0.5 * (1.0 - Math.cos(i * Math.PI)),
-  perlin: null,
-  lastx: 0,
-  speed: 0.02,
-  channels: {},
-}
 const PLAYER_CONFIG_FOR_MULTIPLAYER = ['me', 'human', 'human'];
 const playerColors = {
   red: '#D01013',
@@ -600,62 +475,6 @@ const PlayerColors = {
   lightgreen: '#afff45',
 };
 const PURPLE = '#911eb4';
-const quantization = (rgbValues, depth) => {
-  const MAX_DEPTH = 4;
-  if (depth === MAX_DEPTH || rgbValues.length === 0) {
-    const color = rgbValues.reduce(
-      (prev, curr) => {
-        prev.r += curr.r;
-        prev.g += curr.g;
-        prev.b += curr.b;
-        return prev;
-      },
-      {
-        r: 0,
-        g: 0,
-        b: 0,
-      }
-    );
-    color.r = Math.round(color.r / rgbValues.length);
-    color.g = Math.round(color.g / rgbValues.length);
-    color.b = Math.round(color.b / rgbValues.length);
-    return [color];
-  }
-  const componentToSortBy = findBiggestColorRange(rgbValues);
-  rgbValues.sort((p1, p2) => {
-    return p1[componentToSortBy] - p2[componentToSortBy];
-  });
-  const mid = rgbValues.length / 2;
-  return [
-    ...quantization(rgbValues.slice(0, mid), depth + 1),
-    ...quantization(rgbValues.slice(mid + 1), depth + 1),
-  ];
-};
-const normalWalk = ({ peep, props }) => {
-  const {
-    startX,
-    startY,
-    endX
-  } = props
-  const xDuration = 10
-  const yDuration = 0.25
-  const tl = gsap.timeline()
-  tl.timeScale(randomRange(0.5, 1.5))
-  tl.to(peep, {
-    duration: xDuration,
-    x: endX,
-    ease: 'none'
-  }, 0)
-  tl.to(peep, {
-    duration: yDuration,
-    repeat: xDuration / yDuration,
-    yoyo: true,
-    y: startY - 10
-  }, 0)
-  return tl
-}
-const randomIndex = (array) => randomRange(0, array.length) | 0
-const getRandomFromArray = (array) => (array[randomIndex(array) | 0])
 const RCONTAINERPROP = {
   list: 'elm',
   hand: 'elm',
@@ -771,75 +590,6 @@ const DIBOA = {
     'Windermere Real Estate/East': { sub: '*ntal' },
   }
 };
-const removeFromArray = (array, i) => array.splice(i, 1)[0]
-const removeItemFromArray = (array, item) => removeFromArray(array, array.indexOf(item))
-const removeRandomFromArray = (array) => removeFromArray(array, randomIndex(array))
-const rgbToHexCOOL = (pixel) => {
-  const componentToHex = (c) => {
-    const hex = c.toString(16);
-    return hex.length == 1 ? "0" + hex : hex;
-  };
-  return (
-    "#" +
-    componentToHex(pixel.r) +
-    componentToHex(pixel.g) +
-    componentToHex(pixel.b)
-  ).toUpperCase();
-};
-const buildPalette = (colorsList) => {
-  const paletteContainer = document.getElementById("palette");
-  const complementaryContainer = document.getElementById("complementary");
-  paletteContainer.innerHTML = "";
-  complementaryContainer.innerHTML = "";
-  const orderedByColor = orderByLuminance(colorsList);
-  const hslColors = convertRGBtoHSL(orderedByColor);
-  for (let i = 0; i < orderedByColor.length; i++) {
-    const hexColor = rgbToHexCOOL(orderedByColor[i]);
-    const hexColorComplementary = hslToHexCOOL(hslColors[i]);
-    if (i > 0) {
-      const difference = calculateColorDifference(
-        orderedByColor[i],
-        orderedByColor[i - 1]
-      );
-      if (difference < 120) {
-        continue;
-      }
-    }
-    const colorElement = document.createElement("div");
-    colorElement.style.backgroundColor = hexColor;
-    colorElement.appendChild(document.createTextNode(hexColor));
-    paletteContainer.appendChild(colorElement);
-    if (hslColors[i].h) {
-      const complementaryElement = document.createElement("div");
-      complementaryElement.style.backgroundColor = `hsl(${hslColors[i].h},${hslColors[i].s}%,${hslColors[i].l}%)`;
-      complementaryElement.appendChild(
-        document.createTextNode(hexColorComplementary)
-      );
-      complementaryContainer.appendChild(complementaryElement);
-    }
-  }
-};
-const mainCOOL = () => {
-  const imgFile = document.getElementById("imgfile");
-  const image = new Image();
-  const file = imgFile.files[0];
-  const fileReader = new FileReader();
-  fileReader.onload = () => {
-    image.onload = () => {
-      const canvas = document.getElementById("canvas");
-      canvas.width = image.width;
-      canvas.height = image.height;
-      const ctx = canvas.getContext("2d");
-      ctx.drawImage(image, 0, 0);
-      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-      const rgbArray = buildRgb(imageData.data);
-      const quantColors = quantization(rgbArray, 0);
-      buildPalette(quantColors);
-    };
-    image.src = fileReader.result;
-  };
-  fileReader.readAsDataURL(file);
-};
 const RSGTYPES = { board: 1, hand: 2, field: 101, edge: 102, corner: 103 };
 const RUNTEST = false;
 const SEND_MOUSE_MOVE_EVERY = 200;
@@ -854,7 +604,6 @@ const SHOW_SERVER_ROUTE = false;
 const SHOW_SERVERDATA = false;
 const SHOW_TRACE = false;
 const SIMPLE_COLORS = ['red', 'green', 'yellow', 'blue'];
-const sleep = m => new Promise(r => setTimeout(r, m))
 const soloTypes = ['me', 'AI regular', 'AI random', 'AI pass'];
 const stage = {
   width: 0,
@@ -1032,9 +781,6 @@ const voiceNames = {
   ukMale: 'Google UK English Male',
   deutsch: 'Google Deutsch',
 };
-const walks = [
-  normalWalk,
-]
 const wamber = '#ffc107';
 const waqua = '#00ffff';
 const wblack = '#000000';
