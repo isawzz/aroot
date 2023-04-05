@@ -2969,107 +2969,6 @@ function mStamp(d1, text, color, sz) {
 		'mix-blend-mode': 'multiply',
 	}, null, text);
 }
-function mStyle(elem, styles, unit = 'px') {
-	elem = toElem(elem);
-	if (isdef(styles.vmargin)) { styles.mabottom = styles.matop = styles.vmargin; }
-	if (isdef(styles.hmargin)) { styles.maleft = styles.maright = styles.hmargin; }
-	let bg, fg;
-	if (isdef(styles.bg) || isdef(styles.fg)) {
-		[bg, fg] = colorsFromBFA(styles.bg, styles.fg, styles.alpha);
-	}
-	if (isdef(styles.vpadding) || isdef(styles.hpadding)) {
-		styles.padding = valf(styles.vpadding, 0) + unit + ' ' + valf(styles.hpadding, 0) + unit;
-	}
-	if (isdef(styles.upperRounding)) {
-		let rtop = '' + valf(styles.upperRounding, 0) + unit;
-		let rbot = '0' + unit;
-		styles['border-radius'] = rtop + ' ' + rtop + ' ' + rbot + ' ' + rbot;
-	} else if (isdef(styles.lowerRounding)) {
-		let rbot = '' + valf(styles.lowerRounding, 0) + unit;
-		let rtop = '0' + unit;
-		styles['border-radius'] = rtop + ' ' + rtop + ' ' + rbot + ' ' + rbot;
-	}
-	if (isdef(styles.box)) styles['box-sizing'] = 'border-box';
-	for (const k in styles) {
-		let val = styles[k];
-		let key = k;
-		if (isdef(STYLE_PARAMS[k])) key = STYLE_PARAMS[k];
-		else if (k == 'font' && !isString(val)) {
-			let fz = f.size; if (isNumber(fz)) fz = '' + fz + 'px';
-			let ff = f.family;
-			let fv = f.variant;
-			let fw = isdef(f.bold) ? 'bold' : isdef(f.light) ? 'light' : f.weight;
-			let fs = isdef(f.italic) ? 'italic' : f.style;
-			if (nundef(fz) || nundef(ff)) return null;
-			let s = fz + ' ' + ff;
-			if (isdef(fw)) s = fw + ' ' + s;
-			if (isdef(fv)) s = fv + ' ' + s;
-			if (isdef(fs)) s = fs + ' ' + s;
-			elem.style.setProperty(k, s);
-			continue;
-		} else if (k == 'classname') {
-			mClass(elem, styles[k]);
-		} else if (k == 'border') {
-			if (isNumber(val)) val = `solid ${val}px ${isdef(styles.fg) ? styles.fg : '#ffffff80'}`;
-			if (val.indexOf(' ') < 0) val = 'solid 1px ' + val;
-		} else if (k == 'layout') {
-			if (val[0] == 'f') {
-				val = val.slice(1);
-				elem.style.setProperty('display', 'flex');
-				elem.style.setProperty('flex-wrap', 'wrap');
-				let hor, vert;
-				if (val.length == 1) hor = vert = 'center';
-				else {
-					let di = { c: 'center', s: 'start', e: 'end' };
-					hor = di[val[1]];
-					vert = di[val[2]];
-				}
-				let justStyle = val[0] == 'v' ? vert : hor;
-				let alignStyle = val[0] == 'v' ? hor : vert;
-				elem.style.setProperty('justify-content', justStyle);
-				elem.style.setProperty('align-items', alignStyle);
-				switch (val[0]) {
-					case 'v': elem.style.setProperty('flex-direction', 'column'); break;
-					case 'h': elem.style.setProperty('flex-direction', 'row'); break;
-				}
-			} else if (val[0] == 'g') {
-				val = val.slice(1);
-				elem.style.setProperty('display', 'grid');
-				let n = allNumbers(val);
-				let cols = n[0];
-				let w = n.length > 1 ? '' + n[1] + 'px' : 'auto';
-				elem.style.setProperty('grid-template-columns', `repeat(${cols}, ${w})`);
-				elem.style.setProperty('place-content', 'center');
-			}
-		} else if (k == 'layflex') {
-			elem.style.setProperty('display', 'flex');
-			elem.style.setProperty('flex', '0 1 auto');
-			elem.style.setProperty('flex-wrap', 'wrap');
-			if (val == 'v') { elem.style.setProperty('writing-mode', 'vertical-lr'); }
-		} else if (k == 'laygrid') {
-			elem.style.setProperty('display', 'grid');
-			let n = allNumbers(val);
-			let cols = n[0];
-			let w = n.length > 1 ? '' + n[1] + 'px' : 'auto';
-			elem.style.setProperty('grid-template-columns', `repeat(${cols}, ${w})`);
-			elem.style.setProperty('place-content', 'center');
-		}
-		if (key == 'font-weight') { elem.style.setProperty(key, val); continue; }
-		else if (key == 'background-color') elem.style.background = bg;
-		else if (key == 'color') elem.style.color = fg;
-		else if (key == 'opacity') elem.style.opacity = val;
-		else if (key == 'wrap') elem.style.flexWrap = 'wrap';
-		else if (startsWith(k, 'dir')) {
-			isCol = val[0] == 'c';
-			elem.style.setProperty('flex-direction', 'column');
-		} else if (key == 'flex') {
-			if (isNumber(val)) val = '' + val + ' 1 0%';
-			elem.style.setProperty(key, makeUnitString(val, unit));
-		} else {
-			elem.style.setProperty(key, makeUnitString(val, unit));
-		}
-	}
-}
 function mStyleRemove(elem, prop) {
 	if (isdef(STYLE_PARAMS[prop])) prop = STYLE_PARAMS[prop];
 	elem.style.removeProperty(prop);
@@ -3223,47 +3122,41 @@ function old_mButtonX(dParent, pos = 'tr', handler = null, defaultBehavior = 'hi
 function oneWordKeys(keys) { return keys.filter(x => !x.includes(' ')); }
 function plural(n) { return n == 0 || n > 1 ? 's' : ''; }
 function pSBC(p, c0, c1, l) {
-	let r,
-		g,
-		b,
-		P,
-		f,
-		t,
-		h,
-		i = parseInt,
-		m = Math.round,
-		a = typeof c1 == 'string';
-	if (typeof p != 'number' || p < -1 || p > 1 || typeof c0 != 'string' || (c0[0] != 'r' && c0[0] != '#') || (c1 && !a)) return null;
-	if (!this.pSBCr)
-		this.pSBCr = d => {
-			let n = d.length,
-				x = {};
-			if (n > 9) {
-				([r, g, b, a] = d = d.split(',')), (n = d.length);
-				if (n < 3 || n > 4) return null;
-				(x.r = i(r[3] == 'a' ? r.slice(5) : r.slice(4))), (x.g = i(g)), (x.b = i(b)), (x.a = a ? parseFloat(a) : -1);
-			} else {
-				if (n == 8 || n == 6 || n < 4) return null;
-				if (n < 6) d = '#' + d[1] + d[1] + d[2] + d[2] + d[3] + d[3] + (n > 4 ? d[4] + d[4] : '');
-				d = i(d.slice(1), 16);
-				if (n == 9 || n == 5) (x.r = (d >> 24) & 255), (x.g = (d >> 16) & 255), (x.b = (d >> 8) & 255), (x.a = m((d & 255) / 0.255) / 1000);
-				else (x.r = d >> 16), (x.g = (d >> 8) & 255), (x.b = d & 255), (x.a = -1);
-			}
-			return x;
-		};
-	(h = c0.length > 9),
-		(h = a ? (c1.length > 9 ? true : c1 == 'c' ? !h : false) : h),
-		(f = pSBCr(c0)),
-		(P = p < 0),
-		(t = c1 && c1 != 'c' ? pSBCr(c1) : P ? { r: 0, g: 0, b: 0, a: -1 } : { r: 255, g: 255, b: 255, a: -1 }),
-		(p = P ? p * -1 : p),
-		(P = 1 - p);
-	if (!f || !t) return null;
-	if (l) (r = m(P * f.r + p * t.r)), (g = m(P * f.g + p * t.g)), (b = m(P * f.b + p * t.b));
-	else (r = m((P * f.r ** 2 + p * t.r ** 2) ** 0.5)), (g = m((P * f.g ** 2 + p * t.g ** 2) ** 0.5)), (b = m((P * f.b ** 2 + p * t.b ** 2) ** 0.5));
-	(a = f.a), (t = t.a), (f = a >= 0 || t >= 0), (a = f ? (a < 0 ? t : t < 0 ? a : a * P + t * p) : 0);
-	if (h) return 'rgb' + (f ? 'a(' : '(') + r + ',' + g + ',' + b + (f ? ',' + m(a * 1000) / 1000 : '') + ')';
-	else return '#' + (4294967296 + r * 16777216 + g * 65536 + b * 256 + (f ? m(a * 255) : 0)).toString(16).slice(1, f ? undefined : -2);
+  let r, g, b, P, f, t, h, i = parseInt, m = Math.round, a = typeof c1 == 'string';
+  if (typeof p != 'number' || p < -1 || p > 1 || typeof c0 != 'string' || (c0[0] != 'r' && c0[0] != '#') || (c1 && !a)) return null;
+  h = c0.length > 9;
+  h = a ? (c1.length > 9 ? true : c1 == 'c' ? !h : false) : h;
+  f = pSBCr(c0);
+  P = p < 0;
+  t = c1 && c1 != 'c' ? pSBCr(c1) : P ? { r: 0, g: 0, b: 0, a: -1 } : { r: 255, g: 255, b: 255, a: -1 };
+  p = P ? p * -1 : p;
+  P = 1 - p;
+  if (!f || !t) return null;
+  if (l) { r = m(P * f.r + p * t.r); g = m(P * f.g + p * t.g); b = m(P * f.b + p * t.b); }
+  else { r = m((P * f.r ** 2 + p * t.r ** 2) ** 0.5); g = m((P * f.g ** 2 + p * t.g ** 2) ** 0.5); b = m((P * f.b ** 2 + p * t.b ** 2) ** 0.5); }
+  a = f.a;
+  t = t.a;
+  f = a >= 0 || t >= 0;
+  a = f ? (a < 0 ? t : t < 0 ? a : a * P + t * p) : 0;
+  if (h) return 'rgb' + (f ? 'a(' : '(') + r + ',' + g + ',' + b + (f ? ',' + m(a * 1000) / 1000 : '') + ')';
+  else return '#' + (4294967296 + r * 16777216 + g * 65536 + b * 256 + (f ? m(a * 255) : 0)).toString(16).slice(1, f ? undefined : -2);
+}
+function pSBCr(d) {
+  let i = parseInt, m = Math.round, a = typeof c1 == 'string';
+  let n = d.length,
+    x = {};
+  if (n > 9) {
+    ([r, g, b, a] = d = d.split(',')), (n = d.length);
+    if (n < 3 || n > 4) return null;
+    (x.r = parseInt(r[3] == 'a' ? r.slice(5) : r.slice(4))), (x.g = parseInt(g)), (x.b = parseInt(b)), (x.a = a ? parseFloat(a) : -1);
+  } else {
+    if (n == 8 || n == 6 || n < 4) return null;
+    if (n < 6) d = '#' + d[1] + d[1] + d[2] + d[2] + d[3] + d[3] + (n > 4 ? d[4] + d[4] : '');
+    d = parseInt(d.slice(1), 16);
+    if (n == 9 || n == 5) (x.r = (d >> 24) & 255), (x.g = (d >> 16) & 255), (x.b = (d >> 8) & 255), (x.a = m((d & 255) / 0.255) / 1000);
+    else (x.r = d >> 16), (x.g = (d >> 8) & 255), (x.b = d & 255), (x.a = -1);
+  }
+  return x;
 }
 function rAlphanums(n) { return rChoose(toLetters('0123456789abcdefghijklmnopq'), n); }
 function randomColor() { return rColor(); }
@@ -3296,19 +3189,6 @@ function rCoin(percent = 50) {
 	let r = Math.random();
 	r *= 100;
 	return r < percent;
-}
-function rColor(brightness) {
-	if (isdef(brightness)) {
-		let hue = rHue();
-		let sat = 100;
-		let b = isNumber(brightness) ? brightness : brightness == 'dark' ? 25 : brightness == 'light' ? 75 : 50;
-		return colorFromHSL(hue, sat, b);
-	}
-	let s = '#';
-	for (let i = 0; i < 6; i++) {
-		s += rChoose(['f', 'c', '9', '6', '3', '0']);
-	}
-	return s;
 }
 function rDate(before, after) {
 	let after_date = new Date(after);

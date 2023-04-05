@@ -1,4 +1,208 @@
 
+function isCodeWord(w) {
+	return isdef(window[w]) || isdef(CODE.all[w])
+}
+function computeClosure(symlist) {
+	let keys = {};
+	for (const k in CODE.di) { for (const k1 in CODE.di[k]) keys[k1] = CODE.di[k][k1]; }
+	CODE.all = keys;
+	CODE.keylist = Object.keys(keys)
+	let done = {};
+	let tbd = valf(symlist, ['start']);
+	let MAX = 1000000, i = 0;
+	let visited = {};
+	while (!isEmpty(tbd)) {
+		if (++i > MAX) break; else console.log('i',i)
+		let sym = tbd[0];
+		if (isdef(visited[sym])) { tbd.shift(); continue; }
+		visited[sym] = true;
+		let o = CODE.all[sym];
+		if (nundef(o)) o = getObjectFromWindow(sym);
+		if (nundef(o)) { tbd.shift(); continue; }
+		if (o.type == 'var' && !o.name.startsWith('d') && o.name == o.name.toLowerCase()) { tbd.shift(); continue; }
+		if (o.type == 'var' || o.type == 'const') { tbd.shift(); lookupSet(done, [o.type, sym], o); continue; }
+
+		//at this point *** sym is a func or class!!! ***
+		let olive = window[sym];
+		if (nundef(olive)) { tbd.shift(); lookupSet(done, [o.type, sym], o); continue; }
+
+		let text = olive.toString(); //always using last function body!!!
+		let words = toWords(text, true);
+
+		//words = words.filter(x => text.includes(' ' + x) || text.includes(x + '(')  || text.includes(x + ','));
+		//console.log('words',words)
+		if (sym == 'compute_closure') console.log('', sym, words)
+
+		for (const w of words) { if (nundef(done[w]) || nundef(visited[w]) && w != sym && isCodeWord(w)) addIf(tbd, w); }
+		tbd.shift();
+
+		done[sym] = o; //lookupSet(done, [o.type, sym], o);
+	}
+
+	//console.log('done',done);
+	return done;
+
+	let tres = '';
+	for (const k of ['const', 'var', 'cla', 'func']) {
+		console.log('done', k, done[k])
+		let o = done[k]; if (nundef(o)) continue;
+		let klist = get_keys(o);
+		if (k == 'func') klist = sortCaseInsensitive(klist);
+		for (const k1 of klist) {
+			let code = CODE.justcode[k1];
+			if (!isEmptyOrWhiteSpace(code)) tres += code + '\r\n';
+		}
+	}
+}
+
+function computeClosure(symlist) {
+	let keys = {};
+	for (const k in CODE.di) { for (const k1 in CODE.di[k]) keys[k1] = CODE.di[k][k1]; }
+	CODE.all = keys;
+	CODE.keylist = Object.keys(keys)
+	let done = {};
+	let tbd = valf(symlist, ['start']);
+	let MAX = 1000000, i = 0;
+	let visited = {};
+	while (!isEmpty(tbd)) {
+		//console.log(tbd)
+		if (++i > MAX) break;
+		let sym = tbd[0];
+		if (isdef(visited[sym])) { tbd.shift(); continue; }
+		visited[sym]=true;
+		let o = CODE.all[sym];
+		// if (sym == 'ensureColorDict') console.log('!!!!',sym)
+		if (sym == 'MS') console.log('!!!!',sym)
+		if (nundef(o)) o = getObjectFromWindow(sym);
+		if (nundef(o)) { tbd.shift(); continue; } //console.log('not',sym);
+		if (o.type == 'var' && !o.name.startsWith('d') && o.name == o.name.toLowerCase()) { tbd.shift(); continue; }
+		if (o.type != 'func' && o.type != 'cla') { tbd.shift(); lookupSet(done, [o.type, sym], o); continue; }
+
+		//at this point *** sym is a func!!! ***
+		let olive = window[sym];
+		if (nundef(olive)) { tbd.shift(); lookupSet(done, [o.type, sym], o); continue; }
+
+		let text = olive.toString(); //always using last function body!!!
+		let words = toWords(text, true);
+
+		//words = words.filter(x => text.includes(' ' + x) || text.includes(x + '(')  || text.includes(x + ','));
+		//console.log('words',words)
+		if (sym=='compute_closure') console.log('',sym,words)
+		//if (sym=='colorFrom') console.log('',sym,words, words.includes('ensureColorDict'))
+		for (const w of words) {
+			if (nundef(done[w]) && w != sym && isCodeWord(w)) addIf(tbd, w);
+		}
+		tbd.shift();
+		// if (sym=='colorFrom') console.log('',sym, tbd.includes('ensureColorDict'))
+		if (sym == 'MS') console.log('', sym, tbd.includes('MSCATS'))
+		lookupSet(done, [o.type, sym], o);
+	}
+
+	//console.log('done',done);
+	return done;
+
+	let tres = '';
+	for (const k of ['const', 'var', 'cla', 'func']) {
+		console.log('done', k, done[k])
+		let o = done[k]; if (nundef(o)) continue;
+		let klist = get_keys(o);
+		if (k == 'func') klist = sortCaseInsensitive(klist);
+		for (const k1 of klist) {
+			let code = CODE.justcode[k1];
+			if (!isEmptyOrWhiteSpace(code)) tres += code + '\r\n';
+		}
+	}
+}
+
+
+function compute_closure(code) {
+	if (nundef(code)) code = AU.ta.value;
+	let disub = computeClosure();
+	//console.log('disub', disub);//return;
+	let keydict = {};
+	for (const type in disub) {
+		let klist = sortCaseInsensitive(get_keys(disub[type]));
+		klist.map(x => keydict[x] = disub[type][x]);
+	}
+	CODE.lastClosure = disub;
+	CODE.closureKeys = keydict;
+	let ksorted = [];
+	for (const k of CODE.keysSorted) { if (isdef(CODE.closureKeys[k])) ksorted.push(k); }
+	CODE.closureKeysSorted = ksorted;
+	write_code_text_file();
+}
+
+function compute_closure(code) {
+	if (nundef(code)) code = AU.ta.value;
+	let disub = computeClosure();
+	console.log('disub', disub);//return;
+	let keydict = {};
+	for (const type in disub) {
+		let klist = sortCaseInsensitive(get_keys(disub[type]));
+		klist.map(x => keydict[x] = disub[type][x]);
+	}
+	CODE.lastClosure = disub;
+	CODE.closureKeys = keydict;
+	let ksorted = [];
+	for (const k of CODE.keysSorted) {
+		if (isdef(CODE.closureKeys[k])) ksorted.push(k);
+	}
+	CODE.closureKeysSorted = ksorted;
+
+	//hier muss ich all die closurekeys die NICHT in closureKeysSorted sind reinnehmen!!!!!!!
+	//das wenn ich WIRKLICH nur 1 closure file will!!!!!!!
+	//let 
+	let otherKeys = arrMinus(get_keys(keydict), ksorted);
+	//console.log('rest',otherKeys)
+	//ja, leider sind bei den otherkeys auch native keys drin!!! so geht es also nicht!
+	//console.log('BUILTIN',BUILTIN)
+	let others = otherKeys.filter(x => !OWNPROPS.includes(x));
+	console.log('my keys', sortCaseInsensitive(ksorted.concat(others)))
+
+	let text = '';
+	//let firstvar=true;
+	for (const k of CODE.closureKeysSorted) {
+		let o = lookup(CODE, ['all', k]);
+
+		let code = (lookup(o, ['type']) == 'func' && isdef(window[k]) ? window[k].toString() : CODE.justcode[k]);
+
+		//if (code.startsWith('var') && firstvar){firstvar=false; text+='\n';}
+
+		if (code.includes('d =>')) {
+			console.log('WTF??????????????????', k, code);
+		} else text += code + '\n';
+
+		//if (k == 'pSBCr') console.log('yes',code)
+
+
+		//text += '\n';
+		//let code = isdef(CODE.all[k]) && C
+	}
+	for (const k of others) {
+		let code = window[k].toString();
+		text += code + '\n';
+	}
+
+	text = replaceAllSpecialChars(text, '\r', ''); // replaceAllSafe(text,'\r','')
+	//text = text.replace(/(?:\\[rn])+/g, "\n");
+	AU.ta.value = text;
+
+}
+
+function entrybody() {
+	//const BUILTIN = Object.keys(window);
+	const OWNPROPS = Object.getOwnPropertyNames(window).concat(Object.getOwnPropertyNames(EventTarget.prototype));
+	const OWNPROPS1 = Object.getOwnPropertyNames(window);
+	const OWNBODY = Object.getOwnPropertyNames(document);
+	console.log(':', Object.getOwnPropertyNames(EventTarget.prototype));
+	//console.log('BUILTIN', BUILTIN, '\nOWN', OWNPROPS, '\nbody', OWNBODY);
+	console.log('own1', OWNPROPS1);
+	let obj = this;
+	for (var key in obj.prototype) {
+		console.log('key', key);
+	}
+
+}
 function _test_ui() {
 	let dbody = document.body; mClass(dbody, 'fullpage airport'); addDummy(dbody);
 	let areas = [
@@ -20,6 +224,141 @@ function _test_ui() {
 	let elem = mSearch('keywords:', mySearch, dSearch, {}, { selectOnClick: true });
 
 }
+
+function mStyle(elem, styles, unit = 'px') {
+	//if (styles.bg == '#00000000') console.log('mStyle',getFunctionsNameThatCalledThisFunction(), styles.bg,styles.fg)
+	elem = toElem(elem);
+	if (isdef(styles.vmargin)) { styles.mabottom = styles.matop = styles.vmargin; }
+	if (isdef(styles.hmargin)) { styles.maleft = styles.maright = styles.hmargin; }
+
+	//console.log(':::::::::styles',styles)
+	let bg, fg;
+	if (isdef(styles.bg) || isdef(styles.fg)) {
+		[bg, fg] = colorsFromBFA(styles.bg, styles.fg, styles.alpha);
+	}
+	if (isdef(styles.vpadding) || isdef(styles.hpadding)) {
+
+		styles.padding = valf(styles.vpadding, 0) + unit + ' ' + valf(styles.hpadding, 0) + unit;
+		//console.log('::::::::::::::', styles.vpadding, styles.hpadding)
+	}
+	if (isdef(styles.upperRounding)) {
+		let rtop = '' + valf(styles.upperRounding, 0) + unit;
+		let rbot = '0' + unit;
+		styles['border-radius'] = rtop + ' ' + rtop + ' ' + rbot + ' ' + rbot;
+	} else if (isdef(styles.lowerRounding)) {
+		let rbot = '' + valf(styles.lowerRounding, 0) + unit;
+		let rtop = '0' + unit;
+		styles['border-radius'] = rtop + ' ' + rtop + ' ' + rbot + ' ' + rbot;
+	}
+
+	if (isdef(styles.box)) styles['box-sizing'] = 'border-box';
+	//console.log(styles.bg,styles.fg);
+
+	for (const k in styles) {
+		//if (k=='textShadowColor' || k=='contrast') continue; //meaningless styles => TBD
+		let val = styles[k];
+		let key = k;
+		//console.log('key',key)
+		if (isdef(STYLE_PARAMS[k])) key = STYLE_PARAMS[k];
+		else if (k == 'font' && !isString(val)) {
+			//font would be specified as an object w/ size,family,variant,bold,italic
+			// NOTE: size and family MUST be present!!!!!!! in order to use font param!!!!
+			let fz = f.size; if (isNumber(fz)) fz = '' + fz + 'px';
+			let ff = f.family;
+			let fv = f.variant;
+			let fw = isdef(f.bold) ? 'bold' : isdef(f.light) ? 'light' : f.weight;
+			let fs = isdef(f.italic) ? 'italic' : f.style;
+			if (nundef(fz) || nundef(ff)) return null;
+			let s = fz + ' ' + ff;
+			if (isdef(fw)) s = fw + ' ' + s;
+			if (isdef(fv)) s = fv + ' ' + s;
+			if (isdef(fs)) s = fs + ' ' + s;
+			elem.style.setProperty(k, s);
+			continue;
+		} else if (k == 'classname') {
+			mClass(elem, styles[k]);
+		} else if (k == 'border') {
+			//console.log('________________________YES!')
+			if (isNumber(val)) val = `solid ${val}px ${isdef(styles.fg) ? styles.fg : '#ffffff80'}`;
+			if (val.indexOf(' ') < 0) val = 'solid 1px ' + val;
+		} else if (k == 'layout') {
+			if (val[0] == 'f') {
+				//console.log('sssssssssssssssssssssssssssssssssssssssssssss')
+				val = val.slice(1);
+				elem.style.setProperty('display', 'flex');
+				elem.style.setProperty('flex-wrap', 'wrap');
+				let hor, vert;
+				if (val.length == 1) hor = vert = 'center';
+				else {
+					let di = { c: 'center', s: 'start', e: 'end' };
+					hor = di[val[1]];
+					vert = di[val[2]];
+
+				}
+				let justStyle = val[0] == 'v' ? vert : hor;
+				let alignStyle = val[0] == 'v' ? hor : vert;
+				elem.style.setProperty('justify-content', justStyle);
+				elem.style.setProperty('align-items', alignStyle);
+				switch (val[0]) {
+					case 'v': elem.style.setProperty('flex-direction', 'column'); break;
+					case 'h': elem.style.setProperty('flex-direction', 'row'); break;
+				}
+			} else if (val[0] == 'g') {
+				//layout:'g_15_240' 15 columns, each col 240 pixels wide
+				//console.log('sssssssssssssssssssssssssssssssssssssssssssss')
+				val = val.slice(1);
+				elem.style.setProperty('display', 'grid');
+				let n = allNumbers(val);
+				let cols = n[0];
+				let w = n.length > 1 ? '' + n[1] + 'px' : 'auto';
+				elem.style.setProperty('grid-template-columns', `repeat(${cols}, ${w})`);
+				elem.style.setProperty('place-content', 'center');
+			}
+		} else if (k == 'layflex') {
+			elem.style.setProperty('display', 'flex');
+			elem.style.setProperty('flex', '0 1 auto');
+			elem.style.setProperty('flex-wrap', 'wrap');
+			if (val == 'v') { elem.style.setProperty('writing-mode', 'vertical-lr'); }
+		} else if (k == 'laygrid') {
+			elem.style.setProperty('display', 'grid');
+			let n = allNumbers(val);
+			let cols = n[0];
+			let w = n.length > 1 ? '' + n[1] + 'px' : 'auto';
+			elem.style.setProperty('grid-template-columns', `repeat(${cols}, ${w})`);
+			elem.style.setProperty('place-content', 'center');
+		}
+
+		//console.log(key,val,isNaN(val));if (isNaN(val) && key!='font-size') continue;
+		//if (k == 'bg') console.log('style', k, key, val, bg)
+
+		if (key == 'font-weight') { elem.style.setProperty(key, val); continue; }
+		else if (key == 'background-color') elem.style.background = bg;
+		else if (key == 'color') elem.style.color = fg;
+		else if (key == 'opacity') elem.style.opacity = val;
+		else if (key == 'wrap') elem.style.flexWrap = 'wrap';
+		else if (startsWith(k, 'dir')) {
+			//console.log('.................................................!!!!!!!!!!!!!!!!!!!!!!!')
+			//console.log('val',val);
+			isCol = val[0] == 'c';
+			elem.style.setProperty('flex-direction', 'column'); //flexDirection = isCol ? 'column' : 'row';
+			//in order for this to work, HAVE TO set wmax or hmax!!!!!!!!!!!!!
+			// if (isCol && nundef(styles.hmax)) { //?????????????? WTF??????????????????
+			// 	let rect = getRect(elem.parentNode); //console.log('rect', rect);
+			// 	elem.style.maxHeight = rect.h * .9;
+			// 	elem.style.alignContent = 'start';
+			// } else if (nundef(styles.wmax)) elem.style.maxWidth = '90%';
+		} else if (key == 'flex') {
+			if (isNumber(val)) val = '' + val + ' 1 0%';
+			elem.style.setProperty(key, makeUnitString(val, unit));
+		} else {
+			//console.log('set property',key,makeUnitString(val,unit),val,isNaN(val));
+			//if ()
+			elem.style.setProperty(key, makeUnitString(val, unit));
+		}
+	}
+}
+
+
 function rest() {
 	let areas = [
 		'dTestButtons dTestButtons',
@@ -62,7 +401,7 @@ function gcTest() {
 }
 
 function gcDeck(type = 'c52', total = 52, repeat = 1, colors = ['red', 'black'], opts = {}) {
-	let ranks, suits, letter=valf(opts.letter,'n');
+	let ranks, suits, letter = valf(opts.letter, 'n');
 	if (type == 'c52') {
 		addKeys({ lowAce: true, lowJoker: true, numJokers: 0 }, opts)
 		//if (isdef(opts.jokers)) ranks='*';
@@ -88,9 +427,9 @@ function ui_type_gcHand(list, dParent) {
 
 //#endregion
 
-function restrest(){
-	console.log('Z',Z)
-	console.log('mode',isdef(Z)?Z.mode:'no Z available!'); //valf(Z.mode,Cliendata.mode,''));
+function restrest() {
+	console.log('Z', Z)
+	console.log('mode', isdef(Z) ? Z.mode : 'no Z available!'); //valf(Z.mode,Cliendata.mode,''));
 	return;
 	// let html = `<a id="aAdvancedMenu" href="javascript:onclick_advanced_menu()">≡</a>`;
 	let html = `<a href="javascript:onclick_advanced_test()">T</a>`;
@@ -98,11 +437,11 @@ function restrest(){
 	let mode = 'multi';
 	html = `<a href="javascript:onclick_advanced_mode()">${mode[0].toUpperCase()}</a>`;
 	let bmode = mCreateFrom(html);
-	let d=mCreate('div');
-	mAppend(d,btest);
-	mAppend(d,bmode);
-	mStyle(btest,styles);
-	mStyle(bmode,styles);
+	let d = mCreate('div');
+	mAppend(d, btest);
+	mAppend(d, bmode);
+	mStyle(btest, styles);
+	mStyle(bmode, styles);
 	//mStyle(b, { bg: 'silver', hpadding: 6, maright: 10, rounding: 4 });
 	// mStyle(b, { bg: 'silver', hpadding: 6, maright: 10, rounding: 4 });
 	mClass(btest, 'hop1')
@@ -271,23 +610,23 @@ function start_new_generation(fen, players, options) {
 	delete fen.dominance;
 }
 
-function show_left_netcard(plname,order) {
+function show_left_netcard(plname, order) {
 	let dx = lookup(UI, ['stats', plname]);
-	dx=dx.douter;
+	dx = dx.douter;
 
 	//need player next to plname in order
-	let next = get_next_in_list(plname,order);
-	let dx1=lookup(UI, ['stats', next]);
-	dx1=dx1.douter;
+	let next = get_next_in_list(plname, order);
+	let dx1 = lookup(UI, ['stats', next]);
+	dx1 = dx1.douter;
 
-	let r=getRect(dx);
-	let r1=getRect(dx1);
-	console.log('r',r)
-	let xcenter = r.r+(r1.l-r.r)/2;
+	let r = getRect(dx);
+	let r1 = getRect(dx1);
+	console.log('r', r)
+	let xcenter = r.r + (r1.l - r.r) / 2;
 
-	let sz=40;
-	let wsz=sz*.7;
-	let dmark=mDiv(dTable,{position:'absolute',top:r.t+r.h/2-sz*1.5,left:xcenter-wsz/2,h:sz,w:wsz+1});//,bg:GREEN})
+	let sz = 40;
+	let wsz = sz * .7;
+	let dmark = mDiv(dTable, { position: 'absolute', top: r.t + r.h / 2 - sz * 1.5, left: xcenter - wsz / 2, h: sz, w: wsz + 1 });//,bg:GREEN})
 
 	let pl = Z.fen.players[plname];
 	let idleft = get_color_card(pl.idleft, sz);
@@ -358,7 +697,7 @@ function accuse_present(dParent) {
 	presentcards(hvotecard);
 
 	// *** show membership color for me (or in 'round' stage for all)
-	let plnames = stage == 'round'||stage == 'gameover' ? order : [me];
+	let plnames = stage == 'round' || stage == 'gameover' ? order : [me];
 	plnames.map(x => show_membership_color(x, hnetcard, himg));
 
 	// if (Z.phase > Number(Z.options.rounds)) {
@@ -367,32 +706,32 @@ function accuse_present(dParent) {
 	// }
 }
 
-function show_left_netcard(plname,order) {
+function show_left_netcard(plname, order) {
 
 	console.log('hallo!!!!!!!!!!')
 
 	let dx = lookup(UI, ['stats', plname]);
-	dx=dx.douter;
+	dx = dx.douter;
 	console.log('dx', dx, plname);
 
 	//return;
 
 	//need player next to plname in order
-	let next = get_next_in_list(plname,order);
-	let dx1=lookup(UI, ['stats', next]);
-	dx1=dx1.douter;
+	let next = get_next_in_list(plname, order);
+	let dx1 = lookup(UI, ['stats', next]);
+	dx1 = dx1.douter;
 
-	let r=getRect(dx);
-	let r1=getRect(dx1);
-	console.log('r',r)
-	let xcenter = r.r+(r1.l-r.r)/2;
+	let r = getRect(dx);
+	let r1 = getRect(dx1);
+	console.log('r', r)
+	let xcenter = r.r + (r1.l - r.r) / 2;
 	let ycenter = r.t;//+(r.h/2);
-	let ybot=r.t+r.h;
-	console.log('center',xcenter,ycenter)
+	let ybot = r.t + r.h;
+	console.log('center', xcenter, ycenter)
 
-	let sz=40;
-	let wsz=sz*.7;
-	let dmark=mDiv(dTable,{position:'absolute',top:r.t+r.h/2-sz*1.5,left:xcenter-wsz/2,h:sz,w:wsz+1});//,bg:GREEN})
+	let sz = 40;
+	let wsz = sz * .7;
+	let dmark = mDiv(dTable, { position: 'absolute', top: r.t + r.h / 2 - sz * 1.5, left: xcenter - wsz / 2, h: sz, w: wsz + 1 });//,bg:GREEN})
 
 	let pl = Z.fen.players[plname];
 	let idleft = get_color_card(pl.idleft, sz);
@@ -649,8 +988,8 @@ function show_item_selector(dParent, items) {
 
 function start() { let uname = null; if (isdef(uname)) U = { name: uname }; phpPost({ app: 'simple' }, 'assets'); }
 
-function test_engine(){
-	DA.test.list=[100,101,102];
+function test_engine() {
+	DA.test.list = [100, 101, 102];
 
 	//wie starte ich die tests?
 	test_engine_run_next(DA.test.list);
@@ -732,7 +1071,7 @@ function eval_empty_votes(votes) {
 		// if (!end) { start_new_poll(); }
 	} else { //generation end: last policy color wins!
 		let last_policy = arrLast(fen.policies);
-		
+
 		let color = get_color_of_card(arrLast(fen.policies))
 		ari_history_list(`no votes!`, `generation ends ${color}`);
 		accuse_score_update(color)
@@ -746,7 +1085,7 @@ function eval_empty_votes(votes) {
 function start_new_generation(fen, players) {
 	let deck_discard = fen.deck_discard = [];
 	//let deck_ballots = create_fen_deck('n'); shuffle(deck_ballots);
-	let ranks = fen.ranks; 
+	let ranks = fen.ranks;
 	let tb = {
 		5: ['4', 'T', 6, 2, 1],
 		6: ['2', 'T', 6, 0, 1],
@@ -773,7 +1112,7 @@ function start_new_generation(fen, players) {
 	}
 	if (N == 14) { for (const suit of 'SHDC') { deck_ballots.push('T' + suit + 'n'); } }
 	// for (let i = 0; i < jo; i++) { deck_ballots.push('A' + (i % 2 ? 'H' : 'S') + 'n'); }  //'' + (i%2) + 'J' + 'n');
-	for (let i = 0; i < jo; i++) { deck_ballots.push('' + (i%2) + 'J' + 'n'); } 
+	for (let i = 0; i < jo; i++) { deck_ballots.push('' + (i % 2) + 'J' + 'n'); }
 
 	//#region old
 	// let [rmax, rmin, handsize] = isdef(tb[N]) ? tb[N] : ['A', 'K', Math.min(8, Math.floor(52 / N))];
@@ -789,7 +1128,7 @@ function start_new_generation(fen, players) {
 	// });
 	//#endregion
 
-	shuffle(deck_ballots);	console.log('deck', deck_ballots);
+	shuffle(deck_ballots); console.log('deck', deck_ballots);
 	fen.deck_ballots = deck_ballots;
 	fen.handsize = handsize;
 	//console.log('deck_ballots:::',deck_ballots.length);
@@ -863,13 +1202,13 @@ function consensus_vote_payer() {
 
 }
 
-function sort_by_rank(olist,prop='card',ranks='KQJT98765432A'){
+function sort_by_rank(olist, prop = 'card', ranks = 'KQJT98765432A') {
 
 }
-function policy_added(votes){
+function policy_added(votes) {
 
-	let vsorted = 
-	lookupAddToList(fen, ['policies'], card);
+	let vsorted =
+		lookupAddToList(fen, ['policies'], card);
 	removeInPlace(fen.players[uplayer].hand, card);
 	ari_history_list(`${uplayer} enacts a ${get_color_of_card(card)} policy`, 'policy')
 
@@ -895,7 +1234,7 @@ function policy_added(votes){
 
 }
 
-function accuse_evaluate_votes(){
+function accuse_evaluate_votes() {
 	let [stage, A, fen, phase, uplayer, turn, uname, host] = [Z.stage, Z.A, Z.fen, Z.phase, Z.uplayer, Z.turn, Z.uname, Z.host];
 	assertion(uplayer == host && fen.cardsrevealed, 'NOT THE STARTER WHO COMPLETES THE STAGE!!!')
 	let votes = [];
@@ -919,10 +1258,10 @@ function accuse_evaluate_votes(){
 		return;
 	}
 	//1. check if all votes same color (consensus)
-	let color = get_color_of_card(votes[0].card); 
+	let color = get_color_of_card(votes[0].card);
 	let allsame = true;
 	for (const v of votes) {
-		let c1 = get_color_of_card(v.card); 
+		let c1 = get_color_of_card(v.card);
 		if (c1 != color) { allsame = false; break; }
 	}
 	if (allsame) {
@@ -992,7 +1331,7 @@ function accuse_evaluate_votes(){
 
 
 // --------------- reverted to _nonsens accusefreez0
-function transferToPlayer(plname){
+function transferToPlayer(plname) {
 	//mFadeClearShow('dAdminRight', 300);
 	mClear('dAdminMiddle');
 	stopgame();
@@ -1010,13 +1349,13 @@ function transferToPlayer(plname){
 
 function host_takes_over(plname) {
 	transferToPlayer(plname); return;
-	console.log('should start with',plname)
+	console.log('should start with', plname)
 	U = firstCond(Serverdata.users, x => x.name == plname);
 	start_with_assets(true);
 }
 
 function show_takeover_ui() {
-	
+
 	DA.omnipower = true;
 	let [pldata, stage, A, fen, phase, uplayer, turn, uname, host] = [Z.playerdata, Z.stage, Z.A, Z.fen, Z.phase, Z.uplayer, Z.turn, Z.uname, Z.host];
 	let votes = [];

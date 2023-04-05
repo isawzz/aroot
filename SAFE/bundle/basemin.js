@@ -1156,136 +1156,124 @@ function mGetStyle(elem, prop) {
 	if (val.endsWith('px')) return firstNumber(val); else return val;
 }
 function mStyle(elem, styles, unit = 'px') {
-	//if (styles.bg == '#00000000') console.log('mStyle',getFunctionsNameThatCalledThisFunction(), styles.bg,styles.fg)
-	elem = toElem(elem);
-	if (isdef(styles.vmargin)) { styles.mabottom = styles.matop = styles.vmargin; }
-	if (isdef(styles.hmargin)) { styles.maleft = styles.maright = styles.hmargin; }
-
-	//console.log(':::::::::styles',styles)
-	let bg, fg;
-	if (isdef(styles.bg) || isdef(styles.fg)) {
-		[bg, fg] = colorsFromBFA(styles.bg, styles.fg, styles.alpha);
-	}
-	if (isdef(styles.vpadding) || isdef(styles.hpadding)) {
-
-		styles.padding = valf(styles.vpadding, 0) + unit + ' ' + valf(styles.hpadding, 0) + unit;
-		//console.log('::::::::::::::', styles.vpadding, styles.hpadding)
-	}
-	if (isdef(styles.upperRounding)) {
-		let rtop = '' + valf(styles.upperRounding, 0) + unit;
-		let rbot = '0' + unit;
-		styles['border-radius'] = rtop + ' ' + rtop + ' ' + rbot + ' ' + rbot;
-	} else if (isdef(styles.lowerRounding)) {
-		let rbot = '' + valf(styles.lowerRounding, 0) + unit;
-		let rtop = '0' + unit;
-		styles['border-radius'] = rtop + ' ' + rtop + ' ' + rbot + ' ' + rbot;
-	}
-
-	if (isdef(styles.box)) styles['box-sizing'] = 'border-box';
-	//console.log(styles.bg,styles.fg);
-
-	for (const k in styles) {
-		//if (k=='textShadowColor' || k=='contrast') continue; //meaningless styles => TBD
-		let val = styles[k];
-		let key = k;
-		//console.log('key',key)
-		if (isdef(STYLE_PARAMS[k])) key = STYLE_PARAMS[k];
-		else if (k == 'font' && !isString(val)) {
-			//font would be specified as an object w/ size,family,variant,bold,italic
-			// NOTE: size and family MUST be present!!!!!!! in order to use font param!!!!
-			let fz = f.size; if (isNumber(fz)) fz = '' + fz + 'px';
-			let ff = f.family;
-			let fv = f.variant;
-			let fw = isdef(f.bold) ? 'bold' : isdef(f.light) ? 'light' : f.weight;
-			let fs = isdef(f.italic) ? 'italic' : f.style;
-			if (nundef(fz) || nundef(ff)) return null;
-			let s = fz + ' ' + ff;
-			if (isdef(fw)) s = fw + ' ' + s;
-			if (isdef(fv)) s = fv + ' ' + s;
-			if (isdef(fs)) s = fs + ' ' + s;
-			elem.style.setProperty(k, s);
-			continue;
-		} else if (k == 'classname') {
-			mClass(elem, styles[k]);
-		} else if (k == 'border') {
-			//console.log('________________________YES!')
-			if (isNumber(val)) val = `solid ${val}px ${isdef(styles.fg) ? styles.fg : '#ffffff80'}`;
-			if (val.indexOf(' ') < 0) val = 'solid 1px ' + val;
-		} else if (k == 'layout') {
-			if (val[0] == 'f') {
-				//console.log('sssssssssssssssssssssssssssssssssssssssssssss')
-				val = val.slice(1);
-				elem.style.setProperty('display', 'flex');
-				elem.style.setProperty('flex-wrap', 'wrap');
-				let hor, vert;
-				if (val.length == 1) hor = vert = 'center';
-				else {
-					let di = { c: 'center', s: 'start', e: 'end' };
-					hor = di[val[1]];
-					vert = di[val[2]];
-
-				}
-				let justStyle = val[0] == 'v' ? vert : hor;
-				let alignStyle = val[0] == 'v' ? hor : vert;
-				elem.style.setProperty('justify-content', justStyle);
-				elem.style.setProperty('align-items', alignStyle);
-				switch (val[0]) {
-					case 'v': elem.style.setProperty('flex-direction', 'column'); break;
-					case 'h': elem.style.setProperty('flex-direction', 'row'); break;
-				}
-			} else if (val[0] == 'g') {
-				//layout:'g_15_240' 15 columns, each col 240 pixels wide
-				//console.log('sssssssssssssssssssssssssssssssssssssssssssss')
-				val = val.slice(1);
-				elem.style.setProperty('display', 'grid');
-				let n = allNumbers(val);
-				let cols = n[0];
-				let w = n.length > 1 ? '' + n[1] + 'px' : 'auto';
-				elem.style.setProperty('grid-template-columns', `repeat(${cols}, ${w})`);
-				elem.style.setProperty('place-content', 'center');
-			}
-		} else if (k == 'layflex') {
-			elem.style.setProperty('display', 'flex');
-			elem.style.setProperty('flex', '0 1 auto');
-			elem.style.setProperty('flex-wrap', 'wrap');
-			if (val == 'v') { elem.style.setProperty('writing-mode', 'vertical-lr'); }
-		} else if (k == 'laygrid') {
-			elem.style.setProperty('display', 'grid');
-			let n = allNumbers(val);
-			let cols = n[0];
-			let w = n.length > 1 ? '' + n[1] + 'px' : 'auto';
-			elem.style.setProperty('grid-template-columns', `repeat(${cols}, ${w})`);
-			elem.style.setProperty('place-content', 'center');
-		}
-
-		//console.log(key,val,isNaN(val));if (isNaN(val) && key!='font-size') continue;
-		//if (k == 'bg') console.log('style', k, key, val, bg)
-
-		if (key == 'font-weight') { elem.style.setProperty(key, val); continue; }
-		else if (key == 'background-color') elem.style.background = bg;
-		else if (key == 'color') elem.style.color = fg;
-		else if (key == 'opacity') elem.style.opacity = val;
-		else if (key == 'wrap') elem.style.flexWrap = 'wrap';
-		else if (startsWith(k, 'dir')) {
-			//console.log('.................................................!!!!!!!!!!!!!!!!!!!!!!!')
-			//console.log('val',val);
-			isCol = val[0] == 'c';
-			elem.style.setProperty('flex-direction', 'column'); //flexDirection = isCol ? 'column' : 'row';
-			//in order for this to work, HAVE TO set wmax or hmax!!!!!!!!!!!!!
-			// if (isCol && nundef(styles.hmax)) { //?????????????? WTF??????????????????
-			// 	let rect = getRect(elem.parentNode); //console.log('rect', rect);
-			// 	elem.style.maxHeight = rect.h * .9;
-			// 	elem.style.alignContent = 'start';
-			// } else if (nundef(styles.wmax)) elem.style.maxWidth = '90%';
-		} else if (key == 'flex') {
-			if (isNumber(val)) val = '' + val + ' 1 0%';
-			elem.style.setProperty(key, makeUnitString(val, unit));
-		} else {
-			//console.log('set property',key,makeUnitString(val,unit),val,isNaN(val));
-			//if ()
-			elem.style.setProperty(key, makeUnitString(val, unit));
-		}
-	}
+  elem = toElem(elem);
+  if (isdef(styles.whrest)) { delete styles.whrest; styles.w = styles.h = 'rest'; } else if (isdef(styles.wh100)) { styles.w = styles.h = '100%'; delete styles.wh100; }
+  if (isdef(styles.w100)) styles.w = '100%'; else if (isdef(styles.wrest)) styles.w = 'rest';
+  if (isdef(styles.h100)) styles.h = '100%'; else if (isdef(styles.hrest)) styles.h = 'rest';
+  let dParent = elem.parentNode;
+  let pad = parseInt(valf(dParent.style.padding, '0'));
+  let rp = getRect(dParent);
+  let r = getRect(elem, dParent);
+  if (styles.w == 'rest') {
+    let left = r.l;
+    let w = rp.w;
+    let wrest = w - left - pad;
+    styles.w = wrest;
+  }
+  if (styles.h == 'rest') {
+    let r1 = getRect(dParent.lastChild, dParent);
+    let hrest = rp.h - (r1.y) - pad;
+    styles.h = hrest;
+  }
+  let bg, fg;
+  if (isdef(styles.bg) || isdef(styles.fg)) {
+    [bg, fg] = colorsFromBFA(styles.bg, styles.fg, styles.alpha);
+  }
+  if (isdef(styles.vpadding) || isdef(styles.hpadding)) {
+    styles.padding = valf(styles.vpadding, 0) + unit + ' ' + valf(styles.hpadding, 0) + unit;
+  }
+  if (isdef(styles.vmargin) || isdef(styles.hmargin)) {
+    styles.margin = valf(styles.vmargin, 0) + unit + ' ' + valf(styles.hmargin, 0) + unit;
+  }
+  if (isdef(styles.upperRounding) || isdef(styles.lowerRounding)) {
+    let rtop = '' + valf(styles.upperRounding, 0) + unit;
+    let rbot = '' + valf(styles.lowerRounding, 0) + unit;
+    styles['border-radius'] = rtop + ' ' + rtop + ' ' + rbot + ' ' + rbot;
+  }
+  if (isdef(styles.box)) styles['box-sizing'] = 'border-box';
+  if (isdef(styles.round)) styles['border-radius'] = '50%';
+  for (const k in styles) {
+    let val = styles[k];
+    let key = k;
+    if (isdef(STYLE_PARAMS[k])) key = STYLE_PARAMS[k];
+    else if (k == 'font' && !isString(val)) {
+      let fz = f.size; if (isNumber(fz)) fz = '' + fz + 'px';
+      let ff = f.family;
+      let fv = f.variant;
+      let fw = isdef(f.bold) ? 'bold' : isdef(f.light) ? 'light' : f.weight;
+      let fs = isdef(f.italic) ? 'italic' : f.style;
+      if (nundef(fz) || nundef(ff)) return null;
+      let s = fz + ' ' + ff;
+      if (isdef(fw)) s = fw + ' ' + s;
+      if (isdef(fv)) s = fv + ' ' + s;
+      if (isdef(fs)) s = fs + ' ' + s;
+      elem.style.setProperty(k, s);
+      continue;
+    } else if (k == 'classname') {
+      mClass(elem, styles[k]);
+    } else if (k == 'border') {
+      if (isNumber(val)) val = `solid ${val}px ${isdef(styles.fg) ? styles.fg : '#ffffff80'}`;
+      if (val.indexOf(' ') < 0) val = 'solid 1px ' + val;
+    } else if (k == 'ajcenter') {
+      elem.style.setProperty('justify-content', 'center');
+      elem.style.setProperty('align-items', 'center');
+    } else if (k == 'layout') {
+      if (val[0] == 'f') {
+        val = val.slice(1);
+        elem.style.setProperty('display', 'flex');
+        elem.style.setProperty('flex-wrap', 'wrap');
+        let hor, vert;
+        if (val.length == 1) hor = vert = 'center';
+        else {
+          let di = { c: 'center', s: 'start', e: 'end' };
+          hor = di[val[1]];
+          vert = di[val[2]];
+        }
+        let justStyle = val[0] == 'v' ? vert : hor;
+        let alignStyle = val[0] == 'v' ? hor : vert;
+        elem.style.setProperty('justify-content', justStyle);
+        elem.style.setProperty('align-items', alignStyle);
+        switch (val[0]) {
+          case 'v': elem.style.setProperty('flex-direction', 'column'); break;
+          case 'h': elem.style.setProperty('flex-direction', 'row'); break;
+        }
+      } else if (val[0] == 'g') {
+        val = val.slice(1);
+        elem.style.setProperty('display', 'grid');
+        let n = allNumbers(val);
+        let cols = n[0];
+        let w = n.length > 1 ? '' + n[1] + 'px' : 'auto';
+        elem.style.setProperty('grid-template-columns', `repeat(${cols}, ${w})`);
+        elem.style.setProperty('place-content', 'center');
+      }
+    } else if (k == 'layflex') {
+      elem.style.setProperty('display', 'flex');
+      elem.style.setProperty('flex', '0 1 auto');
+      elem.style.setProperty('flex-wrap', 'wrap');
+      if (val == 'v') { elem.style.setProperty('writing-mode', 'vertical-lr'); }
+    } else if (k == 'laygrid') {
+      elem.style.setProperty('display', 'grid');
+      let n = allNumbers(val);
+      let cols = n[0];
+      let w = n.length > 1 ? '' + n[1] + 'px' : 'auto';
+      elem.style.setProperty('grid-template-columns', `repeat(${cols}, ${w})`);
+      elem.style.setProperty('place-content', 'center');
+    }
+    if (key == 'font-weight') { elem.style.setProperty(key, val); continue; }
+    else if (key == 'background-color') elem.style.background = bg;
+    else if (key == 'color') elem.style.color = fg;
+    else if (key == 'opacity') elem.style.opacity = val;
+    else if (key == 'wrap') { if (val == 'hard') elem.setAttribute('wrap', 'hard'); else elem.style.flexWrap = 'wrap'; }
+    else if (startsWith(k, 'dir')) {
+      isCol = val[0] == 'c';
+      elem.style.setProperty('flex-direction', 'column');
+    } else if (key == 'flex') {
+      if (isNumber(val)) val = '' + val + ' 1 0%';
+      elem.style.setProperty(key, makeUnitString(val, unit));
+    } else {
+      elem.style.setProperty(key, makeUnitString(val, unit));
+    }
+  }
 }
 function mStyleRemove(elem, prop) {
 	if (isdef(STYLE_PARAMS[prop])) prop = STYLE_PARAMS[prop];
@@ -3297,47 +3285,41 @@ function pSBC(p, c0, c1, l) {
 	// c1: #F3D or #F3DC or #FF33DD or #FF33DDCC or rgb(23,4,55) or rgba(23,4,55,0.52) ... to color (blending)
 	// 		or 'c' for conversion between hex string and rgb string
 	// l true:log blending, [false:linear blending]=default!
-	let r,
-		g,
-		b,
-		P,
-		f,
-		t,
-		h,
-		i = parseInt,
-		m = Math.round,
-		a = typeof c1 == 'string';
-	if (typeof p != 'number' || p < -1 || p > 1 || typeof c0 != 'string' || (c0[0] != 'r' && c0[0] != '#') || (c1 && !a)) return null;
-	if (!this.pSBCr)
-		this.pSBCr = d => {
-			let n = d.length,
-				x = {};
-			if (n > 9) {
-				([r, g, b, a] = d = d.split(',')), (n = d.length);
-				if (n < 3 || n > 4) return null;
-				(x.r = i(r[3] == 'a' ? r.slice(5) : r.slice(4))), (x.g = i(g)), (x.b = i(b)), (x.a = a ? parseFloat(a) : -1);
-			} else {
-				if (n == 8 || n == 6 || n < 4) return null;
-				if (n < 6) d = '#' + d[1] + d[1] + d[2] + d[2] + d[3] + d[3] + (n > 4 ? d[4] + d[4] : '');
-				d = i(d.slice(1), 16);
-				if (n == 9 || n == 5) (x.r = (d >> 24) & 255), (x.g = (d >> 16) & 255), (x.b = (d >> 8) & 255), (x.a = m((d & 255) / 0.255) / 1000);
-				else (x.r = d >> 16), (x.g = (d >> 8) & 255), (x.b = d & 255), (x.a = -1);
-			}
-			return x;
-		};
-	(h = c0.length > 9),
-		(h = a ? (c1.length > 9 ? true : c1 == 'c' ? !h : false) : h),
-		(f = pSBCr(c0)),
-		(P = p < 0),
-		(t = c1 && c1 != 'c' ? pSBCr(c1) : P ? { r: 0, g: 0, b: 0, a: -1 } : { r: 255, g: 255, b: 255, a: -1 }),
-		(p = P ? p * -1 : p),
-		(P = 1 - p);
-	if (!f || !t) return null;
-	if (l) (r = m(P * f.r + p * t.r)), (g = m(P * f.g + p * t.g)), (b = m(P * f.b + p * t.b));
-	else (r = m((P * f.r ** 2 + p * t.r ** 2) ** 0.5)), (g = m((P * f.g ** 2 + p * t.g ** 2) ** 0.5)), (b = m((P * f.b ** 2 + p * t.b ** 2) ** 0.5));
-	(a = f.a), (t = t.a), (f = a >= 0 || t >= 0), (a = f ? (a < 0 ? t : t < 0 ? a : a * P + t * p) : 0);
-	if (h) return 'rgb' + (f ? 'a(' : '(') + r + ',' + g + ',' + b + (f ? ',' + m(a * 1000) / 1000 : '') + ')';
-	else return '#' + (4294967296 + r * 16777216 + g * 65536 + b * 256 + (f ? m(a * 255) : 0)).toString(16).slice(1, f ? undefined : -2);
+  let r, g, b, P, f, t, h, i = parseInt, m = Math.round, a = typeof c1 == 'string';
+  if (typeof p != 'number' || p < -1 || p > 1 || typeof c0 != 'string' || (c0[0] != 'r' && c0[0] != '#') || (c1 && !a)) return null;
+  h = c0.length > 9;
+  h = a ? (c1.length > 9 ? true : c1 == 'c' ? !h : false) : h;
+  f = pSBCr(c0);
+  P = p < 0;
+  t = c1 && c1 != 'c' ? pSBCr(c1) : P ? { r: 0, g: 0, b: 0, a: -1 } : { r: 255, g: 255, b: 255, a: -1 };
+  p = P ? p * -1 : p;
+  P = 1 - p;
+  if (!f || !t) return null;
+  if (l) { r = m(P * f.r + p * t.r); g = m(P * f.g + p * t.g); b = m(P * f.b + p * t.b); }
+  else { r = m((P * f.r ** 2 + p * t.r ** 2) ** 0.5); g = m((P * f.g ** 2 + p * t.g ** 2) ** 0.5); b = m((P * f.b ** 2 + p * t.b ** 2) ** 0.5); }
+  a = f.a;
+  t = t.a;
+  f = a >= 0 || t >= 0;
+  a = f ? (a < 0 ? t : t < 0 ? a : a * P + t * p) : 0;
+  if (h) return 'rgb' + (f ? 'a(' : '(') + r + ',' + g + ',' + b + (f ? ',' + m(a * 1000) / 1000 : '') + ')';
+  else return '#' + (4294967296 + r * 16777216 + g * 65536 + b * 256 + (f ? m(a * 255) : 0)).toString(16).slice(1, f ? undefined : -2);
+}
+function pSBCr(d) {
+  let i = parseInt, m = Math.round, a = typeof c1 == 'string';
+  let n = d.length,
+    x = {};
+  if (n > 9) {
+    ([r, g, b, a] = d = d.split(',')), (n = d.length);
+    if (n < 3 || n > 4) return null;
+    (x.r = parseInt(r[3] == 'a' ? r.slice(5) : r.slice(4))), (x.g = parseInt(g)), (x.b = parseInt(b)), (x.a = a ? parseFloat(a) : -1);
+  } else {
+    if (n == 8 || n == 6 || n < 4) return null;
+    if (n < 6) d = '#' + d[1] + d[1] + d[2] + d[2] + d[3] + d[3] + (n > 4 ? d[4] + d[4] : '');
+    d = parseInt(d.slice(1), 16);
+    if (n == 9 || n == 5) (x.r = (d >> 24) & 255), (x.g = (d >> 16) & 255), (x.b = (d >> 8) & 255), (x.a = m((d & 255) / 0.255) / 1000);
+    else (x.r = d >> 16), (x.g = (d >> 8) & 255), (x.b = d & 255), (x.a = -1);
+  }
+  return x;
 }
 
 //#endregion
@@ -3702,21 +3684,22 @@ function rChoose(arr, n = 1, func = null, exceptIndices = null) {
 	return indices.slice(0, n).map(x => arr[x]);
 
 }
-function rColor(brightness) {
-
-	//brightness can be dark,bright,medium, or a percentage, where 0 is black and 100 is white
-	if (isdef(brightness)) {
-		let hue = rHue();
-		let sat = 100;
-		let b = isNumber(brightness) ? brightness : brightness == 'dark' ? 25 : brightness == 'light' ? 75 : 50;
-		return colorFromHSL(hue, sat, b);
-	}
-
-	let s = '#';
-	for (let i = 0; i < 6; i++) {
-		s += rChoose(['f', 'c', '9', '6', '3', '0']);
-	}
-	return s;
+function rColor(cbrightness, c2, alpha = null) {
+  if (isdef(c2)) {
+    let c = colorMix(cbrightness, c2, rNumber(0, 100));
+    return colorTrans(c, alpha ?? Math.random());
+  }
+  if (isdef(cbrightness)) {
+    let hue = rHue();
+    let sat = 100;
+    let b = isNumber(cbrightness) ? cbrightness : cbrightness == 'dark' ? 25 : cbrightness == 'light' ? 75 : 50;
+    return colorFromHSL(hue, sat, b);
+  }
+  let s = '#';
+  for (let i = 0; i < 6; i++) {
+    s += rChoose(['f', 'c', '9', '6', '3', '0']);
+  }
+  return s;
 }
 function rDate(before, after) {
 	let after_date = new Date(after);

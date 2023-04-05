@@ -5,6 +5,7 @@ function addDummy(dParent) {
 	dummy.id = 'dummy';
 
 }
+
 function create_left_side() {
 	let dl = dLeft;
 	mClear(dLeft);
@@ -15,8 +16,9 @@ function create_left_side() {
 	mSearch('keywords', mySearch, dse, { hmargin: 6 }, { selectOnClick: true });
 
 	let dm = mDom(dft, {}, { html: 'Edit Code:' });
+	mButton('closure', compute_closure, dm)
 	let r = getRect(dm);
-	console.log(r.y + r.h);
+	//console.log(r.y + r.h);
 	//let h = `calc( 100vh - ${r.y + r.h} )`;
 	h = window.innerHeight - (r.y + r.h + 4); mStyle(dfta, { h: h, box: true, padding: 4 });
 	AU.ta = mDom(dfta, { fz: 18, family: 'consolas', w100: true, box: true, h: '99%', bg: 'white', fg: 'black' }, { tag: 'textarea', id: 'ta', className: 'plain' });
@@ -30,12 +32,12 @@ function execute_on_control_enter(ev) {
 		//console.log('TEST!', x)
 	}
 }
-async function load_Codebase(dir) {
-	let path_js = isdef(dir) ? (dir + '/z_all.js') : '../allcode.js';
+async function load_Codebase(dir, path_allcode) {
+	let path_js = isdef(path_allcode) ? path_allcode : '../basejs/cb2/allcode.js';
 	dir = isdef(dir) ? dir : '../basejs';
 
+	//#region keysSorted: WOZU BRAUCH ICH keysSorted???????? fuerr die closure!!!!!!!!!!!!!!!
 	let text = CODE.text = await route_path_text(path_js);
-
 	let keysSorted = [];
 	let lines = text.split('\r\n');
 	for (const l of lines) {
@@ -46,6 +48,7 @@ async function load_Codebase(dir) {
 	}
 	CODE.keysSorted = keysSorted;
 	//console.log('keysSorted',keysSorted);
+	//#endregion
 
 	CODE.di = await route_path_yaml_dict(dir + '/z_all.yaml');
 	CODE.justcode = await route_path_yaml_dict(dir + '/z_allcode.yaml');
@@ -54,7 +57,7 @@ async function load_Codebase(dir) {
 	let keys = {};
 	for (const k in CODE.di) { for (const k1 in CODE.di[k]) keys[k1] = CODE.di[k][k1]; }
 	CODE.all = keys;
-	CODE.keylist = Object.keys(keys)
+	CODE.keylist = Object.keys(keys);
 	//let inter = intersection(Object.keys(keys), Object.keys(window));
 	//console.log('intersection',inter);
 	//7748 in intersection, also ca 400 jeweils extra, ergibt total of 8500 keys ca.
@@ -218,7 +221,7 @@ function myOnclickCodeInSidebar(ev) {
 function mySearch(kws) {
 	//kws should be a string
 	assertion(isString(kws), 'mySearch: kws should be a string')
-	console.log(`'${kws}'`);
+	//console.log(`'${kws}'`);
 	ohneRegexMix(kws); //return;//keyPlusMinus(); return;
 }
 function ohneRegexMix(s) {
@@ -248,7 +251,7 @@ function ohneRegexMix(s) {
 		//if (!isEmpty(syes) || smay.some(x => text.includes(x))) res.push(el.key);
 	}
 	CODE.selectedKeys = res; // arr.filter(x => regex.test(x.key)).map(x => x.key);
-	console.log('res', res.length > 20 ? res.length : res)
+	//console.log('res', res.length > 20 ? res.length : res)
 	if (!isEmpty(res)) show_sidebar(res, myOnclickCodeInSidebar); //console.log('keys', res);
 }
 function onclickCase(ev) {
@@ -296,7 +299,7 @@ function onclickWhere(ev) {
 	b.innerHTML = val ? 'start' : 'anywhere';
 }
 function onclickTest(x) {
-	x=runcode(mBy('ta').value)
+	x = runcode(mBy('ta').value)
 	console.log('TEST!', x)
 }
 function parseSearchString(s, sAllow = '+-_') { return toWordsX(s, sAllow); }
@@ -358,7 +361,7 @@ function show_coding_ui() {
 	let rows = 'auto auto 1fr auto auto';
 
 	let [bg, fg] = [rColorTrans(50, 10, 100, [150, 230]), 'contrast']; //console.log('colors:', bg, fg);	//bg='hsla(120,100%,25%,0.3)';
-	dPage = mGridFrom(d, areas, cols, rows, { hmax:'96%',padding: 4, box: true, bg: bg, fg: fg });
+	dPage = mGridFrom(d, areas, cols, rows, { hmax: '96%', padding: 4, box: true, bg: bg, fg: fg });
 
 	let elem = mSearch('keywords:', mySearch, dSearch, {}, { selectOnClick: true });
 	let bs = mDiv(elem, { 'grid-column': '1 / span 3', display: 'flex', gap: 4 });
@@ -366,14 +369,14 @@ function show_coding_ui() {
 	mButton('insensitive', onclickCase, bs, { align: 'center', w: 210 });
 	mButton('anywhere', onclickWhere, bs, { align: 'center', w: 210 });
 
-	mStyle(dFiddle, { h:800,bg:GREEN });
+	mStyle(dFiddle, { h: 800, bg: GREEN });
 	mDom(dFiddle, {}, { html: 'Edit Code:' });
 	AU.ta = mDom(dFiddle, { fz: 18, family: 'consolas', w100: true, box: true, h: 'rest', bg: colorTrans(bg, 1), fg: 'black' }, { tag: 'textarea', id: 'ta', className: 'plain' });
 
 	mFlex(dTestButtons);
 	mButton('TEST', onclickTest, dTestButtons); //mDom(dTestButtons, { bg: bg, hpadding: 10, vpadding: 4, rounding: 8, cursor: 'pointer' }, { onclick: onclickTest, className: 'hop1', html: 'TEST' });
 
-	addEventListener('keydown',execute_on_control_enter)
+	addEventListener('keydown', execute_on_control_enter)
 	//mDom(dTable, {margin:10,bg:'#222'}, { html: 'HAAAAAAAAAALLLLLLLLLOOOOOO', editable: true, selectOnClick: true });
 	//dUnten = mDiv(dTable, {box:true,w:'100%',h:400,bg:'#222'});
 }
@@ -457,12 +460,17 @@ function test_ui() {
 	let d1 = mDom(document.body, {}, { classes: 'fullpage airport' });
 	let [dl, dr] = mColFlex(d1, [7, 2]);
 	for (const d of [dl, dr]) mStyle(d, { bg: rColor('blue', 'green', .5) })
+	//return;
 
 	mStyle(dr, { h: '100vh', fg: 'white' })
 	dSidebar = mDiv100(dr, { wmax: 240, overy: 'auto', overx: 'hidden' }, 'dSidebar'); //,{h:window.innerHeight},'dSidebar')
 	dLeft = dl;
 	onresize = create_left_side;
 	create_left_side();
+}
+function toWords(s, allow_ = false) {
+	let arr = allow_ ? s.split(/[\W]+/) : s.split(/[\W|_]+/);
+	return arr.filter(x => !isEmpty(x));
 }
 function toWordsX(s, sAllow = '_') {
 	let special = ['-', '.', '*', '?', '!'];
