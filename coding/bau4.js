@@ -102,10 +102,3 @@ function ___BAD___computeClosure(keysOrText = []) {
 	//console.log('result',tres);
 	//downloadAsText(tres, 'mycode', 'js');
 }
-function extractKeywords(text) {
-	let words = toWords(text, true); //console.log('words', words);
-	//words = words.filter(x=>text.includes(' '+x));
-	let res = [];
-	for (const w of words) { if (isdef(CODE.all[w])) addIf(res, w); }
-	return res;
-}

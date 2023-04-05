@@ -7,6 +7,11 @@ async function start() {
 	//console.log('CODE', CODE, '\nDB', DB, '\nConfig', Config)
 
 }
+function startgames() {
+	let uname = DA.secretuser = localStorage.getItem('uname');
+	if (isdef(uname)) U = { name: uname };
+	phpPost({ app: 'simple' }, 'assets');
+}
 
 
 
