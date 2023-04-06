@@ -312,6 +312,7 @@ const CORNERS5 = ['⬛', '⬜'];
 //#endregion
 
 //#region vars
+var AU = {}, CODE = {};
 var SOCKETSERVER = 'http://localhost:5000'; //geht im spital
 var SERVER = "http://localhost:8080/aroot/simple"; // oder telecave!
 var Sayings;
@@ -2924,6 +2925,11 @@ function firstNumber(s) {
 	}
 	return null;
 }
+function firstWordAfter(s, sub, allow_ = false) {
+	let s1 = stringAfter(s, sub);
+	let s2 = toWords(s1, allow_)[0]
+	return s2;
+}
 function fisherYates(arr) {
 	if (arr.length == 2 && coin()) { return arr; }
 	var rnd, temp;
@@ -3321,6 +3327,14 @@ function getFunctionsNameThatCalledThisFunction() {
 	let c2 = c1.caller;
 	if (nundef(c2)) return 'no caller!';
 	return c2.name;
+}
+function getFunctionSignature(firstline, key) {
+	let sig;
+	if (firstline.includes(') {')) sig = stringBefore(firstline, ') {') + ')';
+	else if (firstline.includes('){')) sig = stringBefore(firstline, '){') + ')';
+	else sig = `function ${key}()`;
+	sig += '{}';
+	return sig;
 }
 function getGSGElements(gCond, sCond) {
 	let keys = [];
@@ -5245,6 +5259,11 @@ function rLetters(n, except = []) {
 }
 function rNumber(min = 0, max = 100) {
 	return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+async function route_path_text(url) {
+	let data = await fetch(url);
+	let text = await data.text();
+	return text;
 }
 async function route_path_yaml_dict(url) {
 	let data = await fetch(url);

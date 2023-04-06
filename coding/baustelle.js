@@ -5,67 +5,6 @@ function addDummy(dParent) {
 	dummy.id = 'dummy';
 
 }
-function compute_closure(code) {
-	if (nundef(code)) code = AU.ta.value;
-	let disub = CODE.closure = computeClosure();
-	let keylist = [];
-	for (const type of ['const', 'var', 'cla', 'func']) {
-		//let klist = sortCaseInsensitive(get_keys(disub[type]));
-
-		let knownkeys = CODE.keysSorted.filter(x => isdef(disub[type][x]));
-		let extras = sortCaseInsensitive(get_keys(disub[type]).filter(x => !knownkeys.includes(x)));
-		keylist = keylist.concat(knownkeys).concat(extras);
-	}
-
-	console.log(keylist.includes('write_code_text_file'));
-	write_code_text_file(keylist);
-}
-function computeClosure(symlist) {
-	let keys = {};
-	for (const k in CODE.di) { for (const k1 in CODE.di[k]) keys[k1] = CODE.di[k][k1]; }
-	CODE.all = keys;
-	CODE.keylist = Object.keys(keys)
-	let done = {};
-	let tbd = valf(symlist, ['start']);
-	let MAX = 1000000, i = 0;
-	let visited = {};
-	while (!isEmpty(tbd)) {
-		if (++i > MAX) break; //else console.log('i',i)
-		let sym = tbd[0];
-		if (isdef(visited[sym])) { tbd.shift(); continue; }
-		visited[sym] = true;
-		let o = CODE.all[sym];
-		if (nundef(o)) o = getObjectFromWindow(sym);
-		if (nundef(o)) { tbd.shift(); continue; }
-		if (o.type == 'var' && !o.name.startsWith('d') && o.name == o.name.toLowerCase()) { tbd.shift(); continue; }
-		if (o.type == 'var' || o.type == 'const') { tbd.shift(); lookupSet(done, [o.type, sym], o); continue; }
-
-		assertion(['cla', 'func'].includes(o.type), 'TYPE ERRROR!!!!!!!!!!!!!!!!!!!!!!!!!')
-
-		//at this point *** sym is a func or class!!! ***
-		let olive = valf(window[sym],o.code);
-		//if (sym == 'write_code_text_file') console.log('still here')
-		if (nundef(olive)) { tbd.shift(); lookupSet(done, [o.type, sym], o); continue; }
-		//if (sym == 'write_code_text_file') console.log('still here')
-
-		let text = olive.toString(); //always using last function body!!!
-		let words = toWords(text, true);
-
-		//words = words.filter(x => text.includes(' ' + x) || text.includes(x + '(')  || text.includes(x + ','));
-		//console.log('words',words)
-		//if (sym == 'compute_closure') console.log('', sym, words)
-
-		for (const w of words) { if (nundef(done[w]) || nundef(visited[w]) && w != sym && isCodeWord(w)) addIf(tbd, w); }
-		tbd.shift();
-
-		//if (sym == 'write_code_text_file') console.log('still here',o.code)
-		//done[sym] = o; //
-		lookupSet(done, [o.type, sym], o);
-	}
-
-	//console.log('done',done);
-	return done;
-}
 function create_left_side() {
 	let dl = dLeft;
 	mClear(dLeft);
@@ -322,7 +261,10 @@ function mySearch(kws) {
 	ohneRegexMix(kws); //return;//keyPlusMinus(); return;
 }
 function ohneRegexMix(s) {
-	let arr = CODE.codelist;
+	// let arr = CODE.codelist;
+	//let arr = getLiveKeys(CODE.codelist.map(x=>x.key));
+	let arr=CODE.codelist.filter(x=>isLiveInBrowser(x.key));
+	console.log('arr',arr)
 	//s=`-e +fi`
 	let ws = parseSearchString(s);
 	let [sno, syes, smay] = [[], [], []];
@@ -591,13 +533,16 @@ function write_code_text_file(keylist) {
 		else if (type == 'cla') { code = CODE.justcode[k]; }
 		else if (type == 'func') { code = isdef(window[k]) ? window[k].toString() : CODE.justcode[k]; }
 		else { code = window[k].toString(); }
+
+		if (OWNPROPS.includes(k)) {console.log('nicht dabei',k);continue;}
 		// else if (!OWNPROPS.includes(k)) { code = window[k].toString(); }
-		// else code = '';
+		// else {console.log('nicht dabei',k); code = '';}
 		// assertion(!code.includes('[native code]') && !code.includes('function('),"ERRORRRRRRRRRRRRRRRR")
 		// if (k == 'write_code_text_file') console.log('code',code)
 
 		if (k != 'write_code_text_file' && (code.includes('[native code]') || code.includes('function('))) continue;
-		text += code + '\n';
+		//if (code.includes('create_left_side')) console.log('k',k,code)
+		if (!isEmpty(code)) text += code + '\n';
 	}
 	text = replaceAllSpecialChars(text, '\r', '');
 	AU.ta.value = text;
