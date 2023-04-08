@@ -1,4 +1,55 @@
 
+function minimizeCode(di,klist,symlist=['start']){
+	CODE.all = di;
+	CODE.keylist = klist;
+	let done = {};
+	let tbd = symlist;
+	let MAX = 1000000, i = 0;
+	let visited = { grid: true, jQuery: true, config: true, Number: true, sat: true, hallo: true, autocomplete: true, PI: true };
+	while (!isEmpty(tbd)) {
+		if (++i > MAX) break; //else console.log('i',i)
+		let sym = tbd[0];
+		if (isdef(visited[sym])) { tbd.shift(); continue; }
+		visited[sym] = true;
+		let o = CODE.all[sym];
+		if (nundef(o)) o = getObjectFromWindow(sym);
+		if (nundef(o)) { tbd.shift(); continue; }
+		if (o.type == 'var' && !o.name.startsWith('d') && o.name == o.name.toLowerCase()) { tbd.shift(); continue; }
+		if (o.type == 'var' || o.type == 'const') { tbd.shift(); lookupSet(done, [o.type, sym], o); continue; }
+
+		assertion(['cla', 'func'].includes(o.type), 'TYPE ERRROR!!!!!!!!!!!!!!!!!!!!!!!!!')
+
+		//at this point *** sym is a func or class!!! ***
+		let olive = valf(window[sym], o.code);
+		//if (sym == 'write_code_text_file') console.log('still here')
+		if (nundef(olive)) { tbd.shift(); lookupSet(done, [o.type, sym], o); continue; }
+		//if (sym == 'write_code_text_file') console.log('still here')
+
+		let text = olive.toString(); //always using last function body!!!
+		let words = toWords(text, true);
+
+		if (words.includes('in' + 'it')) console.log('sym', sym)
+		//if (words.includes('gr'+'id')) console.log('sym',sym)
+		//words = words.filter(x => text.includes(' ' + x) || text.includes(x + '(')  || text.includes(x + ','));
+		//console.log('words',words)
+		//if (sym == 'compute_closure') console.log('', sym, words)
+
+		for (const w of words) { if (nundef(done[w]) || nundef(visited[w]) && w != sym && isCodeWord(w)) addIf(tbd, w); }
+		tbd.shift();
+
+		//if (sym == 'write_code_text_file') console.log('still here',o.code)
+		//done[sym] = o; //
+		lookupSet(done, [o.type, sym], o);
+	}
+
+	//console.log('done',done);
+	return done;
+	
+}
+function onclickClosure(){
+	let [di,klist]=[lookup(DA,['bundle','di']),lookup(DA,['bundle','klist'])];
+	console.log('di',di)
+}
 
 //#region bundle generation
 function mClosureUI(dParent) {
@@ -6,6 +57,7 @@ function mClosureUI(dParent) {
 	mDiv(dParent, {}, null, '<input type="text" id="inp_project" value="games2"/>')
 	mDiv(dParent, {}, null, 'seed')
 	mDiv(dParent, {}, null, '<input type="text" id="inp_seed" value="accuse start startgame"/>')
+	mButton('bundle', onclickBundle, dParent);
 	mButton('closure', onclickClosure, dParent);
 }
 function getLineStart(line) {
@@ -119,7 +171,7 @@ async function __parsefile(f, byKey, ckeys, idx) {
 	text += `//#endregion ${fname}\n\n`;
 	return [text, idx];
 }
-async function onclickClosure() {
+async function onclickBundle() {
 	let [dir, files, seed] = await get_dir_files_seed();
 	let byKey = {}, ckeys = [], idx = 0; //, di = {}
 	//console.log(files)
@@ -138,6 +190,9 @@ async function onclickClosure() {
 
 	//assemble text!!!
 	assemble_complete_code(ckeys, byKey);
+
+	lookupSetOverride(DA,['bundle','di'],byKey)
+	lookupSetOverride(DA,['bundle','klist'],ckeys)
 
 	write_new_index_html(dir);
 }
@@ -163,6 +218,7 @@ function assemble_complete_code(list, di) {
 
 	text += `//#endregion\n\n`;
 	downloadAsText(text, 'bundle', 'js');
+	lookupSetOverride(DA,['bundle','text'],text)
 
 	AU.ta.value = text;
 	//console.log('last keys',arrTakeLast(list,2))
@@ -176,5 +232,7 @@ function write_new_index_html(dir) {
 
 	downloadAsText(newtext,`index`,'html')
 }
+//#endregion bundle generation
+
 
 

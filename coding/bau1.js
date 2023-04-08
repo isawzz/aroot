@@ -14,6 +14,7 @@ function create_left_side_extended() {
 	let dm = mDom(dft, {}, { html: 'Edit Code:' });
 	mButton('closure', compute_closure, dm)
 	let r = getRect(dm);
+
 	//console.log(r.y + r.h);
 	//let h = `calc( 100vh - ${r.y + r.h} )`;
 	h = window.innerHeight - (r.y + r.h + 4); mStyle(dfta, { h: h, box: true, padding: 4 });
