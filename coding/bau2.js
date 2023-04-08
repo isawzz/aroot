@@ -1,13 +1,6 @@
 
-function write_new_index_html() {
-	let text = DA.indexhtml;
 
-	let scripts = `</body><script src="../coding/_closuregames.js"></script><script>onload = start;</script></html>`;
-	let newtext = stringBefore(text, `</body>`) + scripts;
-
-	//downloadAsText(newtext,'indextest.html')
-}
-
+//#region bundle generation
 function mClosureUI(dParent) {
 	mDiv(dParent, {}, null, 'project')
 	mDiv(dParent, {}, null, '<input type="text" id="inp_project" value="games2"/>')
@@ -146,7 +139,7 @@ async function onclickClosure() {
 	//assemble text!!!
 	assemble_complete_code(ckeys, byKey);
 
-	write_new_index_html();
+	write_new_index_html(dir);
 }
 function assemble_complete_code(list, di) {
 	CODE.byKey = di;
@@ -173,6 +166,15 @@ function assemble_complete_code(list, di) {
 
 	AU.ta.value = text;
 	//console.log('last keys',arrTakeLast(list,2))
+}
+function write_new_index_html(dir) {
+	//let project = stringAfterLast(dir,'/');	console.log('project',project)
+	let text = DA.indexhtml;
+
+	let scripts = `</body><script src="${dir}test/bundle.js"></script><script>onload = start;</script>\n</html>`;
+	let newtext = stringBefore(text, `</body>`) + scripts;
+
+	downloadAsText(newtext,`index`,'html')
 }
 
 
