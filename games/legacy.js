@@ -3222,7 +3222,7 @@ function cBlank(dParent, styles = {}, id) {
 	let d = mDiv(dParent, styles, id, null, 'card');
 	//console.log('styles',styles)
 
-	return d;
+	//return d;
 
 	let item = mItem(null, { div: d }, { type: 'card', sz: sz, rounding: styles.rounding });
 	copyKeys(styles, item);

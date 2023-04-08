@@ -10,7 +10,7 @@ function write_new_index_html(){
 
 function mClosureUI(dParent) {
 	mDiv(dParent, {}, null, 'project')
-	mDiv(dParent, {}, null, '<input type="text" id="inp_project" value="games"/>')
+	mDiv(dParent, {}, null, '<input type="text" id="inp_project" value="games2"/>')
 	mDiv(dParent, {}, null, 'seed')
 	mDiv(dParent, {}, null, '<input type="text" id="inp_seed" value="accuse start startgame"/>')
 	mButton('closure', onclickClosure, dParent);
@@ -140,7 +140,9 @@ function assemble_complete_code(list, di) {
 	}
 	AU.ta.value = text;
 
-	console.log('last keys',arrTakeLast(list,2))
+	downloadAsText(text,'bundle.js');
+
+	//console.log('last keys',arrTakeLast(list,2))
 }
 
 

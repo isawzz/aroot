@@ -846,11 +846,6 @@ function get_number_card(ckey,h=100,w=null,backcolor=BLUE,ov=.3){
 	info.isuit = valf(lookup(Z, ['fen', 'colors']), get_nc_color_array()).indexOf(s); //range(100));'SHCD'.indexOf(s);
 	info.isort = info.isuit * ranks.length + info.irank;
 
-	//card face
-	//let card = cBlank(dTable, { h: sz, w:w, border: 'silver' });
-	//let dcard = mDiv(dTable,{h:h,w:w,rounding:4,bg:'white',border:'silver'});
-	//console.log('________w',w)
-
 	let d = mDiv(null,{h:h,w:w,rounding:4,bg:'white',border:'silver'},null,null,'card');
 	//console.log('ui',d)
 

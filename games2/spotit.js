@@ -235,6 +235,7 @@ function spotit_card(info, dParent, cardStyles, onClickSym) {
 	Card.sz = 300;
 	copyKeys({ w: Card.sz, h: Card.sz }, cardStyles);
 	let card = cRound(dParent, cardStyles, info.id);
+
 	addKeys(info, card);
 	card.faceUp = true;
 	//console.log('card', card);

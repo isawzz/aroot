@@ -1157,24 +1157,8 @@ function mGetStyle(elem, prop) {
 }
 function mStyle(elem, styles, unit = 'px') {
 	elem = toElem(elem);
-	if (isdef(styles.whrest)) { delete styles.whrest; styles.w = styles.h = 'rest'; } else if (isdef(styles.wh100)) { styles.w = styles.h = '100%'; delete styles.wh100; }
-	if (isdef(styles.w100)) styles.w = '100%'; else if (isdef(styles.wrest)) styles.w = 'rest';
-	if (isdef(styles.h100)) styles.h = '100%'; else if (isdef(styles.hrest)) styles.h = 'rest';
-	let dParent = elem.parentNode;
-	let pad = parseInt(valf(dParent.style.padding, '0'));
-	let rp = getRect(dParent);
-	let r = getRect(elem, dParent);
-	if (styles.w == 'rest') {
-		let left = r.l;
-		let w = rp.w;
-		let wrest = w - left - pad;
-		styles.w = wrest;
-	}
-	if (styles.h == 'rest') {
-		let r1 = getRect(dParent.lastChild, dParent);
-		let hrest = rp.h - (r1.y) - pad;
-		styles.h = hrest;
-	}
+	if (isdef(styles.vmargin)) { styles.mabottom = styles.matop = styles.vmargin; }
+	if (isdef(styles.hmargin)) { styles.maleft = styles.maright = styles.hmargin; }
 	let bg, fg;
 	if (isdef(styles.bg) || isdef(styles.fg)) {
 		[bg, fg] = colorsFromBFA(styles.bg, styles.fg, styles.alpha);
@@ -1182,16 +1166,16 @@ function mStyle(elem, styles, unit = 'px') {
 	if (isdef(styles.vpadding) || isdef(styles.hpadding)) {
 		styles.padding = valf(styles.vpadding, 0) + unit + ' ' + valf(styles.hpadding, 0) + unit;
 	}
-	if (isdef(styles.vmargin) || isdef(styles.hmargin)) {
-		styles.margin = valf(styles.vmargin, 0) + unit + ' ' + valf(styles.hmargin, 0) + unit;
-	}
-	if (isdef(styles.upperRounding) || isdef(styles.lowerRounding)) {
+	if (isdef(styles.upperRounding)) {
 		let rtop = '' + valf(styles.upperRounding, 0) + unit;
+		let rbot = '0' + unit;
+		styles['border-radius'] = rtop + ' ' + rtop + ' ' + rbot + ' ' + rbot;
+	} else if (isdef(styles.lowerRounding)) {
 		let rbot = '' + valf(styles.lowerRounding, 0) + unit;
+		let rtop = '0' + unit;
 		styles['border-radius'] = rtop + ' ' + rtop + ' ' + rbot + ' ' + rbot;
 	}
 	if (isdef(styles.box)) styles['box-sizing'] = 'border-box';
-	if (isdef(styles.round)) styles['border-radius'] = '50%';
 	for (const k in styles) {
 		let val = styles[k];
 		let key = k;
@@ -1214,9 +1198,6 @@ function mStyle(elem, styles, unit = 'px') {
 		} else if (k == 'border') {
 			if (isNumber(val)) val = `solid ${val}px ${isdef(styles.fg) ? styles.fg : '#ffffff80'}`;
 			if (val.indexOf(' ') < 0) val = 'solid 1px ' + val;
-		} else if (k == 'ajcenter') {
-			elem.style.setProperty('justify-content', 'center');
-			elem.style.setProperty('align-items', 'center');
 		} else if (k == 'layout') {
 			if (val[0] == 'f') {
 				val = val.slice(1);
@@ -1263,7 +1244,7 @@ function mStyle(elem, styles, unit = 'px') {
 		else if (key == 'background-color') elem.style.background = bg;
 		else if (key == 'color') elem.style.color = fg;
 		else if (key == 'opacity') elem.style.opacity = val;
-		else if (key == 'wrap') { if (val == 'hard') elem.setAttribute('wrap', 'hard'); else elem.style.flexWrap = 'wrap'; }
+		else if (key == 'wrap') elem.style.flexWrap = 'wrap';
 		else if (startsWith(k, 'dir')) {
 			isCol = val[0] == 'c';
 			elem.style.setProperty('flex-direction', 'column');

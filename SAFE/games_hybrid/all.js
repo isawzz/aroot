@@ -7872,7 +7872,7 @@ function cBlank(dParent, styles = {}, id) {
 	let [w, h, sz] = [styles.w, styles.h, Math.min(styles.w, styles.h)];
 	if (nundef(styles.rounding)) styles.rounding = sz * .05;
 	let d = mDiv(dParent, styles, id, null, 'card');
-	return d;
+	//return d;
 	let item = mItem(null, { div: d }, { type: 'card', sz: sz, rounding: styles.rounding });
 	copyKeys(styles, item);
 	return item;
