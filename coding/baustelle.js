@@ -5,25 +5,71 @@ function addDummy(dParent) {
 	dummy.id = 'dummy';
 
 }
-function create_left_side() {
-	let dl = dLeft;
-	mClear(dLeft);
-	let [dt, dse, dsb, dft, dfta] = [mDiv(dl), mDiv(dl), mDiv(dl), mDiv(dl), mDiv(dl)];
+function compute_closure(code) {
+	if (nundef(code)) code = AU.ta.value;
+	let disub = CODE.closure = computeClosure();
+	let keylist = [];
+	for (const type of ['const', 'var', 'cla', 'func']) {
+		//let klist = sortCaseInsensitive(get_keys(disub[type]));
+		if (nundef(disub[type])) continue;
+		let knownkeys = CODE.keysSorted.filter(x => lookup(disub, [type, x]));
+		let extras = sortCaseInsensitive(get_keys(disub[type]).filter(x => !knownkeys.includes(x)));
+		keylist = keylist.concat(knownkeys).concat(extras);
+	}
 
-	for (const d of [dt, dse, dsb, dft, dfta]) mStyle(d, { padding: 4, hmin: 10 })
-
-	mSearch('keywords', mySearch, dse, { hmargin: 6 }, { selectOnClick: true });
-
-	let dm = mDom(dft, {}, { html: 'Edit Code:' });
-	mButton('closure', compute_closure, dm)
-	let r = getRect(dm);
-	//console.log(r.y + r.h);
-	//let h = `calc( 100vh - ${r.y + r.h} )`;
-	h = window.innerHeight - (r.y + r.h + 4); mStyle(dfta, { h: h, box: true, padding: 4 });
-	AU.ta = mDom(dfta, { fz: 18, family: 'consolas', w100: true, box: true, h: '99%', bg: 'white', fg: 'black' }, { tag: 'textarea', id: 'ta', className: 'plain' });
-
-
+	//console.log(keylist.includes('write_code_text_file'));
+	console.log('duplicates',hasDuplicates(keylist))
+	write_code_text_file(keylist);
 }
+function computeClosure(symlist) {
+	let keys = {};
+	for (const k in CODE.di) { for (const k1 in CODE.di[k]) keys[k1] = CODE.di[k][k1]; }
+	CODE.all = keys;
+	CODE.keylist = Object.keys(keys)
+	let done = {};
+	let tbd = valf(symlist, ['start']);
+	let MAX = 1000000, i = 0;
+	let visited = { grid: true, jQuery: true, config: true, Number: true, sat: true, hallo: true, autocomplete: true, PI: true };
+	while (!isEmpty(tbd)) {
+		if (++i > MAX) break; //else console.log('i',i)
+		let sym = tbd[0];
+		if (isdef(visited[sym])) { tbd.shift(); continue; }
+		visited[sym] = true;
+		let o = CODE.all[sym];
+		if (nundef(o)) o = getObjectFromWindow(sym);
+		if (nundef(o)) { tbd.shift(); continue; }
+		if (o.type == 'var' && !o.name.startsWith('d') && o.name == o.name.toLowerCase()) { tbd.shift(); continue; }
+		if (o.type == 'var' || o.type == 'const') { tbd.shift(); lookupSet(done, [o.type, sym], o); continue; }
+
+		assertion(['cla', 'func'].includes(o.type), 'TYPE ERRROR!!!!!!!!!!!!!!!!!!!!!!!!!')
+
+		//at this point *** sym is a func or class!!! ***
+		let olive = valf(window[sym], o.code);
+		//if (sym == 'write_code_text_file') console.log('still here')
+		if (nundef(olive)) { tbd.shift(); lookupSet(done, [o.type, sym], o); continue; }
+		//if (sym == 'write_code_text_file') console.log('still here')
+
+		let text = olive.toString(); //always using last function body!!!
+		let words = toWords(text, true);
+
+		if (words.includes('in' + 'it')) console.log('sym', sym)
+		//if (words.includes('gr'+'id')) console.log('sym',sym)
+		//words = words.filter(x => text.includes(' ' + x) || text.includes(x + '(')  || text.includes(x + ','));
+		//console.log('words',words)
+		//if (sym == 'compute_closure') console.log('', sym, words)
+
+		for (const w of words) { if (nundef(done[w]) || nundef(visited[w]) && w != sym && isCodeWord(w)) addIf(tbd, w); }
+		tbd.shift();
+
+		//if (sym == 'write_code_text_file') console.log('still here',o.code)
+		//done[sym] = o; //
+		lookupSet(done, [o.type, sym], o);
+	}
+
+	//console.log('done',done);
+	return done;
+}
+
 function execute_on_control_enter(ev) {
 	if (ev.ctrlKey && ev.key == 'Enter') {
 		console.log('!!!')
@@ -37,6 +83,9 @@ function extractKeywords(text) {
 	let res = [];
 	for (const w of words) { if (isdef(CODE.all[w])) addIf(res, w); }
 	return res;
+}
+function getLiveKeys(list){
+	return list.filter(x=>isLiveInBrowser(x));
 }
 function getObjectFromWindow(key) {
 	let code, sig, type;
@@ -65,8 +114,28 @@ function getObjectFromWindow(key) {
 	CODE.all[key] = CODE.di[type][key] = o;
 	return o;
 }
+function hasDuplicates(list){
+	let res=[];
+	for(let i=0;i<list.length;i++){
+		for(let j=i+1;j<list.length;j++){
+			if (list[i]==list[j]){res.push(list[i])}
+		}
+	}
+	return res.length>0?res:false;
+}
 function isCodeWord(w) {
 	return isdef(window[w]) || isdef(CODE.all[w])
+}
+function isLiveInBrowser(s){
+	if (isdef(window[s])) return true;
+	try{
+		//console.log('have to eval!!!',s)
+		let res=eval(s);
+		return isdef(res);
+	}catch{
+		return false;
+	}
+	return false;
 }
 async function load_Codebase(dir, path_allcode) {
 	let path_js = isdef(path_allcode) ? path_allcode : '../basejs/cb2/allcode.js';
@@ -246,6 +315,27 @@ function mSearch(label, handler, dParent, styles = {}, opts = {}) {
 
 	return elem;
 }
+function mSearchGoLive(label, handler, dParent, styles = {}, opts = {}) {
+	let html = `
+    <form action="javascript:void(0);" autocomplete="off">
+		<label>${label}</label>
+    </form>
+  `;
+	let elem = mCreateFrom(html);
+	mAppend(dParent, elem);
+	mStyle(elem, { display: 'grid', 'align-items': 'center', w100: true, gap: 4, 'grid-template-columns': 'auto 1fr auto auto' });
+	//mStyle(elem, { display: 'grid', w100: true, gap: 4, 'grid-template-columns': 'auto 1fr auto' });
+
+	let inp = mInput(elem, styles, opts);
+
+	let allhandler = () => handler(mBy(inp.id).value.trim(),false); // handler(toWords(mBy(inp.id).value));
+	mButton('GO', allhandler, elem);
+	let livehandler = () => handler(mBy(inp.id).value.trim(),true); // handler(toWords(mBy(inp.id).value));
+	mButton('Live', livehandler, elem);
+	elem.onsubmit = livehandler;
+
+	return elem;
+}
 function myOnclickCodeInSidebar(ev) {
 	let key = isString(ev) ? ev : ev.target.innerHTML;
 	let text = CODE.justcode[key];
@@ -254,17 +344,17 @@ function myOnclickCodeInSidebar(ev) {
 	if (download) downloadAsText(text, 'hallo', 'js');
 	return text;
 }
-function mySearch(kws) {
+function mySearch(kws,onlylive) {
 	//kws should be a string
 	assertion(isString(kws), 'mySearch: kws should be a string')
 	//console.log(`'${kws}'`);
-	ohneRegexMix(kws); //return;//keyPlusMinus(); return;
+	ohneRegexMix(kws,onlylive); //return;//keyPlusMinus(); return;
 }
-function ohneRegexMix(s) {
+function ohneRegexMix(s,onlylive=false) {
 	// let arr = CODE.codelist;
 	//let arr = getLiveKeys(CODE.codelist.map(x=>x.key));
-	let arr=CODE.codelist.filter(x=>isLiveInBrowser(x.key));
-	console.log('arr',arr)
+	let arr=onlylive?CODE.codelist.filter(x=>isLiveInBrowser(x.key)):CODE.codelist;
+	//console.log('arr',arr)
 	//s=`-e +fi`
 	let ws = parseSearchString(s);
 	let [sno, syes, smay] = [[], [], []];
@@ -534,7 +624,7 @@ function write_code_text_file(keylist) {
 		else if (type == 'func') { code = isdef(window[k]) ? window[k].toString() : CODE.justcode[k]; }
 		else { code = window[k].toString(); }
 
-		if (OWNPROPS.includes(k)) {console.log('nicht dabei',k);continue;}
+		if (OWNPROPS.includes(k)) {continue;} //console.log('nicht dabei',k);
 		// else if (!OWNPROPS.includes(k)) { code = window[k].toString(); }
 		// else {console.log('nicht dabei',k); code = '';}
 		// assertion(!code.includes('[native code]') && !code.includes('function('),"ERRORRRRRRRRRRRRRRRR")

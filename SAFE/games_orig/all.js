@@ -1638,6 +1638,8 @@ const Geo = {
 };
 //#endregion
 //#region vars
+var firsttime = false;
+var FirstLoad = true;
 var currentKey = null;
 var keysDown = new Array(256);
 var virtKeys = false;
@@ -5203,7 +5205,7 @@ var brd_PvArray = new Array(MAXDEPTH);
 var brd_searchHistory = new Array(14 * BRD_SQ_NUM);
 var brd_searchKillers = new Array(3 * MAXDEPTH);
 var dHistory;
-var MyEasing = 'cubic-bezier(1;
+var MyEasing = 'ease';
 var SHAPEFUNCS = {
   'circle': agCircle,
   'hex': agHex,

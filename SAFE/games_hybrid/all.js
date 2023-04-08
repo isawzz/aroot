@@ -312,7 +312,7 @@ const CORNERS5 = ['⬛', '⬜'];
 //#endregion
 
 //#region vars
-var AU = {}, CODE = {};
+var AU = {}, CODE = {}, firsttime = false;
 var SOCKETSERVER = 'http://localhost:5000'; //geht im spital
 var SERVER = "http://localhost:8080/aroot/simple"; // oder telecave!
 var Sayings;
@@ -7239,6 +7239,7 @@ function sss1() {
 	console.log(s);
 }
 function start() {
+	DA.showTestButtons = true;
 	let uname = DA.secretuser = localStorage.getItem('uname');
 	if (isdef(uname)) U = { name: uname };
 	phpPost({ app: 'simple' }, 'assets');

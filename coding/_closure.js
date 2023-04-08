@@ -1,33 +1,17 @@
-const allPeeps = []
-const availablePeeps = [];
 const BLUE = '#4363d8';
 const BROWN = '#96613d';
 const CODE = {};
-const config = {
-	src: 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/175711/open-peeps-sheet.png',
-	rows: 15,
-	cols: 7
-}
-
-const crowd = []
 const FIREBRICK = '#800000';
 const GREEN = '#3cb44b';
 const BLUEGREEN = '#004054';
-const img = document.createElement('img')
 const LIGHTBLUE = '#42d4f4';
 const LIGHTGREEN = '#afff45'; //'#bfef45';
-const MAX_RECURSIONS = 200;
 const names = ['felix', 'amanda', 'sabine', 'tom', 'taka', 'microbe', 'dwight', 'jim', 'michael', 'pam', 'kevin', 'darryl', 'lauren', 'anuj', 'david', 'holly'];
 const OLIVE = '#808000';
 const ORANGE = '#f58231';
 const NEONORANGE = '#ff6700';
 const PURPLE = '#911eb4';
 const RED = '#e6194B';
-const stage = {
-	width: 0,
-	height: 0,
-}
-
 const STYLE_PARAMS = {
 	align: 'text-align',
 	acontent: 'align-content',
@@ -71,12 +55,9 @@ const STYLE_PARAMS = {
 };
 
 const TEAL = '#469990';
-const walks = ['normalWalk']
 const YELLOW = '#ffe119';
 const NEONYELLOW = '#efff04';
-var ___enteredRecursion = 0;
 var A;
-var activatedTests = [];
 var AU = {};
 var ByGroupSubgroup;
 var C = null;
@@ -94,397 +75,15 @@ var dSidebar;
 var dTestButtons;
 var Info;
 var KeySets;
+var Live;
 var P;
-var PI = Math.pi, interval_id, angle, factor = .67, tree = [], leaves = [], jittering = false;
 var Q;
-var R;
 var S = {};
 var SymKeys;
 var Syms;
 var T;
-var UID = 0;
-var visualStructures = {};
-class MS {
-	constructor({ parent, id, type = 'g', domel = null, isa = {} } = {}) {
-		if (domel) {
-			if (domel.id == 'R_d_root') {
-				this.handlers = { click: {}, mouseenter: {}, mouseleave: {} }; this.parent = null; this.id = 'R_d_root'; this.type = 'div'; this.cat = 'd'; this.elem = domel; this.parts = { _: this.elem }; this.children = []; return;
-			}
-			this.id = domel.id;
-			this.type = getTypeOf(domel);
-			this.parent = UIS[domel.parentNode.id];
-		} else {
-			this.id = nundef(id) ? getUID() : id;
-			this.type = type;
-			this.parent = parent;
-		}
-		UIS[this.id] = this;
-		this.cat = MSCATS[this.type]; //'d' for dom els and 'g' for svg els
-		this.elem = domel ? domel
-			: this.cat == 'g' || this.type == 'svg' ? document.createElementNS('http://www.w3.org/2000/svg', this.type)
-				: document.createElement(this.type);
-		this.elem.ms = this;
-		this.elem.id = this.id;
-		if (nundef(this.parent)) this.parent = ROOT;
-		this.children = [];
-		this.posRef = this.parent;
-		if (this.cat == 'd' && this.parent.cat == 'g') {
-			let ancestor = closestParent(parent.elem, 'div');
-			console.log('FOUND domParent:', ancestor);
-			this.posRef = this.parent;
-			this.parent = ancestor.ms;
-		} else if (this.parent.cat == 'd' && this.parent.type != 'svg' && this.cat == 'g') {
-			let msSvg = new MMS({ parent: this.parent, type: 'svg' }).setDefaults().attach();
-			this.parent = msSvg;
-			this.posRef = msSvg;
-		}
-		if (domel) { addIf(this.parent.children, this); }
-		this.x = 0; this.y = 0; this.w = 0; this.h = 0;
-		for (const d in isa) {
-			if (d == 'id') { continue; }
-			this[d] = isa[d];
-		}
-		this.isa = Object.keys(isa);
-		this.parts = { _: this.elem };
-		this.uis = [];
-		this.handlers = { click: {}, mouseenter: {}, mouseleave: {} };
-	}
-	_handler(ev) {
-		ev.stopPropagation();
-		if (!this.isEnabled) return;
-		let part = ev.currentTarget;
-		let partName = isdef(part.name) ? part.name : '_';
-		let eventName = ev.handleObj.origType;
-		let handler = this.handlers[eventName][partName];
-		if (isdef(handler)) { counters[eventName] += 1; counters.events += 1; handler(this, part); }
-	}
-	addHandler(evName, partName = '_', handler = null, autoEnable = true) {
-		let part = this.parts[partName];
-		if (nundef(part)) { part = this.elem; partName = '_'; }
-		if (isdef(handler)) { this.handlers[evName][partName] = handler; }
-		$(part).off(evName).on(evName, this._handler.bind(this));
-		if (autoEnable) this.enable();
-	}
-	addClickHandler(partName = '_', handler = null, autoEnable = true) { this.addHandler('click', partName, handler, autoEnable); }
-	addMouseEnterHandler(partName = '_', handler = null, autoEnable = true) { this.addHandler('mouseenter', partName, handler, autoEnable); }
-	addMouseLeaveHandler(partName = '_', handler = null, autoEnable = true) { this.addHandler('mouseleave', partName, handler, autoEnable); }
-	removeEvents() {
-		$(this.elem).off();
-		if (S_showEvents) this.showEvents(this.elem);
-		for (const partName in this.parts) {
-			$(this.parts[partName]).off();
-			if (S_showEvents) this.showEvents(this.parts[partName]);
-		}
-	}
-	clear(startProps = {}) {
-		let ids = this.children.map(x => x.id);
-		for (const id of ids) UIS[id].destroy();
-		for (const k in startProps) {
-			this.elem[k] = startProps[k];
-		}
-		console.log('children after clear', this.children);
-	}
-	destroy() {
-		$(this.elem).remove();
-		this.elem = null;
-		removeInPlace(this.parent.children, this);
-		delete UIS[this.id];
-	}
-	title(s, key = 'title') {
-		if (this.parts[key]) {
-			this.parts[key].style.backgroundColor = randomColor();
-			return;
-		}
-		let t = document.createElement('div');
-		t.style.backgroundColor = 'dimgray';
-		this.titleColor = t.style.backgroundColor;
-		t.classList.add('tttitle');
-		t.innerHTML = s;
-		this.elem.appendChild(t);
-		this.parts[key] = t;
-		t.name = key;
-		this.attach();
-		return this;
-	}
-	table(o, keys, key = 'table') {
-		if (this.parts[key]) {
-			let oldTable = this.parts[key];
-			let t = tableElem(o, keys);
-			let t2 = t.innerHTML;
-			oldTable.innerHTML = t2;
-		} else {
-			let t = tableElem(o, keys);
-			this.elem.appendChild(t);
-			this.attach();
-			this.parts[key] = t;
-			t.name = key;
-		}
-		return this;
-	}
-	attach() { if (!this.isAttached) { addIf(this.parent.children, this); this.parent.elem.appendChild(this.elem); } return this; }
-	detach() { if (this.isAttached) { removeIf(this.parent.children, this); this.parent.elem.removeChild(this.elem); } return this; }
-	_onMouseEnter(ev) {
-		if (!this.isEnabled) return;
-		let partName = evToId(ev);
-		if (S_showEvents) {
-			counters.events += 1;
-		}
-		if (typeof this.mouseEnterHandler == 'function') {
-			if (S_showEvents)
-				this.mouseEnterHandler(ev);
-		}
-	}
-	_onMouseLeave(ev) {
-		if (!this.isEnabled) return;
-		let partName = evToId(ev);
-		if (S_showEvents) {
-			counters.events += 1;
-		}
-		if (typeof this.mouseLeaveHandler == 'function') {
-			if (S_showEvents)
-				this.mouseLeaveHandler(ev);
-		}
-	}
-	_getRect(x = 0, y = 0, w = 50, h = 25, bg, fg) {
-		let r = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-		r.setAttribute('width', w);
-		r.setAttribute('height', h);
-		r.setAttribute('x', x);
-		r.setAttribute('y', y);
-		if (isdef(bg)) r.setAttribute('fill', bg);
-		if (isdef(fg)) r.setAttribute('stroke', bg);
-		return r;
-	}
-	_getDiv(x, y, w, h, bg, fg) {
-		let r = document.createElement('div');
-		if (this.w < w || this.h < h) { this.setSize(w, h); }
-		if (isdef(x)) {
-			r.style.position = 'absolute';
-			r.style.left = x + 'px';
-			r.style.top = y + 'px';
-		}
-		if (isdef(w)) {
-			r.style.width = w + 'px';
-			r.style.height = h + 'px';
-		}
-		if (isdef(bg)) r.style.backgroundColor = bg;
-		if (isdef(fg)) r.style.color = fg;
-		return r;
-	}
-	addInteractivity(partName, hover = true, click = true) {
-		let part = this.parts[partName];
-		if (nundef(part)) { part = this.elem; }
-		if (this.part.isInteractive) return;
-		this.part.isInteractive = true;
-		if (click) this.part.clickHandler = null;
-		if (hover) { this.part.mouseEnterHandler = null; this.part.mouseLeaveHandler = null; }
-		this.isEnabled = false;
-		this.enable = () => this.isEnabled = true;
-		this.disable = () => this.isEnabled = false;
-		this.elem.addEventListener('click', this._onClick.bind(this));
-		this.elem.addEventListener('mouseenter', this._onMouseEnter.bind(this));
-		this.elem.addEventListener('mouseleave', this._onMouseLeave.bind(this));
-		return this;
-	}
-	enable() {
-		this.isEnabled = true;
-	}
-	disable() {
-		this.isEnabled = false;
-	}
-	high() {
-		if (isdef(this.parts) && isdef(this.parts.title)) this.parts['title'].style.backgroundColor = '#ccff00';
-		else {
-			this.elem.classList.add('selected');
-			this.elem.backgroundColor = '#ccff00';
-		}
-	}
-	unhigh() {
-		if (isdef(this.parts) && isdef(this.parts.title)) this.parts['title'].style.backgroundColor = this.titleColor;
-		else {
-			this.elem.classList.remove('selected');
-			this.elem.backgroundColor = this.titleColor;
-		}
-	}
-	sel() { }
-	unsel() { }
-	frame() { }
-	unframe() { }
-	setDefaults({ x, y, w, h, bg, fg } = {}) {
-		if (this.parent.type == 'svg' && isdef(bg) && nundef(w) && nundef(h) && this.domType == 'g') {
-			this.parent.setBg(bg);
-		} else {
-			if (isdef(bg) || this.cat == 'd') {
-				bg = nundef(bg) ? 'transparent' : bg;
-				this.setBg(bg);
-				fg = nundef(fg) ? bg == 'transparent' ? this.parent.fg : colorIdealText(bg) : fg;
-				this.setFg(fg);
-			}
-		}
-		if (this.cat == 'd' && (nundef(this.x) || nundef(this.w))) return this;
-		w = nundef(w) ? this.posRef.w : w;
-		h = nundef(h) ? this.posRef.h : h;
-		this.setSize(w, h);
-		x = nundef(x) ? 0 : this.posRef.x + x;
-		y = nundef(y) ? 0 : this.posRef.y + y;
-		if (this.parent.cat == 'd') { this.parent.elem.style.position = 'absolute'; }
-		this.setPos(x, y);
-		return this;
-	}
-	setBg(c, updateFg = false) {
-		this.bg = c;
-		if (this.cat == 'g') {
-			if (this.domType == 'text') {
-				if (!this.textBackground) {
-				}
-			} else {
-				this.elem.setAttribute('fill', c);
-			}
-		} else {
-			this.elem.style.backgroundColor = c;
-		}
-		if (updateFg) {
-			this.setFg(colorIdealText(c), true);
-		}
-		return this;
-	}
-	setFg(c) {
-		this.fg = c;
-		if (this.cat == 'g') {
-			if (this.domType == 'text') {
-				this.elem.setAttribute('fill', c);
-			} else {
-				this.elem.setAttribute('stroke', c);
-			}
-		} else {
-			this.elem.style.color = c;
-		}
-		return this;
-	}
-	setFullSize() {
-		this.setSize(this.posRef.w, this.posRef.h);
-		this.setPos(0, 0);
-	}
-	setSize(w, h) {
-		this.w = w; this.h = h;
-		if (this.cat == 'g') {
-			if (this.ground) {
-				this.ground.setAttribute('width', w);
-				this.ground.setAttribute('height', h);
-			} else {
-				this.elem.setAttribute('width', w);
-				this.elem.setAttribute('height', h);
-			}
-			if (this.overlay) {
-				this.overlay.setAttribute('width', w);
-				this.overlay.setAttribute('height', h);
-			}
-		} else {
-			this.elem.style.position = 'absolute';
-			this.elem.style.width = w + 'px';
-			this.elem.style.height = h + 'px';
-		}
-		return this;
-	}
-	setPos(x, y) {
-		this.x = x;
-		this.y = y;
-		if (this.cat == 'g') {
-			this.elem.setAttribute('transform', `translate(${x},${y})`);
-		} else {
-			this.elem.style.position = 'absolute'
-			this.elem.style.left = x + 'px';
-			this.elem.style.top = y + 'px';
-		}
-		return this;
-	}
-	center() {
-		this.setPos(-this.w / 2, -this.h / 2)
-	}
-	centerOrigin() {
-		this.setPos(this.w / 2, this.h / 2);
-	}
-	rect({ x = 0, y = 0, w = 50, h = 25, bg, fg } = {}) {
-		let pa = this.domType == 'g' ? this._getRect(x, y, w, h, bg, fg) : this._getDiv(x, y, w, h, bg, fg);
-		this.elem.appendChild(pa);
-		this.attach();
-		return this;
-	}
-	addBorder(c) {
-		if (this.cat == 'd') {
-			this.elem.style.border = '1px solid ' + c;
-		}
-	}
-	removeBorder() {
-		if (this.cat == 'd') {
-			this.elem.style.border = null;
-		}
-	}
-	selBlack() {
-		if (this.isSelBlack) return;
-		this.elem.classList.add('selBlack');
-		this.isSelBlack = true;
-	}
-	unselBlack() {
-		if (!this.isSelBlack) return;
-		this.elem.classList.remove('selBlack');
-		this.isSelBlack = false;
-	}
-	selRed() { }
-	unselAll() { this.removeBorder(); }
-}
-
-class Peep {
-	constructor({
-		image,
-		rect,
-	}) {
-		this.image = image
-		this.setRect(rect)
-		this.x = 0
-		this.y = 0
-		this.anchorY = 0
-		this.scaleX = 1
-		this.walk = null
-	}
-	setRect(rect) {
-		this.rect = rect
-		this.width = rect[2]
-		this.height = rect[3]
-		this.drawArgs = [
-			this.image,
-			...rect,
-			0, 0, this.width, this.height
-		]
-	}
-	render(ctx) {
-		ctx.save()
-		ctx.translate(this.x, this.y)
-		ctx.scale(this.scaleX, 1)
-		ctx.drawImage(...this.drawArgs)
-		ctx.restore()
-	}
-}
-
 function addIf(arr, el) { if (!arr.includes(el)) arr.push(el); }
 function addKeys(ofrom, oto) { for (const k in ofrom) if (nundef(oto[k])) oto[k] = ofrom[k]; return oto; }
-function addPeepToCrowd() {
-	const peep = removeRandomFromArray(availablePeeps)
-	const walk = getRandomFromArray(walks)({
-		peep,
-		props: resetPeep({
-			peep,
-			stage,
-		})
-	}).eventCallback('onComplete', () => {
-		removePeepFromCrowd(peep)
-		addPeepToCrowd()
-	})
-	peep.walk = walk
-	crowd.push(peep)
-	crowd.sort((a, b) => a.anchorY - b.anchorY)
-	return peep
-}
 function allNumbers(s) {
 	let m = s.match(/\-.\d+|\-\d+|\.\d+|\d+\.\d+|\d+\b|\d+(?=\w)/g);
 	if (m) return m.map(v => Number(v)); else return null;
@@ -514,73 +113,6 @@ function assertion(cond) {
 			console.log('\n', a);
 		}
 		throw new Error('TERMINATING!!!')
-	}
-}
-function autocomplete(inp, arr) {
-	var currentFocus;
-	inp = toElem(inp);
-	inp.addEventListener('input', e => {
-		var a, b, i, val = this.value;
-		autocomplete_closeAllLists();
-		if (!val) { return false; }
-		currentFocus = -1;
-		a = document.createElement('DIV');
-		a.setAttribute('id', this.id + 'autocomplete-list');
-		a.setAttribute('class', 'autocomplete-items');
-		this.parentNode.appendChild(a);
-		for (i = 0; i < arr.length; i++) {
-			if (arr[i].substr(0, val.length).toUpperCase() == val.toUpperCase()) {
-				b = document.createElement('DIV');
-				b.innerHTML = '<strong>' + arr[i].substr(0, val.length) + '</strong>';
-				b.innerHTML += arr[i].substr(val.length);
-				b.innerHTML += "<input type='hidden' value='" + arr[i] + "'>";
-				b.addEventListener('click', e => {
-					inp.value = this.getElementsByTagName('input')[0].value;
-					autocomplete_closeAllLists();
-				});
-				a.appendChild(b);
-			}
-		}
-	});
-	inp.addEventListener('keydown', e => {
-		var x = document.getElementById(this.id + 'autocomplete-list');
-		if (x) x = x.getElementsByTagName('div');
-		if (e.keyCode == 40) {
-			currentFocus++;
-			autocomplete_addActive(x);
-		} else if (e.keyCode == 38) {
-			currentFocus--;
-			autocomplete_addActive(x);
-		} else if (e.keyCode == 13) {
-			e.preventDefault();
-			if (currentFocus > -1) {
-				if (x) x[currentFocus].click();
-			}
-		}
-	});
-	inp.addEventListener('dblclick', e => { evNoBubble(e); });
-	document.addEventListener('click', e => {
-		autocomplete_closeAllLists(e.target);
-	});
-}
-function autocomplete_addActive(x) {
-	if (!x) return false;
-	autocomplete_removeActive(x);
-	if (currentFocus >= x.length) currentFocus = 0;
-	if (currentFocus < 0) currentFocus = x.length - 1;
-	x[currentFocus].classList.add('autocomplete-active');
-}
-function autocomplete_closeAllLists(elmnt) {
-	var x = document.getElementsByClassName('autocomplete-items');
-	for (var i = 0; i < x.length; i++) {
-		if (elmnt != x[i] && elmnt != inp) {
-			x[i].parentNode.removeChild(x[i]);
-		}
-	}
-}
-function autocomplete_removeActive(x) {
-	for (var i = 0; i < x.length; i++) {
-		x[i].classList.remove('autocomplete-active');
 	}
 }
 function capitalize(s) {
@@ -780,7 +312,7 @@ function computeClosure(symlist) {
 	let done = {};
 	let tbd = valf(symlist, ['start']);
 	let MAX = 1000000, i = 0;
-	let visited = {};
+	let visited = { grid: true, jQuery: true, config: true, Number: true, sat: true, hallo: true, autocomplete: true, PI: true };
 	while (!isEmpty(tbd)) {
 		if (++i > MAX) break; //else console.log('i',i)
 		let sym = tbd[0];
@@ -803,6 +335,8 @@ function computeClosure(symlist) {
 		let text = olive.toString(); //always using last function body!!!
 		let words = toWords(text, true);
 
+		if (words.includes('in' + 'it')) console.log('sym', sym)
+		//if (words.includes('gr'+'id')) console.log('sym',sym)
 		//words = words.filter(x => text.includes(' ' + x) || text.includes(x + '(')  || text.includes(x + ','));
 		//console.log('words',words)
 		//if (sym == 'compute_closure') console.log('', sym, words)
@@ -817,19 +351,6 @@ function computeClosure(symlist) {
 
 	//console.log('done',done);
 	return done;
-}
-function correctNumbersInString(s, dec) {
-	let parts = s.split('_');
-	for (let i = 0; i < parts.length; i++) {
-		let p = parts[i];
-		if (isNumber(p)) {
-			let n = Number(p);
-			n -= dec;
-			parts[i] = '' + n;
-		}
-	}
-	let res = parts.join('_');
-	return res;
 }
 function create_card_assets_c52() {
 	let ranknames = { A: 'Ace', K: 'King', T: '10', J: 'Jack', Q: 'Queen' };
@@ -860,30 +381,6 @@ function createcircle(posx, posy, radius, stroke, fill, filter) {
 	circle.setAttributeNS(null, "data-posx", posx);
 	svg.appendChild(circle);
 }
-function createPeeps() {
-	const {
-		rows,
-		cols
-	} = config
-	const {
-		naturalWidth: width,
-		naturalHeight: height
-	} = img
-	const total = rows * cols
-	const rectWidth = width / rows
-	const rectHeight = height / cols
-	for (let i = 0; i < total; i++) {
-		allPeeps.push(new Peep({
-			image: img,
-			rect: [
-				(i % rows) * rectWidth,
-				(i / rows | 0) * rectHeight,
-				rectWidth,
-				rectHeight,
-			]
-		}))
-	}
-}
 function dict2list(d, keyName = 'id') {
 	let res = [];
 	for (const key in d) {
@@ -904,22 +401,6 @@ function downloadAsText(s, filename, ext = 'txt') {
 		filename + "." + ext,
 		"data:application/text",
 		new Blob([s], { type: "" }));
-}
-function downloadFile(jsonObject, filenameNoExt) {
-	json_str = JSON.stringify(jsonObject);
-	saveFileAtClient(
-		filenameNoExt + ".json",
-		"data:application/json",
-		new Blob([json_str], { type: "" }));
-}
-function empty(arr) {
-	let result = arr === undefined || !arr || (isString(arr) && (arr == 'undefined' || arr == '')) || (Array.isArray(arr) && arr.length == 0) || emptyDict(arr);
-	testHelpers(typeof arr, result ? 'EMPTY' : arr);
-	return result;
-}
-function emptyDict(obj) {
-	let test = Object.entries(obj).length === 0 && obj.constructor === Object;
-	return test;
 }
 function ensureColorDict() {
 	if (isdef(ColorDi)) return;
@@ -975,14 +456,6 @@ function ensureColorDict() {
 		if (cnew.c[0] != '#' && isdef(ColorDi[cnew.c])) cnew.c = ColorDi[cnew.c].c;
 		ColorDi[k] = cnew;
 	}
-}
-function error(msg) {
-	let fname = getFunctionsNameThatCalledThisFunction();
-	console.log(fname, 'ERROR!!!!! ', msg);
-}
-function evNoBubble(ev) { ev.preventDefault(); ev.cancelBubble = true; }
-function first(arr) {
-	return arr.length > 0 ? arr[0] : null;
 }
 function firstNumber(s) {
 	if (s) {
@@ -1351,29 +824,6 @@ function getGSGElements(gCond, sCond) {
 	}
 	return keys.sort();
 }
-function getInstrGeoJson(instr, coord) {
-	console.log('instr', instr, 'coord', coord);
-	var formatter = new L.Routing.Formatter();
-	var instrPts = {
-		type: "FeatureCollection",
-		features: []
-	};
-	for (var i = 0; i < instr.length; ++i) {
-		var g = {
-			"type": "Point",
-			"coordinates": [coord[instr[i].index].lng, coord[instr[i].index].lat]
-		};
-		var p = {
-			"instruction": formatter.formatInstruction(instr[i])
-		};
-		instrPts.features.push({
-			"geometry": g,
-			"type": "Feature",
-			"properties": p
-		});
-	}
-	return instrPts;
-}
 function getKeySets() {
 	makeCategories();
 	let res = {};
@@ -1424,18 +874,6 @@ function getObjectFromWindow(key) {
 	CODE.all[key] = CODE.di[type][key] = o;
 	return o;
 }
-function getpal(ipal_dep = -1, ihue = 0, bOrf = 'b', pal) {
-	let p = empty(pal) || !pal || pal == undefined ? palette : pal;
-	if (!p) return randomColor();
-	nHues = p[0].length;
-	nShades = p.length;
-	if (ipal_dep < -1) ipal_dep = randomNumber(0, nShades);
-	else if (ipal_dep >= nShades) ipal_dep %= nShades;
-	if (ihue < -1) ihue = randomNumber(0, nHues);
-	else if (ihue >= nHues) ihue %= nHues;
-	return p[ipal_dep][ihue][bOrf];
-}
-function getRandomFromArray(array) { return (array[randomIndex(array) | 0]) }
 function getRect(elem, relto) {
 	if (isString(elem)) elem = document.getElementById(elem);
 	let res = elem.getBoundingClientRect();
@@ -1456,31 +894,6 @@ function getRect(elem, relto) {
 	let r = { x: res.left, y: res.top, w: res.width, h: res.height };
 	addKeys({ l: r.x, t: r.y, r: r.x + r.w, b: r.t + r.h }, r);
 	return r;
-}
-function grid(id, rows, cols, size, bg = 'blue') {
-	visualStructures[id] = [];
-	let w = size * cols;
-	let h = size * rows;
-	let ms = new MS(id, 'g')
-		.setbg(getpal(3))
-		.rect({ w: w, h: h });
-	ms.tag('layout', 'grid');
-	visualStructures[id].push(ms);
-	return (r, c) => {
-		return {
-			x: c * size - w / 2 + size / 2,
-			y: r * size - h / 2 + size / 2,
-			id: id,
-			ms: ms
-		};
-	};
-}
-function hallo(control, map) {
-	control.on('routeselected', function (e) {
-		var coord = e.route.coordinates;
-		var instr = e.route.instructions;
-		L.geoJson(getInstrGeoJson(instr, coord)).addTo(map);
-	});
 }
 function HSLAToRGBA(hsla, isPct) {
 	let ex = /^hsla\(((((([12]?[1-9]?\d)|[12]0\d|(3[0-5]\d))(\.\d+)?)|(\.\d+))(deg)?|(0|0?\.\d+)turn|(([0-6](\.\d+)?)|(\.\d+))rad)(((,\s?(([1-9]?\d(\.\d+)?)|100|(\.\d+))%){2},\s?)|((\s(([1-9]?\d(\.\d+)?)|100|(\.\d+))%){2}\s\/\s))((0?\.\d+)|[01]|(([1-9]?\d(\.\d+)?)|100|(\.\d+))%)\)$/i;
@@ -1628,17 +1041,6 @@ function hue(h) {
 	var b = 2 - Math.abs(h * 6 - 4);
 	return [Math.floor(r * 255), Math.floor(g * 255), Math.floor(b * 255)];
 }
-function init() {
-	createPeeps()
-	resize()
-	gsap.ticker.add(render)
-	window.addEventListener('resize', resize)
-}
-function initCrowd() {
-	while (availablePeeps.length) {
-		addPeepToCrowd().walk.progress(Math.random())
-	}
-}
 function intersection(arr1, arr2) {
 	let res = [];
 	for (const a of arr1) {
@@ -1658,9 +1060,6 @@ function isEmpty(arr) {
 }
 function isList(arr) { return Array.isArray(arr); }
 function isNumber(x) { return x !== ' ' && x !== true && x !== false && isdef(x) && (x == 0 || !isNaN(+x)); }
-function isObject(v) {
-	return '[object Object]' === Object.prototype.toString.call(v);
-}
 function isString(param) { return typeof param == 'string'; }
 function jsCopy(o) { return JSON.parse(JSON.stringify(o)); }
 function last(arr) {
@@ -1848,25 +1247,6 @@ function mInput(dParent, styles = {}, opts = {}) {
 	return mDom(dParent, styles, opts);
 
 }
-function mSearch(label, handler, dParent, styles = {}, opts = {}) {
-	let html = `
-    <form action="javascript:void(0);" autocomplete="off">
-		<label>${label}</label>
-    </form>
-  `;
-	let elem = mCreateFrom(html);
-	mAppend(dParent, elem);
-	mStyle(elem, { display: 'grid', 'align-items': 'center', w100: true, gap: 4, 'grid-template-columns': 'auto 1fr auto' });
-	//mStyle(elem, { display: 'grid', w100: true, gap: 4, 'grid-template-columns': 'auto 1fr auto' });
-
-	let inp = mInput(elem, styles, opts);
-
-	let myhandler = () => handler(mBy(inp.id).value.trim()); // handler(toWords(mBy(inp.id).value));
-	mButton('GO', myhandler, elem);
-	elem.onsubmit = myhandler;
-
-	return elem;
-}
 function mSize(d, w, h, unit = 'px', sizing) { if (nundef(h)) h = w; mStyle(d, { width: w, height: h }, unit); if (isdef(sizing)) setRect(d, sizing); }
 function mStyle(elem, styles, unit = 'px') {
 	elem = toElem(elem);
@@ -1996,61 +1376,11 @@ function myOnclickCodeInSidebar(ev) {
 	if (download) downloadAsText(text, 'hallo', 'js');
 	return text;
 }
-function mySearch(kws) {
+function mySearch(kws, onlylive) {
 	//kws should be a string
 	assertion(isString(kws), 'mySearch: kws should be a string')
 	//console.log(`'${kws}'`);
-	ohneRegexMix(kws); //return;//keyPlusMinus(); return;
-}
-function normalizeNode(o, num) {
-	if (isdef(o.uid)) normalizeSimpleUidProp(o, 'uid', num);
-	if (isdef(o.children)) { o.children = o.children.map(x => normalizeVal(x, num)); }
-	if (isdef(o.uidParent)) normalizeSimpleUidProp(o, 'uidParent', num);
-	if (isdef(o._NODE)) normalizeSpecKeyProp(o, '_NODE', num);
-	if (isdef(o.here)) normalizeSpecKeyProp(o, 'here', num);
-}
-function normalizeRTree(R) { return normalizeTree(R.rNodes, R); }
-function normalizeSimpleUidProp(o, prop, num) {
-	o[prop] = normalizeVal(o[prop], num);
-}
-function normalizeSpecKeyProp(o, prop, num) {
-	let node1 = o[prop];
-	if (isString(node1) && node1.includes('_')) {
-		o[prop] = correctNumbersInString(node1, num);
-	} else if (isList(node1)) {
-		let newlist = [];
-		for (const el of node1) {
-			if (el.includes('_')) {
-				newlist.push(correctNumbersInString(el, num));
-			}
-		}
-		console.log('SOLLTE NIEEEEEEEEEEEEEEEEEEE VORKOMMEN!!!!!!');
-		o[prop] = newlist;
-	}
-}
-function normalizeTree(t, r) {
-	let tNew = jsCopy(t);
-	let first = r.tree.uid;
-	let num = firstNumber(first);
-	safeRecurse(tNew, normalizeNode, num, false);
-	let newRTree = {};
-	for (const k in tNew) {
-		let kNew = normalizeVal(k, num);
-		newRTree[kNew] = tNew[k];
-	}
-	tNew = newRTree;
-	return sortKeys(tNew);
-}
-function normalizeVal(val, num) {
-	let nval = firstNumber(val);
-	nval -= num;
-	return '_' + nval;
-}
-function Number(div, board, n) {
-	var self = this;
-	this.div = div;
-	this.board = board;
-	this.n = n;
+	ohneRegexMix(kws, onlylive); //return;//keyPlusMinus(); return;
 }
 function nundef(x) { return x === null || x === undefined; }
 function pSBC(p, c0, c1, l) {
@@ -2090,12 +1420,6 @@ function pSBCr(d) {
 	}
 	return x;
 }
-function randomColor() { return rColor(); }
-function randomIndex(array) { return randomRange(0, array.length) | 0 }
-function randomNumber(min = 0, max = 100) {
-	return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-function randomRange(min, max) { return min + Math.random() * (max - min) }
 function range(f, t, st = 1) {
 	if (nundef(t)) {
 		t = f - 1;
@@ -2137,93 +1461,14 @@ function rColor(cbrightness, c2, alpha = null) {
 	}
 	return s;
 }
-function recAllNodes(n, f, p, tailrec, safe = false) {
-	if (safe) { ___enteredRecursion += 1; if (___enteredRecursion > MAX_RECURSIONS) { error('MAX_RECURSIONS reached!!!' + f.name); return; } }
-	if (isList(n)) {
-		if (tailrec) f(n, p);
-		n.map(x => recAllNodes(x, f, p, tailrec));
-		if (!tailrec) f(n, p);
-	} else if (isDict(n)) {
-		if (tailrec) f(n, p);
-		for (const k in n) { recAllNodes(n[k], f, p, tailrec); }
-		if (!tailrec) f(n, p);
-	}
-}
-function removeFromArray(array, i) { return array.splice(i, 1)[0] }
 function removeInPlace(arr, el) {
 	arrRemovip(arr, el);
 }
-function removeItemFromArray(array, item) { return removeFromArray(array, array.indexOf(item)) }
-function removePeepFromCrowd(peep) {
-	removeItemFromArray(crowd, peep)
-	availablePeeps.push(peep)
-}
-function removeRandomFromArray(array) { return removeFromArray(array, randomIndex(array)) }
-function render() {
-	canvas.width = canvas.width
-	cx.save()
-	cx.scale(devicePixelRatio, devicePixelRatio)
-	crowd.forEach((peep) => {
-		peep.render(cx)
-	})
-	cx.restore()
-}
 function replaceAllSpecialChars(str, sSub, sBy) { return str.split(sSub).join(sBy); }
-function resetPeep({ stage, peep }) {
-	const direction = Math.random() > 0.5 ? 1 : -1
-	const offsetY = 100 - 250 * gsap.parseEase('power2.in')(Math.random())
-	const startY = stage.height - peep.height + offsetY
-	let startX
-	let endX
-	if (direction === 1) {
-		startX = -peep.width
-		endX = stage.width
-		peep.scaleX = 1
-	} else {
-		startX = stage.width + peep.width
-		endX = 0
-		peep.scaleX = -1
-	}
-	peep.x = startX
-	peep.y = startY
-	peep.anchorY = startY
-	return {
-		startX,
-		startY,
-		endX
-	}
-}
-function resize() {
-	stage.width = canvas.clientWidth
-	stage.height = canvas.clientHeight
-	canvas.width = stage.width * devicePixelRatio
-	canvas.height = stage.height * devicePixelRatio
-	crowd.forEach((peep) => {
-		peep.walk.kill()
-	})
-	crowd.length = 0
-	availablePeeps.length = 0
-	availablePeeps.push(...allPeeps)
-	initCrowd()
-}
 function rest() { }
 function rHue() { return (rNumber(0, 36) * 10) % 360; }
 function rNumber(min = 0, max = 100) {
 	return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-function safeRecurse(o, func, params, tailrec) {
-	___enteredRecursion = 0;
-	let arr = Array.from(arguments);
-	arr = arr.slice(1);
-	recAllNodes(o, func, params, tailrec, true);
-	return ___enteredRecursion;
-}
-function sat() {
-	let R = T;
-	let rtree = normalizeRTree(R);
-	let sol = {};
-	sol[testEngine.index] = rtree;
-	downloadFile(sol, 'sol' + testEngine.index);
 }
 function saveFile(name, type, data) {
 	if (data != null && navigator.msSaveBlob) return navigator.msSaveBlob(new Blob([data], { type: type }), name);
@@ -2305,34 +1550,6 @@ function sortCaseInsensitive(list) {
 	list.sort((a, b) => { return a.toLowerCase().localeCompare(b.toLowerCase()); });
 	return list;
 }
-function sortKeys(o) {
-	if (Array.isArray(o)) {
-		return o.map(sortKeys);
-	} else if (isObject(o)) {
-		return Object
-			.keys(o)
-			.sort()
-			.reduce(function (a, k) {
-				a[k] = sortKeys(o[k]);
-				return a;
-			}, {});
-	}
-	return o;
-}
-function sortKeys(o) {
-	if (Array.isArray(o)) {
-		return o.map(sortKeys);
-	} else if (isObject(o)) {
-		return Object
-			.keys(o)
-			.sort()
-			.reduce(function (a, k) {
-				a[k] = sortKeys(o[k]);
-				return a;
-			}, {});
-	}
-	return o;
-}
 async function start() {
 	test_ui();
 	await load_Codebase('../basejs/cb1');
@@ -2364,11 +1581,6 @@ function test() {
 		createcircle((i * w / 10), "50%", "100", "0", "hsla(" + (i * 36) + ",100%,50%,0.5)", "url(#f" + circles + ")"); createfilter("-50%", "-50%", "200%", "200%", ["feGaussianBlur"], ["stdDeviation", "5"]);
 	}
 }
-function testHelpers() {
-	if (activatedTests.includes('helpers')) {
-		console.log(...arguments);
-	}
-}
 function toElem(d) { return isString(d) ? mBy(d) : d; }
 function toLetters(s) { return [...s]; }
 function toWords(s, allow_ = false) {
@@ -2377,10 +1589,6 @@ function toWords(s, allow_ = false) {
 }
 function trim(str) {
 	return str.replace(/^\s+|\s+$/gm, '');
-}
-function uid() {
-	UID += 1;
-	return 'a' + UID;
 }
 function valf(val, def) { return isdef(val) ? val : def; }
 function where(o) {
@@ -2392,13 +1600,14 @@ function compute_closure(code) {
 	let keylist = [];
 	for (const type of ['const', 'var', 'cla', 'func']) {
 		//let klist = sortCaseInsensitive(get_keys(disub[type]));
-
-		let knownkeys = CODE.keysSorted.filter(x => isdef(disub[type][x]));
+		if (nundef(disub[type])) continue;
+		let knownkeys = CODE.keysSorted.filter(x => lookup(disub, [type, x]));
 		let extras = sortCaseInsensitive(get_keys(disub[type]).filter(x => !knownkeys.includes(x)));
 		keylist = keylist.concat(knownkeys).concat(extras);
 	}
 
-	console.log(keylist.includes('write_code_text_file'));
+	//console.log(keylist.includes('write_code_text_file'));
+	console.log('duplicates', hasDuplicates(keylist))
 	write_code_text_file(keylist);
 }
 function create_left_side() {
@@ -2408,7 +1617,7 @@ function create_left_side() {
 
 	for (const d of [dt, dse, dsb, dft, dfta]) mStyle(d, { padding: 4, hmin: 10 })
 
-	mSearch('keywords', mySearch, dse, { hmargin: 6 }, { selectOnClick: true });
+	mSearchGoLive('keywords', mySearch, dse, { hmargin: 6 }, { selectOnClick: true });
 
 	let dm = mDom(dft, {}, { html: 'Edit Code:' });
 	mButton('closure', compute_closure, dm)
@@ -2420,8 +1629,31 @@ function create_left_side() {
 
 
 }
+function getLiveKeys(list) {
+	return list.filter(x => isLiveInBrowser(x));
+}
+function hasDuplicates(list) {
+	let res = [];
+	for (let i = 0; i < list.length; i++) {
+		for (let j = i + 1; j < list.length; j++) {
+			if (list[i] == list[j]) { res.push(list[i]) }
+		}
+	}
+	return res.length > 0 ? res : false;
+}
 function isCodeWord(w) {
 	return isdef(window[w]) || isdef(CODE.all[w])
+}
+function isLiveInBrowser(s) {
+	if (isdef(window[s])) return true;
+	try {
+		//console.log('have to eval!!!',s)
+		let res = eval(s);
+		return isdef(res);
+	} catch {
+		return false;
+	}
+	return false;
 }
 async function load_assets_fetch(basepath, baseminpath) {
 	let path = basepath + 'assets/';
@@ -2468,8 +1700,32 @@ async function load_Codebase(dir, path_allcode) {
 	//console.log('intersection',inter);
 	//7748 in intersection, also ca 400 jeweils extra, ergibt total of 8500 keys ca.
 }
-function ohneRegexMix(s) {
-	let arr = CODE.codelist;
+function mSearchGoLive(label, handler, dParent, styles = {}, opts = {}) {
+	let html = `
+    <form action="javascript:void(0);" autocomplete="off">
+		<label>${label}</label>
+    </form>
+  `;
+	let elem = mCreateFrom(html);
+	mAppend(dParent, elem);
+	mStyle(elem, { display: 'grid', 'align-items': 'center', w100: true, gap: 4, 'grid-template-columns': 'auto 1fr auto auto' });
+	//mStyle(elem, { display: 'grid', w100: true, gap: 4, 'grid-template-columns': 'auto 1fr auto' });
+
+	let inp = mInput(elem, styles, opts);
+
+	let allhandler = () => handler(mBy(inp.id).value.trim(), false); // handler(toWords(mBy(inp.id).value));
+	mButton('GO', allhandler, elem);
+	let livehandler = () => handler(mBy(inp.id).value.trim(), true); // handler(toWords(mBy(inp.id).value));
+	mButton('Live', livehandler, elem);
+	elem.onsubmit = livehandler;
+
+	return elem;
+}
+function ohneRegexMix(s, onlylive = false) {
+	// let arr = CODE.codelist;
+	//let arr = getLiveKeys(CODE.codelist.map(x=>x.key));
+	let arr = onlylive ? CODE.codelist.filter(x => isLiveInBrowser(x.key)) : CODE.codelist;
+	//console.log('arr',arr)
 	//s=`-e +fi`
 	let ws = parseSearchString(s);
 	let [sno, syes, smay] = [[], [], []];
@@ -2497,25 +1753,6 @@ function ohneRegexMix(s) {
 	CODE.selectedKeys = res; // arr.filter(x => regex.test(x.key)).map(x => x.key);
 	//console.log('res', res.length > 20 ? res.length : res)
 	if (!isEmpty(res)) show_sidebar(res, myOnclickCodeInSidebar); //console.log('keys', res);
-}
-function create_left_side() {
-	let dl = dLeft;
-	mClear(dLeft);
-	let [dt, dse, dsb, dft, dfta] = [mDiv(dl), mDiv(dl), mDiv(dl), mDiv(dl), mDiv(dl)];
-
-	for (const d of [dt, dse, dsb, dft, dfta]) mStyle(d, { padding: 4, hmin: 10 })
-
-	mSearch('keywords', mySearch, dse, { hmargin: 6 }, { selectOnClick: true });
-
-	let dm = mDom(dft, {}, { html: 'Edit Code:' });
-	mButton('closure', compute_closure, dm)
-	let r = getRect(dm);
-	//console.log(r.y + r.h);
-	//let h = `calc( 100vh - ${r.y + r.h} )`;
-	h = window.innerHeight - (r.y + r.h + 4); mStyle(dfta, { h: h, box: true, padding: 4 });
-	AU.ta = mDom(dfta, { fz: 18, family: 'consolas', w100: true, box: true, h: '99%', bg: 'white', fg: 'black' }, { tag: 'textarea', id: 'ta', className: 'plain' });
-
-
 }
 function parseSearchString(s, sAllow = '+-_') { return toWordsX(s, sAllow); }
 async function route_path_text(url) {
@@ -2567,13 +1804,16 @@ function write_code_text_file(keylist) {
 		else if (type == 'cla') { code = CODE.justcode[k]; }
 		else if (type == 'func') { code = isdef(window[k]) ? window[k].toString() : CODE.justcode[k]; }
 		else { code = window[k].toString(); }
+
+		if (OWNPROPS.includes(k)) { continue; } //console.log('nicht dabei',k);
 		// else if (!OWNPROPS.includes(k)) { code = window[k].toString(); }
-		// else code = '';
+		// else {console.log('nicht dabei',k); code = '';}
 		// assertion(!code.includes('[native code]') && !code.includes('function('),"ERRORRRRRRRRRRRRRRRR")
 		// if (k == 'write_code_text_file') console.log('code',code)
 
 		if (k != 'write_code_text_file' && (code.includes('[native code]') || code.includes('function('))) continue;
-		text += code + '\n';
+		//if (code.includes('create_left_side')) console.log('k',k,code)
+		if (!isEmpty(code)) text += code + '\n';
 	}
 	text = replaceAllSpecialChars(text, '\r', '');
 	AU.ta.value = text;
