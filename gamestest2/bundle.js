@@ -1,3 +1,4 @@
+//#region basemin
 var SOCKETSERVER = 'http://localhost:5000'; //geht im spital
 var SERVER = "http://localhost:8080/aroot/simple"; // oder telecave!
 var Pollmode = 'auto', Sayings;
@@ -199,7 +200,6 @@ const ARI = {
 		16: 'commission new',
 		17: 'church',
 		18: 'church_minplayer_tithe',
-		//180: 'downgrade_cards_church', ***geht zu downgrade!
 		19: 'church_newcards',
 		20: 'payment action',
 		21: 'church_minplayer_tithe_add',
@@ -305,7 +305,6 @@ function mBoxFromMargins(dParent, t, r, b, l, styles, id, inner, classes) {
 	return d;
 }
 function mAnimate(elem, prop, valist, callback, msDuration = 1000, easing = 'cubic-bezier(1,-0.03,.86,.68)', delay = 0, forwards = 'none') {
-	//usage: mAnimate(elem, 'opacity', [0, 0, 1], funcNull, 2000, 'ease-in', 6000, 'both');
 	let kflist = [];
 	for (const perc in valist) {
 		let o = {};
@@ -317,11 +316,8 @@ function mAnimate(elem, prop, valist, callback, msDuration = 1000, easing = 'cub
 	let a = toElem(elem).animate(kflist, opts);
 	if (isdef(callback)) { a.onfinish = callback; }
 	return a;
-	// if (isdef(callback)) a.onfinish = ()=>{delete DA.anim;callback()}; else a.onfinish = ()=>delete DA.anim;
-	// DA.anim = a; return a;
 }
 function mAnimateTo(elem, prop, val, callback, msDuration = 1000, easing = 'cubic-bezier(1,-0.03,.86,.68)', delay = 0) {
-	//usage: mAnimateTo(elem, 'opacity', 1, somefunc, 2000, 'ease-in', 1000);
 	let o = {};
 	o[prop] = isString(val) || prop == 'opacity' ? val : '' + val + 'px';
 	let kflist = [o];
@@ -329,11 +325,8 @@ function mAnimateTo(elem, prop, val, callback, msDuration = 1000, easing = 'cubi
 	let a = toElem(elem).animate(kflist, opts);
 	if (isdef(callback)) { a.onfinish = callback; }
 	return a;
-	// if (isdef(callback)) a.onfinish = ()=>{delete DA.anim;callback()}; else a.onfinish = ()=>delete DA.anim;
-	// DA.anim = a; return a;
 }
 function mAnimateList(elem, ogoal, callback, msDuration = 1000, easing = 'cubic-bezier(1,-0.03,.86,.68)', delay = 0) {
-	//usage: mAnimateTo(elem, 'opacity', 1, somefunc, 2000, 'ease-in', 1000);
 	for (const k in ogoal) {
 		ogoal[k] = isString(ogoal[k]) || k == 'opacity' ? ogoal[k] : '' + ogoal[k] + 'px';
 	}
@@ -342,8 +335,6 @@ function mAnimateList(elem, ogoal, callback, msDuration = 1000, easing = 'cubic-
 	let a = toElem(elem).animate(kflist, opts);
 	if (isdef(callback)) { a.onfinish = callback; }
 	return a;
-	// if (isdef(callback)) a.onfinish = ()=>{delete DA.anim;callback()}; else a.onfinish = ()=>delete DA.anim;
-	// DA.anim = a; return a;
 }
 function mAppend(d, child) { toElem(d).appendChild(child); return child; }
 function mButton(caption, handler, dParent, styles, classes, id) {
@@ -357,12 +348,8 @@ function mButton(caption, handler, dParent, styles, classes, id) {
 	return x;
 }
 function old_mButtonX(dParent, pos = 'tr', handler = null, defaultBehavior = 'hide', sz = 40) {
-	//ACHTUNG!!! default behavior is: removing dParent
 	dParent = toElem(dParent);
-	// let sz = 40;
-	// let styles = { box:true, border:`blue solid ${3*sz/34}px`, bg: GREEN, rounding:'50%', cursor:'pointer',w:sz,h:sz };
 	let styles = { cursor: 'pointer', w: sz, h: sz };
-	// let d2 = mDiv(dParent, { family:'opensans', box:true, align:'center','line-height':34,w: 32, h: 32, pointer: 'cursor' }, null, `<i class="fa-thin fa-times" style="font-size:${sz}px;"></i>`, 'btnX');
 	let d2 = mDiv(dParent, styles, null, `<svg width='100%' height='100%' ><use xlink:href="#Times" /></svg>`); //, 'btnX');
 	mClass(d2, 'svgbtnX');
 	d2.onclick = isdef(handler) ? handler : defaultBehavior == 'hide' ? () => hide(dParent) : () => dParent.remove();
@@ -371,7 +358,6 @@ function old_mButtonX(dParent, pos = 'tr', handler = null, defaultBehavior = 'hi
 }
 function mButtonX(dParent, handler, pos = 'tr', sz = 25, color = 'white') {
 	let d2 = mDiv(dParent, { fg: color, w: sz, h: sz, pointer: 'cursor' }, null, `<i class="fa fa-times" style="font-size:${sz}px;"></i>`, 'btnX');
-	//let d2 = mDiv(dParent, { fg:'white', w: sz, h: sz, pointer: 'cursor' }, null, 'CLOSE', 'btnX');
 	mPlace(d2, pos, 2);
 	d2.onclick = handler;
 	return d2;
@@ -383,11 +369,9 @@ function mCardButton(caption, handler, dParent, styles, classtr = '', id = null)
 }
 function mCard(dParent, styles, classtr = '', id = null) {
 	let classes = toWords("card300 wb " + classtr);
-	// console.log('classes', classes);
 	return mDiv(dParent, styles, id, null, classes);
 }
 function mCardText(ckey, sz, color) {
-	//console.log('hhhhhhhhhhhh',color)
 	let j = is_jolly(ckey);
 	if (nundef(color)) color = get_color_of_card(ckey);
 	return is_jolly(ckey) ?
@@ -402,11 +386,9 @@ function mCenterFlex(d, hCenter = true, vCenter = false, wrap = true) {
 	styles['align-content'] = vCenter ? 'center' : 'flex-start';
 	if (wrap) styles['flex-wrap'] = 'wrap';
 	mStyle(d, styles);
-	//console.log('d', d)
 }
 function mClear(d) { clearElement(d); }
 function mColFlex(dParent, chflex = [1, 5, 1], bgs) { // = [YELLOW, ORANGE, RED]) {
-	// let styles = { opacity:1, bg:RED, display: 'flex','justify-content':'stretch','align-content':'flex-start','flex-wrap':'nowrap' };
 	let styles = { opacity: 1, display: 'flex', 'align-items': 'stretch', 'flex-flow': 'nowrap' };
 	mStyle(dParent, styles);
 	let res = [];
@@ -416,9 +398,6 @@ function mColFlex(dParent, chflex = [1, 5, 1], bgs) { // = [YELLOW, ORANGE, RED]
 		res.push(d1);
 	}
 	return res;
-	// let d2=mDiv(dParent,{flex:chflex[1],bg:ORANGE},null,'hallo');
-	// let d3=mDiv(dParent,{flex:chflex[2],bg:RED},null,'hallo');
-	// return {left:d1,middle:d2,right:d3};
 }
 function mCenterCenterFlex(d) { mCenterFlex(d, true, true, true); }
 function mClass0(d) { d = toElem(d); d.className = ''; }
@@ -455,17 +434,13 @@ function mColorPickerControl(label, value, targetImage, dParent, handler, styles
 		value: value,
 		palette: palette,
 	});
-	//inp.onChange = ()=>{let c = inp.toHEXAString(); onColor(c);}
 	inp.onInput = () => { let c = inp.toHEXAString(); handler(c); }
 	return inp;
 }
 function mCreate(tag, styles, id) { let d = document.createElement(tag); if (isdef(id)) d.id = id; if (isdef(styles)) mStyle(d, styles); return d; }
 function mCreateFrom(htmlString) {
-	//console.log('---------------',htmlString)
 	var div = document.createElement('div');
 	div.innerHTML = htmlString.trim();// '<div>halloooooooooooooo</div>';// htmlString.trim();
-	// Change this to div.childNodes to support multiple top-level nodes
-	//console.log(div.firstChild)
 	return div.firstChild;
 }
 function mDataTable(reclist, dParent, rowstylefunc, headers, id, showheaders = true) {
@@ -519,10 +494,35 @@ function mDraggable(item) {
 function mDroppable(item, handler, dragoverhandler) {
 	function allowDrop(ev) { ev.preventDefault(); }
 	let d = iDiv(item);
-	//console.log('item', item);
 	d.ondragover = isdef(dragoverhandler) ? dragoverhandler : allowDrop;
-	//if (isdef(dragEnterHandler)) d.ondragenter = dragEnterHandler;
 	d.ondrop = handler;
+}
+function unfocusOnEnter(ev) {
+	if (ev.key === 'Enter') {
+		ev.preventDefault();
+		mBy('dummy').focus();
+	}
+}
+function selectText(el) {
+	var sel, range;
+	if (window.getSelection && document.createRange) { //Browser compatibility
+		sel = window.getSelection();
+		if (sel.toString() == '') { //no text selection
+			window.setTimeout(function () {
+				range = document.createRange(); //range object
+				range.selectNodeContents(el); //sets Range
+				sel.removeAllRanges(); //remove all ranges from selection
+				sel.addRange(range);//add Range to a Selection.
+			}, 1);
+		}
+	} else if (document.selection) { //older ie
+		sel = document.selection.createRange();
+		if (sel.text == '') { //no text selection
+			range = document.body.createTextRange();//Creates TextRange object
+			range.moveToElementText(el);//sets Range
+			range.select(); //make selection.
+		}
+	}
 }
 function incInput(inp, n = 1) {
 	let val = Number(inp.innerHTML);
@@ -535,15 +535,11 @@ function mEditRange(label, value, min, max, step, dParent, handler, styles, clas
 	let dLabel = mDiv(d, { w: '30%', align: 'right', hpadding: hpad, display: 'inline-block' }, null, label); //mCreateFrom(`<label>${label}</label>`);
 	let inpText = mCreateFrom(`<input type='number'  step=${step} min="${min}" max="${max}" value="${value}" ></input>`);
 	let inp = mCreateFrom(`<input type="range" step=${step} min="${min}" max="${max}" value="${value}" ></input>`);
-	// let inp = mCreateFrom(`<div contenteditable="true" spellcheck="false">${value}</div>	`)
 	mAppend(d, inpText);
 	mAppend(d, inp);
-	// let button = mButton('+', triggerOnChange ? ev => { incInput(inp); handler(inp.innerHTML, ev); } : ev => { incInput(inp); }, d);
 	mStyle(inpText, { display: 'inline', w: '20%', align: 'left', hpadding: hpad });
 	mStyle(inp, { display: 'inline', w: '40%', hpadding: hpad });
 	inpText.onchange = (ev) => { inp.value = inpText.value; handler(inpText.value, ev); };
-	// inpText.addEventListener('keydown', unfocusOnEnter);
-	// inpText.addEventListener('focusout', ev => { inp.value = inpText.value;handler(inp.innerHTML, ev); });
 	inpText.onclick = ev => selectText(ev.target);
 	inp.onchange = (ev) => { inpText.value = inp.value; handler(inpText.value, ev); };
 	if (isdef(classes)) mClass(inp, classes);
@@ -557,7 +553,6 @@ function mEditNumber(label, value, dParent, handler, styles, classes, id, trigge
 	if (nundef(handler)) handler = x => console.log(x);
 	let inp = mCreateFrom(`<div contenteditable="true" spellcheck="false">${value}</div>	`)
 	mAppend(d, inp);
-	//let button = mButton('+', triggerOnChange ? ev => { incInput(inp); handler(inp.innerHTML, ev); } : ev => { incInput(inp); }, d);
 	mStyle(inp, { display: 'inline-block', w: '40%', align: 'left', hpadding: hpad });
 	inp.addEventListener('keydown', unfocusOnEnter);
 	inp.addEventListener('focusout', ev => { handler(inp.innerHTML, ev); });
@@ -626,7 +621,6 @@ function mEditableInput(dParent, label, val, styles, classes, id) {
 		if (ev.key === 'Enter') {
 			ev.preventDefault();
 			mBy('dummy').focus();
-			//if (isdef(handler)) handler(elem.innerHTML, ev); //das ist schon bei mEditableInputOnEdited!!!
 		}
 	});
 	let dui = mDiv(dParent, { margin: 2 });
@@ -641,7 +635,6 @@ function mEditableInput(dParent, label, val, styles, classes, id) {
 	return elem;
 }
 function mGrid(rows, cols, dParent, styles = {}) {
-	//styles.gap=valf(styles.gap,4);
 	let d = mDiv(dParent, styles);
 	d.style.gridTemplateColumns = 'repeat(' + cols + ',1fr)';
 	d.style.gridTemplateRows = 'repeat(' + rows + ',1fr)';
@@ -668,10 +661,6 @@ function mFlex(d, or = 'h') {
 	d = toElem(d);
 	d.style.display = 'flex';
 	d.style.flexFlow = (or == 'v' ? 'column' : 'row') + ' ' + (or == 'w' ? 'wrap' : 'nowrap');
-	// d.style.alignItems = 'stretch';
-	// d.style.alignContent = 'stretch';
-	// d.style.justiifyItems = 'stretch';
-	// d.style.justifyContent = 'stretch';
 }
 function mFlexLR(d) { mStyle(d, { display: 'flex', 'justify-content': 'space-between', 'align-items': 'center' }); }
 function mFlexSpacebetween(d) { mFlexLR(d); }
@@ -699,7 +688,6 @@ function mFromPoint(x, y) {
 function mIfNotRelative(d) { if (isEmpty(d.style.position)) d.style.position = 'relative'; }
 function mImage() { return mImg(...arguments); }
 function mImg(path, dParent, styles, classes, callback) {
-	//console.log('_______________',path)
 	let d = mCreate('img');
 	if (isdef(callback)) d.onload = callback;
 	d.src = path;
@@ -709,7 +697,6 @@ function mImg(path, dParent, styles, classes, callback) {
 	if (isdef(styles.w)) d.setAttribute('width', styles.w + 'px');
 	if (isdef(styles.h)) d.setAttribute('height', styles.h + 'px');
 	return d;
-	//<img src="kiwi.svg" alt="Kiwi standing on oval"></img>
 }
 function mInput(dParent, styles, id, placeholder, classtr = 'input', tabindex = null, value = '') {
 	let html = `<input type="text" id=${id} class="${classtr}" placeholder="${valf(placeholder, '')}" tabindex="${tabindex}" value="${value}">`;
@@ -769,9 +756,7 @@ function mLinebreak(dParent, gap) {
 function mMagnifyOnHoverControlPopup(elem) {
 	elem.onmouseenter = ev => {
 		if (ev.ctrlKey) {
-			//console.log('hallo!!!!');
 			let r = getRect(elem, document.body);
-			//console.log('r', r);
 			let popup = mDiv(document.body, { rounding: 4, position: 'absolute', top: r.y, left: r.x }, 'popup');
 			let clone = elem.cloneNode(true);
 			popup.appendChild(clone);
@@ -802,7 +787,6 @@ function mNode(o, dParent, title) {
 	return d;
 }
 function mPlace(elem, pos, offx, offy) {
-	// pos is: tl, tb, bl, br or cl, cr, tc, bc, cc
 	elem = toElem(elem);
 	pos = pos.toLowerCase();
 	let dParent = elem.parentNode; if (dParent.style.position != 'absolute') dParent.style.position = 'relative';
@@ -813,7 +797,6 @@ function mPlace(elem, pos, offx, offy) {
 		let [wParent, hParent] = [rParent.w, rParent.h];
 		let rElem = getRect(elem);
 		let [wElem, hElem] = [rElem.w, rElem.h];
-		//console.log('_____________\nelem', rElem, '\nparent', rParent, '\nhor', hor, '\nvert', vert)
 		switch (pos) {
 			case 'cc': mStyle(elem, { position: 'absolute', left: hor + (wParent - wElem) / 2, top: vert + (hParent - hElem) / 2 }); break;
 			case 'tc': mStyle(elem, { position: 'absolute', left: hor + (wParent - wElem) / 2, top: vert }); break;
@@ -834,7 +817,6 @@ function mPopup(content, dParent, styles, id) {
 	if (nundef(styles)) styles = { top: 0, left: 0 };
 	styles.position = 'absolute';
 	let d1 = mDiv(dParent, styles, valf(id, getUID()), content);
-	//mPos(d1,0,44)
 	return d1;
 }
 function mRadioToggle(label, val, dParent, styles = {}, is_on = true) {
@@ -846,7 +828,6 @@ function mRadioToggle(label, val, dParent, styles = {}, is_on = true) {
 	if (isdef(cursor)) { inp.style.cursor = text.style.cursor = cursor; }
 	mAppend(d, inp);
 	mAppend(d, text);
-	//if (isdef(handler)) inp.onclick = ev => {ev.cancelBubble=true;handler(val);}
 	return d;
 }
 function mRadio1(label, val, dParent, styles = {}, handler, group_id) {
@@ -864,13 +845,10 @@ function mRadio(label, val, name, dParent, styles = {}, handler, group_id, is_on
 	let cursor = styles.cursor; delete styles.cursor;
 	let d = mDiv(dParent, styles, group_id + '_' + val);
 	let id = isdef(group_id) ? `i_${group_id}_${val}` : getUID();
-	//let name = isdef(group_id)?group_id: val;
 	let type = isdef(group_id) ? 'radio' : 'checkbox';
 	let checked = isdef(is_on) ? is_on : false;
-	//console.log('player', val, is_on)
 	let inp = mCreateFrom(`<input class='radio' id='${id}' type="${type}" name="${name}" value="${val}">`); // checked="${checked}" >`);
 	if (checked) inp.checked = true;
-	//let inp = mCreateFrom(`<input class='radio' id='${id}' type="${type}" name="${name}" value="${val}" checked="${checked}" >`);
 	let text = mCreateFrom(`<label for='${inp.id}'>${label}</label>`);
 	if (isdef(cursor)) { inp.style.cursor = text.style.cursor = cursor; }
 	mAppend(d, inp);
@@ -878,10 +856,7 @@ function mRadio(label, val, name, dParent, styles = {}, handler, group_id, is_on
 	if (isdef(handler)) {
 		inp.onclick = ev => {
 			ev.cancelBubble = true;
-			//console.log('inp',inp);
 			if (handler == 'toggle') {
-				//console.log('hallo!!!!!!',inp.checked)
-				//inp.checked = ev.target.checked == true ? false : true;
 			} else if (isdef(handler)) {
 				handler(val);
 			}
@@ -916,9 +891,7 @@ function mRemove(elem) {
 	a = elem.childNodes;
 	if (a) {
 		l = a.length;
-		// for (i = 0; i < l; i += 1) {
 		for (i = a.length - 1; i >= 0; i -= 1) {
-			//console.log(elem.id, a, elem.childNodes[i]);
 			mRemove(elem.childNodes[i]);
 		}
 	}
@@ -934,20 +907,23 @@ function mShield(dParent, styles = { bg: '#00000020' }, id = null, classnames = 
 	if (hideonclick) d.onclick = ev => { evNoBubble(ev); d.remove(); };
 	else d.onclick = ev => { evNoBubble(ev); };
 	mClass(d, 'topmost');
-	//setTimeout(()=>mClass(d,'topmost'),10)
 	return d;
 }
 function mShieldsOff() { if (nundef(DA.shields)) return; for (const d of DA.shields) d.remove(); }
+function gCreate(tag) { return document.createElementNS('http://www.w3.org/2000/svg', tag); }
+function gSizeToContent(svg) {
+	var bbox = svg.getBBox();
+	svg.setAttribute("width", bbox.x + bbox.width + bbox.x);
+	svg.setAttribute("height", bbox.y + bbox.height + bbox.y);
+}
 function mStamp(d1, text, color, sz) {
 	mStyle(d1, { position: 'relative' });
 	let r = getRect(d1);
 	let [w, h] = [r.w, r.h];
 	color = valf(color, 'black');
 	sz = valf(sz, r.h / 7);
-	//console.log('r', r, 'sz', sz);
 	let [padding, border, rounding, angle] = [sz / 10, sz / 6, sz / 8, rChoose([-16, -14, -10, 10, 14])];
 	let d2 = mDiv(d1, {
-		//opacity: 0.9,
 		fg: color,
 		position: 'absolute', top: 25, left: 5,
 		transform: `rotate(${angle}deg)`,
@@ -955,7 +931,6 @@ function mStamp(d1, text, color, sz) {
 		hpadding: 2,
 		vpadding: 0,
 		rounding: rounding,
-		//the following wenn ich den black ops one font verwende! mit black
 		border: `${border}px solid ${colorTrans(color, .8)}`, // black
 		'-webkit-mask-size': `${w}px ${h}px`,
 		'-webkit-mask-position': `50% 50%`,
@@ -966,7 +941,6 @@ function mStamp(d1, text, color, sz) {
 		family: 'blackops', // courier blackops fredericka
 		'mix-blend-mode': 'multiply',
 	}, null, text);
-	//mClass(d2,`${color}stamp`);
 }
 function mSuit(ckey, sz = 20, color = null) {
 	let suit = ckey.length == 1 ? ckey : ckey[1];
@@ -1023,7 +997,6 @@ function mGetStyle(elem, prop) {
 		}
 	}
 	if (nundef(val)) val = getStyleProp(elem, prop); // elem.style[prop];
-	//console.log('prop',prop,'val',val)
 	if (val.endsWith('px')) return firstNumber(val); else return val;
 }
 function mStyle(elem, styles, unit = 'px') {
@@ -1165,7 +1138,6 @@ function mSym(key, dParent, styles = {}, pos, classes) {
 	styles.display = 'inline-block';
 	let family = info.family; // == 'emoNoto' && DA.isFirefox == true? 'emoNotoFF':info.family;
 	styles.family = family;
-	//console.log('vorher: styles', jsCopy(styles))
 	let sizes;
 	if (isdef(styles.sz)) { sizes = mSymSizeToBox(info, styles.sz, styles.sz); }
 	else if (isdef(styles.w) && isdef(styles.h)) { sizes = mSymSizeToBox(info, styles.w, styles.h); }
@@ -1178,11 +1150,19 @@ function mSym(key, dParent, styles = {}, pos, classes) {
 	styles.h = sizes.h;
 	styles.align = 'center';
 	if (isdef(styles.bg) && info.family != 'emoNoto') { styles.fg = styles.bg; delete styles.bg; }
-	//console.log('nachher: styles', jsCopy(styles))
 	let x = mDiv(dParent, styles, null, info.text);
 	if (isdef(classes)) mClass(x, classes);
 	if (isdef(pos)) { mPlace(x, pos); }
 	return x;
+}
+function mSymSizeToH(info, h) { let f = h / info.h; return { fz: 100 * f, w: info.w * f, h: h }; }
+function mSymSizeToW(info, w) { let f = w / info.w; return { fz: 100 * f, w: w, h: info.h * f }; }
+function mSymSizeToFz(info, fz) { let f = fz / 100; return { fz: fz, w: info.w * f, h: info.h * f }; }
+function mSymSizeToBox(info, w, h) {
+	let fw = w / info.w;
+	let fh = h / info.h;
+	let f = Math.min(fw, fh);
+	return { fz: 100 * f, w: info.w * f, h: info.h * f };
 }
 function mTable(dParent, headers, showheaders, styles = { mabottom: 0 }, className = 'table') {
 	let d = mDiv(dParent);
@@ -1224,24 +1204,20 @@ function mTableRow(t, o, headers, id) {
 	let colitems = [];
 	for (const k of headers) {
 		let val = isdef(o[k]) ? isDict(o[k]) ? JSON.stringify(o[k]) : isList(o[k]) ? o[k].join(', ') : o[k] : '';
-		//console.log(`o[${k}] = ${val}`, typeof (o[k]), isList(o[k]), isDict(o[k]))
 		let col = mTableCol(elem, val);
 		colitems.push({ div: col, key: k, val: val });
 	}
 	return { div: elem, colitems: colitems };
 }
 function mTableCommandify(rowitems, di) {
-	//di: index:function(rowitem,current_colitem.val)
 	for (const item of rowitems) {
 		for (const index in di) {
 			let colitem = item.colitems[index];
-			//console.log('colitem', colitem)
 			colitem.div.innerHTML = di[index](item, colitem.val);
 		}
 	}
 }
 function mTableCommandifyList(rowitem, val, func) {
-	//func should take in rowitem,listval and return html
 	let names = isString(val) ? val.replaceAll(' ', ',').split(',') : val;
 	let html = '';
 	for (const name of names) {
@@ -1253,7 +1229,6 @@ function mText(text, dParent, styles, classes) {
 	if (!isString(text)) text = text.toString();
 	let d = mDiv(dParent);
 	if (!isEmpty(text)) { d.innerHTML = text; }
-	//console.log('text',text,typeof(text),isString(text),isEmpty(text),d);
 	if (isdef(styles)) mStyle(d, styles);
 	if (isdef(classes)) mClass(d, classes);
 	return d;
@@ -1268,7 +1243,6 @@ function mTextArea(rows, cols, dParent, styles = {}, id) {
 function mYaml(d, js) {
 	d.innerHTML = '<pre>' + jsonToYaml(js) + '</pre>';
 	return d;
-	// d.innerHTML = '<pre class="info">' + jsonToYaml(js) + '</pre>'; 
 }
 function mTableTransition(d, ms = 800) {
 	toElem(d).animate([{ opacity: .25 }, { opacity: 1 },], { fill: 'both', duration: ms, easing: 'ease' });
@@ -1300,20 +1274,13 @@ function mTranslate(child, newParent, ms = 800, callback = null) {
 	let [dx, dy] = get_screen_distance(child, newParent);
 	onend = () => { mAppend(newParent, child); if (callback) callback(); };
 	mAnimate(child, 'transform', [`translateX(${dx}px) translateY(${dy}px)`], onend, ms, 'ease'); //translate(${dx}px,${dy}px)`
-	//let anim = toElem(child).animate([{ transform: `scale(${1},${1})` }, { transform: `scale(${x},${y})` },], { fill: 'both', duration: ms, easing: 'ease' });
-	//anim.onfinish = callback;
 }
 function mTranslateBy(elem, x, y, ms = 800, callback = null) {
 	mAnimate(elem, 'transform', [`translateX(${x}px) translateY(${y}px)`], callback, ms, 'ease'); //translate(${dx}px,${dy}px)`
-	//let anim = toElem(child).animate([{ transform: `scale(${1},${1})` }, { transform: `scale(${x},${y})` },], { fill: 'both', duration: ms, easing: 'ease' });
-	//anim.onfinish = callback;
 }
 function mTranslateByFade(elem, x, y, ms = 800, callback = null) {
 	mAnimate(elem, 'transform', [`translateX(${x}px) translateY(${y}px)`], callback, ms, 'ease'); //translate(${dx}px,${dy}px)`
 	let a = toElem(elem).animate([{ opacity: .25 }, { opacity: 1 },], { fill: 'both', duration: ms, easing: 'ease' });
-	//mAnimate(elem, 'transform', [`translateX(${x}px) translateY(${y}px)`], callback, ms, 'ease'); //translate(${dx}px,${dy}px)`
-	//let anim = toElem(child).animate([{ transform: `scale(${1},${1})` }, { transform: `scale(${x},${y})` },], { fill: 'both', duration: ms, easing: 'ease' });
-	//anim.onfinish = callback;
 }
 function mScale(d, scale) { mStyle(d, { 'transform-origin': 'top', transform: `scale(${scale})` }); }
 function mShrinkTranslate(child, scale, newParent, ms = 800, callback) {
@@ -1349,9 +1316,7 @@ function aMove(d, dSource, dTarget, callback, offset, ms, easing, fade) {
 	if (nundef(offset)) offset = { x: 0, y: 0 };
 	let dist = { x: b2.x - b1.x + offset.x, y: b2.y - b1.y + offset.y };
 	d.style.zIndex = 100;
-	// var MyEasing = 'cubic-bezier(1,-0.03,.86,.68)';
 	let a = d.animate({ opacity: valf(fade, 1), transform: `translate(${dist.x}px,${dist.y}px)` }, { easing: valf(easing, 'EASE'), duration: ms });
-	// let a = aTranslateFadeBy(d.div, dist.x, dist.y, 500);
 	a.onfinish = () => { d.style.zIndex = iZMax(); if (isdef(callback)) callback(); };
 }
 function aTranslateFadeBy(d, x, y, ms) { return d.animate({ opacity: .5, transform: `translate(${x}px,${y}px)` }, { easing: MyEasing, duration: ms }); }
@@ -1362,7 +1327,6 @@ function aTranslateByEase(d, x, y, ms, easing = 'cubic-bezier(1,-0.03,.27,1)') {
 function aRotate(d, ms = 2000) { return d.animate({ transform: `rotate(360deg)` }, ms); }
 function aRotateAccel(d, ms) { return d.animate({ transform: `rotate(1200deg)` }, { easing: 'cubic-bezier(.72, 0, 1, 1)', duration: ms }); }
 function aFlip(d, ms = 300, x = 0, y = 1, easing = 'cubic-bezier(1,-0.03,.27,1)') {
-	// return d.animate({ 'transform-origin': '50% 50%',transform: `scale(${x}px,${y}px)` }, {easing:easing,duration:ms}); 
 	return d.animate({ transform: `scale(${2}px,${y}px)` }, { easing: easing, duration: ms });
 }
 function iAdd(item, props) {
@@ -1375,13 +1339,11 @@ function iAdd(item, props) {
 	for (const k in props) {
 		let val = props[k];
 		if (nundef(val)) {
-			//console.log('k', k, 'item', item, 'props', props);
 			continue;
 		}
 		l[k] = val;
 		if (k == 'div') val.id = id;
 		if (isdef(val.id) && val.id != id) {
-			//console.log('adding', val.id, 'as member of', id)
 			lookupAddIfToList(val, ['memberOf'], id);
 		}
 	}
@@ -1399,10 +1361,8 @@ var SHAPEFUNCS = {
 }
 function drawShape(key, dParent, styles, classes, sizing) {
 	if (nundef(styles)) styles = { w: 96, h: 96, bg: 'random' };
-	//if (nundef(classes)) classes = ['superhover'];
 	if (nundef(sizing)) sizing = { hgrow: true, wgrow: true };
 	let d = mDiv(dParent, styles, null, null, classes, sizing);
-	// mStyle(d, { 'clip-path': PolyClips[key] });
 	if (key == 'circle' || key == 'ellipse') mStyle(d, { rounding: '50%' });
 	else mStyle(d, { 'clip-path': PolyClips[key] });
 	return d;
@@ -1446,16 +1406,7 @@ function drawHex(dParent, styles, classes, sizing) {
 	mStyle(d, { 'clip-path': 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)' });
 	return d;
 }
-function gSizeToContent(svg) {
-	//muss NACH append gemacht werden damit es klappt
-	var bbox = svg.getBBox();
-	//console.log('bbox', bbox);
-	// Update the width and height using the size of the contents
-	svg.setAttribute("width", bbox.x + bbox.width + bbox.x);
-	svg.setAttribute("height", bbox.y + bbox.height + bbox.y);
-}
 function agColoredShape(g, shape, w, h, color) {
-	//console.log(shape)
 	SHAPEFUNCS[shape](g, w, h);
 	gBg(g, color);
 }
@@ -1465,7 +1416,6 @@ function agShape(g, shape, w, h, color, rounding) {
 	return sh;
 }
 function gShape(shape, w = 20, h = 20, color = 'green', rounding) {
-	//console.log(shape)
 	let el = gG();
 	if (nundef(shape)) shape = 'rect';
 	if (shape != 'line') agColoredShape(el, shape, w, h, color);
@@ -1473,19 +1423,13 @@ function gShape(shape, w = 20, h = 20, color = 'green', rounding) {
 	if (isdef(rounding) && shape == 'rect') {
 		let r = el.children[0];
 		gRounding(r, rounding);
-		//console.log(rounding,r);
-		// r.setAttribute('rx', rounding); // rounding kann ruhig in % sein!
-		// r.setAttribute('ry', rounding);
 	}
 	return el;
 }
-function gCreate(tag) { return document.createElementNS('http://www.w3.org/2000/svg', tag); }
 function gPos(g, x, y) { g.style.transform = `translate(${x}px, ${y}px)`; }
 function gSize(g, w, h, shape = null, iChild = 0) {
-	//console.log(getTypeOf(g))
 	let el = (getTypeOf(g) != 'g') ? g : g.children[iChild];
 	let t = getTypeOf(el);
-	//console.log('g', g, '\ntype of g child', el, 'is', t);
 	switch (t) {
 		case 'rect': el.setAttribute('width', w); el.setAttribute('height', h); el.setAttribute('x', -w / 2); el.setAttribute('y', -h / 2); break;
 		case 'ellipse': el.setAttribute('rx', w / 2); el.setAttribute('ry', h / 2); break;
@@ -1501,8 +1445,6 @@ function gSize(g, w, h, shape = null, iChild = 0) {
 function gBg(g, color) { g.setAttribute('fill', color); }
 function gFg(g, color, thickness) { g.setAttribute('stroke', color); if (thickness) g.setAttribute('stroke-width', thickness); }
 function gRounding(r, rounding) {
-	//let r = el.children[0];
-	//console.log(rounding,r);
 	r.setAttribute('rx', rounding); // rounding kann ruhig in % sein!
 	r.setAttribute('ry', rounding);
 }
@@ -1539,7 +1481,6 @@ function agG(g) { let g1 = gG(); g.appendChild(g1); return g1; }
 function aSvg(dParent) {
 	if (!dParent.style.position) dParent.style.position = 'relative';
 	let svg1 = gSvg();
-	//console.log(svg1)
 	svg1.setAttribute('width', '100%');
 	svg1.setAttribute('height', '100%');
 	let style = 'margin:0;padding:0;position:absolute;top:0px;left:0px;';
@@ -1550,7 +1491,6 @@ function aSvg(dParent) {
 function aSvgg(dParent, originInCenter = true) {
 	if (!dParent.style.position) dParent.style.position = 'relative';
 	let svg1 = gSvg();
-	//console.log(svg1)
 	svg1.setAttribute('width', '100%');
 	svg1.setAttribute('height', '100%');
 	let style = 'margin:0;padding:0;position:absolute;top:0px;left:0px;';
@@ -1612,19 +1552,14 @@ function arrIndices(arr, func) {
 function arrLastOfLast(arr) { if (arr.length > 0) { let l = arrLast(arr); return isList(l) ? arrLast(l) : null; } else return null; }
 function arrLast(arr) { return arr.length > 0 ? arr[arr.length - 1] : null; }
 function arrMinMax(arr, func) {
-	//ACHTUNG!!! this only works for unique max or min (returns only the first max/min index!)
-	//console.log('====arr',arr)
 	if (nundef(func)) func = x => x;
 	let min = func(arr[0]), max = func(arr[0]), imin = 0, imax = 0;
-	//console.log('arr', arr, '\nmin', min, 'max', max)
 	for (let i = 1, len = arr.length; i < len; i++) {
 		let v = func(arr[i]);
 		if (v < min) {
 			min = v; imin = i;
-			//console.log('new min!', '\nv', v, 'min', min, 'i', i);
 		} else if (v > max) {
 			max = v; imax = i;
-			//console.log('new max!', '\nv', v, 'max', max, 'i', i);
 		}
 	}
 	return { min: min, imin: imin, max: max, imax: imax, elmin: arr[imin], elmax: arr[imax] };
@@ -1637,7 +1572,6 @@ function arrTakeWhile(arr, func) {
 	return res;
 }
 function arr_get_max(arr, func) {
-	//ACHTUNG!!! arr may NOT contain any DOM elem! (using JSON.stringify)
 	if (isEmpty(arr)) return null;
 	if (nundef(func)) func = x => x;
 	let i = 0; let aug = arr.map(x => ({ el: jsCopy(x), val: func(x), i: i++ }));
@@ -1646,7 +1580,6 @@ function arr_get_max(arr, func) {
 	let res = arrTakeWhile(aug, x => x.val == max); return res.map(x => arr[x.i]);
 }
 function arr_get_min(arr, func) {
-	//ACHTUNG!!! arr may NOT contain any DOM elem! (using JSON.stringify)
 	if (isEmpty(arr)) return null;
 	if (nundef(func)) func = x => x;
 	let i = 0; let aug = arr.map(x => ({ el: jsCopy(x), val: func(x), i: i++ }));
@@ -1660,32 +1593,26 @@ function arrMinus(a, b) { if (isList(b)) return a.filter(x => !b.includes(x)); e
 function arrPlus(a, b) { b.map(x => a.push(x)); return a; }
 function arrRange(from = 1, to = 10, step = 1) { let res = []; for (let i = from; i <= to; i += step)res.push(i); return res; }
 function arrRemove(arr, listweg) {
-	//ACHTUNG!!!! geht nur wenn array elements unique sind! removes FIRST OCCURRENCE of el in arr!!!!!!!!!!!!!	
 	arrReplace(arr, listweg, []);
 }
 function arrRemoveLast(arr) { arr.length -= 1; }
 function arrRepeat(n, el) { let res = []; for (let i = 0; i < n; i++) res.push(el); return res; }
 function arrReplace(arr, listweg, listdazu) {
-	//ACHTUNG!!!! geht nur wenn array elements unique sind! removes FIRST OCCURRENCE of el in arr!!!!!!!!!!!!!
 	arrExtend(arr, listdazu);
 	listweg.map(x => arrRemovip(arr, x));
 	return arr;
 }
 function arrReplace1(arr, elweg, eldazu) {
-	//ACHTUNG!!!! geht nur wenn array elements unique sind! removes FIRST OCCURRENCE of el in arr!!!!!!!!!!!!!
 	let i = arr.indexOf(elweg);
 	arr[i] = eldazu;
 	return arr;
 }
 function arrRemovip(arr, el) {
-	//ACHTUNG!!!! geht nur wenn array elements unique sind! removes FIRST OCCURRENCE of el in arr!!!!!!!!!!!!!
 	let i = arr.indexOf(el);
 	if (i > -1) arr.splice(i, 1);
 	return i;
 }
 function arrRotate(arr, count) {
-	// usage:
-	// let arr = [1,2,3,4,5];let arr1=jsCopy(arr); arr2=arrRotate(arr1,2);
 	var unshift = Array.prototype.unshift,
 		splice = Array.prototype.splice;
 	var len = arr.length >>> 0, count = count >> 0;
@@ -1721,19 +1648,12 @@ function arrTakeLast(arr, n, from = 0) {
 		let keys = Object.keys(arr);
 		let ilast = keys.length - 1; for (let i = ilast - from; i >= 0 && i > ilast - from - n; i--) { res.unshift(arr[keys[i]]); }
 	} else {
-		//ex arr=[1,2,3,4,5]; n=3; from=1; ilast=4; len = 5
-		//soll [2,3,4], ist: i=3,i=2,i=1
-		//ex arr=[0,1,2,3,4]; n=2; from=0; ilast=4; len = 5
-		//soll i=4, >5-0-2-1=2
-		// let len = arr.length;
-		// for (let i = len - 1 - from; i > len - 1 - from - n; i--) { res.unshift(arr[i]); }
 		let ilast = arr.length - 1; for (let i = ilast - from; i >= 0 && i > ilast - from - n; i--) { res.unshift(arr[i]); }
 	}
 	return res;
 }
 function arrWithout(arr, b) { return arrMinus(arr, b); }
 function arrZip(arr1, arr2) {
-	//arr1, arr2 are arrays of objects!
 	let res = [];
 	for (let i = 0; i < Math.min(arr1, arr2); i++) {
 		let o = {};
@@ -1745,7 +1665,6 @@ function arrZip(arr1, arr2) {
 }
 function addKeys(ofrom, oto) { for (const k in ofrom) if (nundef(oto[k])) oto[k] = ofrom[k]; return oto; }
 function copyKeys(ofrom, oto, except = {}, only) {
-	//console.log(ofrom)
 	let keys = isdef(only) ? only : Object.keys(ofrom);
 	for (const k of keys) {
 		if (isdef(except[k])) continue;
@@ -1786,7 +1705,6 @@ function find_minimum(array) {
 	return min;
 }
 function fisherYates(arr) {
-	//shuffles in place! (oberste zeile weil sonst in diesem fall immer die 2 elems geswapped werden!)
 	if (arr.length == 2 && coin()) { return arr; } //let temp=arr[0];arr[0]=arr[1];arr[1]=temp;return arr;} //return coin()?[arr[0],arr[1]]:[arr[1],arr[0]];
 	var rnd, temp;
 	let last = arr[0];
@@ -1796,11 +1714,9 @@ function fisherYates(arr) {
 		arr[i] = arr[rnd];
 		arr[rnd] = temp;
 	}
-	//assertion(arr.length!=2 || last == arr[arr.length-1],'fisher yates does NOT always push 0 to last place',last,arr);
 	return arr;
 }
 function firstCond(arr, func) {
-	//return first elem that fulfills condition
 	if (nundef(arr)) return null;
 	for (const a of arr) {
 		if (func(a)) return a;
@@ -1808,18 +1724,15 @@ function firstCond(arr, func) {
 	return null;
 }
 function firstCondDict(dict, func) {
-	//return first elem that fulfills condition
 	for (const k in dict) { if (func(dict[k])) return k; }
 	return null;
 }
 function firstCondDictKey() { return firstCondDictKeys(...arguments); }
 function firstCondDictKeys(dict, func) {
-	//return first elem that fulfills condition
 	for (const k in dict) { if (func(k)) return k; }
 	return null;
 }
 function firstNCond(n, arr, func) {
-	//return first n elements that fulfills condition
 	if (nundef(arr)) return [];
 	let result = [];
 	let cnt = 0;
@@ -1855,9 +1768,7 @@ function lookupSet(dict, keys, val) {
 	let d = dict;
 	let ilast = keys.length - 1;
 	let i = 0;
-	//console.log('val', val);
 	for (const k of keys) {
-		//console.log('dict', d, 'k', k, 'i', i, 'ilast', ilast);
 		if (nundef(k)) continue; //skip undef or null values
 		if (d[k] === undefined) d[k] = (i == ilast ? val : {});
 		if (nundef(d[k])) d[k] = (i == ilast ? val : {});
@@ -1872,11 +1783,8 @@ function lookupSetOverride(dict, keys, val) {
 	let ilast = keys.length - 1;
 	let i = 0;
 	for (const k of keys) {
-		//console.log(k,d)
 		if (i == ilast) {
 			if (nundef(k)) {
-				//letzter key den ich eigentlich setzen will ist undef!
-				//alert('lookupAddToList: last key indefined!' + keys.join(' '));
 				return null;
 			} else {
 				d[k] = val;
@@ -1891,17 +1799,12 @@ function lookupSetOverride(dict, keys, val) {
 	return d;
 }
 function lookupAddToList(dict, keys, val) {
-	//usage: lookupAddToList({a:{b:[2]}}, [a,b], 3) => {a:{b:[2,3]}}
-	//usage: lookupAddToList({a:{b:[2]}}, [a,c], 3) => {a:{b:[2],c:[3]}}
-	//usage: lookupAddToList({a:[0, [2], {b:[]}]}, [a,1], 3) => { a:[ 0, [2,3], {b:[]} ] }
 	let d = dict;
-	//console.log(dict)
 	let ilast = keys.length - 1;
 	let i = 0;
 	for (const k of keys) {
 		if (i == ilast) {
 			if (nundef(k)) {
-				//letzter key den ich eigentlich setzen will ist undef!
 				console.assert(false, 'lookupAddToList: last key indefined!' + keys.join(' '));
 				return null;
 			} else if (isList(d[k])) {
@@ -1912,7 +1815,6 @@ function lookupAddToList(dict, keys, val) {
 			return d[k];
 		}
 		if (nundef(k)) continue; //skip undef or null values
-		// if (i ==ilast && d[k]) d[k]=val;
 		if (d[k] === undefined) d[k] = {};
 		d = d[k];
 		i += 1;
@@ -1920,18 +1822,14 @@ function lookupAddToList(dict, keys, val) {
 	return d;
 }
 function lookupAddIfToList(dict, keys, val) {
-	//usage see lookupAddToList 
-	//only adds it to list if not contained!
 	let lst = lookup(dict, keys);
 	if (isList(lst) && lst.includes(val)) return;
 	lookupAddToList(dict, keys, val);
 }
 function removeInPlace(arr, el) {
-	//ACHTUNG!!!! geht nur wenn array elements unique sind! removes FIRST OCCURRENCE of el in arr!!!!!!!!!!!!!	
 	arrRemovip(arr, el);
 }
 function sameList(l1, l2) {
-	// compares 2 lists of strings if have same strings in it
 	if (l1.length != l2.length) return false;
 	for (const s of l1) {
 		if (!l2.includes(s)) return false;
@@ -1941,7 +1839,6 @@ function sameList(l1, l2) {
 function shuffle(arr) { if (isEmpty(arr)) return []; else return fisherYates(arr); }
 function shuffle_children(d) {
 	let arr = Array.from(d.children);
-	// arr.map(x => x.remove()); //not needed
 	shuffle(arr);
 	for (const ch of arr) { mAppend(d, ch); }
 }
@@ -1952,7 +1849,6 @@ function sortByFunc(arr, func) { arr.sort((a, b) => (func(a) < func(b) ? -1 : 1)
 function sortByFuncDescending(arr, func) { arr.sort((a, b) => (func(a) > func(b) ? -1 : 1)); return arr; }
 function sortNumbers(ilist) { ilist.sort(function (a, b) { return a - b }); return ilist; }
 function stripToKeys(o, di) {
-	//return new object with only the keys in keys list
 	let res = {};
 	for (const k in o) {
 		if (isdef(di[k])) res[k] = o[k];
@@ -1967,7 +1863,6 @@ function alphaToHex(zero1) {
 		.slice(-2)
 		.toUpperCase();
 	var perc = Math.round(zero1 * 100);
-	//console.log('alpha from', zero1, 'to', hex);
 	return hex;
 }
 function colorDark(c, percent = 50, log = true) {
@@ -1976,8 +1871,6 @@ function colorDark(c, percent = 50, log = true) {
 	return pSBC(zero1, c, undefined, !log);
 }
 function colorFrom(cAny, a, allowHsl = false) {
-	//returns a standard color (rgb or hex format, unless allowHsl==true it could return hsl format)
-	//creates ColorDi if needed
 	if (isString(cAny)) {
 		if (cAny[0] == '#') {
 			if (a == undefined) return cAny;
@@ -1991,20 +1884,15 @@ function colorFrom(cAny, a, allowHsl = false) {
 		} else if (startsWith(cAny, 'rand')) {
 			let spec = capitalize(cAny.substring(4));
 			if (isdef(window['color' + spec])) {
-				//console.log('found function!', 'color' + spec);
 				c = window['color' + spec]();
 			} else c = rColor();
-			//console.log('==>(hex) color is', c);
 			if (a == undefined) return c;
 			return c + (a == 1 ? '' : alphaToHex(a));
 		} else if (startsWith(cAny, 'linear')) {
 			return cAny;
 		} else if (cAny[0] == 'r' && cAny[1] == 'g') {
 			if (a == undefined) return cAny;
-			//this is rbg or rgba string
 			if (cAny[3] == 'a') {
-				//rgba string!
-				//console.log('its an rgba string!!!!!');
 				if (a < 1) {
 					return stringBeforeLast(cAny, ',') + ',' + a + ')';
 				} else {
@@ -2013,17 +1901,13 @@ function colorFrom(cAny, a, allowHsl = false) {
 					return 'rgb(' + r + ',' + parts[1] + ',' + parts[2] + ')';
 				}
 			} else {
-				// simple rgb string
 				if (a < 1) {
-					//console.log(cAny.length)
 					return 'rgba' + cAny.substring(3, cAny.length - 1) + ',' + a + ')';
 				} else {
 					return cAny;
 				}
 			}
 		} else if (cAny[0] == 'h' && cAny[1] == 's') {
-			//hsl or hsla string
-			//if hsla and hsla allowed do same as for rgba
 			if (allowHsl) {
 				if (a == undefined) return cAny;
 				if (cAny[3] == 'a') {
@@ -2035,11 +1919,9 @@ function colorFrom(cAny, a, allowHsl = false) {
 						return 'hsl(' + r + ',' + parts[1] + ',' + parts[2] + ')';
 					}
 				} else {
-					//simple hsl string
 					return a == 1 ? cAny : 'hsla' + cAny.substring(3, cAny.length - 1) + ',' + a + ')'; //cAny.substring(0,cAny.length-1) + ',' + a + ')';
 				}
 			} else {
-				//convert hsl(a) into rgb(a)
 				if (cAny[3] == 'a') {
 					cAny = HSLAToRGBA(cAny);
 				} else {
@@ -2050,7 +1932,6 @@ function colorFrom(cAny, a, allowHsl = false) {
 		} else { //will get here only once!!!
 			ensureColorDict();
 			let c = ColorDi[cAny];
-			//console.log('nach ensure',getFunctionsNameThatCalledThisFunction(), ColorDi, 'looking for', cAny, c)
 			if (nundef(c)) {
 				if (startsWith(cAny, 'rand')) {
 					let spec = cAny.substring(4);
@@ -2068,7 +1949,6 @@ function colorFrom(cAny, a, allowHsl = false) {
 			return c + (a == 1 ? '' : alphaToHex(a));
 		}
 	} else if (Array.isArray(cAny)) {
-		// cAny is rgb array or a list of colors to choose from!!!!
 		if (cAny.length == 3 && isNumber(cAny[0])) { //assume this is a rgb
 			let r = cAny[0];
 			let g = cAny[1];
@@ -2078,10 +1958,7 @@ function colorFrom(cAny, a, allowHsl = false) {
 			return rChoose(cAny);
 		}
 	} else if (typeof cAny == 'object') {
-		//console.log('anyColorToStandardString: cAny is object!!!', cAny);
-		//koennte {h: ,s: , l:} oder {r: ,g: ,b:} sein
 		if ('h' in cAny) {
-			//hsl object
 			let hslString = '';
 			if (a == undefined || a == 1) {
 				hslString = `hsl(${cAny.h},${Math.round(cAny.s <= 1.0 ? cAny.s * 100 : cAny.s)}%,${Math.round(cAny.l <= 1.0 ? cAny.l * 100 : cAny.l)}%)`;
@@ -2094,7 +1971,6 @@ function colorFrom(cAny, a, allowHsl = false) {
 				return colorFrom(hslString, a, allowHsl);
 			}
 		} else if ('r' in cAny) {
-			//rgb object
 			if (a !== undefined && a < 1) {
 				return `rgba(${cAny.r},${cAny.g},${cAny.b},${a})`;
 			} else {
@@ -2104,47 +1980,35 @@ function colorFrom(cAny, a, allowHsl = false) {
 	}
 }
 function colorsFromBFA(bg, fg, alpha) {
-	//handles fg,bg 'inherit', 'contrast', 'rand___' ,or any color
-	//console.log('colorsFromBFA', bg,fg,alpha)
 	if (fg == 'contrast') {
 		if (bg != 'inherit') bg = colorFrom(bg, alpha);
 		fg = colorIdealText(bg);
-		//console.log('h11111111111111111')
 	} else if (bg == 'contrast') {
 		fg = colorFrom(fg);
 		bg = colorIdealText(fg);
-		//console.log('h11111111111111111222222')
 	} else {
 		if (isdef(bg) && bg != 'inherit') bg = colorFrom(bg, alpha);
 		if (isdef(fg) && fg != 'inherit') fg = colorFrom(fg);
-		//console.log('h111111111111111114444444444',bg,fg)
 	}
 	return [bg, fg];
 }
 function colorFromHSL(hue, sat = 100, lum = 50) {
 	return hslToHex(valf(hue, rHue()), sat, lum);
-	//return colorFrom(colorHSLBuild(valf(hue,rHue()), sat, lum)); 
 }
 function colorHex(cAny) {
-	//returns hex string w/ alpha channel or without
 	let c = colorFrom(cAny);
 	if (c[0] == '#') {
 		return c;
 	} else {
-		//it is now an rgba string and has alpha
 		let res = pSBC(0, c, 'c');
-		//console.log('in colorHex!!!!', c, res);
 		return res;
 	}
 }
 function colorHSLBuild(hue, sat = 100, lum = 50) { let result = "hsl(" + hue + ',' + sat + '%,' + lum + '%)'; return result; }
 function colorHSL(cAny, asObject = false) {
-	//returns { h:[0,360], s:[0,1], l:[0,1]}
 	let res = colorFrom(cAny, undefined, true);
-	//console.log(res)
 	let shsl = res;
 	if (res[0] == '#') {
-		//res is a hex string
 		if (res.length == 9) {
 			shsl = hexAToHSLA(res);
 		} else if (res.length == 7) {
@@ -2157,9 +2021,7 @@ function colorHSL(cAny, asObject = false) {
 			shsl = RGBToHSL(res);
 		}
 	}
-	//console.log(shsl);
 	let n = allNumbers(shsl);
-	//console.log(n);
 	if (asObject) {
 		return { h: n[0], s: n[1] / 100, l: n[2] / 100, a: n.length > 3 ? n[3] : 1 };
 	} else {
@@ -2169,7 +2031,6 @@ function colorHSL(cAny, asObject = false) {
 function colorHue(cAny) { let hsl = colorHSL(cAny, true); return hsl.h; }
 function colorIdealText(bg, grayPreferred = false) {
 	let rgb = colorRGB(bg, true);
-	//jetzt ist bg rgb object
 	const nThreshold = 105; //40; //105;
 	let r = rgb.r;
 	let g = rgb.g;
@@ -2178,26 +2039,21 @@ function colorIdealText(bg, grayPreferred = false) {
 	var foreColor = 255 - bgDelta < nThreshold ? 'black' : 'white';
 	if (grayPreferred) foreColor = 255 - bgDelta < nThreshold ? 'dimgray' : 'snow';
 	return foreColor;
-	// return 'white';
 }
 function colorLight(c, percent = 20, log = true) {
 	if (nundef(c)) {
 		return colorFromHSL(rHue(), 100, 85);
 	} else c = colorFrom(c);
-	// if (nundef(c)) c = colorFrom(rChoose(['yellow', 'skyblue', 'orange', 'violet', 'pink', 'GREEN', 'lime']));//rPrimaryColor();
 	let zero1 = percent / 100;
 	return pSBC(zero1, c, undefined, !log);
 }
 function colorRGB(cAny, asObject = false) {
-	//returns { r:[0,255], g:[0,255], b:[0,255]}
 	let res = colorFrom(cAny);
 	let srgb = res;
 	if (res[0] == '#') {
 		srgb = pSBC(0, res, 'c');
 	}
-	//console.log(shsl);
 	let n = allNumbers(srgb);
-	//console.log(n);
 	if (asObject) {
 		return { r: n[0], g: n[1], b: n[2], a: n.length > 3 ? n[3] : 1 };
 	} else {
@@ -2219,8 +2075,6 @@ function colorPaletteFromImage(img) {
 		let color = colorFrom(pal);
 		palette.push(color);
 	}
-	//console.log(palette)
-	//console.log('palette', palette)
 	return palette;
 }
 function colorPaletteFromUrl(path) {
@@ -2229,10 +2083,8 @@ function colorPaletteFromUrl(path) {
 	return pal;
 }
 function colorShades(color) {
-	//assumes pSBC compatible color format (hex,rgb strings)
 	let res = [];
 	for (let frac = -0.8; frac <= 0.8; frac += 0.2) {
-		//darkest -0.8 -0.6 -0.4 -0.2 0=color 0.2 0.4 0.6 0.8 lightest
 		let c = pSBC(frac, color, undefined, true); //colorShade(frac,color);
 		res.push(c);
 	}
@@ -2319,7 +2171,6 @@ function ensureColorDict() {
 	};
 	for (const k in newcolors) {
 		let cnew = newcolors[k];
-		//console.log('new color:', k, cnew)
 		if (cnew.c[0] != '#' && isdef(ColorDi[cnew.c])) cnew.c = ColorDi[cnew.c].c;
 		ColorDi[k] = cnew;
 	}
@@ -2631,7 +2482,6 @@ function getColorHexes(x) {
 function hexToHSL(H) {
 	let ex = /^#([\da-f]{3}){1,2}$/i;
 	if (ex.test(H)) {
-		// convert hex to RGB first
 		let r = 0,
 			g = 0,
 			b = 0;
@@ -2644,7 +2494,6 @@ function hexToHSL(H) {
 			g = '0x' + H[3] + H[4];
 			b = '0x' + H[5] + H[6];
 		}
-		// then to HSL
 		r /= 255;
 		g /= 255;
 		b /= 255;
@@ -2686,20 +2535,17 @@ function hexAToHSLA(H) {
 			g = 0,
 			b = 0,
 			a = 1;
-		// 4 digits
 		if (H.length == 5) {
 			r = '0x' + H[1] + H[1];
 			g = '0x' + H[2] + H[2];
 			b = '0x' + H[3] + H[3];
 			a = '0x' + H[4] + H[4];
-			// 8 digits
 		} else if (H.length == 9) {
 			r = '0x' + H[1] + H[2];
 			g = '0x' + H[3] + H[4];
 			b = '0x' + H[5] + H[6];
 			a = '0x' + H[7] + H[8];
 		}
-		// normal conversion to HSLA
 		r /= 255;
 		g /= 255;
 		b /= 255;
@@ -2726,7 +2572,6 @@ function hexAToHSLA(H) {
 	}
 } //ok
 function HSLToRGB(hsl, isPct) {
-	//if isPct == true, will output 'rgb(xx%,xx%,xx%)' umgerechnet in % von 255
 	let ex = /^hsl\(((((([12]?[1-9]?\d)|[12]0\d|(3[0-5]\d))(\.\d+)?)|(\.\d+))(deg)?|(0|0?\.\d+)turn|(([0-6](\.\d+)?)|(\.\d+))rad)((,\s?(([1-9]?\d(\.\d+)?)|100|(\.\d+))%){2}|(\s(([1-9]?\d(\.\d+)?)|100|(\.\d+))%){2})\)$/i;
 	if (ex.test(hsl)) {
 		let sep = hsl.indexOf(',') > -1 ? ',' : ' ';
@@ -2738,11 +2583,9 @@ function HSLToRGB(hsl, isPct) {
 		let h = hsl[0],
 			s = hsl[1].substr(0, hsl[1].length - 1) / 100,
 			l = hsl[2].substr(0, hsl[2].length - 1) / 100;
-		// strip label and convert to degrees (if necessary)
 		if (h.indexOf('deg') > -1) h = h.substr(0, h.length - 3);
 		else if (h.indexOf('rad') > -1) h = Math.round((h.substr(0, h.length - 3) / (2 * Math.PI)) * 360);
 		else if (h.indexOf('turn') > -1) h = Math.round(h.substr(0, h.length - 4) * 360);
-		// keep hue fraction of 360 if ending up over
 		if (h >= 360) h %= 360;
 		let c = (1 - Math.abs(2 * l - 1)) * s,
 			x = c * (1 - Math.abs(((h / 60) % 2) - 1)),
@@ -2789,7 +2632,6 @@ function HSLToRGB(hsl, isPct) {
 	}
 } //ok
 function HSLAToRGBA(hsla, isPct) {
-	//if isPct == true, will output 'rgb(xx%,xx%,xx%)' umgerechnet in % von 255
 	let ex = /^hsla\(((((([12]?[1-9]?\d)|[12]0\d|(3[0-5]\d))(\.\d+)?)|(\.\d+))(deg)?|(0|0?\.\d+)turn|(([0-6](\.\d+)?)|(\.\d+))rad)(((,\s?(([1-9]?\d(\.\d+)?)|100|(\.\d+))%){2},\s?)|((\s(([1-9]?\d(\.\d+)?)|100|(\.\d+))%){2}\s\/\s))((0?\.\d+)|[01]|(([1-9]?\d(\.\d+)?)|100|(\.\d+))%)\)$/i;
 	if (ex.test(hsla)) {
 		let sep = hsla.indexOf(',') > -1 ? ',' : ' ';
@@ -2797,15 +2639,12 @@ function HSLAToRGBA(hsla, isPct) {
 			.substr(5)
 			.split(')')[0]
 			.split(sep);
-		// strip the slash if using space-separated syntax
 		if (hsla.indexOf('/') > -1) hsla.splice(3, 1);
 		isPct = isPct === true;
-		// must be fractions of 1
 		let h = hsla[0],
 			s = hsla[1].substr(0, hsla[1].length - 1) / 100,
 			l = hsla[2].substr(0, hsla[2].length - 1) / 100,
 			a = hsla[3];
-		// strip label and convert to degrees (if necessary)
 		if (h.indexOf('deg') > -1) h = h.substr(0, h.length - 3);
 		else if (h.indexOf('rad') > -1) h = Math.round((h.substr(0, h.length - 3) / (2 * Math.PI)) * 360);
 		else if (h.indexOf('turn') > -1) h = Math.round(h.substr(0, h.length - 4) * 360);
@@ -2874,14 +2713,11 @@ function RGBToHex7(c) {
 function rgbToHex(rgbStr) { return rgbStr && '#' + rgbStr.slice(4, -1).split(',').map(x => (+x).toString(16).padStart(2, '0')).join(''); }
 function RGBAToHex9(rgba) {
 	let n = allNumbers(rgba); //allNumbers does not catch .5 as float!
-	//console.log('all numbers:', n);
 	if (n.length < 3) {
-		//console.log('RGBAToHex ERROR!', rgba);
 		return randomHexColor();
 	}
 	let a = n.length > 3 ? n[3] : 1;
 	let sa = alphaToHex(a);
-	//console.log('sa:', sa);
 	if (rgba.includes('%')) {
 		n[0] = Math.round((n[0] * 255) / 100);
 		n[1] = Math.round((n[1] * 255) / 100);
@@ -2897,39 +2733,27 @@ function RGBToHSL(rgb) {
 			.substr(4)
 			.split(')')[0]
 			.split(sep);
-		// convert %s to 0–255
 		for (let R in rgb) {
 			let r = rgb[R];
 			if (r.indexOf('%') > -1) rgb[R] = Math.round((r.substr(0, r.length - 1) / 100) * 255);
 		}
-		// make r, g, and b fractions of 1
 		let r = rgb[0] / 255,
 			g = rgb[1] / 255,
 			b = rgb[2] / 255,
-			// find greatest and smallest channel values
 			cmin = Math.min(r, g, b),
 			cmax = Math.max(r, g, b),
 			delta = cmax - cmin,
 			h = 0,
 			s = 0,
 			l = 0;
-		// calculate hue
-		// no difference
 		if (delta == 0) h = 0;
-		// red is max
 		else if (cmax == r) h = ((g - b) / delta) % 6;
-		// green is max
 		else if (cmax == g) h = (b - r) / delta + 2;
-		// blue is max
 		else h = (r - g) / delta + 4;
 		h = Math.round(h * 60);
-		// make negative hues positive behind 360°
 		if (h < 0) h += 360;
-		// calculate lightness
 		l = (cmax + cmin) / 2;
-		// calculate saturation
 		s = delta == 0 ? 0 : delta / (1 - Math.abs(2 * l - 1));
-		// multiply l and s by 100
 		s = +(s * 100).toFixed(1);
 		l = +(l * 100).toFixed(1);
 		return 'hsl(' + h + ',' + s + '%,' + l + '%)';
@@ -2945,7 +2769,6 @@ function RGBAToHSLA(rgba) {
 			.substr(5)
 			.split(')')[0]
 			.split(sep);
-		// strip the slash if using space-separated syntax
 		if (rgba.indexOf('/') > -1) rgba.splice(3, 1);
 		for (let R in rgba) {
 			let r = rgba[R];
@@ -2956,35 +2779,24 @@ function RGBAToHSLA(rgba) {
 				}
 			}
 		}
-		// make r, g, and b fractions of 1
 		let r = rgba[0] / 255,
 			g = rgba[1] / 255,
 			b = rgba[2] / 255,
 			a = rgba[3],
-			// find greatest and smallest channel values
 			cmin = Math.min(r, g, b),
 			cmax = Math.max(r, g, b),
 			delta = cmax - cmin,
 			h = 0,
 			s = 0,
 			l = 0;
-		// calculate hue
-		// no difference
 		if (delta == 0) h = 0;
-		// red is max
 		else if (cmax == r) h = ((g - b) / delta) % 6;
-		// green is max
 		else if (cmax == g) h = (b - r) / delta + 2;
-		// blue is max
 		else h = (r - g) / delta + 4;
 		h = Math.round(h * 60);
-		// make negative hues positive behind 360°
 		if (h < 0) h += 360;
-		// calculate lightness
 		l = (cmax + cmin) / 2;
-		// calculate saturation
 		s = delta == 0 ? 0 : delta / (1 - Math.abs(2 * l - 1));
-		// multiply l and s by 100
 		s = +(s * 100).toFixed(1);
 		l = +(l * 100).toFixed(1);
 		return 'hsla(' + h + ',' + s + '%,' + l + '%,' + a + ')';
@@ -2993,12 +2805,6 @@ function RGBAToHSLA(rgba) {
 	}
 } //ok
 function pSBC(p, c0, c1, l) {
-	//usage:
-	// (blacken) -1.0 <= p <= 1.0 (whiten), or (c0) 0 <= p <= 1.0 (c1) when blending (ie., c1 given)
-	// c0: #F3D or #F3DC or #FF33DD or #FF33DDCC or rgb(23,4,55) or rgba(23,4,55,0.52) ... from color
-	// c1: #F3D or #F3DC or #FF33DD or #FF33DDCC or rgb(23,4,55) or rgba(23,4,55,0.52) ... to color (blending)
-	// 		or 'c' for conversion between hex string and rgb string
-	// l true:log blending, [false:linear blending]=default!
 	let r, g, b, P, f, t, h, i = parseInt, m = Math.round, a = typeof c1 == 'string';
 	if (typeof p != 'number' || p < -1 || p > 1 || typeof c0 != 'string' || (c0[0] != 'r' && c0[0] != '#') || (c1 && !a)) return null;
 	h = c0.length > 9;
@@ -3070,15 +2876,10 @@ function fireClick(node) {
 	if (document.createEvent) {
 		var evt = document.createEvent('MouseEvents');
 		evt.initEvent('click', true, false);
-		//console.log('fireClick: createEvent and node.dispatchEvent exist!!!', node)
-		//console.log('****************fireClick: node.onclick exists!!!', node)
-		//node.click();
 		node.dispatchEvent(evt);
 	} else if (document.createEventObject) {
-		//console.log('fireClick: createEventObject and node.fireEvent exist!!!', node)
 		node.fireEvent('onclick');
 	} else if (typeof node.onclick == 'function') {
-		//console.log('****************fireClick: node.onclick exists!!!', node)
 		node.onclick();
 	}
 }
@@ -3099,11 +2900,7 @@ function fireWheel(node) {
 function fireKey(k, { control, alt, shift } = {}) {
 	console.log('fireKey called!' + document.createEvent)
 	if (document.createEvent) {
-		// var evt = document.createEvent('KeyEvents');
-		// evt.initEvent('keyup', true, false);
 		console.log('fireKey: createEvent and node.dispatchEvent exist!!!', k, control, alt, shift);
-		//el.dispatchEvent(new Event('focus'));
-		//el.dispatchEvent(new KeyboardEvent('keypress',{'key':'a'}));
 		window.dispatchEvent(new KeyboardEvent('keypress', { key: '+', ctrlKey: true }));
 	} else if (document.createEventObject) {
 		console.log('fireClick: createEventObject and node.fireEvent exist!!!', node)
@@ -3115,7 +2912,6 @@ function fireKey(k, { control, alt, shift } = {}) {
 }
 var TOFleetingMessage, dFleetingMessage, Animation1;
 function clearFleetingMessage() {
-	//console.log('dfl',dFleetingMessage)
 	if (isdef(dFleetingMessage)) {
 		dFleetingMessage.remove();
 		dFleetingMessage = null;
@@ -3123,18 +2919,15 @@ function clearFleetingMessage() {
 	}
 }
 function showFleetingMessage(msg, dParent, styles = {}, ms = 3000, msDelay = 0, fade = true) {
-	//console.log('new fleeting message', msg)
 	clearFleetingMessage();
 	dFleetingMessage = mDiv(dParent);
 	if (msDelay) {
 		TOFleetingMessage = setTimeout(() => fleetingMessage(msg, dFleetingMessage, styles, ms, fade), msDelay);
 	} else {
 		TOFleetingMessage = setTimeout(() => fleetingMessage(msg, dFleetingMessage, styles, ms, fade), 10);
-		//fleetingMessage(msg, dParent, styles, ms, fade);
 	}
 }
 function fleetingMessage(msg, d, styles, ms, fade) {
-	//console.log('fade', fade);
 	if (isString(msg)) {
 		dFleetingMessage.innerHTML = msg;
 		mStyle(dFleetingMessage, styles);
@@ -3142,11 +2935,9 @@ function fleetingMessage(msg, d, styles, ms, fade) {
 		mAppend(dFleetingMessage, msg);
 	}
 	if (fade) Animation1 = mAnimate(dFleetingMessage, 'opacity', [1, .4, 0], null, ms, 'ease-in', 0, 'both');
-	//else mStyle(dFleetingMessage, { opacity: 1, fz: 30, fg: 'lime', animation: 'none' });
 	return dFleetingMessage;
 }
 function getFunctionCallerName() {
-	// gets the text between whitespace for second part of stacktrace
 	return new Error().stack.match(/at (\S+)/g)[1].slice(3);
 }
 function getFunctionsNameThatCalledThisFunction() {
@@ -3158,13 +2949,11 @@ function getFunctionsNameThatCalledThisFunction() {
 }
 function getKeySets() {
 	makeCategories();	//console.log('Categories',Categories)
-	//console.log('hallo'); return [];
 	let res = {};
 	for (const k in Syms) {
 		let info = Syms[k];
 		if (nundef(info.cats)) continue;
 		for (const ksk of info.cats) {
-			//console.log('ksk',ksk,'k',k);
 			lookupAddIfToList(res, [ksk], k);
 		}
 	}
@@ -3202,7 +2991,6 @@ function getGSGElements(gCond, sCond) {
 	return keys.sort();
 }
 function makeCategories() {
-	//console.log(ByGroupSubgroup);
 	let keys = Categories = {
 		animal: getGSGElements(g => g == 'Animals & Nature', s => startsWith(s, 'animal')),
 		clothing: getGSGElements(g => g == 'Objects', s => s == 'clothing'),
@@ -3237,20 +3025,15 @@ function makeCategories() {
 		tool: ['object'],
 		transport: [],
 	}
-	//console.log('categories', keys);
 }
 function genCats(n) {
-	//console.log('???????',DA.incompatibleCats)
 	let di = {};
 	let cats = Object.keys(Categories);
-	//console.log('cats available:',cats)
 	for (let i = 0; i < n; i++) {
 		let cat = chooseRandom(cats);
 		let incompat = DA.incompatibleCats[cat];
-		//console.log('cats',cats,'\ncat',cat,'\nincompat',incompat)
 		cats = arrMinus(cats, incompat);
 		removeInPlace(cats, cat);
-		//console.log('cats after minus',cats);
 		di[cat] = Categories[cat];
 	}
 	return di;
@@ -3261,8 +3044,6 @@ function removeDuplicates(keys, prop) {
 	let res = [];
 	let items = keys.map(x => Syms[x]);
 	for (const item of items) {
-		// if (item.key.includes('key')) console.log('hallo',item)
-		// if (isdef(di[item.best])) {console.log('dupl:',item.key); continue;}
 		if (isdef(di[item.best])) { continue; }
 		res.push(item);
 		di[item.key] = true;
@@ -3274,42 +3055,31 @@ function setKeys({ allowDuplicates, nMin = 25, lang, key, keySets, filterFunc, p
 	if (isdef(nMin)) {
 		let diff = nMin - keys.length;
 		let additionalSet = diff > 0 ? nMin > 100 ? firstCondDictKeys(keySets, k => k != key && keySets[k].length > diff) : 'best100' : null;
-		//console.log('diff', diff, additionalSet, keys)
 		if (additionalSet) KeySets[additionalSet].map(x => addIf(keys, x)); //
-		//if (additionalSet) keys = keys.concat(keySets[additionalSet]);
-		//console.log(keys)
 	}
 	let primary = [];
 	let spare = [];
 	for (const k of keys) {
 		let info = Syms[k];
-		//console.log('info',info);
 		info.best = info[lang];
-		//console.log(info.best)
 		if (nundef(info.best)) {
 			let ersatzLang = (lang == 'D' ? 'D' : 'E');
 			let klang = 'best' + ersatzLang;
-			//console.log(k,lang,klang)
 			if (nundef(info[klang])) info[klang] = lastOfLanguage(k, ersatzLang);
 		}
-		//console.log(k,lang,lastOfLanguage(k,lang),info.best,info)
 		let isMatch = true;
-		//if (isdef(filterFunc)) console.log(filterFunc,filterFunc(k,info.best))
 		if (isdef(filterFunc)) isMatch = isMatch && filterFunc(param, k, info.best);
 		if (isdef(confidence)) isMatch = info[klang + 'Conf'] >= confidence;
 		if (isMatch) { primary.push(k); } else { spare.push(k); }
 	}
 	if (isdef(nMin)) {
-		//if result does not have enough elements, take randomly from other
 		let len = primary.length;
 		let nMissing = nMin - len;
 		if (nMissing > 0) { let list = choose(spare, nMissing); spare = arrMinus(spare, list); primary = primary.concat(list); }
 	}
 	if (isdef(sortByFunc)) { sortBy(primary, sortByFunc); }
 	if (isdef(nMin)) console.assert(primary.length >= nMin);
-	//console.log(primary)
 	if (nundef(allowDuplicates)) {
-		//console.log('hhhhhhhhhhhhhhh',primary.length)
 		primary = removeDuplicates(primary);
 	}
 	return primary;
@@ -3323,12 +3093,10 @@ function rRank(ranks = 'A23456789TJQK') { return rChoose(ranks); }
 function rSuit(suit = 'HSDC') { return rChoose(suit); }
 function rCoin(percent = 50) {
 	let r = Math.random();
-	//r ist jetzt zahl zwischen 0 und 1
 	r *= 100;
 	return r < percent;
 }
 function rChoose(arr, n = 1, func = null, exceptIndices = null) {
-	//geht auch mit arr is string!
 	let indices = arrRange(0, arr.length - 1);
 	if (isdef(exceptIndices)) {
 		for (const i of exceptIndices) removeInPlace(indices, i);
@@ -3380,10 +3148,8 @@ function rNumber(min = 0, max = 100) {
 function rPassword(n) { return rChoose(toLetters('0123456789abcdefghijklmnopqABCDEFGHIJKLMNOPQRSTUVWXYZ!.?*&%$#@:;_'), n).join(''); }
 function rPrimaryColor() { let c = '#' + rChoose(['ff', '00']) + rChoose(['ff', '00']); c += c == '#0000' ? 'ff' : c == '#ffff' ? '00' : rChoose(['ff', '00']); return c; }
 function allNumbers(s) {
-	//returns array of all numbers within string s
 	let m = s.match(/\-.\d+|\-\d+|\.\d+|\d+\.\d+|\d+\b|\d+(?=\w)/g);
 	if (m) return m.map(v => Number(v)); else return null;
-	// {console.log(v,typeof v,v[0],v[0]=='-',v[0]=='-'?-(+v):+v,Number(v));return Number(v);});
 }
 function capitalize(s) {
 	if (typeof s !== 'string') return '';
@@ -3392,7 +3158,6 @@ function capitalize(s) {
 function contains(s, sSub) { return s.toLowerCase().includes(sSub.toLowerCase()); }
 function endsWith(s, sSub) { let i = s.indexOf(sSub); return i >= 0 && i == s.length - sSub.length; }
 function firstNumber(s) {
-	// returns first number in string s
 	if (s) {
 		let m = s.match(/-?\d+/);
 		if (m) {
@@ -3454,14 +3219,10 @@ function splitIntoNumbersAndWords(s) {
 	return arr;
 }
 function startsWith(s, sSub) {
-	//console.log('s',s,'sSub',sSub)
-	//testHelpers('startWith: s='+s+', sSub='+sSub,typeof(s),typeof(sSub));
 	return s.substring(0, sSub.length) == sSub;
 }
 function stringAfter(sFull, sSub) {
-	//testHelpers('s='+sFull,'sub='+sSub)
 	let idx = sFull.indexOf(sSub);
-	//testHelpers('idx='+idx)
 	if (idx < 0) return '';
 	return sFull.substring(idx + sSub.length);
 }
@@ -3484,7 +3245,6 @@ function stringBetween(sFull, sStart, sEnd) {
 function stringBetweenLast(sFull, sStart, sEnd) {
 	let s1 = stringBeforeLast(sFull, isdef(sEnd) ? sEnd : sStart);
 	return stringAfterLast(s1, sStart);
-	//return stringBefore(stringAfter(sFull,sStart),isdef(sEnd)?sEnd:sStart);
 }
 function toLetters(s) { return [...s]; }
 function toWords(s) {
@@ -3511,13 +3271,8 @@ class SimpleTimer {
 	}
 	tickHandler() {
 		this.msLeft -= this.interval;
-		//let [ms, unit] = [this.msLeft, this.msTotal / 6];
 		this.msElapsed = this.msTotal - this.msLeft;
 		this.output();
-		//console.log('msLeft', this.msLeft, timeConversion(this.msLeft));
-		// this.button.innerHTML = timeConversion(Math.max(this.msLeft, 0), 'sh');
-		// let bg = ms > unit * 4 ? GREEN : ms > unit * 2 ? YELLOW : ms > unit ? 'orange' : RED;
-		// this.button.style.background = bg;
 		if (isdef(this.onTick)) this.onTick();
 		if (this.msLeft <= 0) {
 			this.stop();
@@ -3559,31 +3314,19 @@ function start_simple_timer(dtimer, msInterval, onTick, msTotal, onElapsed) {
 }
 function stop_simple_timer() { if (isdef(DA.timer)) { DA.timer.clear(); DA.timer = null; } }
 function timeConversion(duration, format = 'Hmsh') {
-	// console.log(timeConversion((60 * 60 * 1000) + (59 * 60 * 1000) + (59 * 1000)));
-	// console.log(timeConversion((60 * 60 * 1000) + (59 * 60 * 1000)              ));
-	// console.log(timeConversion((60 * 60 * 1000)                                 ));
-	// console.log(timeConversion((60 * 60 * 1000)                    + (59 * 1000)));
-	// console.log(timeConversion(                   (59 * 60 * 1000) + (59 * 1000)));
-	// console.log(timeConversion(                                      (59 * 1000)));
 	const portions = [];
 	const msInHour = 1000 * 60 * 60;
 	const hours = Math.trunc(duration / msInHour);
-	//if (hours > 0) {
 	if (format.includes('H')) portions.push((hours < 10 ? '0' : '') + hours);
 	duration = duration - (hours * msInHour); // hours + 'h');
-	//}
 	const msInMinute = 1000 * 60;
 	const minutes = Math.trunc(duration / msInMinute);
-	//if (minutes > 0) {
 	if (format.includes('m')) portions.push((minutes < 10 ? '0' : '') + minutes);// minutes + 'm');
 	duration = duration - (minutes * msInMinute);
-	//}
 	const msInSecond = 1000;
 	const seconds = Math.trunc(duration / 1000);
-	//if (seconds > 0) {
 	if (format.includes('s')) portions.push((seconds < 10 ? '0' : '') + seconds);//seconds + 's');
 	duration = duration - (seconds * msInSecond);
-	//}
 	const hundreds = duration / 10;
 	if (format.includes('h')) portions.push((hundreds < 10 ? '0' : '') + hundreds);//hundreds);
 	return portions.join(':');
@@ -3591,7 +3334,6 @@ function timeConversion(duration, format = 'Hmsh') {
 function assertion(cond) {
 	if (!cond) {
 		let args = [...arguments];
-		//console.log('args',args)
 		for (const a of args) {
 			console.log('\n', a);
 		}
@@ -3599,7 +3341,6 @@ function assertion(cond) {
 	}
 }
 function clearElement(elem) {
-	//console.log(elem);
 	if (isString(elem)) elem = document.getElementById(elem);
 	if (window.jQuery == undefined) { elem.innerHTML = ''; return elem; }
 	while (elem.firstChild) {
@@ -3608,15 +3349,17 @@ function clearElement(elem) {
 	return elem;
 }
 function clear_timeouts() {
-	//clear ALL timeouts!
 	for (const k in TO) clearTimeout(TO[k]);
 	stop_simple_timer();
 }
 function divInt(a, b) { return Math.trunc(a / b); }
 function errlog() { console.log('ERROR!', ...arguments); }
 function evNoBubble(ev) { ev.preventDefault(); ev.cancelBubble = true; }
+function evToClass(ev, className) {
+	let elem = findParentWithClass(className);
+	return elem;
+}
 function evToClosestId(ev) {
-	//returns first ancestor that has an id
 	let elem = findParentWithId(ev.target);
 	return elem.id;
 }
@@ -3634,10 +3377,6 @@ function evToTargetAttribute(ev, attr) {
 	if (nundef(val)) { val = ev.target.parentNode.getAttribute(attr); }
 	return val;
 }
-function evToClass(ev, className) {
-	let elem = findParentWithClass(className);
-	return elem;
-}
 function findAttributeInAncestors(elem, attr) {
 	let val;
 	while (elem && nundef(val = elem.getAttribute(attr))) { elem = elem.parentNode; }
@@ -3649,7 +3388,6 @@ function findAncestorElemWithParentOfType(el, type) {
 	while (el && el.parentNode) {
 		let t = getTypeOf(el);
 		let tParent = getTypeOf(el.parentNode);
-		//console.log('el', t, tParent, 'el.id', el.id, 'parentNode.id', el.parentNode.id);
 		if (tParent == type) break;
 		el = el.parentNode;
 	}
@@ -3685,13 +3423,11 @@ function findChildWithClass(className, parentElem) {
 	testHelpers(parentElem);
 	let children = arrChildren(parentElem);
 	for (const ch of children) {
-		//console.log('....findChildWithClass', ch, ch.classList, className)
 		if (ch.classList.includes(className)) return ch;
 	}
 	return null;
 }
 function findChildOfType(type, parentElem) {
-	//console.log('findChildOfType',parentElem);
 	let children = arrChildren(parentElem);
 	for (const ch of children) {
 		if (getTypeOf(ch) == type) return ch;
@@ -3718,18 +3454,23 @@ function findChildrenOfType(type, parentElem) {
 }
 function findKeys(s) { return SymKeys.filter(x => contains(x, s) || contains(Syms[x].E) || contains(Syms[x].D), s); }
 function format_currency(num) {
-	//num should be presented with 2 decimals and a $ sign in front
 	return '$' + num.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+function get_checked_radios(rg) {
+	let inputs = rg.getElementsByTagName('INPUT');
+	let list = [];
+	for (const ch of inputs) {
+		let checked = ch.getAttribute('checked');
+		if (ch.checked) list.push(ch.value);
+	}
+	return list;
 }
 function get_mouse_pos(ev) {
 	let x = ev.pageX - document.body.scrollLeft; // - ev.target.offsetY;
 	let y = ev.pageY - document.body.scrollTop; // - ev.target.offsetY;
-	//console.log('y calc:',y,'y returned:',ev.clientY);
-	// return ({ x: ev.clientX, y: ev.clientY }); 
 	return ({ x: x, y: y });
 }
 function getTypeOf(param) {
-	//console.log('>>>>>getTypeOf',param)
 	let type = typeof param;
 	if (type == 'string') {
 		return 'string';
@@ -3821,9 +3562,7 @@ function getTextWidth(text, font) {
 function getRect(elem, relto) {
 	if (isString(elem)) elem = document.getElementById(elem);
 	let res = elem.getBoundingClientRect();
-	//console.log(res)
 	if (isdef(relto)) {
-		//console.log(relto)
 		let b2 = relto.getBoundingClientRect();
 		let b1 = res;
 		res = {
@@ -3845,13 +3584,11 @@ function getSizeNeeded(elem) {
 	var d = elem.cloneNode(true); //document.createElement("div");
 	d.style.width = 'auto';
 	document.body.appendChild(d);
-	//console.log(styles);
 	let cStyles = {};
 	cStyles.position = 'fixed';
 	cStyles.opacity = 0;
 	cStyles.top = '-9999px';
 	mStyle(d, cStyles);
-	//d.innerHTML = text;
 	height = d.clientHeight;
 	width = d.clientWidth;
 	d.parentNode.removeChild(d);
@@ -3866,7 +3603,6 @@ function hasWhiteSpace(s) { return /\s/g.test(s); }
 function jsCopy(o) { return JSON.parse(JSON.stringify(o)); }
 function jsCopySafe(o) { return JSON.parse(JSON.stringify(jsClean(o))); }
 function jsClean(o) {
-	//replace all DOM objects in o by null
 	if (nundef(o)) return o;
 	else if (isDOM(o)) return null;
 	else if (isLiteral(o)) return o;
@@ -3903,14 +3639,9 @@ function isNumber(x) { return x !== ' ' && x !== true && x !== false && isdef(x)
 function isString(param) { return typeof param == 'string'; }
 function isSvg(elem) { return startsWith(elem.constructor.name, 'SVG'); }
 function isVisible(elem) { // Where el is the DOM element you'd like to test for visibility
-	//console.log(elem)
 	if (isString(elem)) elem = document.getElementById(elem);
 	let x = elem.style.flex;
-	//console.log('flex', x);
 	return (elem.style.display != 'none' || elem.offsetParent !== null) && (nundef(elem.style.flex) || !endsWith(elem.style.flex, '0%'));
-	// console.log('style',elem.style.flex  == '0 1 0%')
-	// if (isdef(elem.style.flex)) return elem.style.flex != '0 1 0%';
-	// else return (elem.style.display != 'none' || elem.offsetParent !== null);
 }
 function isWhiteSpace(ch) { return /\s/.test(ch) }
 function isWhiteSpace2(ch) {
@@ -3947,7 +3678,6 @@ async function load_assets_fetch(basepath, baseminpath) {
 	return { users: dict2list(DB.users, 'name'), games: dict2list(Config.games, 'name'), tables: [] };
 }
 async function load_syms(path) {
-	//sollten in base/assets/allSyms.yaml sein!
 	if (nundef(path)) path = './base/assets/';
 	Syms = await route_path_yaml_dict(path + 'allSyms.yaml');
 	SymKeys = Object.keys(Syms);
@@ -3978,39 +3708,29 @@ function makeUnitString(nOrString, unit = 'px', defaultVal = '100%') {
 function measure_fieldset(fs) {
 	let legend = fs.firstChild;
 	let r = getRect(legend);
-	//console.log('r legend', r.w);
 	let labels = fs.getElementsByTagName('label');
-	//console.log('labels', labels);
 	let wmax = 0;
 	for (const l of labels) {
 		let r1 = getRect(l);
-		//console.log('l', l.innerHTML, r1.w);
 		wmax = Math.max(wmax, r1.w);
 	}
-	//console.log('max width of labels', wmax);
 	let wt = r.w;
 	let wo = wmax + 24;
 	let diff = wt - wo;
 	if (diff >= 10) {
-		//verschiebe all die labels
 		for (const l of labels) { let d = l.parentNode; mStyle(d, { maleft: diff / 2 }); }
 	}
-	//each label should be at least 50 px wide!
-	//fs min-width setzen
 	let wneeded = Math.max(wt, wo) + 10;
 	mStyle(fs, { wmin: wneeded });
 	for (const l of labels) { let d = l.parentNode; mStyle(l, { display: 'inline-block', wmin: 50 }); mStyle(d, { wmin: wneeded - 40 }); }
 }
 function range(f, t, st = 1) {
 	if (nundef(t)) {
-		//if only 1 arg, will return numbers 0..f-1 
 		t = f - 1;
 		f = 0;
 	}
 	let arr = [];
-	//console.log(f,t)
 	for (let i = f; i <= t; i += st) {
-		//console.log('dsdsdshallo')
 		arr.push(i);
 	}
 	return arr;
@@ -4064,7 +3784,6 @@ function hide(elem) {
 function show_special_message(msg, stay = false, ms = 3000, delay = 0, styles = {}, callback = null) { //divTestStyles={}) {
 	let dParent = mBy('dBandMessage');
 	if (nundef(dParent)) dParent = mDiv(document.body, {}, 'dBandMessage');
-	//console.log('dParent',dParent)
 	show(dParent);
 	clearElement(dParent);
 	addKeys({ position: 'fixed', top: 200, classname: 'slow_gradient_blink', vpadding: 10, align: 'center', position: 'absolute', fg: 'white', fz: 24, w: '100vw' }, styles);
@@ -4074,27 +3793,6 @@ function show_special_message(msg, stay = false, ms = 3000, delay = 0, styles = 
 	dParent.innerHTML = msg;
 	if (delay > 0) TO.special = setTimeout(() => { mFadeRemove(dParent, ms, callback); }, delay);
 	else mFadeRemove(dParent, ms, callback);
-}
-function selectText(el) {
-	var sel, range;
-	if (window.getSelection && document.createRange) { //Browser compatibility
-		sel = window.getSelection();
-		if (sel.toString() == '') { //no text selection
-			window.setTimeout(function () {
-				range = document.createRange(); //range object
-				range.selectNodeContents(el); //sets Range
-				sel.removeAllRanges(); //remove all ranges from selection
-				sel.addRange(range);//add Range to a Selection.
-			}, 1);
-		}
-	} else if (document.selection) { //older ie
-		sel = document.selection.createRange();
-		if (sel.text == '') { //no text selection
-			range = document.body.createTextRange();//Creates TextRange object
-			range.moveToElementText(el);//sets Range
-			range.select(); //make selection.
-		}
-	}
 }
 function setRect(elem, options) {
 	let r = getRect(elem);
@@ -4112,10 +3810,6 @@ function setRect(elem, options) {
 }
 function toElem(d) { return isString(d) ? mBy(d) : d; }
 function toggleSelection(pic, selected, clSelected = 'framedPicture', clUnselected = null) {
-	//if selected is a list, pic is added or removed from it
-	//if selected is an object, it is unselected
-	//if selected is not defined or null, ignore
-	//	console.log(pic)
 	let ui = iDiv(pic);
 	pic.isSelected = !pic.isSelected;
 	if (pic.isSelected) {
@@ -4125,7 +3819,6 @@ function toggleSelection(pic, selected, clSelected = 'framedPicture', clUnselect
 		mClassRemove(ui, clSelected);
 		if (isdef(clUnselected)) mClass(ui, clUnselected);
 	}
-	//if piclist is given, add or remove pic according to selection state
 	if (isdef(selected)) {
 		if (isList(selected)) {
 			if (pic.isSelected) {
@@ -4144,11 +3837,9 @@ function toggleSelection(pic, selected, clSelected = 'framedPicture', clUnselect
 	return pic.isSelected ? pic : null;
 }
 function toggleSelectionOfPicture(pic, selectedPics, className = 'framedPicture') {
-	//	console.log(pic)
 	let ui = iDiv(pic);
 	pic.isSelected = !pic.isSelected;
 	if (pic.isSelected) mClass(ui, className); else mClassRemove(ui, className);
-	//if piclist is given, add or remove pic according to selection state
 	if (isdef(selectedPics)) {
 		if (pic.isSelected) {
 			console.assert(!selectedPics.includes(pic), 'UNSELECTED PIC IN PICLIST!!!!!!!!!!!!')
@@ -4157,13 +3848,6 @@ function toggleSelectionOfPicture(pic, selectedPics, className = 'framedPicture'
 			console.assert(selectedPics.includes(pic), 'PIC NOT IN PICLIST BUT HAS BEEN SELECTED!!!!!!!!!!!!')
 			removeInPlace(selectedPics, pic);
 		}
-	}
-}
-function unfocusOnEnter(ev) {
-	if (ev.key === 'Enter') {
-		ev.preventDefault();
-		//console.log('ENTER!', G.settings.rows)
-		mBy('dummy').focus();
 	}
 }
 function valf(val, def) { return isdef(val) ? val : def; }
@@ -4176,10 +3860,94 @@ function load_assets_direct(obj) {
 	KeySets = getKeySets();
 	console.assert(isdef(Config), 'NO Config!!!!!!!!!!!!!!!!!!!!!!!!');
 }
+function aggregate_elements(list_of_object, propname) {
+	let result = [];
+	for (let i = 0; i < list_of_object.length; i++) {
+		let obj = list_of_object[i];
+		let arr = obj[propname];
+		for (let j = 0; j < arr.length; j++) {
+			result.push(arr[j]);
+		}
+	}
+	return result;
+}
+function complexCompare(obj1, obj2) {
+	const obj1Keys = Object.keys(obj1);
+	const obj2Keys = Object.keys(obj2);
+	if (obj1Keys.length !== obj2Keys.length) {
+		return false;
+	}
+	for (let objKey of obj1Keys) {
+		if (obj1[objKey] !== obj2[objKey]) {
+			if (typeof obj1[objKey] == "object" && typeof obj2[objKey] == "object") {
+				if (!isEqual(obj1[objKey], obj2[objKey])) {
+					return false;
+				}
+			}
+			else {
+				return false;
+			}
+		}
+	}
+	return true;
+}
+function exchange_by_index(arr1, i1, arr2, i2) {
+	let temp = arr1[i1];
+	arr1[i1] = arr2[i2];
+	arr2[i2] = temp;
+}
+function if_plural(n) { return n == 1 ? '' : 's'; }
 function if_stringified_or_list(obj) { return nundef(obj) ? [] : is_stringified(obj) ? JSON.parse(obj) : obj; }
 function if_stringified_or_dict(obj) { return nundef(obj) ? {} : is_stringified(obj) ? JSON.parse(obj) : obj; }
 function if_stringified_or_string(obj) { return nundef(obj) ? '' : is_stringified(obj) ? JSON.parse(obj) : obj; }
+function if_stringified(obj) { return is_stringified(obj) ? JSON.parse(obj) : obj; }
+function is_stringified(obj) {
+	if (isString(obj)) {
+		return '"\'{[('.includes(obj[0]);
+	}
+	return false;
+}
+function intersection(arr1, arr2) {
+	let res = [];
+	for (const a of arr1) {
+		if (arr2.includes(a)) {
+			addIf(res, a);
+		}
+	}
+	return res;
+}
+function mFlip(card, ms, callback) {
+	let a = mAnimate(iDiv(card), 'transform', [`scale(1,1)`, `scale(0,1)`],
+		() => {
+			if (card.faceUp) face_down(card); else face_up(card);
+			mAnimate(iDiv(card), 'transform', [`scale(0,1)`, `scale(1,1)`], callback, ms / 2, 'ease-in', 0, 'both');
+		},
+		ms / 2, 'ease-out', 0, 'both');
+}
+function object2string(o, props = [], except_props = []) {
+	let s = '';
+	if (nundef(o)) return s;
+	if (isString(o)) return o;
+	let keys = Object.keys(o).sort();
+	for (const k of keys) {
+		if (!isEmpty(props) && props.includes(k) || !except_props.includes(k)) {
+			let val = isList(o[k]) ? o[k].join(',') : isDict(o[k]) ? object2string(o[k].props, except_props) : o[k];
+			let key_part = isEmpty(s) ? '' : `, ${k}:`;
+			s += val;
+		}
+	}
+	return s;
+}
+function simpleCompare(o1, o2) {
+	let s1 = object2string(o1);
+	let s2 = object2string(o2);
+	return s1 == s2;
+}
+function get_now() { return new Date(); }
 function get_timestamp() { return Date.now(); }
+//#endregion basemin
+
+//#region legacy
 function dachain(ms = 0) {
 	console.log('TestInfo', TestInfo)
 	if (!isEmpty(DA.chain) && !(DA.test.running && DA.test.step == true)) {
@@ -4188,7 +3956,6 @@ function dachain(ms = 0) {
 }
 function dachainext(ms = 0) {
 	let f = DA.chain.shift();
-	//console.log('====>CHAINING: func',f.name);
 	if (ms > 0) TOMan.TO[getUID('f')] = setTimeout(f, ms);
 	else f();
 }
@@ -4199,20 +3966,13 @@ function onclick_step() {
 	let testnumber = valf(mBy('intestnumber').value, 110);
 	if (!isNumber(testnumber)) testnumber = 110;
 	console.log('test for step is', testnumber);
-	//onclick_ut_n('ari', testnumber);
 	DA.test.number = testnumber;
 	onclick_last_test();
-	//jetzt nur den ersten step wie mach ich das?
 }
 function onclick_ut_n(g, n) {
 	DA.test.running = true;
 	let [fen, player_names] = window[`${g}_ut${n}_create_staged`]();
 	get_create_staged(fen, { level_setting: 'min' }, player_names);
-	// if (isdef(Session.cur_tid) && Session.cur_tid > 1) {
-	// 	get_delete_last_and_create_staged(fen, { level_setting: 'min' }, player_names);
-	// } else {
-	// 	get_create_staged(fen, { level_setting: 'min' }, player_names);
-	// }
 }
 function get_create_staged(fen, options, player_names) {
 	let t = create_table(options, player_names);
@@ -4230,7 +3990,6 @@ function onclick_run_tests() {
 		DA.test.list = [100, 101];
 	}
 	test_engine_run_next(DA.test.list);
-	//onclick_ut_n('ari', 104);
 }
 function onclick_last_test() {
 	stop_game();
@@ -4257,55 +4016,33 @@ function arrToMatrix(arr, rows, cols) {
 	return res;
 }
 function sudokuSampleToIndexMatrix(s, rows, cols) {
-	//all 0 entries => ' ', and all numbers>0 => 
 	if (isNumber(s)) s = String(s);
 	let letters = toLetterArray(s);
-	//console.log('letters',letters);
 	let nums = letters.map(x => Number(x));
-	//console.log('nums',nums);
 	let res = [];
 	for (const n of nums) {
 		if (n === 0) res.push(' ');
 		else res.push(n - 1);
 	}
-	//console.log('numbers',nums);
 	let matrix = arrToMatrix(res, rows, cols);
 	return matrix;
 }
 function stringToMatrix(s, rows, cols) {
 	if (isNumber(s)) s = String(s);
 	let letters = toLetterArray(s);
-	//console.log('letters',letters);
 	let nums = letters.map(x => Number(x));
-	//console.log('numbers',nums);
 	let matrix = arrToMatrix(nums, rows, cols);
 }
 function getSudokuPatternFromDB(r, c, index) {
 	let key = '' + r + 'x' + c;
 	let numSamples = Object.keys(DB.games.gColoku.samples[key]).length;
-	//console.log('r', r, 'c', c, numSamples)
 	if (nundef(index)) index = randomNumber(0, numSamples - 1); else if (index >= numSamples) index = 1;
 	let sample = DB.games.gColoku.samples[key][index];
-	//console.log('sample', sample, 'index', index, sample.sol, r, c)
 	let pattern = sudokuSampleToIndexMatrix(sample.sol, r, c);
-	//console.log('pattern',pattern);
 	let puzzle = sudokuSampleToIndexMatrix(sample.min, r, c);
 	return { pattern: pattern, puzzle: puzzle };
 }
 function getSudokuPattern(r, c) {
-	//mach das pattern es sollte 16 geben!
-	// 0 1 2 3 
-	// 3 2 0 1
-	// 2 3 1 0
-	// 1 0 2 3
-	// 0 1 2 3 
-	// 2 3 0 1
-	// 3 0 1 2
-	// 1 2 3 0
-	// 0 1 2 3 
-	// 2 3 0 1
-	// 1 0 3 2
-	// 3 2 1 0
 	let patterns = {
 		44: [
 			[[0, 1, 2, 3], [2, 3, 0, 1], [3, 0, 1, 2], [1, 2, 3, 0]],
@@ -4319,20 +4056,14 @@ function destroySudokuRule(pattern, rows, cols) {
 	let sz = Math.min(rows, cols);
 	let [r1, r2] = choose(range(0, sz - 1), 2);
 	let c = chooseRandom(range(0, sz - 1));
-	// arrSwap2d(pattern, r1, c, r2, c);
-	//TEST arrSwap2d(pattern, 0, 3, 1, 3);return;
-	//generate row error
 	if (coin(50)) { arrSwap2d(pattern, r1, c, r2, c); }
-	//generate col error
 	else if (coin(50)) { arrSwap2d(pattern, c, r1, c, r2); }
 }
 function hasDuplicate(arr, efunc) {
 	let di = {};
 	if (nundef(efunc)) efunc = x => { return x === ' ' };
 	let i = -1;
-	//console.log('check for dupl in',arr)
 	for (const a of arr) {
-		//console.log('i', i, 'a', a)
 		i += 1;
 		if (efunc(a)) continue; //!isNumber(a) && a==' ') {console.log('H!',a);continue;}
 		if (a in di) return { i: i, val: a };
@@ -4341,8 +4072,6 @@ function hasDuplicate(arr, efunc) {
 	return false;
 }
 function checkSudokuRule(matrix) {
-	//should return at least one example of offending tiles if incorrect! null otherwise!
-	//check rows is simple!
 	let i = 0;
 	for (const arr of matrix) {
 		let dd = hasDuplicate(arr);
@@ -4361,16 +4090,10 @@ function checkSudokuRule(matrix) {
 		}
 		i += 1;
 	}
-	//console.log('still here!');
-	// let sub0=bGetSubMatrix(pattern,0,2,0,2);
-	// let sub1=bGetSubMatrix(pattern,0,2,2,2);
-	// let sub2=bGetSubMatrix(pattern,2,2,0,2);
-	// let sub3=bGetSubMatrix(pattern,2,2,2,2);
 	let [rows, cols] = [matrix.length, matrix[0].length];
 	let rowsEach = rows == 9 ? 3 : 2;
 	let colsEach = cols == 4 ? 2 : 3;
 	let chunks = bGetChunksWithIndices(matrix, rowsEach, colsEach);
-	//printMatrix(chunks, 'quadrants');
 	i = 0;
 	for (const arr of chunks) {
 		let dd = hasDuplicate(arr);
@@ -4383,22 +4106,14 @@ function checkSudokuRule(matrix) {
 	return null;
 }
 function checkSudokuRule_trial1(matrix) {
-	//should return at least one example of offending tiles if incorrect! null otherwise!
 	for (const arr of matrix) { let dd = hasDuplicate(arr); if (dd) return { type: 'row', info: dd }; }
 	for (const arr of bGetCols(matrix)) { let dd = hasDuplicate(arr); if (dd) return { type: 'column', info: dd }; }
-	//console.log('still here!');
-	// let sub0=bGetSubMatrix(pattern,0,2,0,2);
-	// let sub1=bGetSubMatrix(pattern,0,2,2,2);
-	// let sub2=bGetSubMatrix(pattern,2,2,0,2);
-	// let sub3=bGetSubMatrix(pattern,2,2,2,2);
 	let chunks = bGetChunks(matrix, 2, 2);
-	//printMatrix(chunks, 'quadrants');
 	for (const arr of chunks) { let dd = hasDuplicate(arr); if (dd) return { type: 'quadrant', info: dd }; }
 	return null;
 }
 function bGetSubMatrix(arr2d, rFrom, rows, cFrom, cols) {
 	let res = []; for (let i = 0; i < rows; i++) res.push([]);
-	//console.log('rows',rows,res);return;
 	let [rTotal, cTotal] = [arr2d.length, arr2d[0].length];
 	let rIndex = 0;
 	for (let r = rFrom; r < rFrom + rows; r++) {
@@ -4407,13 +4122,10 @@ function bGetSubMatrix(arr2d, rFrom, rows, cFrom, cols) {
 		}
 		rIndex += 1;
 	}
-	//console.log('res',res)
-	//printMatrix(res,'res')
 	return res;
 }
 function bGetSubMatrixWithIndices(arr2d, rFrom, rows, cFrom, cols) {
 	let res = []; for (let i = 0; i < rows; i++) res.push([]);
-	//console.log('rows',rows,res);return;
 	let [rTotal, cTotal] = [arr2d.length, arr2d[0].length];
 	let rIndex = 0;
 	for (let r = rFrom; r < rFrom + rows; r++) {
@@ -4422,22 +4134,17 @@ function bGetSubMatrixWithIndices(arr2d, rFrom, rows, cFrom, cols) {
 		}
 		rIndex += 1;
 	}
-	//console.log('res',res)
-	//printMatrix(res,'res')
 	return res;
 }
 function bGetChunksWithIndices(arr2d, rowsEach, colsEach) {
-	//das returned nicht flattened arrays of just entries, but flattened arrays of {row:r,col:c,val:entry}
 	let res = [];
 	let [rTotal, cTotal] = [arr2d.length, arr2d[0].length];
 	for (let r = 0; r < rTotal; r += rowsEach) {
 		let m1 = [];
 		for (let c = 0; c < cTotal; c += colsEach) {
-			//console.log('rFrom',r,'cFrom',c)
 			m1 = bGetSubMatrixWithIndices(arr2d, r, rowsEach, c, colsEach);
 			res.push(arrFlatten(m1));
 		}
-		//printMatrix(m1,'quad'+res.length);
 	}
 	return res;
 }
@@ -4447,11 +4154,9 @@ function bGetChunks(arr2d, rowsEach, colsEach) {
 	for (let r = 0; r < rTotal; r += rowsEach) {
 		let m1 = [];
 		for (let c = 0; c < cTotal; c += colsEach) {
-			//console.log('rFrom',r,'cFrom',c)
 			m1 = bGetSubMatrix(arr2d, r, rowsEach, c, colsEach);
 			res.push(arrFlatten(m1));
 		}
-		//printMatrix(m1,'quad'+res.length);
 	}
 	return res;
 }
@@ -4463,7 +4168,6 @@ function bGetCols(arr2d) {
 	let cols = arr2d[0].length;
 	let res = [];
 	for (let c = 0; c < cols; c++) { res.push([]); }
-	//console.log('res',res);
 	for (let r = 0; r < rows; r++) {
 		for (let c = 0; c < cols; c++) {
 			res[c].push(arr2d[r][c]);
@@ -4475,7 +4179,6 @@ function printMatrix(arr2d, title = 'result') {
 	let rows = arr2d.length;
 	let cols = arr2d[0].length;
 	let arr = arrFlatten(arr2d);
-	// console.log('arr', arr,rows,cols)
 	let s = toBoardString(arr, rows, cols);
 	console.log(title, s)
 }
@@ -4497,8 +4200,6 @@ function bGetRow(arr, irow, rows, cols) {
 }
 function bNei(arr, idx, rows, cols, includeDiagonals = true) {
 	let nei = [];
-	//ang tile ist 0,0
-	//get r,c from index: 
 	let [r, c] = iToRowCol(idx, rows, cols);
 	if (r > 0) nei.push(idx - cols); else nei.push(null);
 	if (r > 0 && c < cols - 1 && includeDiagonals) nei.push(idx - cols + 1); else nei.push(null);
@@ -4508,7 +4209,6 @@ function bNei(arr, idx, rows, cols, includeDiagonals = true) {
 	if (r < rows - 1 && c > 0 && includeDiagonals) nei.push(idx + cols - 1); else nei.push(null);
 	if (c > 0) nei.push(idx - 1); else nei.push(null);
 	if (r > 0 && c > 0 && includeDiagonals) nei.push(idx - cols - 1); else nei.push(null);
-	//console.log('idx', idx, 'rows', rows, 'cols', cols, 'r', r, 'c', c);
 	return nei;
 }
 function iFromRowCol(row, col, rows, cols) { return row * cols + col; }
@@ -4559,30 +4259,23 @@ function bFreeRayDir1(arr, idx, dir, rows, cols) {
 }
 function isOppPiece(sym, plSym) { return sym && sym != plSym; }
 function bCapturedPieces(plSym, arr, idx, rows, cols, includeDiagonals = true) {
-	//console.log('player sym',plSym,'arr',arr,'idx', idx,'rows', rows,'cols', cols);
 	let res = [];
 	let nei = bNei(arr, idx, rows, cols, includeDiagonals);
-	//console.log('nei',nei);
 	for (let dir = 0; dir < 8; dir++) {
 		let i = nei[dir];
 		if (nundef(i)) continue;
 		let el = arr[i];
-		//console.log('___i',i,'el',el,'checking dir',dir);
 		if (EmptyFunc(el) || el == plSym) continue;
 		let inew = [];
 		let MAX = 100, cmax = 0;
 		while (isOppPiece(el, plSym)) {
-			//console.log('index',i,'is opp',el)
 			if (cmax > MAX) break; cmax += 1;
 			inew.push(i);
 			i = bNeiDir(arr, i, dir, rows, cols);
-			//console.log(i,cmax,'dir',dir);
 			if (nundef(i)) break;
 			el = arr[i];
-			//console.log('i',i,'el',el,'max',cmax);
 		}
 		if (el == plSym) {
-			//add all the captured pieces to res
 			res = res.concat(inew);
 		}
 	}
@@ -4595,59 +4288,47 @@ function bFullRow(arr, irow, rows, cols) {
 	return x;
 }
 function bStrideRow(arr, irow, rows, cols, stride) {
-	//console.log('hallo!', cols, stride)
 	for (let i = 0; i <= cols - stride; i++) {
 		let ch = bStrideRowFrom(arr, irow, i, rows, cols, stride);
-		//console.log('ch', ch, i)
 		if (ch) return ch;
 	}
 	return null;
 }
 function bStrideRowFrom(arr, irow, icol, rows, cols, stride) {
-	//console.log(cols, icol, stride)
 	if (cols - icol < stride) return null;
 	let iStart = irow * cols + icol;
 	let x = arr[iStart];
-	//console.log('starting el:', x)
 	if (EmptyFunc(x)) return null;
 	for (let i = iStart + 1; i < iStart + stride; i++) if (arr[i] != x) return null;
 	return x;
 }
 function bStrideCol(arr, icol, rows, cols, stride) {
-	//console.log('hallo!', rows, stride)
 	for (let i = 0; i <= rows - stride; i++) {
 		let ch = bStrideColFrom(arr, i, icol, rows, cols, stride);
-		//console.log('ch', ch, i)
 		if (ch) return ch;
 	}
 	return null;
 }
 function bStrideColFrom(arr, irow, icol, rows, cols, stride) {
-	//console.log(irow, icol, rows, cols, stride)
 	if (rows - irow < stride) return null;
 	let iStart = irow * cols + icol;
 	let x = arr[iStart];
-	//console.log('starting el:', x)
 	if (EmptyFunc(x)) return null;
 	for (let i = iStart + cols; i < iStart + cols * stride; i += cols) if (arr[i] != x) return null;
 	return x;
 }
 function bStrideDiagFrom(arr, irow, icol, rows, cols, stride) {
-	//console.log(irow, icol, rows, cols, stride)
 	if (rows - irow < stride || cols - icol < stride) return null;
 	let iStart = irow * cols + icol;
 	let x = arr[iStart];
-	//console.log('starting el:', x)
 	if (EmptyFunc(x)) return null;
 	for (let i = iStart + cols + 1; i < iStart + (cols + 1) * stride; i += cols + 1) if (arr[i] != x) return null;
 	return x;
 }
 function bStrideDiag2From(arr, irow, icol, rows, cols, stride) {
-	//console.log(irow, icol, rows, cols, stride)
 	if (rows - irow < stride || icol - stride + 1 < 0) return null;
 	let iStart = irow * cols + icol;
 	let x = arr[iStart];
-	//console.log('starting el:', x)
 	if (EmptyFunc(x)) return null;
 	for (let i = iStart + cols - 1; i < iStart + (cols - 1) * stride; i += cols - 1) if (arr[i] != x) return null;
 	return x;
@@ -4667,7 +4348,6 @@ function bFullDiag(arr, rows, cols) {
 function bFullDiag2(arr, rows, cols) {
 	let iStart = cols - 1;
 	let x = arr[iStart]; if (EmptyFunc(x)) return null;
-	//console.log(iStart,arr[iStart]);
 	for (let i = iStart + cols - 1; i < arr.length - 1; i += cols - 1) { if (arr[i] != x) return null; }//console.log(i,arr[i]); }
 	return x;
 }
@@ -4696,7 +4376,6 @@ function bPartialDiag(arr, rows, cols) {
 function bPartialDiag2(arr, rows, cols) {
 	let iStart = cols - 1;
 	let x = null;
-	//console.log(iStart,arr[iStart]);
 	for (let i = iStart; i < arr.length - 1; i += cols - 1) {
 		if (EmptyFunc(arr[i])) continue; else if (EmptyFunc(x)) x = arr[i]; else if (arr[i] != x) return null;
 	}
@@ -4707,7 +4386,6 @@ function boardToNode(state) {
 	for (let i = 0; i < state.length; i++) {
 		if (state[i] == null) res[i] = ' ';
 		else res[i] = state[i];
-		//else if (state[i]=='O')
 	}
 	return res;
 }
@@ -4738,7 +4416,6 @@ function toBoardString(arr, rows, cols) {
 	return s;
 }
 function printState(state, cols, rows) {
-	//console.log('___________',state)
 	let formattedString = '';
 	state.forEach((cell, index) => {
 		formattedString += isdef(cell) ? ` ${cell == '0' ? ' ' : cell} |` : '   |';
@@ -4747,7 +4424,6 @@ function printState(state, cols, rows) {
 			if (index < rows * cols - 1) {
 				let s = '\u2015\u2015\u2015 '.repeat(cols);
 				formattedString += '\n' + s + '\n'; //\u2015\u2015\u2015 \u2015\u2015\u2015 \u2015\u2015\u2015\n';
-				// formattedString += '\n\u2015\u2015\u2015 \u2015\u2015\u2015 \u2015\u2015\u2015\n';
 			}
 		}
 	});
@@ -4774,7 +4450,6 @@ function checkBoardFull(arr) { for (const x of arr) if (EmptyFunc(x)) return fal
 function checkPotentialTTT(arr, rows, cols) { return checkwinnersPossible(arr, rows, cols); }
 function checkwinnersTTT(arr, rows, cols) { return checkwinners(arr, rows, cols); }
 function checkwinnersC4(arr, rows = 6, cols = 7, stride = 4) {
-	//console.log(arr,rows,cols,stride)
 	for (i = 0; i < rows; i++) { let ch = bStrideRow(arr, i, rows, cols, stride); if (ch) return ch; }
 	for (i = 0; i < cols; i++) { let ch = bStrideCol(arr, i, rows, cols, stride); if (ch) return ch; }
 	for (i = 0; i < rows; i++) {
@@ -4796,15 +4471,12 @@ class Board {
 			mCenterFlex(d);
 			d.onclick = handler;
 		});
-		//console.log(this.items)
 	}
 	get(ir, c) {
 		if (isdef(c)) {
-			// interpret as row,col
 			let idx = ir * this.cols + c;
 			return this.items[idx];
 		} else {
-			//interpret as index
 			return this.items[ir];
 		}
 	}
@@ -4820,7 +4492,6 @@ class Board {
 			if (!EmptyFunc(val)) {
 				addLabel(item, val, { fz: 60, fg: colors[val] });
 			} else item.label = val;
-			//item.label = arr[i];
 		}
 	}
 	clear() {
@@ -4837,7 +4508,6 @@ class Board2D {
 		this.rows = rows;
 		this.cols = cols;
 		this.dParent = dParent;
-		//let dGridParent = this.dGridParent = mDiv(dParent,{bg:'green'});
 		let dBoard = this.dBoard = mDiv(dParent);//, boardStyles);
 		let items = this.items = this.fill(dBoard, this.rows, this.cols, null, cellStyles);
 	}
@@ -4865,11 +4535,9 @@ class Board2D {
 	}
 	get(ir, c) {
 		if (isdef(c)) {
-			// interpret as row,col
 			let idx = ir * this.cols + c;
 			return this.items[idx];
 		} else {
-			//interpret as index
 			return this.items[ir];
 		}
 	}
@@ -4885,7 +4553,6 @@ class Board2D {
 			if (!EmptyFunc(val)) {
 				addLabel(item, val, { fz: 60, fg: colors[val] });
 			} else item.label = val;
-			//item.label = arr[i];
 		}
 	}
 	clear() {
@@ -4896,13 +4563,10 @@ class Board2D {
 	}
 }
 function reduceBoard(board, rNew, cNew, iModify) {
-	//console.log(board.rows,board.cols, 'iModify',iModify)
 	let [boardArrOld, rOld, cOld] = [board.fields.map(x => isdef(x.item) ? x.item.index : null), board.rows, board.cols];
-	//console.log('boardArrOld',boardArrOld)
 	let rest = [];
 	if (rOld > rNew) { rest = bGetRow(boardArrOld, iModify, rOld, cOld).filter(x => x != null); }
 	else if (cOld > cNew) { rest = bGetCol(boardArrOld, iModify, rOld, cOld).filter(x => x != null); }
-	//console.log('restPerlen', rest)
 	let boardArrNew = new Array(rNew * cNew);
 	for (let r = 0; r < rNew; r++) {
 		for (let c = 0; c < cNew; c++) {
@@ -4912,12 +4576,10 @@ function reduceBoard(board, rNew, cNew, iModify) {
 				let iOld = iFromRowCol(r, c, rOld, cOld);
 				boardArrNew[i] = boardArrOld[iOld];
 			}
-			// else if (x == iModify) boardArrNew[i] = null;
 			else {
 				let [ir, ic] = (rOld != rNew) ? [r + 1, c] : [r, c + 1];
 				let iOld = iFromRowCol(ir, ic, rOld, cOld);
 				boardArrNew[i] = boardArrOld[iOld];
-				//console.log('TRANFER!!!', boardArrOld[iOld]);
 			}
 		}
 	}
@@ -4939,7 +4601,6 @@ function expandBoard(board, rNew, cNew, iInsert) {
 				let [ir, ic] = (rOld != rNew) ? [r - 1, c] : [r, c - 1];
 				let iOld = iFromRowCol(ir, ic, rOld, cOld);
 				boardArrNew[i] = boardArrOld[iOld];
-				//console.log('TRANFER!!!', boardArrOld[iOld]);
 			}
 		}
 	}
@@ -4982,58 +4643,41 @@ function quadCenters(rows, cols, wCell, hCell) {
 		}
 		y += hCell; x = 0;
 	}
-	//last,x,y+offX,offY 	
 	return [centers, wCell * cols, hCell * rows];
 }
 function circleCenters(rows, cols, wCell, hCell) {
-	//find center
 	let [w, h] = [cols * wCell, rows * hCell];
 	let cx = w / 2;
 	let cy = h / 2;
-	//console.log('cx,cy', cx, cy)
 	let centers = [{ x: cx, y: cy }];
-	//calc wieviele schichten sich ausgehen?
 	let rx = cx + wCell / 2; let dradx = rx / wCell;
 	let ry = cy + hCell / 2; let drady = ry / hCell;
 	let nSchichten = Math.floor(Math.min(dradx, drady));
-	//console.log('Schichten', nSchichten)
 	for (let i = 1; i < nSchichten; i++) {
 		let [newCenters, wsch, hsch] = oneCircleCenters(i * 2 + 1, i * 2 + 1, wCell, hCell);
-		//console.log('newCenters',newCenters,'w',wsch,'h',hsch);//,'\n',newCenters.centers.length);
 		for (const nc of newCenters) {
-			//console.log('adding point',nc);
 			centers.push({ x: nc.x + cx - wsch / 2, y: nc.y + cy - hsch / 2 });
 		}
 	}
 	return [centers, wCell * cols, hCell * rows];
 }
 function cCircle(c, sz, n, disp = -90) {
-	//disp=0 would be starting from east for flat hex!
-	//return starting from north towards NW in clockwise order, n equidistant points along circle with center c and diameter sz
 	let rad = sz / 2;
 	centers = getEllipsePoints(rad, rad, n, disp)
 	centers = centers.map(pt => ({ x: pt.X + c.x, y: pt.Y + c.y }));
 	return centers;
 }
 function oneCircleCenters(rows, cols, wCell, hCell) {
-	//find center
 	let [w, h] = [cols * wCell, rows * hCell];
 	let cx = w / 2;
 	let cy = h / 2;
-	//console.log('cx,cy',cx,cy)
 	let centers = [{ x: cx, y: cy }];
-	//wieviele will ich placen?
 	let n = 8;
-	//was ist radius?
 	let radx = cx - wCell / 2;
 	let rady = cy - hCell / 2;
-	//console.log('radx,rady',radx,rady)
 	let peri = Math.min(radx, rady) * 2 * Math.PI;
-	//console.log('.............n',n)
 	n = Math.floor(peri / Math.min(wCell, hCell));
-	//console.log('.............n',n)
 	while (n > 4 && n % 4 != 0 && n % 6 != 0) n -= 1;
-	//console.log('.............n',n)
 	centers = getEllipsePoints(radx, rady, n)
 	centers = centers.map(pt => ({ x: pt.X + cx, y: pt.Y + cy }));
 	return [centers, wCell * cols, hCell * rows];
@@ -5068,7 +4712,6 @@ function _calc_hex_col_array_old(rows, cols) {
 }
 function _calc_hex_col_array(rows, cols) {
 	let colarr = []; //how many cols in each row
-	//let b = (rows - 1) / 2; //Math.floor(rows/2);
 	let even = rows % 2 == 0;
 	for (let i = 0; i < rows; i++) {
 		colarr[i] = cols;
@@ -5080,7 +4723,6 @@ function _calc_hex_col_array(rows, cols) {
 	return colarr;
 }
 function fillColarr(colarr, items) {
-	//eg  colarr=[2,4,3], items:[a,b,c,d,e,f,g,h,i] =>returns [[a,b],[c,d,e,f],[g,h,i]]
 	let i = 0;
 	let result = [];
 	for (const r of colarr) {
@@ -5116,12 +4758,8 @@ function hex1Indices(rows, topcols) {
 	return res;
 }
 function hex1Centers(rows, cols, wCell = 100, hCell = null) {
-	//console.log('haaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
-	//rows = 7, cols = 6;
 	let colarr = _calc_hex_col_array(rows, cols);
-	//console.log('colarr', colarr);
 	let maxcols = arrMax(colarr);
-	//calc x offset of row: (maxcols-colarr[i])*wCell/2
 	if (nundef(hCell)) hCell = (hCell / .866);
 	let hline = hCell * .75;
 	let offX = wCell / 2, offY = hCell / 2;
@@ -5136,23 +4774,16 @@ function hex1Centers(rows, cols, wCell = 100, hCell = null) {
 			centers.push(center);
 		}
 	}
-	//console.log(centers)
 	return [centers, wCell * maxcols, hCell / 4 + rows * hline];
 }
 function hex1Board(dParent, rows, topcols, styles = {}) {
 	let g = new UIGraph(dParent, styles);
 	let [w, h] = [valf(lookup(styles, ['node', 'w']), 50), valf(lookup(styles, ['node', 'h']), 50)];
-	//let [rows, topcols] = [5, 3];
 	let total = hex1Count(rows, topcols);
-	//console.log('for rows', rows, 'and cols', topcols, 'need', total, 'nodes')
 	let nids = g.addNodes(total);
 	g.hex1(rows, topcols, w + 4, h + 4);
 	let indices = hex1Indices(rows, topcols);
-	//console.log('indices', indices);
-	//correct, jetzt soll jeder node die bekommen!
 	let ids = g.getNodeIds();
-	//console.log('node ids:', ids);
-	//return;
 	let di = {};
 	for (let i = 0; i < ids.length; i++) {
 		let [row, col] = [indices[i].row, indices[i].col];
@@ -5161,11 +4792,7 @@ function hex1Board(dParent, rows, topcols, styles = {}) {
 		g.setProp(id, 'row', row);
 		g.setProp(id, 'col', col);
 		g.setProp(id, 'label', `${row},${col}`);
-		//g.setStyle(id, 'label', 'data(label)');
 	}
-	//let labels=g.getNodes().map(x=>x.data().label);
-	//console.log('labels',labels);
-	//let label=g.cy.getElementById(ids[1]).data('label');
 	for (let i = 0; i < ids.length; i++) {
 		let [row, col] = [indices[i].row, indices[i].col];
 		let id = ids[i];
@@ -5173,10 +4800,6 @@ function hex1Board(dParent, rows, topcols, styles = {}) {
 		nid2 = lookup(di, [row + 1, col - 1]); if (nid2) g.addEdge(id, nid2);
 		nid2 = lookup(di, [row + 1, col + 1]); if (nid2) g.addEdge(id, nid2);
 	}
-	//let deg=g.getDegree(ids[1]); //cy.getElementById(ids[1]).data('label');
-	//let deg1=g.getDegree(ids[10]); //cy.getElementById(ids[1]).data('label');
-	//let deg2=g.getDegree(ids[18]); //cy.getElementById(ids[1]).data('label');
-	//console.log('das geht: label',label,deg,deg1,deg2);
 	let byrc = {};
 	for (const r in di) {
 		byrc[r] = {};
@@ -5194,19 +4817,15 @@ function catanBoard(dParent, rows, topcols, styles = {}) {
 	hexCornerNodes(g);
 }
 function correctPolys(polys, approx = 10) {
-	//console.log('citySize', citySize, 'approx', approx);
 	let clusters = [];
 	for (const p of polys) {
-		//console.log(p.map(pt => '(' + pt.x + ',' + pt.y + ') ').toString());
 		for (const pt of p) {
 			let found = false;
 			for (const cl of clusters) {
 				for (const v of cl) {
 					let dx = Math.abs(v.x - pt.x);
 					let dy = Math.abs(v.y - pt.y);
-					//console.log('diff', dx, dy);
 					if (dx < approx && dy < approx) {
-						//console.log('FOUND X!!!', dx,dy);
 						cl.push(pt);
 						found = true;
 						break;
@@ -5215,13 +4834,10 @@ function correctPolys(polys, approx = 10) {
 				if (found) break;
 			}
 			if (!found) {
-				//make new cluster with this point
 				clusters.push([pt]);
 			}
 		}
 	}
-	//now all points of all polys are in clusters
-	//go through clusters, computer mean for all points in a clusters
 	let vertices = [];
 	for (const cl of clusters) {
 		let sumx = 0;
@@ -5249,7 +4865,6 @@ function correctPolys(polys, approx = 10) {
 				if (found) break;
 			}
 			if (!found) {
-				//make new cluster with this point
 				error('point not found in vertices!!! ' + pt.x + ' ' + pt.y);
 			}
 		}
@@ -5269,8 +4884,6 @@ function hexCornerNodes(g) {
 	let nodes = g.getNodes();
 	let centers = nodes.map(x => x.data('center'));
 	let vertices = getCornerVertices(centers);
-	//now create points for unique vertices!
-	//danach muss ich noch das neighborhood machen
 	for (const f of nodes) {
 		let center = f.data('center');
 		console.log('center', center)
@@ -5318,9 +4931,7 @@ function neighborhood(items, byrc) {
 	let di = {};
 	for (const info of items) {
 		if (info.type != 'field') continue;
-		//nodes from north! null if dont exist
 		let [r, c] = [info.row, info.col];
-		//nodes for each field
 		info.nodeItems = [
 			lookup(byrc, [r - 2, c]),
 			lookup(byrc, [r - 1, c + 1]),
@@ -5331,7 +4942,6 @@ function neighborhood(items, byrc) {
 		];
 		info.nodes = info.nodeItems.map(x => isdef(x) ? x.id : null);
 		delete info.nodeItems;
-		//edges between nodes
 		for (let i = 0; i < 6; i++) {
 			let n1 = info.nodes[i];
 			if (n1 == null) continue;
@@ -5341,7 +4951,6 @@ function neighborhood(items, byrc) {
 			lookupSet(di, [n1, n2], true);
 			adjList.push([n1, n2]);
 		}
-		//field neighbors
 		info.neiItems = [
 			lookup(byrc, [r - 3, c + 1]),
 			lookup(byrc, [r, c + 2]),
@@ -5383,7 +4992,6 @@ class AGraph {
 			maxZoom: 1,
 			minZoom: .001,
 			motionBlur: false,
-			// wheelSensitivity: 0.05,
 			zoomingEnabled: false,
 			userZoomingEnabled: false,
 			panningEnabled: false,
@@ -5410,13 +5018,11 @@ class AGraph {
 	getPosition(id) {
 		let node = this.getNode(id);
 		let pos = node.renderedPosition();
-		//console.log('node', node, pos);
 		return pos; //this.cy.getElementById(id).renderedPosition();
 	}
 	getSize(id) {
 		let node = this.getNode(id);
 		let pos = node.bb();//renderedBoundingBox();
-		//console.log('node', node, pos);
 		return pos; //this.cy.getElementById(id).renderedPosition();
 	}
 	getProp(id, prop) { return this.cy.getElementById(id).data(prop); }
@@ -5429,16 +5035,13 @@ class AGraph {
 	}
 	getShortestPathsFrom(id) { let res = this.cy.elements().dijkstra('#' + id); return res; }
 	getShortestPathFromTo(nid1, nid2) {
-		//console.log(nid1, nid2)
 		let funcs = this.dijkstra = this.getShortestPathsFrom(nid1);
-		// let len = funcs.distanceTo('#' + nid2);
 		let path = funcs.pathTo('#' + nid2);
 		return path;
 	}
 	getLengthOfShortestPath(nid1, nid2) {
 		let funcs = this.dijkstra = this.getShortestPathsFrom(nid1);
 		let len = funcs.distanceTo('#' + nid2);
-		//let path = funcs.pathTo('#' + nid2);
 		return len;
 	}
 	setPositionData(prop = 'center') {
@@ -5451,13 +5054,10 @@ class AGraph {
 		return true;
 	}
 	sortNodesByDegree(idlist, descending = true) {
-		//console.log('idlist',idlist)
 		if (nundef(idlist)) idlist = this.cy.nodes.map(x => x.data().id);
-		// if (nundef(idlist)) idlist = this.cy.elements().filter('node').map(x => x.data().id);
 		let nodes = idlist.map(x => this.getNode(x));
 		for (const n of nodes) {
 			n.degree = this.getDegree(n.id());
-			//console.log('id',n.id(),'has degree',n.degree);
 		}
 		if (descending) sortByDescending(nodes, 'degree'); else sortBy(nodes, 'degree');
 		return nodes;
@@ -5465,11 +5065,8 @@ class AGraph {
 	storeCurrentPositions(prop = 'center') {
 		for (const n of this.getNodes()) {
 			let id = n.id();
-			//console.log('id', id);
 			let pos = this.getPosition(id);
-			//console.log('current pos', id, pos);
 			this.setProp(id, prop, pos);
-			//console.log('new val', this.getProp(id, prop));
 		}
 	}
 	addNode(data, coords) {
@@ -5497,7 +5094,6 @@ class AGraph {
 		return ids;
 	}
 	addEdge(nid1, nid2, data) {
-		//console.log('addEdge',nid1,nid2,data)
 		if (nundef(data)) data = {};
 		data.id = this.getCommonEdgeId(nid1, nid2);
 		data.source = nid1;
@@ -5509,9 +5105,7 @@ class AGraph {
 		return ele.id();
 	}
 	addEdges(nOrNodePairList) {
-		//nodePairList should be of the form: [[nid1,nid2], ...]
 		if (isNumber(nOrNodePairList)) {
-			//make n random nodes!
 			let nids = this.getNodeIds();
 			let prod = arrPairs(nids);
 			nOrNodePairList = choose(prod, nOrNodePairList);
@@ -5530,7 +5124,6 @@ class AGraph {
 }
 class UIGraph extends AGraph {
 	init(dParent, styles = {}) {
-		//console.log('dParent', dParent)
 		let defOptions = {
 			maxZoom: 1,
 			minZoom: .001,
@@ -5558,10 +5151,6 @@ class UIGraph extends AGraph {
 				let mStyles = styles[ks];
 				let cyStyles = translateStylesToCy(mStyles, ks);
 				copyKeys(cyStyles, styleDict[ks]);
-				// console.log('style dict', styles[ks])
-				// for (const k in styles[ks]) {
-				// 	mStyleToCy(k, styles[ks][k], styleDict[ks]);
-				// }
 			}
 		}
 		let cyStyle = [];
@@ -5573,19 +5162,14 @@ class UIGraph extends AGraph {
 	}
 	hex(rows, cols, wCell, hCell) {
 		let centers = this.hexPositions = getCentersFromRowsCols('hex', rows, cols, wCell, hCell)[0];
-		//console.log('centers', centers);
 		this.storePositions('hex', centers);
 		this.storePositions('preset', centers);
-		//jetzt retrieve
 		this.retrievePositions('hex');
 		this.cy.layout({ name: 'preset' }).run();
 		this.center();
-		//for (const n of this.cy.nodes()) { n.position(centers.x, centers.y); }
 	}
 	hex1(rows, cols, wCell, hCell) {
 		let centers = this.hexPositions = getCentersFromRowsCols('hex1', rows, cols, wCell, hCell)[0];
-		//console.log('centers', centers);
-		//centers = centers.map(pt=>{return {x:pt.y,y:pt.x};});
 		this.storePositions('hex1', centers);
 		this.storePositions('preset', centers);
 		let nodes = this.getNodes();
@@ -5594,16 +5178,13 @@ class UIGraph extends AGraph {
 			let center = centers[i];
 			node.data('center', center);
 		}
-		//jetzt retrieve
 		this.retrievePositions('hex1');
 		this.cy.layout({ name: 'preset' }).run();
 		this.center();
-		//for (const n of this.cy.nodes()) { n.position(centers.x, centers.y); }
 	}
 	breadthfirst() { this.cy.layout({ name: 'breadthfirst', animate: true }).run(); }
 	circle() { this.cy.layout({ name: 'circle', animate: 'end' }).run(); }
 	concentric() { this.cy.layout({ name: 'concentric', animate: true }).run(); }
-	//cola() { this.cy.layout({ name: 'cola', animate: 'end' }).run(); }
 	comcola() {
 		let defaults = {
 			name: 'cola',
@@ -5615,10 +5196,8 @@ class UIGraph extends AGraph {
 			padding: 30, // padding around the simulation
 			boundingBox: undefined, //{x1:0,y1:0,x2:200,y2:200,w:200,h:200}, //undefined, // constrain layout bounds; { x1, y1, x2, y2 } or { x1, y1, w, h }
 			nodeDimensionsIncludeLabels: false, // whether labels should be included in determining the space used by a node
-			// layout event callbacks
 			ready: function () { }, // on layoutready
 			stop: function () { }, // on layoutstop
-			// positioning options
 			randomize: false, // use random node positions at beginning of layout
 			avoidOverlap: true, // if true, prevents overlap of node bounding boxes
 			handleDisconnected: true, // if true, avoids disconnected components from overlapping
@@ -5627,29 +5206,17 @@ class UIGraph extends AGraph {
 			flow: undefined, // use DAG/tree flow layout if specified, e.g. { axis: 'y', minSeparation: 30 }
 			alignment: undefined, // relative alignment constraints on nodes, e.g. function( node ){ return { x: 0, y: 1 } }
 			gapInequalities: undefined, // list of inequality constraints for the gap between the nodes, e.g. [{"axis":"y", "left":node1, "right":node2, "gap":25}]
-			// different methods of specifying edge length
-			// each can be a constant numerical value or a function like `function( edge ){ return 2; }`
 			edgeLength: undefined, // sets edge length directly in simulation
 			edgeSymDiffLength: undefined, // symmetric diff edge length in simulation
 			edgeJaccardLength: undefined, // jaccard edge length in simulation
-			// iterations of cola algorithm; uses default values on undefined
 			unconstrIter: undefined, // unconstrained initial layout iterations
 			userConstIter: undefined, // initial layout iterations with user-specified constraints
 			allConstIter: undefined, // initial layout iterations with all constraints including non-overlap
-			// infinite layout options
 			infinite: false // overrides all other options for a forces-all-the-time mode
 		};
 		let options = {
 			name: 'cola',
 			convergenceThreshold: 100,
-			// padding: 25,
-			// nodeSpacing: 5,
-			// edgeLengthVal: 2,
-			// animate: true,
-			// randomize: false,
-			// maxSimulationTime: 1500,
-			// ready: this.reset.bind(this),
-			// flow: null,
 			boundingBox: { x1: 20, y1: 20, w: 200, h: 200 },
 		};
 		copyKeys(options, defaults);
@@ -5658,81 +5225,42 @@ class UIGraph extends AGraph {
 	}
 	cola() { this.cy.layout({ name: 'cola' }).run(); }
 	cose() { this.cy.layout({ name: 'cose', animate: 'end' }).run(); }
-	// dagre() { this.cy.layout({ name: 'dagre', fit: true, padding: 25, animate: 'end' }).run(); }
 	euler() { this.cy.layout({ name: 'euler', fit: true, padding: 25, animate: 'end' }).run(); }
 	fcose() {
 		var defaultOptions = {
-			// 'draft', 'default' or 'proof' 
-			// - "draft" only applies spectral layout 
-			// - "default" improves the quality with incremental layout (fast cooling rate)
-			// - "proof" improves the quality with incremental layout (slow cooling rate) 
 			quality: "default",
-			// Use random node positions at beginning of layout
-			// if this is set to false, then quality option must be "proof"
 			randomize: true,
-			// Whether or not to animate the layout
 			animate: true,
-			// Duration of animation in ms, if enabled
 			animationDuration: 500,
-			// Easing of animation, if enabled
 			animationEasing: undefined,
-			// Fit the viewport to the repositioned nodes
 			fit: true,
-			// Padding around layout
 			padding: 30,
-			// Whether to include labels in node dimensions. Valid in "proof" quality
 			nodeDimensionsIncludeLabels: false,
-			// Whether or not simple nodes (non-compound nodes) are of uniform dimensions
 			uniformNodeDimensions: false,
-			// Whether to pack disconnected components - cytoscape-layout-utilities extension should be registered and initialized
 			packComponents: true,
-			// Layout step - all, transformed, enforced, cose - for debug purpose only
 			step: "all",
 			/* spectral layout options */
-			// False for random, true for greedy sampling
 			samplingType: true,
-			// Sample size to construct distance matrix
 			sampleSize: 25,
-			// Separation amount between nodes
 			nodeSeparation: 75,
-			// Power iteration tolerance
 			piTol: 0.0000001,
 			/* incremental layout options */
-			// Node repulsion (non overlapping) multiplier
 			nodeRepulsion: node => 4500,
-			// Ideal edge (non nested) length
 			idealEdgeLength: edge => 50,
-			// Divisor to compute edge forces
 			edgeElasticity: edge => 0.45,
-			// Nesting factor (multiplier) to compute ideal edge length for nested edges
 			nestingFactor: 0.1,
-			// Maximum number of iterations to perform - this is a suggested value and might be adjusted by the algorithm as required
 			numIter: 2500,
-			// For enabling tiling
 			tile: true,
-			// Represents the amount of the vertical space to put between the zero degree members during the tiling operation(can also be a function)
 			tilingPaddingVertical: 10,
-			// Represents the amount of the horizontal space to put between the zero degree members during the tiling operation(can also be a function)
 			tilingPaddingHorizontal: 10,
-			// Gravity force (constant)
 			gravity: 0.25,
-			// Gravity range (constant) for compounds
 			gravityRangeCompound: 1.5,
-			// Gravity force (constant) for compounds
 			gravityCompound: 1.0,
-			// Gravity range (constant)
 			gravityRange: 3.8,
-			// Initial cooling factor for incremental layout  
 			initialEnergyOnIncremental: 0.3,
 			/* constraint options */
-			// Fix desired nodes to predefined positions
-			// [{nodeId: 'n1', position: {x: 100, y: 200}}, {...}]
 			fixedNodeConstraint: undefined,
-			// Align desired nodes in vertical/horizontal direction
-			// {vertical: [['n1', 'n2'], [...]], horizontal: [['n2', 'n4'], [...]]}
 			alignmentConstraint: undefined,
-			// Place two nodes relatively in vertical/horizontal direction
-			// [{top: 'n1', bottom: 'n2', gap: 100}, {left: 'n3', right: 'n4', gap: 75}, {...}]
 			relativePlacementConstraint: undefined,
 			/* layout event callbacks */
 			ready: () => { }, // on layoutready
@@ -5774,7 +5302,6 @@ class UIGraph extends AGraph {
 	randomLayout() { this.cy.layout({ name: 'random', animate: 'true' }).run(); }
 	klay() {
 		let klayDefaults = {
-			// Following descriptions taken from http://layout.rtsys.informatik.uni-kiel.de:9444/Providedlayout.html?algorithm=de.cau.cs.kieler.klay.layered
 			addUnnecessaryBendpoints: false, // Adds bend points even if an edge does not change direction.
 			aspectRatio: 1.6, // The aimed aspect ratio of the drawing, that is the quotient of width by height
 			borderSpacing: 20, // Minimal amount of space to be left to the border
@@ -5872,7 +5399,6 @@ class UIGraph extends AGraph {
 		}
 	}
 	storePositions(key, poslist = []) {
-		//console.log('positions', poslist)
 		if (nundef(key)) key = 'prest';
 		this.posDict[key] = {};
 		let i = 0;
@@ -5924,7 +5450,6 @@ class UIGraph extends AGraph {
 		dContainer.css('width', bounds.w + 100);
 		this.cy.center();
 		this.cy.resize();
-		//fix the Edgehandles
 		dContainer.cytoscapeEdgehandles('resize');
 	}
 	enableDD() { this.enableDragging(); }
@@ -5942,7 +5467,6 @@ class UIGraph extends AGraph {
 	hideControls() { }
 	mount() { }
 	unmount() { }
-	//old API: weg damit!!!
 	closeLayoutControls() { if (isdef(this.sb)) hide(this.sb); }
 	addLayoutControls(dParent, buttonlist) {
 		if (nundef(dParent)) dParent = iDiv(this);
@@ -5952,7 +5476,6 @@ class UIGraph extends AGraph {
 			CC: mButton('CC', () => this.concentric(), dParent, {}, ['tbb']),
 			cola: mButton('cola', () => this.comcola(), dParent, {}, ['tbb']),
 			cose: mButton('cose', () => this.cose(), dParent, {}, ['tbb']),
-			// dagre: mButton('dagre', () => this.dagre(), sb, {}, ['tbb']),
 			euler: mButton('euler', () => this.euler(), dParent, {}, ['tbb']),
 			fcose: mButton('fcose', () => this.fcose(), dParent, {}, ['tbb']),
 			grid: mButton('grid', () => this.gridLayout(), dParent, {}, ['tbb']),
@@ -5975,7 +5498,6 @@ class UIGraph extends AGraph {
 		if (this.hasVisual) return;
 		this.hasVisual = true;
 		this.id = nundef(dParent.id) ? getUID() : dParent.id;
-		// mIfNotRelative(dParent);
 		let styleDict = {
 			node: { 'width': 25, 'height': 25, 'background-color': 'red', "color": "#fff", 'label': 'data(id)', "text-valign": "center", "text-halign": "center", },
 			edge: { 'width': 2, 'line-color': 'silver', 'curve-style': 'haystack', },
@@ -5992,16 +5514,10 @@ class UIGraph extends AGraph {
 		}
 		let cyStyle = [];
 		for (const k in styleDict) { cyStyle.push({ selector: k, style: styleDict[k] }); }
-		//let d1=
 		let size = getSize(dParent);
 		let d1 = mDiv(dParent, { position: 'relative', bg: 'green', w: size.w, left: 0, top: 0, h: size.h, align: 'left' });
-		// let d1 = mDiv(dParent, { position: 'relative', bg: 'green', w: size.w - 80, left: 40, top: 0, h: size.h, align: 'left' });
-		// // console.log('size',size)
-		// // let dCy = mDiv(dParent, { position: 'absolute', left: 40, top: 0, w: 'calc( 100% - 80px )', h: '100%' });
-		// // let dCy = mDiv(dParent, {display:'inline-block', position: 'absolute', left: 40, top: 0, w: size.w-80, h: size.h });
 		this.cy.mount(d1);
 		this.cy.style(cyStyle);
-		// console.log('extent',g.cy.extent());
 		this.enablePanZoom();
 		iAdd(this, { div: dParent, dCy: d1 });
 	}
@@ -6010,7 +5526,6 @@ class UIGraph extends AGraph {
 		if (isString(elid)) elid = this.cy.getElementById(elid);
 		let di = translateStylesToCy(styles, group);
 		for (const k in di) {
-			// let css = mStyleTranslate(k, styles[k]);
 			elid.style(k, di[k]);
 		}
 	}
@@ -6021,12 +5536,10 @@ class UIGraph extends AGraph {
 	}
 	setStyle(elid, prop, val) {
 		if (isString(elid)) elid = this.cy.getElementById(elid);
-		//console.log('elid', prop, val)
 		elid.style(prop, val);
 	}
 	setClass(elid, className) {
 		if (isString(elid)) elid = this.cy.getElementById(elid);
-		//console.log('elid', className, val)
 		elid.class(className);
 	}
 }
@@ -6042,7 +5555,6 @@ class MazeGraph extends AGraph {
 		let sb = this.sb = mDiv(dParent, { w: 40 }); mCenterCenterFlex(this.sb);
 		hide(dGraph); hide(sb);
 		this.items = this.createCellItems();
-		//console.log('items', this.items)
 	}
 	clear() { super.clear(); } //dTable.firstChild.remove(); } //mBy(this.mazeId).remove();}
 	getTopLeftCell() { return this.getCell(0, 0); }
@@ -6053,7 +5565,6 @@ class MazeGraph extends AGraph {
 	getCommonId(row, col) { return '' + row + "-" + col; }
 	getCommonIdTable(row, col) { return 'td_' + this.getCommonId(row, col); }
 	getRCI(edgeId) {
-		//edge id is of the form r1-c1_r2-c2
 		let [r1, c1, r2, c2] = allNumbers(edgeId).map(x => Math.abs(x));	//console.log('r,c 1:',r1,c1,'\nr,c 2:',r2,c2);
 		let i1, i2; //indices that have to be switched form 1 to 0
 		i1 = r1 < r2 ? 2 : r1 > r2 ? 0 : c1 < c2 ? 1 : 3;
@@ -6061,7 +5572,6 @@ class MazeGraph extends AGraph {
 		return [r1, c1, i1, r2, c2, i2];
 	}
 	getRelativeDirections(item1, item2) {
-		//edge id is of the form r1-c1_r2-c2
 		let [r1, c1, r2, c2] = [item1.row, item1.col, item2.row, item2.col];//allNumbers(edgeId).map(x=>Math.abs(x));	//console.log('r,c 1:',r1,c1,'\nr,c 2:',r2,c2);
 		let i1, i2; //indices that have to be switched form 1 to 0
 		i1 = r1 < r2 ? 2 : r1 > r2 ? 0 : c1 < c2 ? 1 : 3;
@@ -6069,7 +5579,6 @@ class MazeGraph extends AGraph {
 		return [i1, i2];
 	}
 	createCellItems() {
-		//each cellItem should contain: div:table td, sz, row, col, maze arr, id=idNode, idCell
 		let items = [];
 		this.matrix = [];
 		for (let r = 0; r < this.rows; r++) {
@@ -6081,7 +5590,6 @@ class MazeGraph extends AGraph {
 				iAdd(item, { div: mBy(this.getCommonIdTable(r, c)) });
 				items.push(item);
 				this.matrix[r][c] = item;
-				//console.log('item', item)
 			}
 		}
 		return items;
@@ -6127,7 +5635,6 @@ class MazeGraph extends AGraph {
 			</table>
 		`);
 		mAppend(dGridOuter, tMaze);
-		// let sBorder = `${gap}px solid black`;
 		let sBorder = `${1}px solid black`;
 		for (var i = 0; i < m.length; i++) {
 			$('#tMaze > tbody').append("<tr>");
@@ -6138,14 +5645,12 @@ class MazeGraph extends AGraph {
 				if (m[i][j][1] == 0) { $('#' + selector).css('border-right', sBorder); }
 				if (m[i][j][2] == 0) { $('#' + selector).css('border-bottom', sBorder); }
 				if (m[i][j][3] == 0) { $('#' + selector).css('border-left', sBorder); }
-				//mStyle(mBy(selector), { bg: coin(30) ? 'random' : 'lightgreen' });
 			}
 			$('tMmaze > tbody').append("</tr>");
 		}
 		return dGridOuter;
 	}
 	createMaze(cols, rows, sz, gap) {
-		// Establish variables and starting grid
 		var dxy = sz + 2 * gap;
 		var offs = dxy / 2 + gap;
 		var totalCells = cols * rows;
@@ -6161,28 +5666,21 @@ class MazeGraph extends AGraph {
 				unvis[i][j] = true;
 			}
 		}
-		// Set a random position to start from
 		var currentCell = [Math.floor(Math.random() * rows), Math.floor(Math.random() * cols)];
 		var path = [currentCell];
 		unvis[currentCell[0]][currentCell[1]] = false;
 		var visited = 1;
-		// Loop through all available cell positions
 		while (visited < totalCells) {
-			// Determine neighboring cells
 			var pot = [[currentCell[0] - 1, currentCell[1], 0, 2],
 			[currentCell[0], currentCell[1] + 1, 1, 3],
 			[currentCell[0] + 1, currentCell[1], 2, 0],
 			[currentCell[0], currentCell[1] - 1, 3, 1]];
 			var neighbors = new Array();
-			// Determine if each neighboring cell is in game grid, and whether it has already been checked
 			for (var l = 0; l < 4; l++) {
 				if (pot[l][0] > -1 && pot[l][0] < rows && pot[l][1] > -1 && pot[l][1] < cols && unvis[pot[l][0]][pot[l][1]]) { neighbors.push(pot[l]); }
 			}
-			// If at least one active neighboring cell has been found
 			if (neighbors.length) {
-				// Choose one of the neighbors at random
 				let next = neighbors[Math.floor(Math.random() * neighbors.length)];
-				// Remove the wall between the current cell and the chosen neighboring cell
 				cells[currentCell[0]][currentCell[1]][next[2]] = 1;
 				cells[next[0]][next[1]][next[3]] = 1;
 				let row = currentCell[0];
@@ -6190,13 +5688,11 @@ class MazeGraph extends AGraph {
 				let row2 = next[0];
 				let col2 = next[1];
 				this.addEdge(this.getCommonId(row, col), this.getCommonId(row2, col2), {});
-				// Mark the neighbor as visited, and set it as the current cell
 				unvis[next[0]][next[1]] = false;
 				visited++;
 				currentCell = [next[0], next[1]];
 				path.push(currentCell);
 			}
-			// Otherwise go back up a step and keep going
 			else {
 				currentCell = path.pop();
 			}
@@ -6213,12 +5709,7 @@ class MazeGraph extends AGraph {
 	disconnectCells(nid1, nid2) {
 		this.removeEdge(this.getCommonEdgeId(nid1, nid2));
 		let [item1, item2] = [Items[nid1], Items[nid2]];
-		//console.log('item1', item1, item2);
 		let [dir1, dir2] = this.getRelativeDirections(item1, item2);
-		// this.setItemColor(item1,'green');
-		// this.setItemColor(item2,'lightgreen');
-		//this.setItemContent(item1,'1');this.removeItemContent(item1);
-		//console.log('directions:', dir1, dir2);
 		this.setItemBorder(item1, dir1);
 		this.setItemBorder(item2, dir2);
 	}
@@ -6238,12 +5729,9 @@ class MazeGraph extends AGraph {
 	}
 	colorComponents() {
 		let comps = this.getComponents();
-		//get hue wheel!!!
 		let wheel = getColorWheel('red', comps.length);
-		//console.log('wheel', wheel)
 		let i = 0;
 		for (const comp of comps) {
-			// this.breadCrumbs(comp, wheel[i], 20); i += 1;
 			this.breadCrumbs(comp, wheel[i]); i += 1;
 		}
 	}
@@ -6253,16 +5741,10 @@ class MazeGraph extends AGraph {
 		this.addVisual(this.dGraph);
 		this.storeCurrentPositions();
 		this.addLayoutControls(this.sb, ['show', 'hide', 'prest', 'grid', 'klay', 'rand', 'euler', 'reset', 'store']);//,'grid','euler','prest');		
-		// setTimeout(() => {
-		// 	this.comcola();
-		// 	this.addLayoutControls(this.sb, ['cola', 'fit', 'prest', 'grid', 'klay', 'rand', 'euler', 'cose', 'reset', 'store']);//,'grid','euler','prest');
-		// }, 2000);
 	}
 	hideGraph() {
 		if (isdef(this.dGraph) && this.hasVisual) {
-			//this.dGraph.style.opacity = 0;
 			this.dGraph.style.display = 'none';
-			// hide(this.dGraph);
 		}
 	}
 }
@@ -6295,7 +5777,6 @@ function indexDiff(a, b, s) {
 	let ib = s.indexOf(b);
 	console.log('index of', a, 'is', ia)
 	console.log('index of', b, 'is', ib)
-	//console.log('s',s,'diff',ia-ib);
 	return ia - ib;
 }
 function sort_cards_orig(hand, bysuit = true, byrank = true) {
@@ -6308,11 +5789,9 @@ function sort_cards_orig(hand, bysuit = true, byrank = true) {
 	} else if (byrank) {
 		sortByFunc(ranked, x => rankstr.indexOf(x.r));
 	}
-	//console.log('ranked',ranked)
 	return ranked.map(x => x.x);
 }
 function set_card_constants(w, h, ranks, suits, deckletters, numjokers = 0, ovdeck = .25, ovw = '20%', ovh = '20%') {
-	//koennte ich eine card haben die suit=Spade,
 	Card = {};
 	Card.sz = valf(h, 300);
 	Card.h = h;
@@ -6333,7 +5812,6 @@ function get_card_key52(R1 = '1', SB = 'B') {
 	return `card_${Rank1}${SuitB}`;
 }
 function get_card_div(R1 = '1', SB = 'B') {
-	//per default returns a facedown card
 	let key52 = get_card_key52(R1, SB);
 	let svgCode = C52['card_1B']; //joker:J1,J2, back:1B,2B
 	svgCode = '<div>' + svgCode + '</div>';
@@ -6347,13 +5825,11 @@ function inno_card(dParent, keyOrName) {
 	let cardInfo, name, key, id;
 	if (isdef(InnoById[keyOrName])) { id = key = keyOrName; cardInfo = InnoById[id]; name = cardInfo.name; }
 	else if (isdef(InnoByName[keyOrName])) { name = keyOrName; cardInfo = InnoByName[name]; id = key = cardInfo.id; };
-	//console.log('card', cardInfo);
 	let sym = INNO.sym[cardInfo.type];
 	let info = Syms[sym.key];
 	let card = cBlank(dParent, { fg: 'black', bg: INNO.color[cardInfo.color], w: Card.sz, h: Card.sz * .65, margin: 10 });
 	let [dCard, sz, szTitle, margin] = [iDiv(card), Card.sz / 5, cardInfo.exp[0] == 'A' ? Card.sz / 12 : Card.sz / 8, 4];
 	let [dTitle, dMain] = cTitleArea(card, szTitle);
-	//let fzTitle = cardInfo.exp[0] == 'A'? szTitle *.5 :szTitle*.7;
 	let d = mAddContent(dTitle, name, {
 		patop: 4, bg: sym.bg, fg: 'white', h: szTitle, fz: szTitle * .7, align: 'center',
 		position: 'relative'
@@ -6372,18 +5848,14 @@ function inno_card(dParent, keyOrName) {
 	}
 	if (isdef(cardInfo.dogmas)) {
 		let box = mBoxFromMargins(dMain, 10, margin, sz + margin, sz + 2 * margin); //,{bg:'grey',alpha:.5, rounding:10});
-		//console.log('box',box);
 		mStyle(box, { align: 'left' });
 		let text = '';
 		for (const dog of cardInfo.dogmas) {
-			//console.log('text', cardInfo.type, sym);
 			let t = startsWith(dog, 'I demand') ? ('I <b>demand</b>' + dog.substring(8)) : startsWith(dog, 'I compell') ? ('I <b>compell</b>' + dog.substring(8)) : dog;
 			text += `<span style="color:${sym.bg};font-family:${info.family}">${info.text}</span>` + '&nbsp;' + t + '<br>';
 		}
 		let t2 = innoText(text);
-		//box.onclick = (ev) => makeInfobox(ev, box, 2); //console.log('click!',ev.target);
 		mFillText(t2, box);
-		// mText(t2,box);
 	} else if (isdef(cardInfo.res_city)) {
 		let positions = ['tc', 'tr'];
 		for (let i = 0; i < 2; i++) {
@@ -6395,7 +5867,6 @@ function inno_card(dParent, keyOrName) {
 			else if (isNumber(r)) { innoBonusNumber(r, dMain, sz, pos, margin); }
 			else if (r == 'echo') { innoEcho(cardInfo.echo, dMain, sz, pos, margin); }
 			else if (r == 'inspire') { innoInspire(cardInfo.inspire, dMain, sz, pos, margin); }
-			//else if (r == 'plus') { innoEcho(cardInfo.echo, dMain, sz, pos, margin); }
 		}
 	}
 	card.info = cardInfo;
@@ -6406,13 +5877,11 @@ function inno_card_fixed_font(dParent, keyOrName) {
 	let cardInfo, name, key, id;
 	if (isdef(InnoById[keyOrName])) { id = key = keyOrName; cardInfo = InnoById[id]; name = cardInfo.name; }
 	else if (isdef(InnoByName[keyOrName])) { name = keyOrName; cardInfo = InnoByName[name]; id = key = cardInfo.id; };
-	//console.log('card', cardInfo);
 	let sym = INNO.sym[cardInfo.type];
 	let info = Syms[sym.key];
 	let card = cBlank(dParent, { fg: 'black', bg: INNO.color[cardInfo.color], w: Card.sz, h: Card.sz * .65, margin: 10 });
 	let [dCard, sz, szTitle, margin] = [iDiv(card), Card.sz / 5, cardInfo.exp[0] == 'A' ? Card.sz / 12 : Card.sz / 8, 4];
 	let [dTitle, dMain] = cTitleArea(card, szTitle);
-	//let fzTitle = cardInfo.exp[0] == 'A'? szTitle *.5 :szTitle*.7;
 	let d = mAddContent(dTitle, name, {
 		patop: 4, bg: sym.bg, fg: 'white', h: szTitle, fz: szTitle * .7, align: 'center',
 		position: 'relative'
@@ -6433,23 +5902,17 @@ function inno_card_fixed_font(dParent, keyOrName) {
 	mStyle(box, { align: 'left', padding: 4 });
 	let text = '';
 	for (const dog of cardInfo.dogmas) {
-		//console.log('text', cardInfo.type, sym);
 		let t = startsWith(dog, 'I demand') ? ('I <b>demand</b>' + dog.substring(8)) : startsWith(dog, 'I compell') ? ('I <b>compell</b>' + dog.substring(8)) : dog;
 		text += `<span style="color:${sym.bg};font-family:${info.family}">${info.text}</span>` + '&nbsp;' + t + '<br>';
 	}
 	let t2 = innoText(text);
-	//box.onclick = (ev) => makeInfobox(ev, box, 2); //console.log('click!',ev.target);
-	//mFillText(t2, box);
 	mText(t2, box, { fz: 10 });
 	card.info = cardInfo;
 	return card;
 }
 function innoAgeNumber(n, dParent, sz, pos, margin = 10) {
 	let x = Card.sz * .04; sz -= x; //margin += x / 2;
-	// let box = mDiv(dParent, { w: sz, h: sz, bg: 'beige', rounding: '50%', align: 'center' });
-	//mPlace(box, pos, margin);
 	let hOff = 0; //margin / 2;
-	// let styles = { w: sz, h: sz, bg: 'beige', rounding: '50%', align: 'center' };
 	let styles = { wmin: sz * 1.1, h: sz, bg: '#131313', align: 'center' };
 	let box = mShape('hexFlat', dParent, styles); mPlace(box, pos, margin, margin - hOff / 2); //mPlace(box, pos, margin + hOff / 2, margin);
 	s = mDiv(box, { fz: sz * .6, fg: 'white', display: 'inline-block' }, null, n);
@@ -6460,14 +5923,12 @@ function innoBonusNumber(n, dParent, sz, pos, margin = 10) {
 	let hOff = margin / 2;
 	let styles = { w: sz, h: sz - hOff, bg: 'brown', box: true, align: 'center' };
 	let box = mShape('circle', dParent, styles); mPlace(box, pos, margin + hOff / 2, margin);
-	//let box = mDiv(dParent, { w: sz, h: sz, bg: 'brown', border:'5px double dimgray', box:true, rounding: '50%', align:'center'}); mPlace(box, pos, margin);
 	let dText = mDiv(box, { fz: sz * .1, fg: 'black', 'line-height': sz * .1, matop: sz * .05 }, null, 'bonus');
 	let dNum = mDiv(box, { fz: sz * .7, fg: 'black', 'line-height': sz * .65 }, null, n);
 	return box;
 }
 function innoEcho(text, dParent, sz, pos, margin = 10) {
 	if (isList(text)) text = text.join('<br>');
-	//console.log('text',text); return;
 	margin /= 2;
 	sz += margin / 4;
 	let box = mDiv(dParent, { w: sz, h: sz, bg: 'black', fg: 'white', rounding: 10 });
@@ -6479,7 +5940,6 @@ function innoEcho(text, dParent, sz, pos, margin = 10) {
 }
 function innoInspire(text, dParent, sz, pos, margin = 10) {
 	if (isList(text)) text = text.join('<br>');
-	//console.log('text',text); return;
 	margin /= 2;
 	sz += margin / 4;
 	let box = mDiv(dParent, { w: sz, h: sz, bg: '#ffffff80', fg: 'black', rounding: 10 });
@@ -6501,30 +5961,23 @@ function innoFlag(cardType, dParent, sz, pos, margin = 10) {
 }
 function innoText(text) {
 	for (const s in INNO.sym) { INNO.sym[s].sym = Syms[INNO.sym[s].key]; }
-	// console.log('INNO.sym', INNO.sym);
-	// console.log('text', text);
-	//words to replace:
 	let parts = text.split('[');
 	let s = parts[0];
 	for (let i = 1; i < parts.length; i++) {
 		let part = parts[i];
 		let kw = stringBefore(part, ']');
-		//console.log('kw', kw);
 		let sp;
 		let fz = Card.sz * .04;
 		if (Object.keys(INNO.sym).includes(kw)) { let o = INNO.sym[kw]; sp = makeSymbolSpan(o.sym, o.bg, o.fg, fz * .9, '20%'); }
 		else if (isNumber(kw)) { sp = makeNumberSpan(kw, '#232323', 'white', fz * .9, '20%'); }
 		s += sp + stringAfter(part, ']');
 	}
-	// console.log('text', text, '\ns', s)
 	return s;
 }
 function inno_calc_visible_syms(board, splays = {}) {
-	//splayed color NOT IMPLEMENTED!
 	let res = {};
 	INNO.symNames.map(x => res[x] = 0);
 	for (const color in board) {
-		//console.log(board, splays)
 		let res_color = inno_calc_visible_syms_pile(board[color], splays[color]);
 		for (const k in res) { res[k] += res_color[k]; }
 	}
@@ -6538,13 +5991,9 @@ function inno_calc_visible_syms_pile(keys, dir) {
 	for (const k of top.resources) {
 		if (isdef(totals[k])) totals[k] += 1;
 	}
-	//console.log('sym count of top card', totals);
 	if (nundef(dir) || dir == 0) return totals;
-	//splayed color NOT IMPLEMENTED!
 	if (dir == 1) {
-		//left splay: all cards except top card count symbol resources[3], +TODO*** city symbols!
 	} else if (dir == 2) {
-		//right splay: all cards except top card count symbol resources[0]+[1], +TODO*** city symbols!
 		for (const c of cards) {
 			for (const k in totals) {
 				if (c.resources[0] == k) totals[k]++;
@@ -6571,9 +6020,7 @@ function inno_get_hand_actions(otree, uname) {
 function inno_get_basic_deck_age(otree, min_age) {
 	for (let i = min_age; i <= 10; i++) {
 		let deck = otree.decks.B[i];
-		//console.log('age',i,'deck',deck);
 		let len = deck.length;
-		//console.log('basic deck age', i, 'has', deck.length);
 		if (len > 0) return i;
 	}
 	return 11;
@@ -6587,9 +6034,7 @@ function inno_get_deck_age(otree, deck_letter, min_age = 1) {
 }
 function inno_get_player_age(otree, uname) {
 	let top = inno_get_top_card_info(otree, uname);
-	//console.log('top',top);
 	let maxage = arrMinMax(top, x => x.age).max;
-	//console.log('maxage of player top cards is',maxage);
 	return maxage;
 }
 function inno_get_splay(otree, path) {
@@ -6599,8 +6044,6 @@ function inno_get_splay(otree, path) {
 }
 function inno_get_top_card_actions(otree, uname) {
 	let keys = inno_get_top_card_keys(otree, uname);
-	// console.log('keys', keys);
-	// for (const k of keys) { console.log(InnoById[k]); }
 	let res = keys.map(x => `${uname}.board.${inno_get_cardinfo(x).color}.${x}`);
 	return res;
 }
@@ -6634,13 +6077,9 @@ function inno_create_card_assets() {
 			lookupAddToList(Dinno, [exp[0], c.age], c.id);
 		}
 	}
-	//console.log('Decks', Dinno);
-	//console.log('inno cards:',InnoById);
-	//console.log('n', get_keys(InnoById));
 }
 function inno_stat_sym(key, n, dParent, sz) {
 	let d = mDiv(dParent, { display: 'flex', dir: 'c', fz: sz });
-	//let box = mDiv(dParent, { w: sz, h: sz, bg: INNO.sym[key].bg, rounding: 10 },null,n); 
 	let s = mSym(INNO.sym[key].key, d, { h: sz, fz: sz, fg: INNO.sym[key].fg });
 	d.innerHTML += `<span>${n}</span>`;
 	return d;
@@ -6654,7 +6093,6 @@ function inno_show_other_player_info(ev) {
 	console.log('player info for', pl);
 }
 function inno_present_board(dParent, board) {
-	//let d = mDiv(dParent); //,{},null,'board');
 	let dBoard = mDiv(dParent, {}, null, 'board');
 	mFlex(dBoard);
 	let boardItemLists = [];
@@ -6667,7 +6105,6 @@ function inno_present_board(dParent, board) {
 	return boardItemLists;
 }
 function inno_present_hand(dParent, hand) {
-	//let d = mDiv(dParent); //,{},null,'board');
 	let dHand = mDiv(dParent, {}, null, 'hand');
 	mFlexWrap(dHand); mLinebreak(dHand);
 	let handItems = inno_present_cards(dHand, hand);
@@ -6676,7 +6113,6 @@ function inno_present_hand(dParent, hand) {
 function inno_present_card(dParent, k) { let card = inno_card(dParent, k); card.key = card.info.key; return card; }
 function inno_present_cards(dParent, keys) {
 	let items = [];
-	//console.log('keys',keys)
 	for (const k of keys) {
 		let card = inno_present_card(dParent, k);
 		items.push(card);
@@ -6684,27 +6120,19 @@ function inno_present_cards(dParent, keys) {
 	return items;
 }
 function inno_shuffle_decks() {
-	//console.log('Dinno.B[1]', Dinno.B[1]);
 	for (const exp in Dinno) {
 		for (const age in Dinno[exp]) {
 			shuffle(Dinno[exp][age]);
 		}
 	}
-	//console.log('Dinno.B[1]', Dinno.B[1]);
 }
 function inno_setup(player_names) {
-	//einfachkeitshalber mach ich jetzt ein fen object und stringify
-	//each player gets 2 cards
 	inno_shuffle_decks();//shuffle all decks (remove to test deterministically)
-	// make decks
 	let pre_fen = {};
 	let decks = pre_fen.decks = jsCopy(Dinno);
-	// make achievement pile: from each Basic deck, remove 1
 	pre_fen.achievements = [];
 	for (const age in decks.B) { last_elem_from_to(decks.B[age], pre_fen.achievements); }
-	//make special achievements
 	pre_fen.special_achievements = ['monument', 'empire', 'world', 'wonder', 'universe', 'legend', 'repute', 'fame', 'glory', 'victory', 'supremacy', 'destiny', 'wealth', 'heritage', 'history'];
-	//from each basic and echoes age=1 deck draw 1 card per player
 	let pls = pre_fen.players = {};
 	let deck1 = decks.B[1]; let deck2 = decks.E[1];
 	for (const plname of player_names) {
@@ -6719,17 +6147,12 @@ function inno_setup(player_names) {
 		};
 		last_elem_from_to(deck1, pl.hand); last_elem_from_to(deck2, pl.hand);
 	}
-	//no! phase should be select_initial_card
-	//fen.phase = 0;
-	//fen.turn = jsCopy(player_names);
 	pre_fen.plorder = jsCopy(player_names); //get_random_player_order(player_names);
 	let fen = {
 		players: pre_fen.players,
 		decks: pre_fen.decks,
 	};
 	addKeys(pre_fen, fen);
-	//sort pre_fen keys so wie ich es in der ui will!
-	//console.log('keys von pre_fen',get_keys(pre_fen),get_keys(fen));
 	return fen; //[player_names.map(x=>x),fen];
 }
 function spotitCard(info, dParent, cardStyles, onClickSym) {
@@ -6738,7 +6161,6 @@ function spotitCard(info, dParent, cardStyles, onClickSym) {
 	addKeys(info, card);
 	let d = iDiv(card);
 	card.pattern = fillColarr(card.colarr, card.keys);
-	// symSize: abhaengig von rows
 	let symStyles = { sz: Card.sz / (card.rows + 1), fg: 'random', hmargin: 8, vmargin: 4, cursor: 'pointer' };
 	let syms = [];
 	mRows(iDiv(card), card.pattern, symStyles, { 'justify-content': 'center' }, { 'justify-content': 'center' }, syms);
@@ -6752,7 +6174,6 @@ function spotitCard(info, dParent, cardStyles, onClickSym) {
 	return card;
 }
 function spotitDeal(rows, cols, numCards, setName) {
-	//deal cards (backend)
 	let colarr = _calc_hex_col_array(rows, cols);
 	let perCard = arrSum(colarr);
 	let nShared = (numCards * (numCards - 1)) / 2;
@@ -6760,11 +6181,9 @@ function spotitDeal(rows, cols, numCards, setName) {
 	let keys = choose(oneWordKeys(KeySets[setName]), nShared + numCards * nUnique);
 	let dupls = keys.slice(0, nShared); //these keys are shared: cards 1 and 2 share the first one, 1 and 3 the second one,...
 	let uniqs = keys.slice(nShared);
-	//console.log('numCards', numCards, '\nperCard', perCard, '\ntotal', keys.length, '\ndupls', dupls, '\nuniqs', uniqs);
 	let infos = [];
 	for (let i = 0; i < numCards; i++) {
 		let keylist = uniqs.slice(i * nUnique, i * nUnique + nUnique);
-		//console.log('card unique keys:',card.keys);
 		let info = { id: getUID(), shares: {}, keys: keylist, rows: rows, cols: cols, colarr: colarr };
 		infos.push(info);
 	}
@@ -6778,7 +6197,6 @@ function spotitDeal(rows, cols, numCards, setName) {
 			c1.shares[c2.id] = dupl;
 			c2.shares[c1.id] = dupl;
 			c2.keys.push(dupl);
-			//each gets a shared card
 		}
 	}
 	for (const info of infos) { shuffle(info.keys); }
@@ -6786,7 +6204,6 @@ function spotitDeal(rows, cols, numCards, setName) {
 }
 function spotitFindCardSharingSymbol(card, key) {
 	let id = firstCondDict(card.shares, x => x == key);
-	//console.log('found', id);
 	return Items[id];
 }
 function spotitFindSymbol(card, key) { let k = firstCondDictKey(card.live, x => x == key); return card.live[k]; }
@@ -6798,11 +6215,9 @@ function spotitOnClickSymbol(ev) {
 		console.log('clicked key', keyClicked, 'of card', id, item);
 		if (Object.values(item.shares).includes(keyClicked)) {
 			console.log('success!!!');//success!
-			//find the card that shares this symbol!
 			let otherCard = spotitFindCardSharingSymbol(item, keyClicked);
 			let cardSymbol = ev.target;
 			let otherSymbol = spotitFindSymbol(otherCard, keyClicked);
-			//mach die success markers auf die 2 symbols!
 			Selected = { success: true, feedbackUI: [cardSymbol, otherSymbol] };
 		} else {
 			console.log('fail!!!!!!!!'); //fail
@@ -6857,7 +6272,6 @@ function draw_set_card(dParent, info, card_styles) {
 		if (shape == 'circle') console.log('circle', d1);
 		if (isdef(text)) { mCenterCenterFlex(d1); mText(text, d1, { fz: sz / 1.75, fg: 'black', family: 'impact' }); }
 	}
-	//console.log('drawing info',info,'\nstyles',styles);
 	return card;
 }
 function check_complete_set(fenlist) {
@@ -6876,7 +6290,6 @@ function create_set_card(fen, dParent, card_styles) {
 	let myinfo = info_from_fen(fen);
 	let info = { shape: 'circle', color: BLUE, num: 1, shading: 'solid', background: 'white', text: 'none' };
 	copyKeys(myinfo, info);
-	// console.log('info', info);
 	let card = draw_set_card(dParent, info, card_styles);
 	card.fen = fen; //fen_from_info(info);
 	return card;
@@ -6918,8 +6331,6 @@ function make_set_deck(n_or_attr_list) {
 	let keys = get_keys(all_attrs);
 	let n = isNumber(n_or_attr_list) ? n_or_attr_list : n_or_attr_list.length;
 	let attrs = isNumber(n_or_attr_list) ? arrTake(keys, n) : n_or_attr_list;
-	// 00 01 02 10 11 12
-	//take a list, triple it and add 0,1,2 to the end of all elements
 	let list = ['0', '1', '2']; //because each attribute has exactly 3 possible values
 	let i = 1;
 	while (i < n) {
@@ -6928,11 +6339,9 @@ function make_set_deck(n_or_attr_list) {
 		list = l1.concat(l2).concat(l3);
 		i++;
 	}
-	//console.log('list',list);
 	return list;
 }
 function make_goal_set(deck, prob_different) {
-	//make a random set: fen of 3 cards with each letter all same or all different to first
 	let [fen1, fen2, fen3] = [deck[0], '', ''];  // 0102
 	let n = fen1.length;
 	let different = randomNumber(0, n - 1);
@@ -6948,7 +6357,6 @@ function make_goal_set(deck, prob_different) {
 function get_splay_word(nsplay) { return nsplay == 0 ? 'none' : nsplay == 1 ? 'left' : nsplay == 2 ? 'right' : dsplay == 3 ? 'up' : 'deck'; }
 function get_splay_number(wsplay) { return wsplay == 'none' ? 0 : wsplay == 'left' ? 1 : wsplay == 'right' ? 2 : wsplay == 'up' ? 3 : 4; }
 function mContainerSplay_WORKS(d, splay, w, h, num, ov) {
-	//splay can be number(0,1,2,3) or word ('none','left','right','up')
 	if (!isNumber(splay)) splay = get_splay_number(splay);
 	if (isString(ov) && ov[ov.length - 1] == '%') ov = splay == 0 ? 1 : splay == 3 ? Number(ov) * h / 100 : Number(ov) * w / 100;
 	if (splay == 3) {
@@ -6963,23 +6371,14 @@ function mContainerSplay_WORKS(d, splay, w, h, num, ov) {
 		d.style.display = 'grid'; ov = .5
 		d.style.gridTemplateColumns = `repeat(${num},${ov}px)`;
 		d.style.width = `${w + (num - 1) * (ov * 1.1)}px`;
-		// d.style.display = 'grid'; ov = .5;
-		// d.style.gridTemplateColums = `repeat(${num},${ov}px)`;
-		// d.style.width = `${w + (num - 1)}px`;
 	} else if (splay == 4) {
-		//d.style.display = 'grid'; ov=.5;
-		//d.style.gridTemplateColumns = `repeat(${num},${ov}px)`;
 		d.style.position = 'relative';
 		if (nundef(ov)) ov = .5;
 		d.style.width = `${w + (num - 1) * (ov * 1.1)}px`;
 		d.style.height = `${h + (num - 1) * (ov * 1.1)}px`;
-		// d.style.display = 'grid'; ov = .5;
-		// d.style.gridTemplateColums = `repeat(${num},${ov}px)`;
-		// d.style.width = `${w + (num - 1)}px`;
 	}
 }
 function mContainerSplay(d, splay, w, h, num, ov) {
-	//splay can be number(0,1,2,3,4) or word ('none','left','right','up','deck')
 	if (nundef(splay)) splay = 2;
 	if (!isNumber(splay)) splay = get_splay_number(splay);
 	if (isString(ov) && ov[ov.length - 1] == '%') ov = splay == 0 ? 1 : splay == 3 ? Number(ov) * h / 100 : Number(ov) * w / 100;
@@ -6992,7 +6391,6 @@ function mContainerSplay(d, splay, w, h, num, ov) {
 		d.style.display = 'grid';
 		d.style.gridTemplateColumns = `repeat(${num},${ov}px)`;
 		let wnew = w + (num - 1) * (ov * 1.1);
-		// console.log('setting min-width to',wnew)
 		d.style.minWidth = `${w + (num - 1) * (ov * 1.1)}px`;
 	} else if (splay == 0) {
 		d.style.display = 'grid'; ov = .5
@@ -7017,15 +6415,11 @@ function mItemSplay(item, list, splay, ov = .5) {
 		let offset = (list.length - idx) * ov;
 		mStyle(d, { position: 'absolute', left: offset, top: offset }); //,Z:list.length - idx});
 		d.style.zIndex = list.length - idx;
-		// } else if (splay == 4) {
-		// 	let offset = idx * ov; //(list.length-idx)*ov;
-		// 	mStyle(d, { position: 'absolute', left: offset, top: offset });
 	} else {
 		d.style.zIndex = splay != 2 ? list.length - idx : 0;
 	}
 }
 function cardPattern(n, sym) {
-	//wie teilt man n symbols auf eine card auf (sz bei pik 8)
 	let di = {
 		1: [sym],
 		2: [[sym], [sym]],
@@ -7069,8 +6463,6 @@ function cBlank(dParent, styles = {}, id) {
 	let [w, h, sz] = [styles.w, styles.h, Math.min(styles.w, styles.h)];
 	if (nundef(styles.rounding)) styles.rounding = sz * .05;
 	let d = mDiv(dParent, styles, id, null, 'card');
-	//console.log('styles',styles)
-	//return d;
 	let item = mItem(null, { div: d }, { type: 'card', sz: sz, rounding: styles.rounding });
 	copyKeys(styles, item);
 	return item;
@@ -7085,11 +6477,8 @@ function cTitleArea(card, h, styles, classes) {
 }
 function makeInfobox(ev, elem, scale) {
 	let t = ev.target; while (isdef(t) && t != elem) t = t.parentNode; if (nundef(t)) { console.log('WRONG click', ev.target); return; }
-	//let t = ev.target; if (ev.target != elem) {console.log('WRONG click',ev.target); return;}
-	//console.log('ok');
 	let di = DA.infobox; if (isdef(di)) {
 		let inner = di.innerHTML;
-		//console.log('removing!');
 		di.remove();
 		DA.infobox = null;
 		if (inner == elem.innerHTML) return;
@@ -7106,36 +6495,14 @@ function makeNumberSpan(n, bg, fg, fz, rounding = '50%') {
 	return `<span style='font-size:${fz}px;background:${bg};color:${fg};padding:0px 5px;border-radius:${rounding}'>${n}</span>`;
 }
 function makeSymbolSpan(info, bg, fg, fz, rounding = '50%') {
-	//console.log('makeSymbol',bg,fg,fz,info);
-	//let pad=info.key == 'white-tower'?
 	let patop = Math.min(2, fz * .2);
 	let pad = '5% 10%'; pad = '3px 5px'; pad = `${patop}px ${patop * 2}px`;
 	if (info.key == 'queen-crown') pad = `${patop}px ${patop}px ${1}px ${patop}px`;
 	else if (info.key == 'leaf') pad = `${1}px ${patop}px ${patop}px ${patop}px`;
 	else if (info.key == 'white-tower') pad = `${patop}px ${patop * 2}px ${patop - 1}px ${patop * 2}px`;
-	//return `<span style='background:${bg};padding:2px 10px;font-family:${info.family}'>${info.text}</span>`;
-	// sp = `
-	// <div style="display: inline-flex; place-content: center; flex-wrap: wrap; width: ${fz * 1.5}px; height: ${fz * 1.35}px;
-	// 	font-size: ${fz}px; background: ${bg};color: ${fg}; border-radius: 50%;">
-	// 	<div style="font-family: ${info.family}; font-size: ${fz}px;display: inline-block;">${info.text}</div>
-	// </div>`;
-	// return `<span style='line-height: 125%;font-family:${info.family};font-size:${fz}px;background:${bg};color:${fg};padding:1px 7px;border-radius:${rounding}'>${info.text}</span>`;
-	// return `<div style='box-sizing:border-box;padding:6px 7px 4px 7px;min-height:22px;display:inline-block;font-family:${info.family};font-size:${fz}px;background:${bg};color:${fg};border-radius:${rounding}'>${info.text}</div>`;
 	return `<div style='box-sizing:border-box;padding:${pad};min-height:${fz + 3}px;display:inline-block;font-family:${info.family};font-size:${fz}px;background:${bg};color:${fg};border-radius:${rounding}'>${info.text}</div>`;
 }
-function mSymSizeToH(info, h) { let f = h / info.h; return { fz: 100 * f, w: info.w * f, h: h }; }
-function mSymSizeToW(info, w) { let f = w / info.w; return { fz: 100 * f, w: w, h: info.h * f }; }
-function mSymSizeToFz(info, fz) { let f = fz / 100; return { fz: fz, w: info.w * f, h: info.h * f }; }
-function mSymSizeToBox(info, w, h) {
-	//console.log('mSymSizeToBox', w, h, '\ninfo:', info.w, info.h);
-	let fw = w / info.w;
-	let fh = h / info.h;
-	let f = Math.min(fw, fh);
-	//console.log('fw', fw, '\nfh', fh, '\nf', f);
-	return { fz: 100 * f, w: info.w * f, h: info.h * f };
-}
 function mPlaceText(text, where, dParent, styles, innerStyles, classes) {
-	//where can be: [w,h,'tl'] or margins: [t,r,b,l]
 	let box;
 	if (where.length == 4) {
 		let [t, r, b, l] = where;
@@ -7146,7 +6513,6 @@ function mPlaceText(text, where, dParent, styles, innerStyles, classes) {
 		mPlace(box, place);
 	}
 	let r = mMeasure(box);
-	//text = 'das ist ein sehr langer text ich hoffe er ist auf jeden fall zu lang fuer diese box. denn wenn nicht ist es ein echtes problem. dann muss ich einen anderen test machen!';
 	let [fz, w, h] = fitFont(text, 20, r.w, r.h);
 	console.log('res', fz, w, h);
 	let dText = mDiv(box, {
@@ -7160,17 +6526,11 @@ function mPlaceText(text, where, dParent, styles, innerStyles, classes) {
 }
 function mFillText(text, box, padding = 10, perleft = 10, pertop = 20) {
 	let r = mMeasure(box);
-	//text = 'das ist ein sehr langer text ich hoffe er ist auf jeden fall zu lang fuer diese box. denn wenn nicht ist es ein echtes problem. dann muss ich einen anderen test machen!';
 	let [fz, w, h] = fitFont(text, 14, r.w - padding, r.h - padding);
-	//if (fz<8) fz=8;
-	//console.log('res', fz,w,h);
 	let dText = mDiv(box, {
 		w: w, h: h, fz: fz,
 		position: 'absolute', transform: `translate(-${perleft}%,-${pertop}%)`, top: `${pertop}%`, left: `${perleft}%`
 	}, null, text);
-	//if (isdef(styles)) mStyle(box,styles);
-	//if (isdef(innerStyles)) mStyle(dText,innerStyles);
-	//if (isdef(classes)) mStyle(box,classes);
 	return dText;
 }
 function mRowsX(dParent, arr, itemStyles = { bg: 'random' }, rowStyles, colStyles, akku) {
@@ -7212,7 +6572,6 @@ function mRows(dParent, arr, itemStyles = { bg: 'random' }, rowStyles, colStyles
 	let d0 = mDiv100(dParent, { display: 'flex', dir: 'column', 'justify-content': 'space-between' });//,'align-items':'center'});
 	if (isdef(rowStyles)) mStyle(d0, rowStyles);
 	for (let i = 0; i < arr.length; i++) {
-		// let d1=mDiv(d0,{bg:'random',h:randomNumber(30,80),w:'100%'},null,randomName());
 		let content = arr[i];
 		if (isList(content)) {
 			let d1 = mDiv(d0); //,null,randomName());
@@ -7220,7 +6579,6 @@ function mRows(dParent, arr, itemStyles = { bg: 'random' }, rowStyles, colStyles
 		} else {
 			d1 = mContent(content, d0, itemStyles); //mDiv(d0, styles, null, content);
 			akku.push(d1);
-			// let d1 = mDiv(d0, { bg: 'random' }, null, content);
 		}
 	}
 }
@@ -7244,19 +6602,14 @@ function mContent(content, dParent, styles) {
 }
 function mSymInDiv(sym, dParent, styles = { sz: Card.sz / 5, fg: 'random' }) {
 	dResult = mDiv(dParent);
-	//sym = chooseRandom(KeySets['animals-nature']); //SymKeys);
 	ds = mSym(sym, dResult, styles);
 	return dResult;
 }
 function mSymInDivShrink(sym, dParent, styles = { sz: Card.sz / 5, fg: 'random' }) {
-	//console.log('**************************!!!!')
 	dResult = mDiv(dParent);
 	let ds = mSym(sym, dResult, styles);
-	//console.log('ds',ds);
 	let scale = chooseRandom([.5, .75, 1, 1.25]);
-	//if (coin()) scale = -scale;
 	let [scaleX, scaleY] = [coin() ? scale : -scale, scale];
-	//console.log('sym', sym, scaleX, scaleY);
 	if (coin()) ds.style.transform = `scale(${scaleX},${scaleY})`;
 	return dResult;
 }
@@ -7295,22 +6648,17 @@ function iHandZone(dParent, styles, nmax) {
 		styles.w = sz.w;
 		styles.h = sz.h;
 	}
-	//console.log('________________', styles)
 	return mZone(dParent, styles);
 }
 function iSortHand(dParent, h) {
 	let d = h.deck;
-	//console.log(d.cards());
 	d.sort();
-	//console.log(d.cards());
 	iPresentHand(dParent, h);
 }
 function iPresentHand(h, dParent, styles, redo = true) {
-	//console.log('zone styles',styles)
 	if (nundef(h.zone)) h.zone = iHandZone(dParent, styles); else clearElement(h.zone);
 	if (nundef(h.iHand)) {
 		let items = i52(h.deck.cards());
-		//console.log('items',items)
 		h.iHand = iSplay(items, h.zone);
 	} else if (redo) {
 		clearElement(h.zone);
@@ -7337,15 +6685,11 @@ function iRemakeHand(data) {
 function iH00_dep(iarr, dParent, styles, id) {
 	function iH00Zone(dTable, nmax = 3, padding = 10) {
 		let sz = netHandSize(nmax);
-		//console.log('________________', sz)
 		return mZone(dTable, { wmin: sz.w, h: sz.h, padding: padding, rounding: 10 });
 	}
-	//should return item={iarr,live.div,styles}
 	let data = DA[id] = {};
 	let h = data.deck = new DeckClass();
 	h.init(iarr);
-	// iPresentHand_test(dParent, data);
-	// return data;
 	h = data;
 	if (nundef(h.zone)) h.zone = iH00Zone(dParent); else clearElement(h.zone);
 	if (nundef(h.iHand)) {
@@ -7361,10 +6705,8 @@ function iH00_dep(iarr, dParent, styles, id) {
 function iH01(iarr, dParent, styles, id, overlap) {
 	function iH01Zone(dTable, nmax = 3, padding = 10) {
 		let sz = netHandSize(nmax);
-		//console.log('________________', sz)
 		return mZone(dTable, { wmin: sz.w, h: sz.h, padding: padding }); //, rounding: 10, bg:'blue' });
 	}
-	//should return item={iarr,live.div,styles}
 	let h = isdef(Items[id]) ? Items[id] : { arr: iarr, styles: styles, id: id };
 	if (nundef(h.zone)) h.zone = iH01Zone(dParent); else clearElement(h.zone);
 	let items = i52(iarr);
@@ -7374,10 +6716,8 @@ function iH01(iarr, dParent, styles, id, overlap) {
 function iH00(iarr, dParent, styles, id) {
 	function iH00Zone(dTable, nmax = 7, padding = 10) {
 		let sz = netHandSize(nmax);
-		//console.log('________________', sz)
 		return mZone(dTable, { wmin: sz.w, h: sz.h, padding: padding }); //, rounding: 10, bg:'blue' });
 	}
-	//should return item={iarr,live.div,styles}
 	let h = isdef(Items[id]) ? Items[id] : { arr: iarr, styles: styles, id: id };
 	if (nundef(h.zone)) h.zone = iH00Zone(dParent); else clearElement(h.zone);
 	let items = i52(iarr);
@@ -7386,14 +6726,11 @@ function iH00(iarr, dParent, styles, id) {
 }
 function iHandZone_test(dTable, nmax = 10, padding = 10) {
 	let sz = netHandSize(nmax);
-	//console.log('________________', sz)
 	return mZone(dTable, { wmin: sz.w, h: sz.h, bg: 'random', padding: padding, rounding: 10 });
 }
 function iSortHand_test(dParent, h) {
 	let d = h.deck;
-	//console.log(d.cards());
 	d.sort();
-	//console.log(d.cards());
 	iPresentHand_test(dParent, h);
 }
 function iPresentHand_test(dParent, h, redo = true) {
@@ -7423,15 +6760,6 @@ function anim1(elem, prop, from, to, ms) {
 	if (prop == 'left') elem.style.position = 'absolute';
 	if (isNumber(from)) from = '' + from + 'px';
 	if (isNumber(to)) to = '' + to + 'px';
-	// let kfStart={};
-	// kfStart[prop]=from;
-	// let kfEnd={};
-	// kfEnd[prop]={};
-	// elem.animate([{left: '5px'},{left: '200px'}], {
-	// 	// timing options
-	// 	duration: ms,
-	// 	iterations: Infinity
-	// });
 }
 class Card52 {
 	static toString(c) { return c.rank + ' of ' + c.suit; }
@@ -7441,14 +6769,11 @@ class Card52 {
 		let suit = Card52.getSuit(i);
 		return 'card_' + rank + suit;
 	}
-	//returns index 0..51
 	static _fromKey(k) {
 		let ranks = 'A23456789TJQK';
 		let suits = 'SHDC';
-		//ex k='2H';
 		let ir = ranks.indexOf(k[0]); //=> zahl zwischen 0 und 12
 		let is = suits.indexOf(k[1]); //=> zahle zwischen 0 und 3
-		//console.log(is)
 		return is * 13 + ir;
 	}
 	static getRankValue(i) { if (nundef(i)) return null; let r = i % 13; return r == 0 ? 12 : r - 1; }
@@ -7461,12 +6786,10 @@ class Card52 {
 	}
 	static getSuit(i) {
 		let s = ['S', 'H', 'D', 'C'][divInt(i, 13)];
-		//if (!'SHDC'.includes(s)) console.log('SUIT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
 		return s;
 	}
 	static getShortString(c) { return c.suit + c.rank; }
 	static turnFaceDown(c, color) {
-		//console.log(c.faceUp)
 		if (!c.faceUp) return;
 		let svgCode = C52.card_2B; //C52 is cached asset loaded in _start
 		c.div.innerHTML = svgCode;
@@ -7480,7 +6803,6 @@ class Card52 {
 	}
 	static fromSR(sr, h) { return Card52.fromShortString(sr, h); }
 	static fromShortString(sr, h) {
-		//eg: getByShortString('HK')
 		let key = sr[1].toUpperCase() + sr[0].toUpperCase();
 		let i = Card52._fromKey(key);
 		console.log('card from ', sr, 'is', key, 'i', i)
@@ -7488,7 +6810,6 @@ class Card52 {
 	}
 	static get(sr, h) { return Card52.fromSR(sr, h); }
 	static getItem(i, h = 110, w) {
-		//rank:A23456789TJQK, suit:SHDC, card_2H (2 of hearts)
 		if (nundef(w)) w = h * .7;
 		if (nundef(i)) i = randomNumber(0, 51);
 		if (isString(i) && i.length == 2) { i = Card52._fromKey(i[1].toUpperCase() + i[0].toUpperCase()); }
@@ -7501,7 +6822,6 @@ class Card52 {
 		if (nundef(irankey) && nundef(suit)) {
 			[rank, suit] = Card52.randomRankSuit();
 		} else if (nundef(irankey)) {
-			//face down card!
 			irankey = '2';
 			suit = 'B';
 		} else if (nundef(suit)) {
@@ -7509,22 +6829,18 @@ class Card52 {
 			rank = irankey[5];
 			suit = irankey[6];
 		}
-		//console.log('rank', rank, 'suit', suit); // should have those now!
 		if (rank == '10') rank = 'T';
 		if (rank == '1') rank = 'A';
 		if (nundef(suit)) suit = 'H'; else suit = suit[0].toUpperCase(); //joker:J1,J2, back:1B,2B
 		let cardKey = 'card_' + rank + suit;
 		let svgCode = C52[cardKey]; //C52 is cached asset loaded in _start
-		// console.log(cardKey, C52[cardKey])
 		svgCode = '<div>' + svgCode + '</div>';
 		let el = mCreateFrom(svgCode);
 		if (isdef(h) || isdef(w)) { mSize(el, w, h); }
-		//console.log('__________ERGEBNIS:',w,h)
 		return { rank: rank, suit: suit, key: cardKey, div: el, w: w, h: h, faceUp: true }; //this is a card!
 	}
 	static random() { return Card52.getItem(randomNumber(0, 51)); }
 	static randomRankSuit() {
-		//console.log(Object.keys(C52))
 		let c = Card52.random();
 		return [c.rank, c.suit];
 	}
@@ -7563,9 +6879,7 @@ class DeckClass {
 	removeFromIndex(i, n) { return this.data.splice(i, n); }
 	setData(arr, shuffled = false) { this.data = arr; if (shuffled) this.shuffle(); }
 	sort() {
-		//console.log('cards:', this.data.join(','));
 		this.data.sort((a, b) => Number(a) - Number(b));
-		//console.log('cards:', this.data.join(','));
 		return this;
 	}
 	shuffle() { shuffle(this.data); return this; }
@@ -7580,14 +6894,11 @@ class Cardz {
 		let suit = Card52.getSuit(i);
 		return 'card_' + rank + suit;
 	}
-	//returns index 0..51
 	static _fromKey(k) {
 		let ranks = 'A23456789TJQK';
 		let suits = 'SHDC';
-		//ex k='2H';
 		let i_rank = ranks.indexOf(k[0]); //=> zahl zwischen 0 und 12
 		let i_suit = suits.indexOf(k[1]); //=> zahle zwischen 0 und 3
-		//console.log(is)
 		return i_suit * ranks.length + i_rank;
 	}
 	static getRankValue(i) { if (nundef(i)) return null; let r = i % 13; return r == 0 ? 12 : r - 1; }
@@ -7600,12 +6911,10 @@ class Cardz {
 	}
 	static getSuit(i) {
 		let s = ['S', 'H', 'D', 'C'][divInt(i, 13)];
-		//if (!'SHDC'.includes(s)) console.log('SUIT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
 		return s;
 	}
 	static getShortString(c) { return c.suit + c.rank; }
 	static turnFaceDown(c, color) {
-		//console.log(c.faceUp)
 		if (!c.faceUp) return;
 		let svgCode = C52.card_2B; //C52 is cached asset loaded in _start
 		c.div.innerHTML = svgCode;
@@ -7619,14 +6928,12 @@ class Cardz {
 	}
 	static fromSR(sr) { return Card52.fromShortString(sr); }
 	static fromShortString(sr) {
-		//eg: getByShortString('HK')
 		let key = sr[1].toUpperCase() + sr[0].toUpperCase();
 		let i = Card52._fromKey(key);
 		console.log(key, 'i', i)
 		return Card52.getItem(i);
 	}
 	static getItem(i, h = 110, w) {
-		//rank:A23456789TJQK, suit:SHDC, card_2H (2 of hearts)
 		if (nundef(w)) w = h * .7;
 		if (nundef(i)) i = randomNumber(0, 51);
 		if (isString(i) && i.length == 2) { i = Card52._fromKey(i[1].toUpperCase() + i[0].toUpperCase()); }
@@ -7639,7 +6946,6 @@ class Cardz {
 		if (nundef(irankey) && nundef(suit)) {
 			[rank, suit] = Card52.randomRankSuit();
 		} else if (nundef(irankey)) {
-			//face down card!
 			irankey = '2';
 			suit = 'B';
 		} else if (nundef(suit)) {
@@ -7647,22 +6953,18 @@ class Cardz {
 			rank = irankey[5];
 			suit = irankey[6];
 		}
-		//console.log('rank', rank, 'suit', suit); // should have those now!
 		if (rank == '10') rank = 'T';
 		if (rank == '1') rank = 'A';
 		if (nundef(suit)) suit = 'H'; else suit = suit[0].toUpperCase(); //joker:J1,J2, back:1B,2B
 		let cardKey = 'card_' + rank + suit;
 		let svgCode = C52[cardKey]; //C52 is cached asset loaded in _start
-		// console.log(cardKey, C52[cardKey])
 		svgCode = '<div>' + svgCode + '</div>';
 		let el = mCreateFrom(svgCode);
 		if (isdef(h) || isdef(w)) { mSize(el, w, h); }
-		//console.log('__________ERGEBNIS:',w,h)
 		return { rank: rank, suit: suit, key: cardKey, div: el, w: w, h: h, faceUp: true }; //this is a card!
 	}
 	static random() { return Card52.getItem(randomNumber(0, 51)); }
 	static randomRankSuit() {
-		//console.log(Object.keys(C52))
 		let c = Card52.random();
 		return [c.rank, c.suit];
 	}
@@ -7679,8 +6981,6 @@ class Deck1 extends Array {
 	initEmpty() { }
 	init52(shuffled = true, jokers = 0) {
 		range(0, 51 + jokers).map(x => this.push(Card52.getItem(x)));
-		//this.__proto__.faceUp = true;
-		//console.log(this.__proto__)
 		if (shuffled) this.shuffle();
 	}
 	add(otherDeck) { while (otherDeck.length > 0) { this.unshift(otherDeck.pop()); } return this; }
@@ -7692,30 +6992,22 @@ class Deck1 extends Array {
 	putUnderPile(x) { this.push(x); }
 	putOnTop(x) { this.unshift(x); }
 	showDeck(dParent, splay, ovPercent = 0, faceUp = undefined, contStyles = {}) {
-		//console.log('aaaaaaaaaaaaaaaaaaaaaaaaa')
 		if (isdef(faceUp)) { if (faceUp == true) this.turnFaceUp(); else this.turnFaceDown(); }
-		// splayout(this, dParent, {bg:'random',padding:0}, ovPercent, splay);
 		splayout(this, dParent, contStyles, ovPercent, splay);
 	}
 	shuffle() { shuffle(this); }
 	topCard() { return this[this.length - 1]; }
 	turnFaceUp() {
 		if (isEmpty(this) || this[0].faceUp) return;
-		//if (this.__proto__.faceUp) return;
 		this.map(x => Card52.turnFaceUp(x));
-		//this.__proto__.faceUp = true;
 	}
 	turnFaceDown() {
 		if (isEmpty(this) || !this[0].faceUp) return;
-		//if (!this.__proto__.faceUp) return;
-		//console.log(this[0])
 		this.map(x => Card52.turnFaceDown(x));
-		//this.__proto__.faceUp = false;
 	}
 }
 function splayout(elems, dParent, w, h, x, y, overlap = 20, splay = 'right') {
 	function splayRight(elems, d, x, y, overlap) {
-		//console.log('splayRight', elems, d)
 		for (const c of elems) {
 			mAppend(d, c);
 			mStyle(c, { position: 'absolute', left: x, top: y });
@@ -7753,7 +7045,6 @@ function splayout(elems, dParent, w, h, x, y, overlap = 20, splay = 'right') {
 	}
 	if (isEmpty(elems)) return { w: 0, h: 0 };
 	mStyle(dParent, { display: 'block', position: 'relative' });
-	//phase 4: add items to container
 	[x, y] = (eval('splay' + capitalize(splay)))(elems, dParent, x, y, overlap);
 	let isHorizontal = splay == 'right' || splay == 'left';
 	let sz = { w: (isHorizontal ? (x - overlap + w) : w), h: (isHorizontal ? h : (y - overlap + h)) };
@@ -7777,7 +7068,6 @@ function giRep(gi, dParent, styles, shape, prefix, content) {
 	d.id = (isdef(prefix) ? prefix : '') + id;
 	let key = isdef(prefix) ? prefix : 'div';
 	d.innerHTML = content;
-	//was macht iAdd?
 	let di = {}; di[key] = d; iAdd(gi, di);
 	return d;
 }
@@ -7788,30 +7078,24 @@ function aristoUi(dParent, g) {
 	mFlex(dWorld);
 	iAdd(g.me, { div: cardZone(d1, g.me, 2) });
 	let others = g.others;
-	//console.log('others', others);
 	for (let i = 0; i < others.length; i++) {
 		let pl = others[i];
 		iAdd(pl, { div: cardZone(d1, pl) });
 	}
 	for (const o of [g.draw_pile, g.market, g.buy_cards, g.discard_pile]) { iAdd(o, { div: cardZone(dWorld, o) }); }
-	//was hab ich hier? for each player, have d[NAME] thaths all
-	//was will ich jetzt?
 	for (const name of ['draw_pile', 'market', 'buy_cards', 'discard_pile']) { g[name + 'Items'] = showCards(g[name]); }
-	//g.me.handItems = showCards({ div: iDiv(g.me), type: 'hand', cards: g.me.hand });
 	for (const pl of g.allPlayers) {
 		pl.handItems = showCards({ div: iDiv(pl), type: pl == g.me ? 'hand' : 'handHidden', cards: pl.hand });
 		if (isdef(pl.stall)) pl.stallItems = showCards({ div: iDiv(pl), type: g.stallsHidden ? 'cardsHidden' : 'cards', cards: pl.stall });
 		if (isdef(pl.buildings)) {
 			for (const building of pl.buildings) {
 				let bItem = showCards({ div: iDiv(pl), type: 'hand', cards: building });
-				// let bItem = showCards({ div: iDiv(pl), type: pl==g.me?'hand':'handHidden', cards: building });
 				lookupAddToList(pl, ['buildingItems'], bItem);
 			}
 		}
 	}
 }
 function showCards(o, type) {
-	//in ddraw_pile, present draw_pile (arr of numbers 0 to 103)
 	let d2 = iDiv(o);
 	if (nundef(type)) type = isdef(o.type) ? o.type : 'hand';
 	let arr = type == 'deck' ? o.deck.cards() : o.cards;
@@ -7876,16 +7160,6 @@ function mgPos(card, el, x = 0, y = 0, unit = '%', anchor = 'center') {
 	mAppend(iG(card), el);
 	let box = el.getBBox();
 	console.log('rect', box);
-	// if (unit == '%'){
-	// 	x=x*card.w/100;
-	// 	y=y*card.h/100;
-	// }
-	// if (anchor == 'center'){
-	// 	let [w, h] = [box.width, box.height];
-	// 	console.log('w',w,'h',h)
-	// 	x -= w/2;
-	// 	y -= h/2;
-	// }
 	el.setAttribute('x', x);
 	el.setAttribute('y', y);
 }
@@ -7894,12 +7168,9 @@ function mgSize(el, h, w) {
 	if (isdef(w)) el.setAttribute('width', w);
 }
 function mgSuit(key) {
-	// let svg=gCreate('svg');
 	let el = gCreate('use');
 	el.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', '#' + key);
 	return el;
-	// mAppend(svg,el);
-	// return svg;
 }
 function mgSym(key) {
 	let el = gCreate('text');
@@ -7911,7 +7182,6 @@ function mgSym(key) {
 function mgShape(key) {
 }
 function mgSuit1(card, key, h, x, y) {
-	//let el = useSymbol(key, h, x, y);
 	el = document.createElementNS('http://www.w3.org/2000/svg', 'use');
 	el.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', `#${key}`);
 	el.setAttribute('height', h);
@@ -7920,9 +7190,6 @@ function mgSuit1(card, key, h, x, y) {
 	el.setAttribute('y', y);
 	mAppend(iG(card), el);
 	return el;
-	// let p=iG(card);
-	// //p.innerHTML += el.innerHTML;
-	// el = mCreateFrom(el);
 }
 function useSymbolElemNO(key = 'Treff', h = 50, x = 0, y = 0) {
 	return mCreateFrom(`<use xlink:href="#${key}" height="${h}" x="${x}" y="${y}"></use>`);
@@ -7942,7 +7209,6 @@ function cBlankSvg(dParent, styles = {}) {
 	let d = mDiv(dParent, styles, null, null, 'card');
 	let svg = mgTag('svg', d, { width: '100%', height: '100%' }); //,background:'transparent'});
 	let g = mgTag('g', svg);
-	//let sym = mSymFramed(Syms['bee'], 'skyblue', sz / 4); mAppend(d, sym);
 	let item = mItem(null, { div: d, svg: svg, g: g }, { type: 'card', sz: sz });
 	copyKeys(styles, item);
 	return item;
@@ -7950,13 +7216,9 @@ function cBlankSvg(dParent, styles = {}) {
 function mSymbol(key, dParent, sz, styles = {}) {
 	console.log('key', key)
 	let info = symbolDict[key];
-	//ich brauche einen size der macht dass das symbol in sz passt
 	fzStandard = info.fz;
 	hStandard = info.h[0];
 	wStandard = info.w[0];
-	//fzStandard/fz = hStandard/sz= wStandard/wz;
-	//fzStandard = fz*hStandard/sz= fz*wStandard/wz;
-	//fzStandard = fz*hStandard/sz= fz*wStandard/wz;
 	let fzMax = fzStandard * sz / Math.max(hStandard, wStandard);
 	fzMax *= .9;
 	let fz = isdef(styles.fz) && styles.fz < fzMax ? styles.fz : fzMax;
@@ -7969,8 +7231,6 @@ function mSymbol(key, dParent, sz, styles = {}) {
 	newStyles.fz = fz;
 	let d = mDiv(dParent, newStyles);
 	console.log(key, info)
-	//let fz=sz;
-	//if (isdef(styles.h)) styles.fz=info.h[0]*
 	let txt = mText(info.text, d, { family: info.family });
 	console.log('-----------', margin, hpadding, vpadding);
 	mStyle(txt, { margin: margin, 'box-sizing': 'border-box' });
@@ -7984,7 +7244,6 @@ function fitFont(text, fz = 20, w2 = 200, h2 = 100) {
 		r1 = getRect(e1);
 		r2 = getRect(e2);
 		e2.remove();
-		//console.log('e1', r1.w, r1.h, 'e2', r2.w, r2.h, 'fz',fz);
 		fz -= 1;
 	} while (r1.w * r1.h < r2.w * r2.h);
 	e1.remove();
@@ -8004,7 +7263,6 @@ function mSymInline(key, dParent, styles) {
 	return text;
 }
 function innoSymInline(key, dParent) {
-	//let box = mSpan(dParen,bg: INNO.sym[key].bg, rounding: 10t, { bg: INNO.sym[key].bg, rounding: 10 }); mPlace(box, pos, 10);
 	s = mSymInline(INNO.sym[key].key, dParent, { fg: INNO.sym[key].fg, bg: INNO.sym[key].bg, rounding: 10 });
 	return s;
 }
@@ -8012,24 +7270,19 @@ function cardInno1(key, wCard = 420) {
 	if (nundef(key)) key = chooseRandom(Object.keys(Cinno));
 	let f = wCard / 420;
 	let [w, h, szSym, paSym, fz, pa, bth, vGapTxt, rnd, gap] = [420 * f, 200 * f, 100 * f, 8 * f, 100 * f * .8, 20 * f, 4 * f, 8 * f, 10 * f, 6 * f].map(x => Math.ceil(x));
-	//key = 'Flight';
 	let info = Cinno[key];
 	info.key = key;
 	let cdict = { red: RED, blue: 'royalblue', green: 'green', yellow: 'yelloworange', purple: 'indigo' };
 	info.c = getColorDictColor(cdict[info.color]);
-	//make empty card with dogmas on it
 	let d = mDiv();
 	mSize(d, w, h);
-	//let szSym = 50; let fz = szSym * .8;
 	mStyle(d, { fz: pa, margin: 8, align: 'left', bg: info.c, rounding: rnd, patop: paSym, paright: pa, pabottom: szSym, paleft: szSym + paSym, border: '' + bth + 'px solid silver', position: 'relative' })
 	mText(info.key.toUpperCase(), d, { fz: pa, weight: 'bold', margin: 'auto' });
 	mLinebreak(d);
 	for (const dog of info.dogmas) {
-		//console.log(dog);
 		let text = replaceSymbols(dog);
 		let d1 = mText(text, d); //,{mabot:14});
 		d1.style.marginBottom = '' + vGapTxt + 'px';
-		//mLinebreak(d);
 	}
 	let syms = []; let d1;
 	szSym -= gap;
@@ -8042,9 +7295,6 @@ function cardInno1(key, wCard = 420) {
 	for (const sym of info.resources) {
 		let isEcho = false;
 		if (sym == 'None') {
-			//einfach nur das age als text
-			//console.log('age of card:', info.age)
-			//mTextFit(text, { wmax, hmax }, dParent, styles, classes)
 			d1 = mDiv(d, { fz: fz * .75, fg: 'black', bg: 'white', rounding: '50%', display: 'inline' });
 			let d2 = mText('' + info.age, d1, {});
 			mClass(d2, 'centerCentered');
@@ -8053,7 +7303,6 @@ function cardInno1(key, wCard = 420) {
 			console.log('info.echo', info.echo);
 			if (isList(info.echo)) text = info.echo[0];
 			text = replaceSymbols(text);
-			//console.log('Echo!!! info', info);
 			wEcho = szSym;
 			let [w1, h1, w2, h2] = [wEcho, szSym, wEcho - 8, szSym - 8];
 			d1 = mDiv(d, { display: 'inline', fg: 'white', bg: 'dimgray', rounding: 6, h: h1, w: w1 });
@@ -8095,17 +7344,9 @@ class Karte {
 	static c1(info, n, fg, h, w) {
 		let d = mDiv();
 		let svg = mgTag('svg', d, { class: 'card', face: '2C', height: '100%', width: '100%', preserveAspectRatio: 'none', viewBox: "-120 -168 240 336" });
-		// let idN = fg + n;
-		// let prefabN = mgTag('symbol', svg, { id: idN, viewBox: "-500 -500 1000 1000", preserveAspectRatio: "xMinYMid" });
-		// let t = mgTag('text', prefabN, { 'text-anchor': "middle", 'dominant-baseline': "middle", x: 0, y: 0, fill: fg }, { fz: 1000 }, n);
-		// let idSym = info.E;
-		// let prefabSym = mgTag('symbol', svg, { id: idSym, viewBox: "-500 -500 1000 1000", preserveAspectRatio: "xMinYMid" });
-		// t = mgTag('text', prefabSym, { 'text-anchor': "middle", 'dominant-baseline': "middle", x: 0, y: 0, fill: fg },
-		// 	{ fz: (info.family == 'emoNoto' ? 750 : 1000), family: info.family }, info.text);
 		let g = mgTag('g', svg);
 		let rect = mgTag('rect', g, { width: 239, height: 335, x: -120, y: 168, rx: 12, ry: 12, fill: "white", stroke: "black" });
 		let t = mgTag('text', g, { 'text-anchor': "middle", 'dominant-baseline': "middle", x: 0, y: 0, fill: fg }, { fz: 1000 }, 'HALLO');
-		// let elNumber = mgTag('use', svg, { 'xlink:href': `#${idN}`, height: 42, x: -120, y: -156 });
 		if (nundef(w)) w = h * .7;
 		if (isdef(h) || isdef(w)) { mSize(d, w, h); }
 		console.log('d', d)
@@ -8122,14 +7363,8 @@ class Karte {
 				<text text-anchor="middle" dominant-baseline="middle" x="0" y="-150" fill="red" style="font-size:750px;font-family:${info.family};">${info.text}</text>				
 			</symbol>
 			<rect width="239" height="335" x="-119.5" y="-167.5" rx="12" ry="12" fill="white" stroke="black"></rect>`;
-		//calc coordinates!
-		//min x [-120 120]
-		//y [-156 156]
-		//what should be next?
-		//upper left=  
 		let h1 = { xs: 24, s: 27, m: 42, l: 60, xl: 70, xxl: 100 };
 		let left = [0, 50, 100, 120];
-		// mid->left: 
 		let upperLeftNumber = `<use xlink:href="#${fg}${n}" height="42" x="-120" y="-156"></use>`
 			`<use xlink:href="#${info.E}" height="26.769" x="-111.784" y="-119"></use>
 			<use xlink:href="#${info.E}" height="70" x="-35" y="-135.588"></use>
@@ -8147,8 +7382,6 @@ class Karte {
 		return { key: getUID(), div: el, w: w, h: h, faceUp: true }; //this is a card!
 	}
 	static get52(suit, rank, fg, bg, h, w, faceUp) {
-		//suit is a key into Syms including
-		//rank is a number 0,1.... or TJQKA or some other letter or * for joker 
 		let key = suit.toLowerCase();
 		let di = {
 			h: 'hearts', s: 'spades', p: 'spades', c: 'clubs', t: 'clubs', d: 'diamonds', k: 'diamonds',
@@ -8328,6 +7561,8 @@ class Karte {
 		return { key: getUID(), div: el, w: w, h: h, faceUp: true }; //this is a card!
 	}
 }
+function onclick_cancelmenu() { hide('dMenu'); }
+function onclick_home() { stopgame(); start_with_assets(); }
 function onclick_lamp() {
 	DA.simple = !DA.simple;
 	if (DA.simple) show_simple_ui(); else show_advanced_ui();
@@ -8344,7 +7579,6 @@ function onclick_pause_continue() {
 	onclick_stoppolling();
 	show_status('game is paused', true);
 	mStyle(b, { fg: 'grey' });
-	//hide(b)
 }
 function onclick_reset_past() { stopgame(); phpPost({ app: 'simple' }, 'delete_past'); }
 function clearTable() {
@@ -8381,10 +7615,8 @@ function show_advanced_ui() {
 	show('dButtons');
 	show('dTest0');
 	show('dTopAdvanced');
-	//hier koennt ich auch activate test vars machen!!!
 	DA.testing = true;
 	DA.test = { iter: 0, maxiter: 200, running: false, step: true, suiteRunning: false, number: 0, list: [100, 101] };
-	//hier setze default tests!
 	DA.test.list = arrRange(100, 101); //[];// [100, 101, 102, 103, 104];
 	DA.test.number = 306; // do NOT set this to 107 in real mode!
 	DA.staged_moves = []; DA.iter = 100; DA.auto_moves = {};
@@ -8419,9 +7651,7 @@ function show_title_right(s, styles, funnyLetters = false) {
 	if (isdef(styles)) mStyle(d, styles);
 }
 function show_user() {
-	//console.log('U',U)
 	if (isdef(U) && U.name != 'anonymous') {
-		//show_title_left(U.name, { fg: U.color });
 		let uname = U.name;
 		let sz = 36;
 		let html = `
@@ -8430,7 +7660,6 @@ function show_user() {
 			<span>${uname}</span>
 		</div>`;
 		show_title_left(html, { fg: U.color });
-		// mUserPic(U.name, mBy('dTitleLeft'));
 	}
 	else show_home_logo();
 }
@@ -8446,15 +7675,12 @@ function toggle_users_off() { let a = mBy('aUsers'); hide('dUsers'); mStyle(a, {
 function test_endgame() {
 	let [A, fen, uname] = [Z.A, Z.fen, Z.uname];
 	fen.actionsCompleted = [];
-	//erstmal: jeder bakommt ein chateau + 1 or 2 random buildings!
-	//erstmal: alle players bekommen 3-5 correct buildings
 	for (const plname of fen.plorder) {
 		add_a_correct_building_to(fen, plname, 'chateau');
 		add_a_correct_building_to(fen, plname, rChoose(['farm', 'estate', 'chateau']));
 		if (coin()) add_a_correct_building_to(fen, plname, rChoose(['farm', 'estate', 'chateau']));
 		fen.actionsCompleted.push(plname);
 	}
-	//test_skip_to_actions();
 	Z.stage = 5;
 	Z.phase = 'king';
 	take_turn_fen();
@@ -8476,19 +7702,16 @@ function testSplitIntoNumbersAndWords() {
 	let ss = ['1k 2queen', '1 k 12 q', '12king2queen', '31 ace 2queen', '1 3 3 4', '1 10 3 8', '1J3As', '12 koenig 2 Ass'];
 	for (const s of ss) {
 		let x = splitIntoNumbersAndWords(s);
-		//console.log('s',s,'x',x);
 	}
 }
 function test_skip_to_tax() {
 	let [A, fen, uname] = [Z.A, Z.fen, Z.uname];
-	//was soll da geschehen?
 	Z.phase = 'jack';
 	Z.stage = 5;
 	let iturn = fen.plorder.length - 1;
 	Z.turn = [fen.plorder[iturn]];
 	fen.actionsCompleted = fen.plorder.slice(0, iturn);
 	console.log('fen.actionsCompleted', fen.actionsCompleted);
-	//add 0 to 5 cards to each player's hand
 	for (const plname in fen.players) {
 		let pl = fen.players[plname];
 		pl.hand = pl.hand.concat(deck_deal(fen.deck, rNumber(0, 5)));
@@ -8497,18 +7720,15 @@ function test_skip_to_tax() {
 }
 function test_skip_to_actions() {
 	let [A, fen, uname] = [Z.A, Z.fen, Z.uname];
-	//was soll da geschehen?
 	Z.phase = 'king';
 	Z.stage = 5;
 	fen.actionsCompleted = [];
-	//empty market into pl with min hand!
 	let i = arrMinMax(fen.plorder, x => fen.players[x].hand.length).imin;
 	let pl_min_hand = fen.plorder[i];
 	console.log('pl w/ min hand is', pl_min_hand);
 	let pl = fen.players[pl_min_hand];
 	pl.hand = pl.hand.concat(fen.market);
 	fen.market = deck_deal(fen.deck, 2);
-	//each player gets a random stall (1 to hand length)
 	for (const plname of fen.plorder) {
 		pl = fen.players[plname];
 		let n = rNumber(1, pl.hand.length);
@@ -8556,48 +7776,35 @@ function testanim0() {
 				ms / 2, 'ease-in', 0, 'both');
 		}, ms / 2, 'ease-out', 100, 'both');
 }
+//#endregion legacy
+
+//#region apiserver
 function handle_result(result, cmd) {
-	//if (cmd == 'table') {console.log('result', result); } //return;}
 	if (result.trim() == "") return;
 	let obj;
 	try { obj = JSON.parse(result); } catch { console.log('ERROR:', result); }
 	if (Clientdata.AUTORESET) { Clientdata.AUTORESET = false; if (result.auto == true) { console.log('message bounced'); return; } }
-	//console.log('HANDLERESULT bekommt', jsCopy(obj));
 	DA.result = jsCopy(obj); //console.log('DA.result', DA.result);
 	processServerdata(obj, cmd);
-	//console.log('playerdata',Serverdata.playerdata);
-	// console.log('obj.fen', obj.fen,'obj.turn', obj.turn, 'obj.a', obj.a, 'obj.b', obj.b);
-	//console.log('obj.fen', obj.fen,'obj.turn', obj.turn, 'obj.a', obj.a, 'obj.b', obj.b);
 	switch (cmd) {
 		case "assets": load_assets(obj); start_with_assets(); break;
 		case "users": show_users(); break;
 		case "tables": show_tables(); break;
 		case "delete_table":
 		case "delete_tables": show_tables(); break;
-		//************************* table *************************** */
 		case "table1":
 			update_table();
-			//console.log('status:', Z.status)
-			//console.log('Z.playerdata', Z.playerdata.map(x => `${x.name}:${object2string(x.state)}`).join(', '));
-			//console.log('Z.table', Z.table);
 			console.log('cmd', cmd)
 			console.log('obj', obj)
 			for (const k in obj) { if (isLiteral(obj[k])) { console.log(k, obj[k]); } }
 			clear_timeouts();
 			gamestep();
 			break;
-		//************************* table *************************** */
 		case "gameover":
-		//case "clear":
 		case "table":
 		case "startgame":
 			update_table();
-			//console.log('status:',Z.status)
-			//console.log('Z.playerdata', Z.playerdata.map(x => `${x.name}:${object2string(x.state)}`).join(', '));
-			//console.log('Z.table', Z.table);
-			//console.log('...playerdata',Z.playerdata,`turn:${Z.turn}`)
 			if (Z.skip_presentation) { Z.func.state_info(mBy('dTitleLeft')); autopoll(); return; }
-			//console.log('===>turn', Z.turn);
 			clear_timeouts();
 			gamestep();
 			break;
@@ -8623,7 +7830,6 @@ function phpPost(data, cmd) {
 	o.data = valf(data, {});
 	o.cmd = cmd;
 	o = JSON.stringify(o);
-	//console.log('DA', DA);
 	if (DA.SIMSIM && (DA.exclusive || ['table', 'startgame', 'gameover', 'tables'].includes(cmd))) {
 		sendSIMSIM(o, DA.exclusive);
 		FORCE_REDRAW = true;
@@ -8633,7 +7839,6 @@ function phpPost(data, cmd) {
 		FORCE_REDRAW = true;
 		return;
 	}
-	//if (nundef(data.auto)) console.log('zum server - clear!', cmd);
 	clear_transaction();
 	var xml = new XMLHttpRequest();
 	loader_on();
@@ -8647,24 +7852,18 @@ function phpPost(data, cmd) {
 	xml.send(o);
 }
 function processServerdata(obj, cmd) {
-	//creates and maintains Serverdata
-	//console.log('obj', obj);
 	if (isdef(Serverdata.table)) Serverdata.prevtable = jsCopy(Serverdata.table);
 	if (isdef(obj.playerdata)) {
-		//console.log('processServerdata', obj.playerdata);
 		let old_playerdata = valf(Serverdata.playerdata, []);
 		let di = list2dict(old_playerdata, 'name');
 		Serverdata.playerdata = if_stringified(obj.playerdata);
 		Serverdata.playerdata_changed_for = [];
-		//Serverdata.playerstatus_changed_for = [];
 		for (const o of Serverdata.playerdata) {
 			let old = di[o.name];
-			//console.log('o.state', o.state, 'old', old);
 			o.state = isEmpty(o.state) ? '' : if_stringified(o.state);
 			o.state1 = isEmpty(o.state1) ? '' : if_stringified(o.state1);
 			o.state2 = isEmpty(o.state2) ? '' : if_stringified(o.state2);
 			let changed = nundef(old) ? true : !simpleCompare(old, o);
-			//console.log('playerdata for', o.name, 'changed', changed);
 			if (changed) {
 				Serverdata.playerdata_changed_for.push(o.name);
 			}
@@ -8676,65 +7875,48 @@ function processServerdata(obj, cmd) {
 	for (const k in obj) {
 		if (k == 'tables') Serverdata.tables = obj.tables.map(x => unpack_table(x));
 		else if (k == 'table') { Serverdata.table = unpack_table(obj.table); }
-		//else if (k == 'playerdata') { Serverdata.playerdata = obj.playerdata.map(x=>unpack_playerdata(obj.table); } 
 		else if (k == 'users') Serverdata[k] = obj[k];
 		else if (k == 'playerdata') continue;
 		else if (cmd != 'assets') Serverdata[k] = obj[k];
 	}
-	//if obj.table is defined, update that same table in Serverdata.tables
 	if (isdef(obj.table)) {
 		assertion(isdef(Serverdata.table) && obj.table.id == Serverdata.table.id, 'table NOT in Serverdata or table id mismatch');
 		let i = Serverdata.tables.findIndex(x => x.id == obj.table.id);
-		//console.log('i', i)
 		if (i != -1) { Serverdata.tables[i] = Serverdata.table; } else Serverdata.tables.push(Serverdata.table);
 	}
-	//ensure that Serverrdata.table still exists in Serverdata.tables
 	else if (isdef(Serverdata.table)) {
 		let t = Serverdata.tables.find(x => x.id == Serverdata.table.id);
 		if (nundef(t)) delete Serverdata.table;
 	}
 }
 function unpack_table(table) {
-	//console.log('table as arriving from server', jsCopy(table));
-	//console.log('table has keys', Object.keys(table));
 	for (const k of ['players', 'fen', 'options', 'scoring']) {
 		let val = table[k];
-		//console.log('k',k, 'val',val, table[k]);
 		if (isdef(table[k])) table[k] = if_stringified(val); if (nundef(table[k])) table[k] = {}; //JSON.parse(table[k]); else table[k] = {};
 	}
 	if (isdef(table.modified)) { table.modified = Number(table.modified); table.timestamp = new Date(table.modified); table.stime = stringBeforeLast(table.timestamp.toString(), 'G').trim(); }
-	//console.log('table as processed', jsCopy(table));
 	assertion(isdef(window[table.game]), 'game function for ' + table.game + ' not defined in window');
 	if (isdef(table.game)) { table.func = window[table.game](); }
 	if (isdef(table.options.mode)) { table.mode = table.options.mode; }
-	//legacy code: delete action,expected,
 	delete table.action; delete table.expected;
-	//console.log('table after unpacking', jsCopy(table));
 	return table;
 }
 function update_table() {
-	//creates and maintains Z (open tables)
 	assertion(isdef(U), 'NO USER LOGGED IN WHEN GETTING TABLE FROM SERVER!!!!!!!!!!!!!!!!!!!!', U);
-	//copy all important keys to Z.prev
 	if (nundef(Z) || nundef(Z.prev)) Z = { prev: {} };
 	for (const wichtig of ['playerdata', 'notes', 'uplayer', 'uname', 'friendly', 'step', 'round', 'phase', 'stage', 'timestamp', 'modified', 'stime', 'mode', 'scoring']) {
 		if (isdef(Z[wichtig])) Z.prev[wichtig] = jsCopy(Z[wichtig]);
 	}
-	//console.log('last uplayer was',Z.prev.uplayer)
 	Z.prev.turn = Clientdata.last_turn = Clientdata.this_turn;
 	copyKeys(Serverdata, Z);
-	//console.log('playerdata', Z.playerdata, 'prev', Z.prev.playerdata);
 	if (isdef(Serverdata.table)) { copyKeys(Serverdata.table, Z); Z.playerlist = Z.players; copyKeys(Serverdata.table.fen, Z); }
 	assertion(isdef(Z.fen), 'no fen in Z bei cmd=table or startgame!!!', Serverdata);
 	assertion(isdef(Z.host), 'TABLE HAS NOT HOST IN UPDATE_TABLE!!!!!!!!!!!!!!')
 	Clientdata.this_turn = Z.turn;
 	set_user(U.name); //sets Z.uname
 	assertion(!isEmpty(Z.turn), 'turn empty!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!', Z.turn);
-	//console.log('Z', Z);
 	let [fen, uname, turn, mode, host] = [Z.fen, Z.uname, Z.fen.turn, Z.mode, Z.host];
 	let role = Z.role = !is_playing(uname, fen) ? 'spectator' : fen.turn.includes(uname) ? 'active' : 'inactive';
-	//set Z.uplayer
-	//console.log('uname', uname, 'turn', turn, 'mode', mode, 'host', host);
 	let upl = role != 'spectator' ? uname : turn[0];
 	if (Z.game == 'accuse') {
 		if (isdef(Clientdata.mode)) Z.mode = Clientdata.mode;
@@ -8753,43 +7935,22 @@ function update_table() {
 		if (mode == 'hotseat' && turn.length > 1) { let next = get_next_in_list(Z.prev.uplayer, Z.turn); if (next) upl = next; }
 		if (mode == 'multi' && Z.role == 'inactive' && (uname != host || is_human_player(upl))) { upl = uname; }
 	}
-	//console.log('-----------setting', upl,'\nuname',uname,'\nturn',turn,'\nprev',Z.prev.uplayer)
 	set_player(upl, fen); //sets uplayer
-	//console.log('___uname:' + uname.toUpperCase(), 'uplayer:' + Z.uplayer.toUpperCase(), `(${mode})`)
-	//set playmode and strategy
 	let pl = Z.pl;
 	Z.playmode = pl.playmode; //could be human | ai | hybrid (that's for later!!!)
 	Z.strategy = uname == pl.name ? valf(Clientdata.strategy, pl.strategy) : pl.strategy; //humans are really hybrids: they have default strategy 'random'
-	//if (Z.playmode != 'human') Z.strategy = pl.strategy;
-	//determine wheather have to present game state!
 	let [uplayer, friendly, modified] = [Z.uplayer, Z.friendly, Z.modified];
-	//can skip presentation if: same table & uplayer, state newer (has been modified)
-	//console.log('modified', modified, 'Z.prev.modified', Z.prev.modified);
-	//console.log('Z.playerdata_changed_for', Z.playerdata_changed_for);
-	//console.log('FORCE_REDRAW', FORCE_REDRAW);
-	//console.log()
 	Z.uplayer_data = firstCond(Z.playerdata, x => x.name == Z.uplayer);
-	// _Z.skip_presentation = isEmpty(Z.playerdata_changed_for) && !FORCE_REDRAW && friendly == Z.prev.friendly && modified <= Z.prev.modified && uplayer == Z.prev.uplayer;
 	let sametable = !FORCE_REDRAW && friendly == Z.prev.friendly && modified <= Z.prev.modified && uplayer == Z.prev.uplayer;
 	let sameplayerdata = isEmpty(Z.playerdata_changed_for);
 	let myplayerdatachanged = Z.playerdata_changed_for.includes(Z.uplayer);
-	//if uplayer is neither host nor trigger nor acting_host, can skip unless own playerdata changed??? =>will still do _autopoll!
 	let specialcase = !i_am_host() && !i_am_acting_host() && !i_am_trigger() && !myplayerdatachanged;
 	Z.skip_presentation = sametable && (sameplayerdata || specialcase);
 	if (DA.TEST1 && DA.TEST0 && (!sametable || !sameplayerdata)) {
 		console.log('======>Z.skip_presentation', Z.skip_presentation, '\nplayerdata_changed_for', Z.playerdata_changed_for);
 		console.log('_______ *** THE END *** ___________')
 	}
-	// Z.skip_presentation = !FORCE_REDRAW && friendly == Z.prev.friendly && modified <= Z.prev.modified && uplayer == Z.prev.uplayer;
-	// !Z.playerdata_changed_for.includes(uplayer) && 
-	// if (Z.skip_presentation && !isEmpty(Z.playerdata_changed_for) && Z.role != 'active') {
-	// 	//some playerdata have changed, but NOT uplayer's
-	// 	//may make some small adjustments but NOT full_fledged redraw!
-	// 	console.log('skip_presentation but playerdata_changed_for not empty', Z.playerdata_changed_for);
-	// }
 	FORCE_REDRAW = false;
-	//console.log('!!!!!!!!!!!!!!!!!Z.skip_presentation', Z.skip_presentation);
-	//if (Z.skip_presentation) { _autopoll(); } else { clear_timeouts(); }
 }
 function autopoll(ms) { TO.poll = setTimeout(_poll, valf(ms, valf(Z.options.poll, 2000))); }
 function pollStop() { clearTimeout(TO.poll); Clientdata.AUTORESET = true; }
@@ -8799,25 +7960,21 @@ function _poll() {
 	if (nundef(U) || nundef(Z) || nundef(Z.friendly)) { console.log('poll without U or Z!!!', U, Z); return; }
 	show_polling_signal();
 	if (nundef(DA.pollCounter)) DA.pollCounter = 0; DA.pollCounter++; console.log('polling'); //, DA.pollCounter);
-	//console.log('DA',DA)
-	//if (DA.pollCounter >= valf(DA.sendmax, 1000)) return;
 	if (Z.game == 'feedback' && i_am_host()) {
-		//muss periodisch die fen updaten!
 		send_or_sim({ friendly: Z.friendly, uname: Z.uplayer, fen: Z.fen, write_fen: true, auto: true }, 'table');
 	} else send_or_sim({ friendly: Z.friendly, uname: Z.uplayer, auto: true }, 'table');
 }
 function send_or_sim(o, cmd) {
 	Counter.server += 1; //console.log('send_or_sim '+Counter.server);
-	//if (Counter.server > 10) return;
-	//if (nundef(Z) || is_multi_stage()) o.read_players = true; das wird jetzt IMMER gemacht!!!
-	//if (DA.simulate) phpPostSimulate(o, cmd); else phpPost(o, cmd);
 	phpPost(o, cmd);
 }
+//#endregion apiserver
+
+//#region apisimphp
 const GT = {}; //tables
 function db_clear_players(friendly) {
 	assertion(isdef(GT[friendly]), `table ${friendly} does NOT exist!!!!`);
 	let t = GT[friendly]; //for now only 1 copy!
-	//TODO: timestamp are currently NOT SET
 	for (const pldata of t.playerdata) { pldata.state = null; pldata.player_status = null; }
 	return t.playerdata;
 }
@@ -8849,10 +8006,7 @@ function db_read_table(friendly) {
 function db_new_table(friendly, game, host, players, fen, options) {
 	let table = { friendly, game, host, players, fen, options };
 	table.modified = Date.now();	//console.log(table.modified,typeof table.modified);
-	//console.log('new table',table)
-	//console.log('******************* THE END ********************');
 	let playerdata = [];
-	//console.log('players', players); //is a list!
 	for (const plname of players) {
 		playerdata.push({ name: `${plname}`, state: null, player_status: null });
 	}
@@ -8866,20 +8020,14 @@ function data_from_client(raw) {
 	let js = JSON.parse(raw);
 	return js;
 }
-function get_now() { return new Date(); }
 function apiphp(o, saveFromZ = false) {
 	let [data, cmd] = [o.data, o.cmd];
 	let result = {}, friendly, uname, state, player_status, fen;
-	//console.log('data', data, 'cmd', cmd);
 	if (saveFromZ && isdef(data.friendly) && !db_table_exists(data.friendly)) {
-		//create such a table and save it from Z data
-		// da muss ich sowas aehnliches machen wie in startgame aber halt von Z die daten pullen!
 		let res = db_new_table(data.friendly, Z.game, Z.host, jsCopy(Z.playerlist), jsCopy(Z.fen), jsCopy(Z.options));
 		if (isdef(Z.playerdata)) res.playerdata = jsCopy(Z.playerdata);
-		//console.log('created table from Z',res);
 	}
 	if (cmd == 'table') {
-		//result.data = data;
 		if (isdef(data.auto)) result.auto = data.auto;
 		friendly = data.friendly;
 		uname = data.uname;
@@ -8906,7 +8054,6 @@ function apiphp(o, saveFromZ = false) {
 		result.playerdata = res.playerdata;
 		result.status = `startgame ${data.friendly}`;
 	} else if (cmd == 'tables') {
-		//console.log('GT', GT);
 		result.tables = dict2list(GT, 'friendly').map(x => x.table);
 		result.status = "tables";
 	} else if (cmd == 'gameover') {
@@ -8922,8 +8069,10 @@ function sendSIMSIM(o, exclusive = false, saveFromZ = false) {
 	let res = JSON.stringify(result);
 	if (exclusive) { if_hotseat_autoswitch(result); handle_result(res, o.cmd); } else { console.log('sendSIMSIM testresult', result); }
 }
+//#endregion apisimphp
+
+//#region cards
 function accuse_get_card(ckey, h, w, backcolor = BLUE, ov = .3) {
-	//console.log('ckey', ckey)
 	if (is_color(ckey)) {
 		return get_color_card(ckey,h)
 	} else if (ckey.length > 3) {
@@ -8936,8 +8085,6 @@ function accuse_get_card(ckey, h, w, backcolor = BLUE, ov = .3) {
 }
 function accuse_get_card_func(hcard = 80, backcolor = BLUE) { return ckey => accuse_get_card(ckey, hcard, null, backcolor); }
 function aggregate_player_hands_by_rank(fen) {
-	//fen.akku will contain all player hand cards! 
-	//returns di {rank:count}
 	let di_ranks = {};
 	let akku = [];
 	for (const uname in fen.players) {
@@ -8949,7 +8096,6 @@ function aggregate_player_hands_by_rank(fen) {
 			if (isdef(di_ranks[r])) di_ranks[r] += 1; else di_ranks[r] = 1;
 		}
 	}
-	//console.log('di_ranks', di_ranks);
 	fen.akku = akku;
 	return di_ranks;
 }
@@ -8972,7 +8118,6 @@ function ari_get_card_large(ckey, h, w, ov = .2) {
 	return card;
 }
 function ari_get_card(ckey, h, w, ov = .3) {
-	//console.log('ckey', ckey);
 	let type = ckey[2];
 	let sz = { largecard: 100, smallcard: 50 };
 	let info = type == 'n' ? to_aristocard(ckey, sz.largecard) : type == 'l' ? to_luxurycard(ckey, sz.largecard) : type == 'r' ? to_rumorcard(ckey, sz.smallcard) : to_commissioncard(ckey, sz.smallcard);
@@ -8984,7 +8129,6 @@ function ari_get_card(ckey, h, w, ov = .3) {
 function cardFromInfo(info, h, w, ov) {
 	let svgCode = C52[info.c52key];
 	let ckey = info.key;
-	//console.log('ckey', ckey, info.rank, info.suit, get_color_of_card(ckey));
 	if (info.rank == '*') {
 		let color = get_color_of_card(ckey);
 		if (color != 'red') svgCode = colored_jolly(color);
@@ -9002,7 +8146,6 @@ function cardFromInfo(info, h, w, ov) {
 }
 function calc_hand_value(hand, card_func = ferro_get_card) {
 	let vals = hand.map(x => card_func(x).val);
-	//console.log('vals', vals);
 	let sum = vals.reduce((a, b) => a + b, 0);
 	return sum;
 }
@@ -9035,9 +8178,7 @@ function colored_jolly(color) {
 }
 function correct_handsorting(hand, plname) {
 	let pl = Z.fen.players[plname];
-	//console.log('pl',pl,'Clientdata',Clientdata);
 	let [cs, pls, locs] = [Clientdata.handsorting, pl.handsorting, localStorage.getItem('handsorting')];
-	//console.log('correct_handsorting:', 'client', cs, 'pl', pls, 'stor', locs);
 	let s = cs ?? pls ?? locs ?? Config.games[Z.game].defaulthandsorting;
 	hand = sort_cards(hand, s == 'suit', 'CDSH', true, Z.func.rankstr);
 	return hand;
@@ -9064,11 +8205,9 @@ function create_fen_deck(cardtype, num_decks = 1, num_jokers = 0) {
 	let newarr = [];
 	while (num_decks > 0) { newarr = newarr.concat(arr); num_decks--; }
 	while (num_jokers > 0) { newarr.push('*H' + cardtype); num_jokers--; }
-	//console.log('arr',arr)
 	return newarr;
 }
 function face_down_alt(item, bg, texture_name) {
-	//console.log('haaaaaaaaaaaaaaaaaaaaaaaa')
 	let dCover = item.live.dCover;
 	if (nundef(dCover)) {
 		let d = iDiv(item);
@@ -9092,24 +8231,17 @@ function face_down(item, color, texture) {
 }
 function face_up(item) {
 	if (item.faceUp) return;
-	//console.log('html',item.html)
 	if (lookup(item, ['live', 'dCover'])) mStyle(item.live.dCover, { display: 'none' });
 	else item.div.innerHTML = isdef(item.c52key) ? C52[item.c52key] : item.html;
 	item.faceUp = true;
 }
 function ferro_get_card(ckey, h, w, ov = .25) {
-	//joker is represented as '*Hn' where second letter is digit 0..9 (up to 9 jokers in play!)
-	// H suit damit er beim sortieren immer rechts aufscheint!
 	let type = ckey[2];
-	// let info = type == 'n' ? to_aristocard(ckey) : type == 'l' ? to_luxurycard(ckey) : to_commissioncard(ckey);
-	//den joker gibt es NICHT!!!!
-	//console.log('ckey',ckey)
 	let info = ckey[0] == '*' ? get_joker_info() : jsCopy(C52Cards[ckey.substring(0, 2)]);
 	info.key = ckey;
 	info.cardtype = ckey[2]; //n,l,c=mini...
 	let [r, s] = [info.rank, info.suit];
 	info.val = r == '*' ? 50 : r == 'A' ? 20 : 'TJQK'.includes(r) ? 10 : Number(r);
-	//console.log('r',r,'val',info.val)
 	info.color = RED;
 	info.sz = info.h = valf(h, Config.ui.card.h);
 	info.w = valf(w, info.sz * .7);
@@ -9139,7 +8271,6 @@ function get_sequence_suit(j) { let non_jolly_key = firstCond(j, x => !is_jolly(
 function get_c52j_info(ckey, backcolor = BLUE) {
 	let info;
 	if (ckey[0] == '*') {
-		//info = get_joker_info();
 		info = {
 			c52key: `card_0J`, //'card_1J', //`card_${1+n%2}`,
 			color: "#e6194B",
@@ -9203,10 +8334,6 @@ function is_card_key(ckey, rankstr = '*A23456789TJQK', suitstr = 'SHCD') {
 function is_jolly(ckey) { return ckey[0] == '*'; }
 function is_joker(card) { return is_jolly(card.key); }
 function is_overlapping_set(cards, max_jollies_allowed = 1, seqlen = 7, group_same_suit_allowed = true) {
-	//sequence can be up or down
-	//case 2,3,4,3,2 oder 2,3,4,5,4,3
-	//auf jeden fall nimm mindestens 3 cards vom anfang: die muessen eine seq or group ergeben!
-	//let orig_cards = jsCopy(cards);
 	let istart = 0;
 	let inextstart = 0;
 	let lmin = 3;
@@ -9214,8 +8341,6 @@ function is_overlapping_set(cards, max_jollies_allowed = 1, seqlen = 7, group_sa
 	if (cards.length < lmin) return false;
 	while (legal && istart <= cards.length - lmin) {
 		let cl = cards.slice(istart, istart + lmin);
-		//console.log('istart',istart,'looking at',cl.map(x=>x.key).join(','));
-		//check that cl is a ferro set
 		let set = ferro_is_set(cl, max_jollies_allowed, seqlen, group_same_suit_allowed);
 		if (set) { istart++; inextstart = Math.min(istart + lmin, cards.length - 3); }
 		else if (!set && inextstart == istart) return false;
@@ -9256,18 +8381,13 @@ function pop_top(o) {
 	return t;
 }
 function replace_jolly(key, j) {
-	//assume validity has been verified and only 1 jolly per group
 	let jolly_idx = find_index_of_jolly(j);
 	j[jolly_idx] = key;
 }
 function remove_card_shadow(c) { iDiv(c).firstChild.setAttribute('class', null); }
 function set_card_border(item, thickness = 1, color = 'black', dasharray) {
-	//console.log('set_card_border', item, thickness, color);
 	let d = iDiv(item);
-	//console.log('item', item)
 	let rect = lastDescendantOfType('rect', d);
-	//console.log('rect', rect);
-	//assertion(rect, 'NO RECT FOUND IN ELEM', d);
 	if (rect) {
 		rect.setAttribute('stroke-width', thickness);
 		rect.setAttribute('stroke', color);
@@ -9281,7 +8401,6 @@ function set_card_style(item, styles = {}, className) {
 	let d = iDiv(item);
 	let svg = findDescendantOfType('svg', d);
 	let rect = findDescendantOfType('rect', svg);
-	//shadow style will be applied to svg!
 	if (isdef(styles.shadow)) {
 		let shadow = styles.shadow;
 		delete styles.shadow;
@@ -9307,21 +8426,17 @@ function sheriff_card(name, color) {
 	let bcolor = SHERIFF.color[info.type]; // type == 'legal' ? 'lime' : type == 'contraband' ? 'crimson' : 'orangered';
 	let c = cPortrait(null, { margin: 12, border: `solid 4px ${bcolor}`, bg: valf(color, colorLight('gold', 60)) });
 	let d = iDiv(c);
-	//console.log('d', d);
 	let ds = mSym(info.ksym, d, { sz: 30 }, 'tl');
 	ds = mSymText(info.value, d, { sz: 25, rounding: '50%', bg: 'gold', margin: 3 }, 'tr');
 	ds = mText(info.label.toUpperCase(), d, { family: 'Algerian', w: '100%', fz: 12, align: 'center', position: 'absolute', bottom: 0 });//mPlace(ds,'tc',0,8)
 	ds = mText(info.label.toUpperCase(), d, { family: 'Algerian', w: '100%', fz: 12, align: 'center', position: 'absolute', top: 0 });//mPlace(ds,'tc',0,8)
 	ds = mSymText(info.penalty, d, { sz: 25, rounding: '50%', bg: 'crimson', margin: 3 }, 'br');
 	ds = mSym(info.kcenter, d, { sz: 70 }, 'cc'); mPos(ds, 'calc( 50% - 35px )', 'calc( 50% - 35px )');
-	// ds = mText('penalty:',d,{fz:12,display:'inline'});mPlace(ds,'bc',0,8)
-	//set_card_border(c,5,'lime')
 	return c;
 }
 function sort_cards(hand, bySuit = true, suits = 'CDHS', byRank = true, rankstr = '23456789TJQKA') {
 	if (bySuit && byRank) {
 		let buckets = arrBuckets(hand, x => x[1], suits);
-		//console.log('buckets',buckets);
 		for (const b of buckets) { sort_cards(b.list, false, null, true, rankstr); } //sort each bucket by rank!
 		hand.length = 0; buckets.map(x => x.list.map(y => hand.push(y))); //aggregate buckets to form hand
 	} else if (bySuit) hand.sort((a, b) => suits.indexOf(a[1]) - suits.indexOf(b[1])); //.charCodeAt(1)-b.charCodeAt(1)); 
@@ -9350,7 +8465,6 @@ function sortCardItemsToSequence(items, rankstr = '23456789TJQKA', jolly_allowed
 	if (jollies.length > jolly_allowed) { return null; } //if has jollies, make sure that there are no more than jolly_allowed
 	let no_jolly = items.filter(x => !is_joker(x));
 	let sorted = sortCardItemsByRank(no_jolly, rankstr);
-	//count gaps
 	let partial_sequences = [], seq = [sorted[0]], first, second;
 	for (let i = 0; i < sorted.length - 1; i++) {
 		first = sorted[i];
@@ -9368,13 +8482,8 @@ function sortCardItemsToSequence(items, rankstr = '23456789TJQKA', jolly_allowed
 	} else {
 		arrLast(partial_sequences).diff_to_next = diff;
 	}
-	//now I have all the partial sequences!
-	//console.log('partial_sequences', partial_sequences);
-	//partial sequence with highest diff_to_next will be placed last in final sequence
-	//find index of partial sequence with highest diff_to_next
 	let i_max_diff = partial_sequences.findIndex(x => x.diff_to_next == Math.max(...partial_sequences.map(x => x.diff_to_next)));
 	let max_diff = partial_sequences[i_max_diff].diff_to_next;
-	//console.log('max_diff',max_diff); 
 	let istart = (i_max_diff + 1) % partial_sequences.length;
 	let final_sequence = [];
 	let jollies_needed = 0;
@@ -9385,46 +8494,29 @@ function sortCardItemsToSequence(items, rankstr = '23456789TJQKA', jolly_allowed
 		let list = partial_sequences[index].seq;
 		final_sequence = final_sequence.concat(list);
 		let nj = partial_sequences[index].diff_to_next - 1;
-		//console.log('list',list,'nj',nj)
 		if (i < len - 1) {
 			for (let j = 0; j < nj; j++) { final_sequence.push(jollies[ij++]); }
 			jollies_needed += nj;
 		}
 	}
-	//console.log('final_sequence', final_sequence.map(x=>x.key)); //.map(x=>x.key));
-	//console.log('jollies_needed', jollies_needed);
-	//now, sort sequence in place!
 	for (let i = 0; i < final_sequence.length; i++) { items[i] = final_sequence[i]; }
 	return jollies_needed;
 }
 function spread_hand(path, ov) {
-	//console.log('path',path)
 	let hand = lookup(UI, path.split('.'));
-	//if (hand && isdef(hand.list)) hand = hand.list;
-	//console.log('hand',hand)
 	assertion(hand, 'hand does NOT exist', path);
-	//console.log('hand', hand, getFunctionsNameThatCalledThisFunction());
 	if (hand.ctype != 'hand') return;
-	//console.log('hand.ctype', hand.ctype);
 	if (isEmpty(hand.items)) return;
-	//console.log('hand.items', hand.items);
-	//console.log('hand UI', hand);
 	let card = hand.items[0];
 	if (nundef(ov)) ov = card.ov;
 	if (hand.ov == ov) return;
-	//console.log('hand.ov', hand.ov, 'ov', ov); hier geht err nur 1x hin pro hand!!!
 	hand.ov = ov;
 	let cont = hand.cardcontainer;
-	//console.log('cont', cont);
 	let items = hand.items;
 	mContainerSplay(cont, hand.splay, card.w, card.h, items.length, ov * card.w);
-	//clearElement(container);
-	//items.map(x => ui_add_cards_to_hand_container(container, items));
 }
 function symbolcolor(card, color) {
 	let d = iDiv(card);
-	//get all symbol elements
-	//let symbols = d.getElementsByClassName('symbol');
 	let els = d.getElementsByTagName('symbol'); // findDescendantOfType('symbol', d);
 	console.log('list', els)
 	for (const el of els) {
@@ -9435,7 +8527,6 @@ function symbolcolor(card, color) {
 	}
 }
 function to_aristocard(ckey, sz = 100, color = RED, w) {
-	//console.log('ckey', ckey);
 	let info = jsCopy(C52Cards[ckey.substring(0, 2)]);
 	info.key = ckey;
 	info.cardtype = ckey[2];
@@ -9455,25 +8546,19 @@ function to_rumorcard(ckey, sz = 40, color = GREEN, w) { return to_aristocard(ck
 function toggle_face(item) { if (item.faceUp) face_down(item); else face_up(item); }
 function ui_add_container_title(title, cont, items, show_if_empty) {
 	if (isdef(title) && (!isEmpty(items) || show_if_empty)) {
-		//size container at least as wide as title needs!
 		let st = get_containertitle_styles();
 		let stmeasure = jsCopy(st); delete stmeasure.position;
 		let elem = mText(title, cont, stmeasure);
 		let sz = getSizeNeeded(elem);
-		//if (show_if_empty) console.log('*** szNeeded=', title, sz);
 		let offsetx = valf(st.left, 0);
 		let cont_wmin = mGetStyle(cont, 'wmin');
 		let my_min = sz.w + offsetx * 1.5;
-		//console.log('container min-width:', cont_wmin);
 		let wmin = !isNumber(cont_wmin) ? my_min : Math.max(valf(cont_wmin, 0), my_min);
-		//console.log('offsetx',offsetx,st.left,sz.w,cont_wmin);
-		//if (show_if_empty) console.log('*** wmin=', wmin);
 		mStyle(cont, { wmin: wmin });
 		mStyle(elem, st);
 	}
 }
 function ui_add_cards_to_deck_container(cont, items, list) {
-	//make 1 card
 	if (nundef(list)) list = items.map(x => x.key);
 	for (const item of items) {
 		mAppend(cont, iDiv(item));
@@ -9483,7 +8568,6 @@ function ui_add_cards_to_deck_container(cont, items, list) {
 	return items[0];
 }
 function ui_add_cards_to_hand_container(cont, items, list) {
-	//make 1 card
 	if (nundef(list)) list = items.map(x => x.key);
 	for (const item of items) {
 		mAppend(cont, iDiv(item));
@@ -9500,7 +8584,6 @@ function ui_make_hand_container(items, dParent, styles = { bg: 'random', padding
 	let d = mDiv(dParent, styles, id);
 	if (!isEmpty(items)) {
 		let card = items[0];
-		//console.log('card',card)
 		mContainerSplay(d, 2, card.w, card.h, items.length, card.ov * card.w);
 	}
 	return d;
@@ -9518,7 +8601,6 @@ function ui_type_building(b, dParent, styles = {}, path = 'farm', title = '', ge
 	let cardcont = mDiv(cont);
 	let list = b.list;
 	let d = mDiv(dParent);
-	//console.log(b)
 	let items = list.map(x => get_card_func(x));
 	reindex_items(items);
 	let d_harvest = null;
@@ -9529,9 +8611,7 @@ function ui_type_building(b, dParent, styles = {}, path = 'farm', title = '', ge
 		d_harvest = mDiv(d, { position: 'absolute', w: 20, h: 20, bg: 'orange', opacity: .5, fg: 'black', top: '45%', left: -10, rounding: '50%', align: 'center' }, null, 'H');
 	}
 	let d_rumors = null, rumorItems = [];
-	//console.log('b',b)
 	if (!isEmpty(b.rumors)) {
-		//console.log('ja, hat rumors!!!!!!!!!!!!!!')
 		let d = cont;
 		mStyle(d, { position: 'relative' });
 		d_rumors = mDiv(d, { display: 'flex', gap: 2, position: 'absolute', h: 30, bottom: 0, right: 0 }); //,bg:'green'});
@@ -9541,20 +8621,13 @@ function ui_type_building(b, dParent, styles = {}, path = 'farm', title = '', ge
 		}
 	}
 	let card = isEmpty(items) ? { w: 1, h: 100, ov: 0 } : items[0];
-	//console.log('card',card)
 	let [ov, splay] = separate_lead ? [card.ov * 1.5, 5] : [card.ov, 2];
 	mContainerSplay(cardcont, 5, card.w, card.h, items.length, card.ov * 1.5 * card.w);
 	ui_add_cards_to_hand_container(cardcont, items, list);
 	ui_add_container_title(title, cont, items);
 	let uischweine = [];
-	//console.log('b', b);
 	for (let i = 1; i < items.length; i++) {
 		let item = items[i];
-		//console.log('item',item)
-		// uncomment the following code to keep own buildings always open!
-		// if (ishidden && !b.schweine.includes(i)) face_down(item); //wenn ich immer offen sehen will!
-		// else if (b.schweine.includes(i)) add_ui_schwein(item, uischweine);
-		// uncomment the following code to show buildings closed by default!
 		if (!b.schweine.includes(i)) face_down(item); else add_ui_schwein(item, uischweine);
 	}
 	return {
@@ -9580,12 +8653,9 @@ function ui_type_deck(list, dParent, styles = {}, path = 'deck', title = 'deck',
 	function get_bottomcard() { return isEmpty(list) ? null : arrLast(items); }
 	function ensure_ui(list, cardcont, items, get_card_func) {
 		clearElement(cardcont); arrClear(items); if (isEmpty(list)) return;
-		//make items
 		let n = Math.min(2, list.length); let ct = get_card_func(list[0]); items.push(ct); if (n > 1) { let cb = get_card_func(arrLast(list)); items.push(cb); }
 		mStyle(cardcont, { position: 'relative', wmin: ct.w + 8, hmin: ct.h });
-		//append in umgekehrter reihenfolge!?
 		for (let i = items.length - 1; i >= 0; i--) { let x = items[i]; face_down(x); mAppend(cardcont, iDiv(x)); mStyle(iDiv(x), { position: 'absolute', top: 0, left: 0 }) }
-		// (old code) mContainerSplay(cont, 4, ct.w, ct.h, list.length, 0); // ui_add_cards_to_deck_container(cont, items);
 		mText(list.length, iDiv(ct), { position: 'absolute', left: list.length >= 100 ? '10%' : '25%', top: 10, fz: ct.h / 3 }); //add number of cards in deck to top card
 	}
 	return {
@@ -9605,18 +8675,13 @@ function ui_type_deck(list, dParent, styles = {}, path = 'deck', title = 'deck',
 }
 function ui_type_hand(list, dParent, styles = {}, path = 'hand', title = 'hand', get_card_func = ari_get_card, show_if_empty = false) {
 	let cont = ui_make_container(dParent, get_container_styles(styles));
-	//mStyle(cont,{bg:'lime'})
 	let items = list.map(x => get_card_func(x));
 	let cardcont = mDiv(cont);
-	//if (!isEmpty(items)) {
 	let card = isEmpty(items) ? { w: 1, h: Config.ui.card.h, ov: 0 } : items[0];
-	//console.log('card',card)
 	let splay = 2;
 	mContainerSplay(cardcont, splay, card.w, card.h, items.length, card.ov * card.w);
 	ui_add_cards_to_hand_container(cardcont, items, list);
-	//}
 	ui_add_container_title(title, cont, items, show_if_empty);
-	//console.log('hand container',cont, cardcont)
 	return {
 		ctype: 'hand',
 		list: list,
@@ -9631,18 +8696,13 @@ function ui_type_lead_hand(list, dParent, styles = {}, path = 'hand', title = 'h
 	let hcard = isdef(styles.h) ? styles.h - 30 : Config.ui.card.h;
 	addKeys(get_container_styles(styles), styles);
 	let cont = ui_make_container(dParent, styles);
-	//mStyle(cont,{bg:'lime'})
 	let items = list.map(x => get_card_func(x, hcard));
 	let cardcont = mDiv(cont);
-	//if (!isEmpty(items)) {
 	let card = isEmpty(items) ? { w: 1, h: hcard, ov: 0 } : items[0];
-	//console.log('card',card)
 	let splay = 5;
 	mContainerSplay(cardcont, splay, card.w, card.h, items.length, card.ov * card.w);
 	ui_add_cards_to_hand_container(cardcont, items, list);
-	//}
 	ui_add_container_title(title, cont, items, show_if_empty);
-	//console.log('hand container',cont, cardcont)
 	return {
 		ctype: 'hand',
 		list: list,
@@ -9669,7 +8729,6 @@ function ui_type_market(list, dParent, styles = {}, path = 'market', title = 'ma
 	};
 }
 function ui_type_rank_count(list, dParent, styles, path, title, get_card_func, show_if_empty = false) {
-	//styles.padding = 25;
 	let cont = ui_make_container(dParent, get_container_styles(styles));
 	let cardcont = mDiv(cont, { display: 'flex' });
 	let items = [];
@@ -9682,7 +8741,6 @@ function ui_type_rank_count(list, dParent, styles, path, title, get_card_func, s
 		let item = { card: c, count: o.count, div: d };
 		items.push(item);
 	}
-	//items.map(x => mAppend(cardcont, iDiv(x)));
 	ui_add_container_title(title, cont, items, show_if_empty);
 	return {
 		list: list,
@@ -9697,11 +8755,8 @@ function ui_type_church(list, dParent, styles = {}, path = 'trick', title = '', 
 	let cardcont = mDiv(cont, { display: 'flex' });
 	let items = [];
 	let n = Z.plorder.length;
-	//let inc=360/(n==2?4:n),rotation=inc;
 	let inc = 90;
-	//4 players: start at 90, 3 players: start at 0
 	let rotation = n % 2 ? 0 : 90;
-	//console.log('list',list);
 	for (const ckey of list) {
 		let d = mDiv(cardcont, { origin: 'center', transform: `rotate( ${rotation}deg )`, position: 'absolute', left: 8 });
 		let c = get_card_func(ckey);
@@ -9712,7 +8767,6 @@ function ui_type_church(list, dParent, styles = {}, path = 'trick', title = '', 
 		items.push(item);
 		rotation += inc;
 	}
-	//items.map(x => mAppend(cardcont, iDiv(x)));
 	ui_add_container_title(title, cont, items, show_if_empty);
 	return {
 		list: list,
@@ -9722,6 +8776,9 @@ function ui_type_church(list, dParent, styles = {}, path = 'trick', title = '', 
 		items: items,
 	}
 }
+//#endregion cards
+
+//#region gamehelpers
 function PRHLayout() {
 	let drr = UI.DRR = mDiv(dTable);
 	mAppend(drr, UI.dHistory);
@@ -9785,14 +8842,10 @@ function staticTitle() {
 	clearInterval(TO.titleInterval);
 	let url = window.location.href;
 	let loc = url.includes('telecave') ? 'telecave' : 'local';
-	// let game = isdef(Z) ? Config.games[Z.game].friendly : '♠ GAMES ♠'
 	let game = isdef(Z) ? stringAfter(Z.friendly, 'of ') : '♠ GAMES ♠';
 	document.title = `(${loc}) ${game}`;
 }
 function activate_playerstats(items) {
-	//das ist manually!
-	//console.log('activate_playerstats');
-	//console.log('items', items); //return;
 	let fen = Z.fen;
 	for (const plname in fen.players) {
 		let ui = items[plname];
@@ -9802,34 +8855,18 @@ function activate_playerstats(items) {
 }
 function if_hotseat_autoswitch(result) {
 	if (isdef(result.table) && isdef(Z) && Z.mode == 'hotseat') { //!DA.AUTOSWITCH) {
-		//DA.AUTOSWITCH = true;
-		//hier sollte der automatische switch von uname passieren!!!
 		let turn = lookup(result, ['table', 'fen', 'turn']);
 		assertion(isdef(turn), 'turn is NOT defined (_sendSIMSIM) !!!!');
-		//console.log('turn', turn, 'res', result)
-		//console.log('autoswitch vorher',result,U.name)
 		let uname = turn.length == 1 ? turn[0] : get_next_in_list(U.name, turn);
-		//console.log('uname', uname,U.name);
 		if (uname != U.name) switch_uname(uname);
 	}
 }
 function switch_uname(plname) {
 	set_user(plname);
-	//console.log('uname is',U.name,Z.uname,Z.uplayer,Z.prev.uplayer)
 	show_username();
-	//DA.AUTOSWITCH = false;
 }
 function activate_ui() {
 	if (uiActivated) { DA.ai_is_moving = false; return; }
-	//console.log('______ activate_ui','\nprevturn',Clientdata.last_turn,'\n=>turn',Clientdata.this_turn,'\nprevstage',Clientdata.last_stage,'\n=>stage',Clientdata.this_stage);
-	// if ((Clientdata.this_stage != Clientdata.last_stage || FirstLoad) && Clientdata.this_stage == 'card_selection') {
-	// 	FirstLoad = false;
-	// 	Clientdata.snapshot = jsCopy(Z.fen);
-	// 	show('bRestartMove');
-	// } else if (Clientdata.this_turn.length != 1) {
-	// 	delete Clientdata.snapshot;
-	// 	hide('bRestartMove');
-	// }
 	uiActivated = true; DA.ai_is_moving = false;
 }
 function animate_card_exchange(i0, i1, callback) {
@@ -9839,10 +8876,8 @@ function animate_card_exchange(i0, i1, callback) {
 	let d1 = iDiv(i1.o);
 	let r0 = getRect(d0);
 	let r1 = getRect(d1);
-	//get center of rectangles
 	let c0 = { x: r0.x + r0.w / 2, y: r0.y + r0.h / 2 };
 	let c1 = { x: r1.x + r1.w / 2, y: r1.y + r1.h / 2 };
-	//get vector from c0 to c1
 	let v = { x: c1.x - c0.x, y: c1.y - c0.y };
 	mTranslateBy(d0, v.x, v.y);
 	mTranslateBy(d1, -v.x, -v.y, 700, callback);
@@ -9905,12 +8940,9 @@ function animate_title() {
 	titlebar(0);
 }
 function beautify_history(lines, title, fen, uplayer) {
-	//mach draus ein html
-	//let [fen, uplayer] = [Z.fen, Z.uplayer];
 	let html = `<div class="history"><span style="color:red;font-weight:bold;">${title}: </span>`;
 	for (const l of lines) {
 		let words = toWords(l);
-		//console.log('words', words);
 		for (const w1 of words) {
 			if (is_card_key(w1)) { html += mCardText(w1); continue; }
 			w = w1.toLowerCase();
@@ -9943,12 +8975,10 @@ function collect_game_specific_options(game) {
 		let key = p;
 		let vals = poss[p];
 		if (isString(vals) && vals.split(',').length <= 1) {
-			//set option directly
 			di[p] = isNumber(vals) ? Number(vals) : vals;
 			continue;
 		}
 		let fs = mBy(`d_${p}`);
-		//console.log('fs',fs, 'key',p);
 		let val = get_checked_radios(fs)[0];
 		di[p] = isNumber(val) ? Number(val) : val;
 	}
@@ -9972,30 +9002,15 @@ function generate_table_name(n) {
 	while (true) {
 		let cap = rChoose(Info.capital);
 		let parts = cap.split(' ');
-		//console.log('parts', parts);
 		if (parts.length == 2) cap = stringBefore(cap, ' '); else cap = stringBefore(cap, '-');
 		cap = cap.trim();
 		let s = (n == 2 ? 'duel of ' : rChoose(['battle of ', 'war of '])) + cap;
-		//console.log('s', s);
 		if (!existing.includes(s)) return s;
 	}
 }
 function get_admin_player(list) {
 	let res = valf(firstCond(list, x => x == 'mimi'), firstCond(list, x => ['felix', 'amanda', 'lauren'].includes(x)));
 	return res ?? list[0]; //if (!res) return list[0];
-}
-function get_checked_radios(rg) {
-	let inputs = rg.getElementsByTagName('INPUT');
-	let list = [];
-	for (const ch of inputs) {
-		//console.log('child',ch)
-		let checked = ch.getAttribute('checked');
-		//console.log('is',checked);
-		//console.log('?',ch.checked); 
-		if (ch.checked) list.push(ch.value);
-	}
-	//console.log('list',list)
-	return list;
 }
 function get_next_in_list(el, list) {
 	let iturn = list.indexOf(el);
@@ -10009,20 +9024,15 @@ function get_next_player(g, uname) {
 	return nextplayer;
 }
 function get_next_human_player(plname) {
-	//console.log('==>find next_human_player after',plname);
 	if (nundef(plname)) return null;
 	let [prevturn, mode, turn, uname, plorder, fen, host] = [Z.prev.turn, Z.mode, Z.turn, Z.uname, Z.plorder, Z.fen, Z.host];
 	let same = isString(plname) && isList(prevturn) && sameList(prevturn, turn);
 	if (!same) return null;
-	// let i=valf(fen.ihotseat,0);
-	//log_object(Z,'hotseat player choice','prev turn plorder players');
-	//console.log('prevturn', prevturn, 'turn', turn, 'same', same, 'plname', plname);
 	let plnew = get_next_player(Z, plname);
 	while (fen.players[plnew].playmode == 'bot') {
 		plnew = get_next_player(Z, plnew);
 		if (plnew == plname) break;
 	}
-	//console.log('next player should be',plnew);
 	return plnew;
 }
 function get_present_order_accuse() {
@@ -10033,7 +9043,6 @@ function get_present_order_accuse() {
 }
 function get_present_order() {
 	let [fen, uplayer, uname] = [Z.fen, Z.uplayer, Z.uname];
-	//assert that if uplayer is a bot, uname must be host!
 	assertion(is_human_player(uplayer) || uname == Z.host, "PRESENT ORDER ME WRONG!!!!!!!!!!!!!")
 	let uname_plays = fen.plorder.includes(uname);
 	let is_bot = !is_human_player(uplayer);
@@ -10059,14 +9068,10 @@ function get_screen_distance(child, newParent) {
 	let sibling = iChild == children.length - 1 ? null : children[iChild + 1];
 	const x0 = child.getBoundingClientRect().left;
 	const y0 = child.getBoundingClientRect().top;
-	//console.log('pos0', x0, y0)
 	newParent.appendChild(child);
 	const x1 = child.getBoundingClientRect().left;
 	const y1 = child.getBoundingClientRect().top;
-	//console.log('pos1', x1, y1)
 	if (sibling) parentOriginal.insertBefore(child, sibling); else parentOriginal.appendChild(child);
-	// child.style.setProperty('--dx', (x1 - x0) + 'px');
-	// child.style.setProperty('--dy', (y1 - y0) + 'px');
 	return [x1 - x0, y1 - y0];
 }
 function get_game_color(game) { return colorFrom(Config.games[game].color); }
@@ -10078,7 +9083,6 @@ function get_user_pic(uname, sz = 50, border = 'solid medium white') {
 }
 function get_user_pic_html(uname, sz = 50, border = 'solid medium white') {
 	return `<img src='../base/assets/images/${uname}.jpg' width='${sz}' height='${sz}' class='img_person' style='margin:0px 4px;border:${border}'>`
-	//return mCreateFrom(html);
 }
 function get_user_pic_and_name(uname, dParent, sz = 50, border = 'solid medium white') {
 	let html = `
@@ -10092,11 +9096,9 @@ function get_user_pic_and_name(uname, dParent, sz = 50, border = 'solid medium w
 }
 function get_texture(name) { return `url(../base/assets/images/textures/${name}.png)`; }
 function hide_buildings() {
-	//console.log('HAAAAAAAAAAAAAAAAAAAAAAAAAAAALLLLLLLLLLLLLLLOOOOOOOOOOOOOO')
 	let uplayer = Z.uplayer;
 	let buildings = UI.players[uplayer].buildinglist;
 	for (const b of buildings) {
-		//console.log('b.schweine', b.schweine);
 		for (let i = 1; i < b.items.length; i++) {
 			let card = b.items[i];
 			if (b.schweine.includes(card)) continue;
@@ -10105,7 +9107,6 @@ function hide_buildings() {
 	}
 }
 function hFunc(content, funcname, arg1, arg2, arg3) {
-	//console.log('arg2',arg2,typeof arg2)
 	let html = `<a style='color:blue' href="javascript:${funcname}('${arg1}','${arg2}','${arg3}');">${content}</a>`;
 	return html;
 }
@@ -10115,7 +9116,6 @@ function i_am_trigger() { return is_multi_trigger(U.name); }
 function is_loggedin(name){return isdef(U) && U.name == name;}
 function is_advanced_user() {
 	let advancedUsers = ['mimi', 'felix', 'bob', 'buddy', 'minnow', 'nimble', 'leo']; //, 'guest', 'felix'];
-	//console.log('***U', isdef(U) ? U.name : 'undefined!!!', 'secret:', DA.secretuser);
 	return isdef(U) && ((advancedUsers.includes(DA.secretuser) || advancedUsers.includes(U.name)));
 }
 function is_collect_mode() { return Z.turn.length > 1; }
@@ -10131,7 +9131,6 @@ function is_playerdata_set(plname) {
 function is_color(s) { return isdef(ColorDi[s.toLowerCase()]); }
 function is_player(s) { return isdef(Z.fen.players[s]); }
 function is_playing(pl, fen) {
-	//returns true is pl is in fen.plorder or in fen.roundorder
 	return isList(fen.plorder) && fen.plorder.includes(pl) || isList(fen.roundorder) && fen.roundorder.includes(pl) || Z.game == 'feedback' && isdef(Z.fen.players[pl]);
 }
 function is_shield_mode() {
@@ -10142,13 +9141,10 @@ function is_shield_mode() {
 function path2fen(fen, path) { let o = lookup(fen, path.split('.')); return o; }
 function path2UI(path) {
 	let res = lookup(UI, path.split('.'));
-	//console.log('res',res);
 	return res;
 }
 function player_stat_count(key, n, dParent, styles = {}) {
 	let sz = valf(styles.sz, 16);
-	//console.log('hallo!!!')
-	//if (nundef(styles.wmax)) styles.wmax = sz;
 	addKeys({ display: 'flex', margin: 4, dir: 'column', hmax: 2 * sz, 'align-content': 'start', fz: sz, align: 'center' }, styles);
 	let d = mDiv(dParent, styles);
 	if (isdef(Syms[key])) mSym(key, d, { h: sz, 'line-height': sz, w: '100%' });
@@ -10161,7 +9157,6 @@ function new_cards_animation(n = 2) {
 	let pl = fen.players[uplayer];
 	if (stage == 'card_selection' && !isEmpty(pl.newcards)) {
 		let anim_elems = [];
-		//console.log('player', uplayer, 'newcards', jsCopy(pl.newcards));
 		for (const key of pl.newcards) {
 			let ui = lastCond(UI.players[uplayer].hand.items, x => x.key == key);
 			if (nundef(ui)) { pl.newcards = []; return; }
@@ -10169,10 +9164,7 @@ function new_cards_animation(n = 2) {
 			anim_elems.push(ui);
 		}
 		delete pl.newcards;
-		//console.log('player', uplayer, 'newcards deleted:', pl.newcards);
-		//animate newcards!
 		anim_elems.map(x => mPulse(x, n * 1000));
-		// setTimeout(ferro_pre_action,1000);
 	}
 }
 function round_change_animation(n = 2) {
@@ -10199,18 +9191,14 @@ function set_user(name) {
 		Z.prev.uname = U.name;
 	}
 	U = firstCond(Serverdata.users, x => x.name == name);
-	//console.log('set_user', name, U);
 	if (isdef(Z)) {
 		Z.u = U;
 		Z.uname = name;
-		//if (Z.mode != 'hotseat') Z.uplayer = Z.uname; // ?????
-		//console.log('Z.uname', Z.uname);
 	}
 }
 function set_player(name, fen) {
 	if (isdef(PL) && PL.name != name) { Z.prev.pl = PL; Z.prev.uplayer = PL.name; }
 	PL = Z.pl = firstCond(Serverdata.users, x => x.name == name);
-	//console.log('name',name);
 	copyKeys(fen.players[name], PL);
 	Z.uplayer = name;
 }
@@ -10226,22 +9214,17 @@ function shield_off() {
 	mStyle('dAdmin', { bg: 'white' });
 }
 function show_admin_ui() {
-	//console.log('show_admin_ui');
-	//game specific buttons hide or show
 	for (const id of ['bSpotitStart', 'bClearAck', 'bRandomMove', 'bSkipPlayer', 'bRestartMove', 'dTakeover', 'bExperience']) hide(id);
 	if (Z.game == 'spotit' && Z.uname == Z.host && Z.stage == 'init') show('bSpotitStart');
 	else if (Z.game == 'bluff' && Z.uname == Z.host && Z.stage == 1) show('bClearAck');
 	else if (Z.uname == Z.host && Z.stage == 'round_end') show('bClearAck');
 	else if (Z.game == 'ferro' && Z.uname == 'mimi' && Z.stage != 'card_selection') show('bClearAck');
-	//else if (Z.game == 'accuse' && DA.HOSTAKEOVER && (Z.uname == Z.host || Z.uname == 'mimi' || DA.omnipower)) show_takeover_ui();
 	if (Z.game == 'accuse' && lookup(Z, ['fen', 'players', Z.uplayer, 'experience']) > 0) show('bExperience');
 	if (['ferro', 'bluff', 'aristo', 'a_game'].includes(Z.game) && (Z.role == 'active' || Z.mode == 'hotseat')) {
-		//console.log('random should show because game is', Z.game)
 		show('bRandomMove');
 	}
 	if (Z.uname == Z.host || Z.uname == 'mimi' || Z.uname == 'felix') show('dHostButtons'); else hide('dHostButtons');
 	if (DA.showTestButtons == true) show('dTestButtons'); else hide('dTestButtons');
-	//if (isdef(mBy('dAdvancedUI'))) show_advanced_ui_buttons();
 }
 function show_fleeting_message(s, dParent, styles, id, ms = 2000) {
 	let d = mDiv(dParent, styles, id, s);
@@ -10274,11 +9257,9 @@ function show_game_menu(gamename) {
 	let dButtons = mDiv(dForm, {}, 'dMenuButtons');
 	let bstart = mButton('start', () => {
 		let players = DA.playerlist.map(x => ({ name: x.uname, playmode: x.playmode }));
-		//console.log('players are', players);
 		let game = gamename;
 		let options = collect_game_specific_options(game);
 		for (const pl of players) { if (isEmpty(pl.strategy)) pl.strategy = valf(options.strategy, 'random'); }
-		//console.log('options nach collect',options)
 		startgame(game, players, options); hide('dMenu');
 	}, dButtons, {}, ['button', 'enabled']);
 	let bcancel = mButton('cancel', () => { hide('dMenu'); }, dButtons, {}, ['button', 'enabled']);
@@ -10286,37 +9267,27 @@ function show_game_menu(gamename) {
 	let d = dInputs; mClear(d); mCenterFlex(d);
 	let dPlayers = mDiv(d, { gap: 6 });
 	mCenterFlex(dPlayers);
-	//show players
 	DA.playerlist = [];
 	DA.allPlayers = [];
 	DA.lastName = null;
 	let params = [gamename, DA.playerlist];
 	let funcs = [style_not_playing, style_playing_as_human, style_playing_as_bot];
 	for (const u of Serverdata.users) {
-		//if (['ally', 'bob', 'leo'].includes(u.name) && (nundef(U) || u.name!=U.name)) continue; //lass die aus wenn nicht Uname!
 		let d = get_user_pic_and_name(u.name, dPlayers, 40);
 		mStyle(d, { w: 60, cursor: 'pointer' })
 		let item = { uname: u.name, div: d, state: 0, strategy: '', isSelected: false };
 		DA.allPlayers.push(item);
-		//katzen sind bots per default! (select twice!)
-		// if (['nimble', 'guest', 'minnow', 'buddy'].includes(u.name)) { toggle_select(item, funcs, gamename, DA.playerlist); toggle_select(item, funcs, gamename, DA.playerlist); }
-		//host spielt als human mit per default
 		if (is_loggedin(u.name)) { toggle_select(item, funcs, gamename, DA.playerlist); DA.lastName = U.name; }
-		//else d.onclick = () => toggle_select(item, funcs, gamename, DA.playerlist);
 		else d.onclick = ev => {
 			if (ev.shiftKey) {
-				//console.log('SHIFT!!!!',ev.target);
 				let list = Serverdata.users;
 				if (nundef(DA.lastName)) DA.lastName = list[0].name;
-				//suche index of DA.lastName in Serverdata.users
 				let x1 = list.find(x => x.name == DA.lastName);
 				let i1 = list.indexOf(x1);
 				let x2 = list.find(x => x.name == item.uname);
 				let i2 = list.indexOf(x2);
-				//put i1,i2 in correct order!
 				if (i1 == i2) return;
 				if (i1 > i2) [i1, i2] = [i2, i1];
-				//select all items between i1 and i2
 				assertion(i1 < i2, "NOT IN CORRECT ORDER!!!!!")
 				for (let i = i1; i <= i2; i++) {
 					let xitem = DA.allPlayers[i];
@@ -10330,7 +9301,6 @@ function show_game_menu(gamename) {
 			}
 		}
 	}
-	// mDiv(d,{h:40,matop:10,fz:11,fg:'silver',rounding:10,bg:'beige'},null,'use SHIFT to multi-select players'); //'SHIFT<br>multiselect');
 	mDiv(d,{w:'100%',fz:11,fg:'#444'},null,'(use SHIFT to multi-select players)'); //'SHIFT<br>multiselect');
 	mLinebreak(d, 1);
 	show_game_options(d, gamename);
@@ -10345,10 +9315,8 @@ function show_game_options(dParent, game) {
 		let val = poss[p];
 		if (isString(val)) {
 			let list = val.split(','); // make a list 
-			//if list only contains 1 item, this option is set without displaying the options!
 			if (list.length <= 1) continue;
 			let fs = mRadioGroup(dParent, {}, `d_${key}`, key);
-			//let func = pool=='mode'?adjust_playmodes:null;
 			for (const v of list) { mRadio(v, isNumber(v) ? Number(v) : v, key, fs, { cursor: 'pointer' }, null, key, true); }
 			measure_fieldset(fs);
 		}
@@ -10356,7 +9324,6 @@ function show_game_options(dParent, game) {
 }
 function show_player_button(caption, ui_item, handler) {
 	let d = ui_item.container ?? iDiv(ui_item);
-	//console.log('d', d);
 	let styles = { rounding: 6, bg: 'silver', fg: 'black', border: 0, maleft: 10 };
 	let b = mButton(caption, handler, d, styles, 'enabled');
 	return b;
@@ -10392,19 +9359,11 @@ function show_history(fen, dParent) {
 	if (!isEmpty(fen.history)) {
 		let html = '';
 		for (const o of jsCopy(fen.history).reverse()) {
-			//console.log('o', o);
 			html += beautify_history(o.lines, o.title, fen);
-			//html += o;//html+=`<h1>${k}</h1>`;
-			//for (const line of arr) { html += `<p>${line}</p>`; }
 		}
-		// let dHistory =  mDiv(dParent, { padding: 6, margin: 4, bg: '#ffffff80', fg: 'black', hmax: 400, 'overflow-y': 'auto', wmin: 240, rounding: 12 }, null, html); //JSON.stringify(fen.history));
 		let dHistory = mDiv(dParent, { maright: 10, hpadding: 12, bg: colorLight('#EDC690', 50), box: true, matop: 4, rounding: 10, patop: 10, pabottom: 10, hmax: `calc( 100vh - 250px )`, 'overflow-y': 'auto', w: 260 }, null, html); //JSON.stringify(fen.history));
-		// let dHistory =  mDiv(dParent, { padding: 6, margin: 4, bg: '#ffffff80', fg: 'black', hmax: 400, 'overflow-y': 'auto', wmin: 240, rounding: 12 }, null, html); //JSON.stringify(fen.history));
-		//mNode(fen.history, dHistory, 'history');
 		UI.dHistoryParent = dParent;
 		UI.dHistory = dHistory;
-		//console.log('dHistory', dHistory);
-		//console.log(Clientdata.historyLayout);
 		if (isdef(Clientdata.historyLayout)) { show_history_layout(Clientdata.historyLayout); }
 	}
 }
@@ -10463,18 +9422,15 @@ function show_options_popup(options) {
 		let val = valf(di[options[k]], options[k]);
 		opresent[key] = val;
 	}
-	//moechte dass er statt mode
 	let x = mYaml(mCreate('div'), opresent);
 	let dpop = mPopup(x.innerHTML, dTable, { fz: 16, fg: 'white', top: 0, right: 0, border: 'white', padding: 10, bg: 'dimgray' }, 'dOptions');
 	mInsert(dpop, mCreateFrom(`<div style="text-align:center;width:100%;font-family:Algerian;font-size:22px;">${Z.game}</div>`));
-	//console.log('popup', dpop);
 }
 function show_polling_signal() {
 	if (DA.TEST0 != true) return;
 	let d1 = mDiv(mBy('dAdmin'), { position: 'fixed', top: 10, left: 73 });
 	let bg = Z.skip_presentation == true ? 'grey' : 'green'; //valf(DA.reloadColor, 'green')
 	let d2 = mDiv(d1, { width: 20, height: 20, bg: bg, rounding: 10, display: 'inline-block' });
-	//let d3 = mDiv(d1, { display: 'inline-block' }, null, Z.skip_presentation==true ? 'SKIP' : 'REDRAW');
 	mFadeRemove(d1, 1000);
 }
 function show_role() {
@@ -10489,18 +9445,14 @@ function show_role() {
 	if (hotseatplayer) {
 		styles = boldstyle;
 		text = `your turn for ${Z.uplayer}`;
-		// text = `your turn for ${Z.uplayer} ${location}`;
 	} else if (Z.role == 'spectator') {
 		styles = normalstyle;
 		text = `(spectating)`;
-		//text = `(spectating  ${location})`;
 	} else if (Z.role == 'active') {
 		styles = boldstyle;
 		text = `It's your turn!!!`;
-		//text = `It's your turn  ${location}!`;
 	} else if (Z.role == 'waiting') {
 		text = `waiting for players to complete their moves...`;
-		//text = `waiting for players to complete their moves ${location}...`;
 	} else {
 		assertion(Z.role == 'inactive', 'role is not active or inactive or spectating ' + Z.role);
 		styles = normalstyle;
@@ -10514,12 +9466,8 @@ function show_settings(dParent) {
 	clearElement(dParent);
 	mFlex(dParent);
 	mStyle(dParent, { 'justify-content': 'end', gap: 12, paright: 10 })
-	//console.log('dParent', dParent)
 	let playmode = get_playmode(uplayer); //console.log('playmode',playmode,'uplayer',uplayer);
 	let game_mode = Z.mode;
-	// let dplaymode = mDiv(dParent, { fg: 'blue' }, null, playmode); // playmode == 'bot' ? 'bot' : '');
-	// let dgamemode = mDiv(dParent, { fg: 'red' }, null, Z.mode); //Z.mode == 'hotseat' ? 'h' : '');
-	// let st = { fz: 20, padding: 6, h: 40, box: true, matop: 2, rounding: '50%', cursor: 'pointer' };
 	let st = { fz: 20, padding: 0, h: 40, box: true, matop: 2, rounding: '50%', cursor: 'pointer' };
 	let dHistoryButton = miPic('scroll', dParent, st);
 	dHistoryButton.onclick = show_history_popup;
@@ -10531,7 +9479,6 @@ function show_settings(dParent) {
 	options.playmode = playmode;
 	d.onmouseenter = () => show_options_popup(options);
 	d.onmouseleave = hide_options_popup;
-	//dHistoryButton.onmouseleave = hide_options_popup;
 }
 function show_progress() {
 	if (isdef(Z.fen.progress)) {
@@ -10542,25 +9489,20 @@ function show_progress() {
 	}
 }
 function show_status(s) {
-	//console.log('........show_status', s)
 	if (is_advanced_user()) {
 		clear_status();
 		if (!TESTING && !s.includes('reload')) show_fleeting_message(s, 'dTest', { fz: 14, position: 'absolute', top: 5, right: 10 }, 'dStatus');
 	}
 }
 function show_strategy_popup() {
-	//console.log('options', options);
 	let dpop = mPopup('', dTable, { fz: 16, fg: 'white', top: 0, right: 0, border: 'white', padding: 10, bg: 'dimgray' }, 'dOptions');
 	mAppend(dpop, mCreateFrom(`<div style="text-align:center;width:100%;font-family:Algerian;font-size:22px;">${Z.game}</div>`));
 	mDiv(dpop, { matop: 5, maleft: 10 }, null, `choose strategy:`);
 	let vals = Config.games[Z.game].options.strategy.split(',');
-	//console.log('vals', vals);
 	let key = 'strategy';
 	let fs = mRadioGroup(dpop, { fg: 'white' }, `d_${key}`); //,`${key}`, {fg:'white',border:'1px solid red'});
 	for (const v of vals) { mRadio(v, isNumber(v) ? Number(v) : v, key, fs, { cursor: 'pointer' }, set_player_strategy, key, v == Z.strategy); }
 	measure_fieldset(fs);
-	//UI.dStrategyContent = mTextArea(10, 20, dpop, { margin: 10, padding: 10 }, 'dStrategyContent');
-	//console.log('popup', dpop);
 }
 function show_tables(ms = 500) {
 	clear_screen();
@@ -10575,17 +9517,13 @@ function show_tables(ms = 500) {
 	mTableCommandify(t.rowitems, {
 		0: (item, val) => hFunc(val, 'onclick_table', val, item.id),
 	});
-	//delete command:
 	let d = iDiv(t);
-	//let x = mAppend(d.firstChild.firstChild, mCreate('th')); x.innerHTML = 'commands'; //header! console.log('x', x);
 	for (const ri of t.rowitems) {
 		let r = iDiv(ri);
 		let h = hFunc('delete', 'delete_table', ri.o.friendly);
 		c = mAppend(r, mCreate('td'));
 		c.innerHTML = h;
 	}
-	//mRise(dParent, ms);
-	//mRise('dScreen', 1000); 
 }
 function show_title() {
 	settingsOn = Z.func.state_info(mBy('dTitleLeft'));
@@ -10601,11 +9539,9 @@ function show_username(loadTable = false) {
 	mAppend(d, get_logout_button());
 	mAppend(d, dpic);
 	if (is_advanced_user()) { show('dAdvanced1'); } else { hide('dAdvanced'); hide('dAdvanced1'); }
-	//if (TESTING) show('dAdvanced');
 	if (!TESTING && !DA.running) {
 		if (!loadTable) phpPost({ app: 'easy' }, 'tables'); 
 		else if (!isEmpty(Serverdata.tables)) {
-			//console.log('....Serverdata',Serverdata);
 			onclick_table(Serverdata.tables[0].friendly);
 		}
 	}
@@ -10613,10 +9549,8 @@ function show_username(loadTable = false) {
 function show_users(ms = 300) {
 	let dParent = mBy('dUsers');
 	mClear(dParent);
-	//mStyle(dParent, { gap: 10, padding: 10 });
 	for (const u of Serverdata.users) {
 		if (['ally', 'bob', 'leo'].includes(u.name)) continue;
-		//console.log('u',u)
 		let d = get_user_pic_and_name(u.name, dParent);
 		d.onclick = () => onclick_user(u.name);
 		mStyle(d, { cursor: 'pointer' });
@@ -10637,7 +9571,6 @@ function show_waiting_message(msg) {
 }
 function show_winners() {
 	let winners = Z.fen.winners;
-	//winners = ['felix','amanda'];
 	let multiple_winners = winners.length > 1;
 	let winners_html = winners.map(x => get_user_pic_html(x, 35)).join(' ');
 	let msg = `
@@ -10676,7 +9609,6 @@ function ui_player_info(dParent, outerStyles = { dir: 'column' }, innerStyles = 
 	let items = {};
 	let styles = jsCopy(innerStyles); addKeys({ rounding: 10, bg: '#00000050', margin: 4, padding: 4, patop: 12, box: true, 'border-style': 'solid', 'border-width': 6 }, styles);
 	let order = get_present_order();
-	//console.log('order', order);
 	for (const plname of order) {
 		let pl = fen.players[plname];
 		let uname = pl.name;
@@ -10684,7 +9616,6 @@ function ui_player_info(dParent, outerStyles = { dir: 'column' }, innerStyles = 
 		styles['border-color'] = get_user_color(uname);
 		let item = mDivItem(dParent, styles, name2id(uname));
 		let d = iDiv(item);
-		//let bc=pl.playmode == 'bot'?'red':'white';
 		let picstyle = { w: 50, h: 50, box: true };
 		let ucolor = get_user_color(uname);
 		if (pl.playmode == 'bot') {
@@ -10698,32 +9629,251 @@ function ui_player_info(dParent, outerStyles = { dir: 'column' }, innerStyles = 
 	if (DA.SIMSIM || is_advanced_user()) activate_playerstats(items)
 	return items;
 }
+function start() {
+	DA.showTestButtons = true;
+	let uname = DA.secretuser = localStorage.getItem('uname');
+	if (isdef(uname)) U = { name: uname };
+	phpPost({ app: 'simple' }, 'assets');
+}
+function start_with_assets(reload = false) {
+	DA.isFirefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1; if (DA.isFirefox) console.log('using Firefox!')
+	show_home_logo();
+	if (nundef(U)) { show_users(); return; }
+	show_username(reload);
+	if (DA.TEST0 || DA.showTestButtons) show('dTestButtons');
+}
+function startgame(game, players, options = {}) {
+	if (nundef(game)) game = 'a_game';
+	let default_options = {}; for (const k in Config.games[game].options) default_options[k] = arrLast(Config.games[game].options[k].split(','));
+	addKeys(default_options, options); //ensure options
+	if (nundef(players)) players = rChoose(Serverdata.users, 2).map(x => ({ name: x.name })); //, playmode: 'human', strategy:valf(options.strategy,'random') })); //ensure players
+	let playernames = players.map(x => x.name);
+	let fen = window[game]().setup(playernames, options);
+	if (nundef(fen.round)) fen.round = 1;
+	if (nundef(fen.phase)) fen.phase = '';
+	if (nundef(fen.stage)) fen.stage = 0;
+	if (nundef(fen.step)) fen.step = 0;
+	if (nundef(fen.turn)) fen.turn = [fen.plorder[0]]; else if (DA.TESTSTART1 && fen.turn.length == 1) fen.turn = [playernames[0]];
+	players.map(x => { let pl = fen.players[x.name]; pl.playmode = valf(x.playmode, 'human'); pl.strategy = valf(x.strategy, valf(options.strategy, 'random')); });
+	if (options.mode == 'solo') {
+		let me = isdef(U) && isdef(fen.players[U.name]) ? U.name : rChoose(playernames);
+		for (const plname of playernames) {
+			if (plname == me) continue;
+			fen.players[plname].playmode = 'bot';
+		}
+		options.mode = 'hotseat';
+	}
+	for (const k in options) { if (isNumber(options[k])) options[k] = parseInt(options[k]); }
+	let o = {
+		friendly: generate_table_name(players.length), game: game, host: playernames[0], players: playernames,
+		fen: fen, options: options
+	};
+	ensure_polling(); // macht einfach nur Pollmode = 'auto'
+	phpPost(o, 'startgame');
+}
+function start_game_with_players(n, game = 'accuse', opts = {}) {
+	let numplayers = n;
+	let list = jsCopy(Serverdata.users).map(x => x.name);
+	removeInPlace(list, 'mimi');
+	removeInPlace(list, 'felix');
+	let playernames = rChoose(list, numplayers - 2);
+	playernames = ['mimi', 'felix'].concat(playernames);
+	let uname = U.name;
+	removeInPlace(playernames,uname);
+	playernames.unshift(uname);
+	let playmodes = playernames.map(x => 'human');
+	let players = [];
+	for (let i = 0; i < n; i++) players.push({ name: playernames[i], playmode: playmodes[i] });
+	addKeys({ mode: 'multi' }, opts);
+	startgame(game, players, opts);
+}
+function gamestep() {
+	show_admin_ui();
+	DA.running = true; clear_screen(); dTable = mBy('dTable'); mClass('dTexture', 'wood');
+	if (Z.game == 'aristo') { if (Z.role != Clientdata.role || Z.mode == 'multi' && Z.role != 'active') mFall(dTable); Clientdata.role = Z.role; }//else mTableTransition(dTable, 2000);
+	else mFall(dTable);
+	shield_off();
+	show_title();
+	show_role();
+	Z.func.present(dTable);	// *** Z.uname und Z.uplayer ist IMMER da! ***
+	if (isdef(Z.scoring.winners)) { show_winners(); animatedTitle('GAMEOVER!'); }
+	else if (Z.func.check_gameover(Z)) {
+		let winners = show_winners();
+		Z.scoring = { winners: winners }
+		sendgameover(winners[0], Z.friendly, Z.fen, Z.scoring);
+	} else if (is_shield_mode()) {
+		staticTitle();
+		if (!DA.no_shield == true) { hide('bRestartMove'); shield_on(); } //mShield(dTable.firstChild.childNodes[1])} //if (isdef(Z.fen.shield)) mShield(dTable);  }
+		autopoll();
+	} else {
+		Z.A = { level: 0, di: {}, ll: [], items: [], selected: [], tree: null, breadcrumbs: [], sib: [], command: null, autosubmit: Config.autosubmit };
+		copyKeys(jsCopy(Z.fen), Z);
+		copyKeys(UI, Z);
+		activate_ui(Z);
+		Z.func.activate_ui();
+		if (Z.isWaiting == true || Z.mode != 'multi') staticTitle(); else animatedTitle();
+		if (Z.options.zen_mode != 'yes' && Z.mode != 'hotseat' && Z.fen.keeppolling) {
+			autopoll();
+			console.log('gamestep autopoll');
+		}
+	}
+	if (TESTING == true) landing();	//DA.max=100;DA.runs=valf(DA.runs+1,0);if (DA.runs<DA.max) onclick_restart();
+}
+function ai_move(ms = 100) {
+	DA.ai_is_moving = true;
+	let [A, fen] = [valf(Z.A, {}), Z.fen];
+	let selitems;
+	if (Z.game == 'accuse' && Z.stage == 'hand') {
+		selitems = [];
+	} else if (Z.game == 'ferro') {
+		if (Z.stage == 'card_selection') {
+			let uplayer = Z.uplayer;
+			let i1 = firstCond(A.items, x => x.path.includes(`${uplayer}.hand`));
+			let i2 = firstCond(A.items, x => x.key == 'discard');
+			selitems = [i1, i2];
+		} else if (Z.stage == 'buy_or_pass') {
+			selitems = [A.items[1]]; //waehlt immer pass
+		} else selitems = [A.items[0]];
+	} else if (Z.game == 'bluff') {
+		let [newbid, handler] = bluff_ai();
+		if (newbid) { fen.newbid = newbid; UI.dAnzeige.innerHTML = bid_to_string(newbid); }
+		else if (handler != handle_gehtHoch) { bluff_generate_random_bid(); }
+		A.callback = handler;
+		selitems = [];
+	} else if (A.command == 'trade') {
+		selitems = ai_pick_legal_trade();
+	} else if (A.command == 'exchange') {
+		selitems = ai_pick_legal_exchange();
+	} else if (A.command == 'upgrade') {
+		selitems = [rChoose(A.items)];
+	} else if (A.command == 'rumor') {
+		selitems = [];
+		let buildings = A.items.filter(x => x.path.includes('building'));
+		let rumors = A.items.filter(x => !x.path.includes('building'));
+		selitems = [rChoose(buildings), rChoose(rumors)];
+	} else if (ARI.stage[Z.stage] == 'rumors_weitergeben') {
+		let players = A.items.filter(x => Z.plorder.includes(x.key))
+		let rumors = A.items.filter(x => !Z.plorder.includes(x.key))
+		selitems = [rChoose(players), rChoose(rumors)];
+	} else if (ARI.stage[Z.stage] == 'journey') {
+		selitems = []; // always pass!
+	} else {
+		let items = A.items;
+		let nmin = A.minselected;
+		let nmax = Math.min(A.maxselected, items.length);
+		let nselect = rNumber(nmin, nmax);
+		selitems = rChoose(items, nselect); if (!isList(selitems)) selitems = [selitems];
+	}
+	for (const item of selitems) {
+		select_last(item, select_toggle);
+		if (isdef(item.submit_on_click)) A.selected.pop();
+	}
+	clearTimeout(TO.ai);
+	loader_on();
+	TO.ai = setTimeout(() => { if (isdef(A.callback)) A.callback(); loader_off(); }, ms);
+}
+function ai_schummler() { }
+function clear_screen() { mShieldsOff(); clear_status(); clear_title(); for (const ch of arrChildren('dScreen')) mClear(ch); mClassRemove('dTexture', 'wood'); mStyle(document.body, { bg: 'white', fg: 'black' }); }
+function is_ai_player(plname) {
+	let [fen, name] = [Z.fen, valf(plname, Z.uplayer)];
+	return lookup(fen, ['players', name, 'playmode']) == 'bot';
+}
+function is_human_player(plname) {
+	let [fen, name] = [Z.fen, valf(plname, Z.uplayer)];
+	return lookup(fen, ['players', name, 'playmode']) == 'human';
+}
+function is_current_player_bot() {
+	let [fen, uplayer, turn] = [Z.fen, Z.uplayer, Z.turn];
+	let curplayer = Z.turn[0];
+	if (fen.players[curplayer].playmode == 'bot') return true; else return false;
+}
+function stopgame() {
+	if (!DA.running) return;
+	DA.running = false;
+	DA.noshow = 0;
+	clear_timeouts();
+	hide('bRestartMove');
+	hide('dHostButtons');
+	mStyle('dAdmin', { bg: 'white' });
+	mClear('dAdminMiddle')
+	for (const id of ['bSpotitStart', 'bClearAck', 'bRandomMove', 'bSkipPlayer']) hide(id);
+	pollStop();
+	Z = null; delete Serverdata.table; delete Serverdata.playerdata; Clientdata = {};
+	staticTitle();
+}
+function sendgameover(plname, friendly, fen, scoring) {
+	let o = { winners: plname, friendly: friendly, fen: fen, scoring: scoring };
+	phpPost(o, 'gameover');
+}
+function take_turn_fen() { take_turn(); }
+function take_turn_spotit() { take_turn(true, true); }
+function take_turn_fen_clear() { take_turn(true, false, true); }
+function take_turn_fen_write() { take_turn(true, true); }
+function take_turn_multi() { if (isdef(Z.state)) take_turn(false, true); else take_turn(false, false); }
+function take_turn_state1() { if (isdef(Z.state1)) take_turn(false, true); else take_turn(false, false); }
+function take_turn_state2() { if (isdef(Z.state2)) take_turn(false, true); else take_turn(false, false); }
+function take_turn_write() { take_turn_multi(); }
+function take_turn_waiting() { take_turn(true, false, false, null); }
+function take_turn(write_fen = true, write_player = false, clear_players = false, player_status = null) {
+	prep_move();
+	let o = { uname: Z.uplayer, friendly: Z.friendly };
+	if (isdef(Z.fen)) o.fen = Z.fen;
+	if (write_fen) { assertion(isdef(Z.fen) && isdef(Z.fen.turn), 'write_fen without fen!!!!'); o.write_fen = true; }
+	if (write_player) {
+		o.write_player = true;
+		if (isdef(Z.state)) o.state = Z.state;
+		if (isdef(Z.state1)) o.state1 = Z.state1;
+		if (isdef(Z.state2)) o.state2 = Z.state2;
+	}
+	if (clear_players) {
+		o.clear_players = true; delete Z.playerdata; delete o.fen.pldata;
+	}
+	o.player_status = player_status;
+	let cmd = 'table';
+	send_or_sim(o, cmd);
+}
+function take_feedback_host(write_fen = true, write_player = false, clear_players = false, player_status = null) {
+	prep_move();
+	let o = { uname: Z.uplayer, friendly: Z.friendly };
+	if (isdef(Z.fen)) o.fen = Z.fen;
+	if (write_fen) { assertion(isdef(Z.fen) && isdef(Z.fen.turn), 'write_fen without fen!!!!'); o.write_fen = true; }
+	if (write_player) { o.write_player = true; o.state = Z.state; } //console.log('writing playerstate for', Z.uplayer, Z.state); }
+	if (clear_players) o.clear_players = true;
+	o.player_status = player_status;
+	o.auto = true;
+	let cmd = 'table';
+	send_or_sim(o, cmd);
+}
+function prep_move() {
+	let [fen, uplayer, pl] = [Z.fen, Z.uplayer, Z.pl];
+	for (const k of ['round', 'phase', 'stage', 'step', 'turn']) { fen[k] = Z[k]; }
+	deactivate_ui();
+	clear_timeouts();
+}
+//#endregion gamehelpers
+
+//#region onclick
 function test_start_ferro(mode = 'multi') {
 	let game = 'ferro';
-	// let playernames = ['felix', 'lauren', 'mimi'];
 	let playernames = ['mimi', 'lauren', 'felix'];
 	let playmodes = ['human', 'human', 'human'];
 	let strategies = ['random', 'random', 'random'];
 	let i = 0; let players = playernames.map(x => ({ name: x, strategy: strategies[i], playmode: playmodes[i++] }));
-	// let i = 0; let players = playernames.map(x => ({ name: x, playmode: playmodes[i++] }));
 	let options = { mode: mode, thinking_time: 20 };
 	startgame(game, players, options);
 }
 function test_start_aristo(n = 3, mode = 'multi') {
 	let game = 'aristo';
-	// let playernames = ['felix', 'lauren', 'mimi'];
 	let playernames = arrTake(['mimi', 'felix', 'amanda', 'lauren', 'gul', 'nasi'], n);
 	let playmodes = ['human', 'human', 'human', 'human', 'human', 'human'];
 	let strategies = ['random', 'random', 'random', 'random', 'random', 'random', 'random'];
 	let i = 0; let players = playernames.map(x => ({ name: x, strategy: strategies[i], playmode: playmodes[i++] }));
-	// let i = 0; let players = playernames.map(x => ({ name: x, playmode: playmodes[i++] }));
 	let options = { mode: mode, commission: 'no' };
 	startgame(game, players, options);
 }
 function onclick_ack() {
 	if (nundef(Z) || nundef(Z.func.clear_ack)) return;
 	Z.func.clear_ack();
-	//if (!is_sending) take_turn_single();
 }
 function onclick_advanced_menu() { DA.showTestButtons = toggle_visibility('dTestButtons'); }
 function onclick_advanced_test() {
@@ -10737,27 +9887,20 @@ function style_advanced_button(){
 }
 function onclick_advanced_mode() { Clientdata.mode = toggle_mode(); } //onclick_reload(); }
 function onclick_by_rank() {
-	//console.log('onclick_by_rank');
 	let [plorder, stage, A, fen, uplayer, pl] = [Z.plorder, Z.stage, Z.A, Z.fen, Z.uplayer, Z.fen.players[Z.uplayer]];
-	//console.log('sorting for', uplayer);
 	let items = ui_get_hand_items(uplayer).map(x => x.o);
 	let h = UI.players[uplayer].hand;
 	pl.handsorting = 'rank'; //{ n: items.length, by: 'rank' };
-	//lookupSetOverride(Clientdata,['handsorting',uplayer],pl.handsorting);
 	Clientdata.handsorting = pl.handsorting;
 	localStorage.setItem('handsorting', Clientdata.handsorting);
-	//console.log('h ui', h);
-	//console.log('items', items);
 	let cardcont = h.cardcontainer;
 	let ch = arrChildren(cardcont);
 	ch.map(x => x.remove());
-	//console.log('rankstr', Z.func.rankstr);//console.log('rankstr',Z.func.rankstr);
 	let sorted = sortCardItemsByRank(items, Z.func.rankstr); //window[Z.game.toUpperCase()].rankstr); //'23456789TJQKA*');
 	h.sortedBy = 'rank';
 	for (const item of sorted) {
 		mAppend(cardcont, iDiv(item));
 	}
-	//let sorted = items.sort((a, b) => a.o.rank - b.o.rank);
 }
 function onclick_by_suit() {
 	let [plorder, stage, A, fen, uplayer, pl] = [Z.plorder, Z.stage, Z.A, Z.fen, Z.uplayer, Z.fen.players[Z.uplayer]];
@@ -10765,7 +9908,6 @@ function onclick_by_suit() {
 	let h = UI.players[uplayer].hand;
 	Clientdata.handsorting = pl.handsorting = 'suit'; //{ n: items.length, by: 'suit' };
 	localStorage.setItem('handsorting', Clientdata.handsorting);
-	//console.log('h ui', h);
 	let cardcont = h.cardcontainer;
 	let ch = arrChildren(cardcont);
 	ch.map(x => x.remove());
@@ -10775,22 +9917,15 @@ function onclick_by_suit() {
 	for (const item of sorted) {
 		mAppend(cardcont, iDiv(item));
 	}
-	//let sorted = items.sort((a, b) => a.o.rank - b.o.rank);
 }
-function onclick_cancelmenu() { hide('dMenu'); }
 function onclick_experience() {
-	//muss sagen wieviel und zu wem
-	//muss auch checken ob ueberhaupt experience habe!
 	let [fen, uplayer] = [Z.fen, Z.uplayer];
 	let plnames = get_other_players();
 	let nums = range(1, fen.players[uplayer].experience);
 	if (isEmpty(nums)) { show_special_message('you dont have any experience points!'); return; }
-	//console.log('plnames',plnames,'nums',nums)
 	show_special_popup('select player and number of experience points to gift:', send_experience_points, {}, plnames, nums);
-	//mQuestionPopup()
 }
 function onclick_game_menu_item(ev) { show_game_menu(ev_to_gname(ev)); }
-function onclick_home() { stopgame(); start_with_assets(); }
 function onclick_logout() {
 	mFadeClearShow('dAdminRight', 300);
 	mClear('dAdminMiddle');
@@ -10800,7 +9935,6 @@ function onclick_logout() {
 	show_users();
 }
 function onclick_random() {
-	//console.log('====>onclick_random');
 	if (uiActivated && !DA.ai_is_moving) ai_move(300);
 	else if (!uiActivated) console.log('NOP: ui not activated...');
 	else if (DA.ai_is_moving) console.log('NOP: ai is (or was already) moving...');
@@ -10808,9 +9942,7 @@ function onclick_random() {
 }
 function onclick_reload_after_switching() { DA.pollCounter = 0; DA.reloadColor = rColor(); onclick_reload(); }
 function onclick_reload() {
-	//console.log('onclick_reload')
 	if (isdef(Z)) {
-		// bei einem timed game mit schachuhr, muss ich die zeit abziehen!!!
 		if (Z.game == 'fritz' && nundef(Z.fen.winners)) {
 			console.log(Z);
 			Z.fen.players[Z.uplayer].time_left = stop_timer();
@@ -10823,23 +9955,16 @@ function onclick_reload() {
 }
 function onclick_remove_host() {
 	let [role, host, game, fen, uplayer, turn, stage] = [Z.role, Z.host, Z.game, Z.fen, Z.uplayer, Z.turn, Z.stage];
-	//im notfall koennte auch host wandern lassen zu anderem player?
-	//if ()
-	// if host 's
-	//if ()
 }
 function onclick_restart() {
-	//old code: nur die fen wird resettet
 	let [game, fen, plorder, host] = [Z.game, Z.fen, Z.plorder, Z.host];
 	Z.scoring = {};
 	if (nundef(fen.original_players)) fen.original_players = fen.players;
-	//if (isdef(fen.original_players)) plorder=fen.original_players;
 	let playernames = [host].concat(get_keys(fen.original_players).filter(x => x != host));
 	let playmodes = playernames.map(x => fen.original_players[x].playmode);
 	let strategies = playernames.map(x => fen.original_players[x].strategy);
 	let default_options = {}; for (const k in Config.games[game].options) default_options[k] = arrLast(Config.games[game].options[k].split(','));
 	addKeys(default_options, Z.options);
-	//console.log('playernames',playernames,'playmodes',playmodes)
 	fen = Z.fen = Z.func.setup(playernames, Z.options);
 	[Z.plorder, Z.stage, Z.turn, Z.round, Z.step, Z.phase] = [fen.plorder, fen.stage, fen.turn, 1, 1, fen.phase];
 	if (DA.TESTSTART1) Z.turn = fen.turn = [Z.host];
@@ -10849,7 +9974,6 @@ function onclick_restart() {
 function onclick_restart_move() { clear_transaction(); onclick_reload(); }
 function onclick_reset_all() { stopgame(); phpPost({ app: 'simple' }, 'delete_tables'); }
 function onclick_skip() {
-	//removeInPlace(Z.turn,Z.uplayer);
 	let [game, fen, uplayer, turn, stage] = [Z.game, Z.fen, Z.uplayer, Z.turn, Z.stage];
 	if (game == 'spotit') return;
 	else if (game == 'bluff' && stage == 1 || game == 'ferro' && stage == 'auto_ack') { onclick_ack(); }
@@ -10877,13 +10001,6 @@ function onclick_skip_membership_selection() {
 		pld.state = { item: rChoose(pl.hand) };
 	}
 	relegate_to_host(Z.playerdata);
-	//accuse_evaluate_votes();
-	// let [game, A, fen, uplayer, plorder] = [Z.game, Z.A, Z.fen, Z.uplayer, Z.plorder];
-	// for (const plname in fen.players) {
-	// 	fen.players[plname].membership = '2Hn';
-	// }
-	// //fen.policies = ['QHn'];
-	// start_new_poll();
 }
 function onclick_vote_empty() {
 	let [game, A, fen, uplayer, plorder] = [Z.game, Z.A, Z.fen, Z.uplayer, Z.plorder];
@@ -10892,7 +10009,6 @@ function onclick_vote_empty() {
 		pld.state = { item: '' };
 	}
 	relegate_to_host(Z.playerdata);
-	//accuse_evaluate_votes();
 }
 function onclick_vote_president() {
 	let [game, A, fen, uplayer, plorder] = [Z.game, Z.A, Z.fen, Z.uplayer, Z.plorder];
@@ -10912,7 +10028,6 @@ function onclick_vote_random() {
 		pld.state = { item: (coin() ? '' : rChoose(pl.hand)) };
 	}
 	relegate_to_host(Z.playerdata);
-	//accuse_evaluate_votes();
 }
 function onclick_vote_1() {
 	let [game, A, fen, uplayer, plorder] = [Z.game, Z.A, Z.fen, Z.uplayer, Z.plorder];
@@ -10940,13 +10055,10 @@ function onclick_start_spotit() {
 }
 function onclick_status() { query_status(); }
 function onclick_table(tablename) {
-	//console.log('onclick_table', tablename);
-	//ensure_polling();
 	send_or_sim({ friendly: tablename, uname: U.name }, 'table');
 }
 function onclick_tables() { phpPost({ app: 'simple' }, 'tables'); }
 function onclick_tithe_all() {
-	//each player must get tithes={val:x};
 	let [game, fen, uplayer, turn, stage] = [Z.game, Z.fen, Z.uplayer, Z.turn, Z.stage];
 	for (const plname in fen.players) {
 		let pl = fen.players[plname];
@@ -10956,7 +10068,6 @@ function onclick_tithe_all() {
 	proceed_to_newcards_selection();
 }
 function onclick_user(uname) {
-	//console.log('onclick_user',uname);
 	U = firstCond(Serverdata.users, x => x.name == uname);
 	localStorage.setItem('uname', U.name);
 	DA.secretuser = U.name;
@@ -10970,15 +10081,12 @@ function onclick_view_buildings() {
 	let buildings = UI.players[uplayer].buildinglist;
 	for (const b of buildings) b.items.map(x => face_up(x));
 	TO.buildings = setTimeout(hide_buildings, 5000);
-	//console.log('buildings',buildings);
 }
 function toggle_select(item, funcs) {
 	let params = [...arguments];
-	//console.log('pic', item, 'list', params[2]);
 	let ifunc = (valf(item.ifunc, 0) + 1) % funcs.length; let f = funcs[ifunc]; f(item, ...params.slice(2));
 }
 function style_not_playing(item, game, list) {
-	//console.log('item', item, 'game', game, 'list', list)
 	let ui = iDiv(item); let uname = ui.getAttribute('username');
 	mStyle(ui, { bg: 'transparent', fg: 'black' });
 	arrLast(arrChildren(ui)).innerHTML = uname;
@@ -10986,7 +10094,6 @@ function style_not_playing(item, game, list) {
 	item.isSelected = false;
 }
 function style_playing_as_human(item, game, list) {
-	//console.log('item', item, 'game', game, 'list', list)
 	let ui = iDiv(item); let uname = ui.getAttribute('username');
 	mStyle(ui, { bg: get_user_color(uname), fg: colorIdealText(get_user_color(uname)) });
 	arrLast(arrChildren(ui)).innerHTML = uname;
@@ -10994,18 +10101,18 @@ function style_playing_as_human(item, game, list) {
 	item.isSelected = true;
 }
 function style_playing_as_bot(item, game, list) {
-	//console.log('item', item, 'game', game, 'list', list)
 	let ui = iDiv(item); let uname = ui.getAttribute('username'); let bg = get_game_color(game);
 	mStyle(ui, { bg: bg, fg: colorIdealText(bg) });
 	arrLast(arrChildren(ui)).innerHTML = uname.substring(0, 3) + 'bot';
 	item.ifunc = 2; item.playmode = 'bot';
 	item.isSelected = true;
 }
+//#endregion onclick
+
+//#region select
 function add_transaction(cmd) {
 	if (!DA.simulate) start_transaction();
-	//let t = { cmd: cmd, fen: jsCopy(Z.fen), stage: Z.stage, round: Z.round, phase: Z.phase, turn: Z.turn };
 	DA.transactionlist.push(cmd);
-	//console.log('added transaction', cmd, DA);
 }
 function start_transaction() {
 	if (DA.simulate) return;
@@ -11024,7 +10131,6 @@ function pack_table(o) {
 function clear_selection() {
 	let [plorder, stage, A, fen, uplayer, pl] = [Z.plorder, Z.stage, Z.A, Z.fen, Z.uplayer, Z.fen.players[Z.uplayer]];
 	if (nundef(Z.A) || isEmpty(A.selected)) return;
-	//console.log('selected', A.selected);
 	let selitems = A.selected.map(x => A.items[x]);
 	for (const item of selitems) { ari_make_unselected(item); }
 	A.selected = [];
@@ -11033,17 +10139,12 @@ function select_add_items(items, callback = null, instruction = null, min = 0, m
 	let A = Z.A;
 	select_clear_previous_level();
 	A.level++; A.items = items; A.callback = callback; A.selected = []; A.minselected = min; A.maxselected = max;
-	//console.log('A.level', A.level)
 	show_progress();
 	let dInstruction = mBy('dSelections0');
 	mClass(dInstruction, 'instruction');
 	mCenterCenterFlex(dInstruction);
-	// dInstruction.innerHTML = '<div>' + ((Z.role == 'active' ? `${get_waiting_html()}<span style="color:red;font-weight:bold;max-height:25px">You </span>` : `${Z.uplayer} `)) + "&nbsp;" + instruction; // + '</div>';
 	dInstruction.innerHTML = (Z.role == 'active' ? `${get_waiting_html()}<span style="color:red;font-weight:bold;max-height:25px">You</span>` : `${Z.uplayer}`) + "&nbsp;" + instruction; // + '</div>';
-	//console.log('A',A)
 	if (too_many_string_items(A)) { mLinebreak(dInstruction, 4); } //console.log('triggered!!!') }
-	//prep items and link to ui
-	//console.log('haaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaA.items',items,A.items); //return;
 	let has_submit_items = false;
 	let buttonstyle = { maleft: 10, vmargin: 2, rounding: 6, padding: '4px 12px 5px 12px', border: '0px solid transparent', outline: 'none' }
 	for (const item of A.items) {
@@ -11064,26 +10165,19 @@ function select_add_items(items, callback = null, instruction = null, min = 0, m
 	if (show_submit_button) { mButton('submit', callback, dInstruction, buttonstyle, 'selectable_button', 'bSubmit'); }
 	let show_restart_button = A.level > 1; 
 	if (show_restart_button) { mButton('restart', onclick_reload, dInstruction, buttonstyle, 'selectable_button', 'bReload'); }
-	//now, mark all items for selection
 	let dParent = window[`dActions${A.level}`];
 	for (const item of A.items) { ari_make_selectable(item, dParent, dInstruction); }
-	//activate ui or automatic selection
 	assertion(A.items.length >= min, 'less options than min selection!!!!', A.items.length, 'min is', min); //TODO: sollte das passieren, check in ari_pre_action die mins!!!
 	if (A.items.length == min && !is_ai_player() && !prevent_autoselect) {
-		//all items need to be selected!
 		for (const item of A.items) { A.selected.push(item.index); ari_make_selected(item); }
 		if (A.autosubmit) {
-			//console.log('items.length==min und autosubmit!!!!!!!!!!!!!!!!!!')
 			loader_on();
-			//console.log('autosubmit because item.length == min items (so would have to select all items anyway)')
 			setTimeout(() => { if (callback) callback(); loader_off(); }, 800);
 		}
 	} else if (is_ai_player()) {
-		//console.log('ist ein BOT!!!');
 		ai_move();
 	} else if (TESTING && isdef(DA.test)) {
 		if (DA.test.iter >= DA.auto_moves.length) {
-			//console.log('test end');
 			if (isdef(DA.test.end)) DA.test.end();
 			activate_ui();
 			return;
@@ -11098,10 +10192,8 @@ function select_add_items(items, callback = null, instruction = null, min = 0, m
 				} else if (el == 'random') {
 					numbers.push(rNumber(0, A.items.length - 1));
 				} else if (isString(el)) {
-					//this is a command!
 					let commands = A.items.map(x => x.key);
 					let idx = commands.indexOf(el);
-					//console.log('idx of', el, 'is', idx)
 					numbers.push(idx);
 				} else numbers.push(el);
 			}
@@ -11110,7 +10202,6 @@ function select_add_items(items, callback = null, instruction = null, min = 0, m
 			if (selection.length == 1) A.command = A.items[A.selected[0]].key;
 			A.last_selected = A.items[A.selected[0]];
 			select_highlight();
-			//console.log('DA.testing: selection', selection);
 			setTimeout(() => {
 				if (A.callback) A.callback();
 			}, 1000);
@@ -11121,33 +10212,26 @@ function select_confirm_weiter(callback) {
 	select_add_items(ui_get_string_items(['weiter']), callback, 'may click to continue', 1, 1, Z.mode == 'multi');
 }
 function select_last(item, callback, ev) {
-	//console.log('clicked',ev.target)
-	//console.log('haaaaaaaaaaaaaaaaaaaalllllllllllllllllooooooooooooooooo')
 	if (isdef(ev)) evNoBubble(ev);
 	Z.A.last_selected = item; callback(item, ev);
 }
 function select_clear_previous_level() {
-	//console.log('select_clear_previous_level', Z.A.items)
 	let A = Z.A;
 	if (!isEmpty(A.items)) {
 		console.assert(A.level >= 1, 'have items but level is ' + A.level);
 		A.ll.push({ items: A.items, selected: A.selected });
 		let dsel = Z.game == 'accuse'?mBy(`dTitleMiddle`):mBy(`dSelections1`); // mBy(`dSelections${A.level}`)
 		mStyle(dsel, { display: 'flex', 'align-items': 'center', padding: 10, box: true, gap: 10 });
-		//return;
 		for (const item of A.items) {
-			//console.log('item', item);
 			ari_make_unselectable(item);
 			if (A.keep_selection) continue;
 			ari_make_unselected(item);
 			if (!A.selected.includes(item.index)) continue;
 			if (item.itemtype == 'card') {
-				//a miniature of this item is added to 
 				let d = iDiv(item);
 				let card = item.o;
 				let mini = mDiv(dsel, { bg: 'yellow', fg: 'black', hpadding: 2, border: '1px solid black' }, null, card.friendly);
 			} else if (item.itemtype == 'container') {
-				//a miniature of this item is added to 
 				let list = item.o.list;
 				let cards = list.map(x => ari_get_card(x, 30, 30 * .7));
 				let cont2 = ui_make_hand_container(cards, dsel, { bg: 'transparent' });
@@ -11163,14 +10247,9 @@ function select_clear_previous_level() {
 	}
 }
 function select_toggle() { //item,ev) {
-	//console.log('clicked',ev.target)
-	//evNoBubble(ev);
 	if (!uiActivated) { console.log('ui is deactivated!!!'); return; }
 	let A = Z.A;
 	let item = A.last_selected;
-	//console.log('last_selected', item)
-	//let id = evToId(ev); let item = A.di[id];
-	//console.log('click id', id, 'item', item);
 	if (A.selected.includes(item.index)) {
 		removeInPlace(A.selected, item.index);
 		ari_make_unselected(item);
@@ -11179,26 +10258,18 @@ function select_toggle() { //item,ev) {
 		A.selected.push(item.index);
 		ari_make_selected(item);
 		if (!DA.ai_is_moving && A.selected.length >= A.maxselected && A.autosubmit) {
-			//console.log('autosubmitting in _select_toggle with 1 sec delay because cannot select more -  max reached!');
 			setTimeout(() => A.callback(), 100);
 		}
 	}
-	//console.log('selected', A.selected);
-	// if (!isEmpty(A.selected) && isdef(mBy('bClearSelection'))) { show('bClearSelection'); }
-	// else if (isEmpty(A.selected) && isdef(mBy('bClearSelection'))) { hide('bClearSelection'); }
 }
 function select_error(msg, callback = null, stay = false) {
 	let [A] = [Z.A];
 	DA.callback = callback;
-	//soll ich die selected items unselected machen? nein, weil user sonst nicht weiß, was er gewählt hat 
 	if (A.maxselected == 1 && A.selected.length > 0) {
-		//console.log('last_selected', A.last_selected, 'selected', A.selected);
 		let item = A.items[A.selected[0]];
 		ari_make_unselected(item);
 		A.selected = [];
-		//unselect A.items[A.selected[0]]
 	} else if (A.selected.length == 2) {
-		//make second item unselected
 		let item = A.items[A.selected[1]];
 		ari_make_unselected(item);
 		A.selected = [A.selected[0]];
@@ -11207,7 +10278,6 @@ function select_error(msg, callback = null, stay = false) {
 	if (stay) {
 		dError.innerHTML += '<br><button onclick="continue_after_error()">CLICK TO CONTINUE</button>';
 	} else {
-		//autoclose
 		TO.error = setTimeout(continue_after_error, 3000);
 	}
 }
@@ -11218,17 +10288,11 @@ function select_highlight() { let A = Z.A; for (const i of A.selected) { let a =
 function remove_from_selection(card) {
 	if (nundef(Z.A)) return;
 	let A = Z.A;
-	//console.log('A.items',A.items);
-	//console.log("A.selected",A.selected);
-	//console.log('card',card);
 	let item = firstCond(A.items, x => x.id == card.id);
-	//console.log('====>item',item);
 	if (isdef(item)) {
 		let idx = item.index;
 		A.items.splice(item.index, 1);
 		removeInPlace(A.selected, item.index);
-		//console.log('A.selected',A.selected);
-		//console.log('A.items',A.items);
 		make_card_unselectable(item);
 		make_card_unselected(item);
 		reindex_items(A.items);
@@ -11240,7 +10304,6 @@ function restart_selection_process() {
 		console.log('attempt to restart selection process in non-ferro game!!!');
 		return;
 	}
-	//all selectedCards are made unselected
 	A.selectedCards.map(x => ari_make_unselected(x));
 	mClear('dSelections0');
 	Z.A = { level: 0, di: {}, ll: [], items: [], selected: [], tree: null, breadcrumbs: [], sib: [], command: null };
@@ -11250,7 +10313,6 @@ function restart_selection_process() {
 function select_timer(ms, callback) {
 	let d = mBy('dSelections0');
 	let dtimer = mDiv(d, { w: 80, maleft: 10, fg: 'red', weight: 'bold' }, 'dTimer');
-	//start_user_timer(dtimer, 1000, null, ms, callback); //(dtimer, msInterval, onTick, msTotal, onElapsed)
 	if (isdef(DA.timer)) { DA.timer.clear(); DA.timer = null; }
 	let timer = DA.timer = new SimpleTimer(dtimer, 1000, null, ms, callback);
 	timer.start();
@@ -11260,14 +10322,12 @@ function stop_timer() {
 	if (isdef(DA.timer)) {
 		let res = DA.timer.clear();
 		DA.timer = null;
-		//console.log('time left in stop timer', res)
 		return isNumber(res) ? res : 0;
 	}
 	return 0;
 }
 function ari_make_selectable(item, dParent, dInstruction) {
 	let A = Z.A;
-	//console.log('itemtype', item.itemtype);
 	switch (item.itemtype) {
 		case 'card': make_card_selectable(item); break;
 		case 'container': make_container_selectable(item); break;
@@ -11285,7 +10345,6 @@ function ari_make_unselectable(item) {
 	}
 }
 function ari_make_selected(item) {
-	//console.log('item',item)
 	let A = Z.A;
 	switch (item.itemtype) {
 		case 'card': make_card_selected(item); break;
@@ -11306,14 +10365,11 @@ function ari_make_unselected(item) {
 function make_card_selectable(item) { 
 	let d = iDiv(item.o); 
 	mClass(d, 'selectable'); 
-	//console.log('WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW')
 	if (Z.game != 'aristo') { spread_hand(item.path, .3); } 
-	//console.log('WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW')
 	mClass(d.parentNode, 'selectable_parent'); 
 }
 function make_card_unselectable(item) { let d = iDiv(item.o); d.onclick = null; mClassRemove(d, 'selectable'); mClassRemove(d.parentNode, 'selectable_parent'); spread_hand(item.path); }
 function make_card_selected(item) {
-	//selection color can be set bei game!
 	let color = isdef(Z.func.get_selection_color) ? Z.func.get_selection_color(item) : 'red';
 	set_card_border(item, 13, color);
 	if (DA.magnify_on_select) mClass(iDiv(item.o), 'mag');
@@ -11339,10 +10395,12 @@ function make_deck_selectable(item) { }
 function make_deck_unselectable(item) { }
 function make_deck_selected(item) { }
 function make_deck_unselected(item) { }
+//#endregion select
+
+//#region sim
 function ferro_ut0_create_staged() { //prep double visit
 	console.log('*** test ferro 0: buy_or_pass with no coins ***');
 	DA.test.number = 0;
-	//one player that is not uplayer should have coin = 0
 	let [fen, uplayer] = [o.fen, o.fen.turn[0]];
 	let otherplayer = firstCond(fen.plorder, (p) => p != uplayer);
 	let pl = fen.players[otherplayer];
@@ -11352,10 +10410,6 @@ function ferro_ut0_create_staged() { //prep double visit
 	[['visit'], ['last'], [0]],
 	[['visit'], ['last'], [1]],
 	[['pass']],
-		// [['pass']], [['pass']], //end of jack phase
-		// [[0]], [[0]], //stall selection king phase
-		// [['pass']], [['pass']], //end of king phase
-		// [[1]], //NOT ending game!
 	];
 	return [fen, player_names];
 }
@@ -11376,10 +10430,6 @@ function ari_ut306_create_staged() { //prep double visit
 	[['visit'], ['last'], [0]],
 	[['visit'], ['last'], [1]],
 	[['pass']],
-		// [['pass']], [['pass']], //end of jack phase
-		// [[0]], [[0]], //stall selection king phase
-		// [['pass']], [['pass']], //end of king phase
-		// [[1]], //NOT ending game!
 	];
 	return [fen, player_names];
 }
@@ -11449,7 +10499,6 @@ function ari_ut112_create_staged() { //auction payment test 2
 	};
 	DA.iter_verify = 13;
 	DA.verify = (ot) => {
-		//derjenige der 2 gezahlt hat muss um 1 kaufen!
 		let coins = ot.plorder.map(x => ot[x].coins);
 		let sum = arrSum(coins);
 		let res = sum == 11;
@@ -11481,7 +10530,6 @@ function ari_ut111_create_staged() { //auction payment test
 	};
 	DA.iter_verify = 8;
 	DA.verify = (ot) => {
-		//derjenige der 2 gezahlt hat muss um 1 kaufen!
 		let coins = ot.plorder.map(x => ot[x].coins);
 		let sum = arrSum(coins);
 		let res = sum == 8;
@@ -11513,7 +10561,6 @@ function ari_ut110_create_staged() { //end game 2
 	DA.iter_verify = 8;
 	DA.verify = (ot) => {
 		let res = ot.stage == 3;
-		//console.log('stage',ot.stage);
 		if (!res) console.log('Not ending game FAIL!', ot.stage);
 		return res;
 	};
@@ -11590,7 +10637,6 @@ function ari_ut107_create_staged() { //end game
 	DA.verify = (ot) => {
 		let res = ot.winners = 'mimi';
 		if (!res) console.log('end game mimi should win didnt work!', ot);
-		//hier muss gameover screen beseitigt werden! wie mach ich das?
 		return res;
 	};
 	return [fen, player_names];
@@ -11670,7 +10716,6 @@ function ari_ut104_create_staged() { //downgrade from estate to farm
 	};
 	DA.auto_moves = {
 		mimi_1: [['downgrade'], [0]],
-		//leo_3: () => { A.selected = [0]; ari_post_action(); },
 	};
 	return [fen, player_names];
 }
@@ -11681,10 +10726,8 @@ function ari_ut103_create_staged() { //trade
 	let player_names = ['mimi', 'leo'];
 	let fen = ari_setup(player_names);
 	arisim_stage_3(fen);
-	//arisim_stage_4(fen); //da passiert die stall selection
 	arisim_stage_4_all_mimi_starts(fen, 2);
 	DA.fen0 = fen;
-	//console.log('...........fen.market[1]',fen.market[1]);
 	DA.auto_moves = {
 		mimi_1: [['trade'], [1, 3]],
 		mimi_2: [['pass']],
@@ -11739,7 +10782,6 @@ function ari_ut101_create_staged() { //stall selection with empty hands
 		if (!res) for (const uname of ot.plorder) console.log('pl', uname, 'stall', ot[uname].stall.length, 'should be', stall_sz[uname]);
 		return res;
 	};
-	//DA.auto_moves = {};
 	DA.auto_moves = {
 		amanda_2: [[0, 1, 2]],
 		lauren_4: [[0]],
@@ -11756,8 +10798,6 @@ function ari_ut100_create_staged() { //tax
 	ari_test_hand_to_discard(fen, 'mimi'); //mimi has no hand!
 	deck_add(fen.deck, 3, fen.players.amanda.hand); //amanda has to pay 3 tax
 	ari_test_hand_to_discard(fen, 'felix', 3); //felix hand size 3, no tax!
-	//deck_add(fen.deck,1,fen.players.felix.hand); //felix has to pay 1 tax
-	// lauren pays no tax
 	deck_add(fen.deck, 1, fen.players.blade.hand); //blade has to pay 1 tax
 	let sz = ARI.sz_hand;
 	fen.pl_tax = { mimi: -sz, amanda: 3, felix: -sz + 3, lauren: 0, blade: 1 };
@@ -11770,8 +10810,6 @@ function ari_ut100_create_staged() { //tax
 	DA.verify = (ot) => {
 		let res = forAll(ot.plorder, x => ot[x].hand.length <= sz);
 		if (!res) for (const uname of ot.plorder) console.log('pl', uname, 'hand', ot[uname].hand.length, 'should be', Math.min(sz, DA.fen0.players[uname].hand.length));
-		// for(const uname of ot.plorder) if (ot[uname].hand.length>sz) return false;
-		// return true;
 		return res;
 	};
 	DA.auto_moves = {
@@ -11834,7 +10872,6 @@ function ari_ut14_create_staged() { //pickup single card
 	DA.iter_verify = 2;
 	DA.verify = (ot) => {
 		let plast = arrLast(ot.round);
-		//this player's hand must now be exactly as at beginning!
 		let ok = sameList(ot[plast].hand, DA.fen0.players[plast].hand);
 		console.log('pl', plast, 'hand', ot[plast].hand, 'should be', DA.fen0.players[plast].hand);
 		return ok;
@@ -11875,9 +10912,6 @@ function ari_ut0_create_staged() {
 	fen.players.leo.hand = 'ACb ASb 2Db 4Db 6Db KDb QSb'.split(' ');
 	fen.players.mimi.buildings.farm = [{ list: '4Cr 4Sr 4Sb 4Dr'.split(' '), h: null }, { list: '5Cr 5Sr 5Sb 5Dr'.split(' '), h: null }];
 	fen.players.mimi.buildings.estate = [{ list: 'TCr TSr TSb TDr TDb'.split(' '), h: null }];
-	//log_object(fen, 'fen');
-	//log_object(fen.players.mimi, 'mimi')
-	//log_object(fen.players.leo, 'leo')
 	DA.staged_moves = [];
 	DA.iter = 100;
 	return [fen, player_names];
@@ -11886,11 +10920,9 @@ function ari_ut1_create_staged() {
 	Session.cur_game = 'gAristo';
 	let player_names = ['mimi', 'leo'];
 	let fen = ari_setup(player_names);
-	//move 2 cards from deck to market
 	top_elem_from_to(fen.deck, fen.market);
 	top_elem_from_to(fen.deck, fen.market);
 	fen.stage = 4;
-	//move 2 or 3 cards to stalls
 	top_elem_from_to(fen.players.mimi.hand, fen.players.mimi.stall);
 	top_elem_from_to(fen.players.mimi.hand, fen.players.mimi.stall);
 	fen.iturn = 1;
@@ -11905,7 +10937,6 @@ function ari_ut2_create_staged() {
 	let fen = ari_setup(player_names);
 	arisim_stage_3(fen);
 	arisim_stage_4(fen);
-	//fen.players.mimi.hand.push('KHg');
 	DA.staged_moves = [];
 	DA.iter = 100;
 	return [fen, player_names];
@@ -11920,18 +10951,10 @@ function ari_ut3_create_staged() {
 	}
 	fen.players.mimi.hand = 'AHb ADb 2Cb 4Cb 6Cb KCb QDb'.split(' ');
 	fen.players.leo.hand = 'ACb KDb QSb ASb 2Db 4Db 6Db'.split(' ');
-	// fen.players.mimi.hand = '4Cb 6Cb KCb QDb'.split(' ');
-	// fen.players.leo.hand = 'ACb ASb 2Db 4Db 6Db'.split(' ');
 	fen.players.mimi.buildings.farm = [{ list: '4Cr 7Sr 4Sb 4Dr'.split(' '), h: null }];//, { list: '5Cr 5Sr 5Sb 5Dr'.split(' '), h: null }];
 	fen.players.leo.buildings.estate = [{ list: 'TCr 7Sr TSb TDr TDb'.split(' '), h: null }];
 	fen.market = 'KSb 3Sb'.split(' ');
 	arisim_stage_4(fen, 3, 2);
-	// fen.players.mimi.stall = 'AHb ADb 2Cb'.split(' ');
-	// fen.players.leo.stall = 'KDb QSb'.split(' ');
-	// fen.stage = 5;
-	//log_object(fen, 'fen');
-	//log_object(fen.players.mimi, 'mimi')
-	//log_object(fen.players.leo, 'leo')
 	DA.staged_moves = [];
 	DA.iter = 100;
 	return [fen, player_names];
@@ -11987,8 +11010,6 @@ function ari_ut6_create_staged() { //start in jack phase
 	fen.players.leo.buildings.estate = [{ list: 'TCr 7Sr TSb TDr TDb'.split(' '), h: null }];
 	for (let i = 0; i < 3; i++) {
 		top_elem_from_to(fen.deck, fen.market);
-		//top_elem_from_to(fen.players.mimi.hand,fen.players.mimi.stall);
-		//top_elem_from_to(fen.players.leo.hand,fen.players.leo.stall);
 	}
 	fen.phase = 'jack';
 	arisim_stage_4(fen);
@@ -12010,8 +11031,6 @@ function ari_ut7_create_staged() { //double visit
 	fen.players.leo.buildings.estate = [{ list: 'TCr 7Sr TSb TDr TDb'.split(' '), h: null }];
 	for (let i = 0; i < 3; i++) {
 		top_elem_from_to(fen.deck, fen.market);
-		//top_elem_from_to(fen.players.mimi.hand,fen.players.mimi.stall);
-		//top_elem_from_to(fen.players.leo.hand,fen.players.leo.stall);
 	}
 	fen.phase = 'jack';
 	arisim_stage_4(fen);
@@ -12024,7 +11043,6 @@ function ari_ut8_create_staged() { //harvest, tax
 	let player_names = ['mimi', 'leo'];
 	let fen = ari_setup(player_names);
 	deck_add(fen.deck, 1, fen.players.mimi.hand); //'AHb ADb 2Cb 4Cb 6Cb QCb QDb'.split(' ');
-	//deck_add(fen.deck, 2, fen.players.leo.hand); //'ACb KDb QSb ASb 2Db 4Db 6Db'.split(' ');
 	fen.players.mimi.buildings.farm = [{ list: deck_deal(fen.deck, 4), h: '3Hb' }];//, { list: '5Cr 5Sr 5Sb 5Dr'.split(' '), h: null }];
 	fen.players.leo.buildings.farm = [{ list: deck_deal(fen.deck, 4), h: null }];
 	fen.players.leo.buildings.estate = [{ list: deck_deal(fen.deck, 5), h: null }];
@@ -12050,8 +11068,6 @@ function ari_ut9_create_staged() { //transfer to new round
 	fen.players.leo.buildings.estate = [{ list: 'TCr 7Sr TSb TDr TDb'.split(' '), h: null }];
 	for (let i = 0; i < 3; i++) {
 		top_elem_from_to(fen.deck, fen.market);
-		//top_elem_from_to(fen.players.mimi.hand,fen.players.mimi.stall);
-		//top_elem_from_to(fen.players.leo.hand,fen.players.leo.stall);
 	}
 	fen.phase = 'king';
 	arisim_stage_4(fen);
@@ -12074,7 +11090,6 @@ function inno_ut0_create_staged() {
 	let [decks, mimi, leo] = [fen.decks, fen.players.mimi, fen.players.leo];
 	let deck1 = decks.B[1]; let deck2 = decks.E[1];
 	inno_undo_random_deal(fen);
-	//now re-deal staged:
 	elem_from_to('agriculture', deck1, mimi.hand);
 	elem_from_to('comb', deck2, mimi.hand);
 	elem_from_to('metalworking', deck1, leo.hand);
@@ -12082,8 +11097,6 @@ function inno_ut0_create_staged() {
 	DA.staged_moves = ['mimi.hand.agriculture', 'leo.hand.metalworking', 'mimi.board.yellow.agriculture', 'mimi.hand.comb',
 		'leo.board.red.metalworking', 'leo.board.red.metalworking', 'mimi.board.yellow.agriculture', 'pass', 'mimi.board.yellow.agriculture', 'pass'];
 	DA.iter = 100;
-	//DA.verify = (ot)=>ot.turn[0]=='mimi';
-	// DA.verify = (ot)=>ot.mimi.board.yellow[0]==['agriculture'] && ot.leo.board.yellow[0]=='soap' && ot.turn[0]=='mimi';
 	return [fen, player_names];
 }
 function inno_ut1_create_staged() {
@@ -12094,7 +11107,6 @@ function inno_ut1_create_staged() {
 	let [decks, mimi, leo] = [fen.decks, fen.players.mimi, fen.players.leo];
 	let deck1 = decks.B[1]; let deck2 = decks.E[1];
 	inno_undo_random_deal(fen);
-	//now re-deal staged:
 	elem_from_to('agriculture', deck1, mimi.hand);
 	elem_from_to('comb', deck2, mimi.hand);
 	elem_from_to('metalworking', deck1, leo.hand);
@@ -12104,14 +11116,12 @@ function inno_ut1_create_staged() {
 	return [fen, player_names];
 }
 function inno_ut2_create_staged() {
-	//console.log('*** TEST: init 2 players ***');
 	Session.cur_game = 'gPreinno';
 	let player_names = ['mimi', 'leo'];
 	let fen = inno_setup(player_names);
 	let [decks, mimi, leo] = [fen.decks, fen.players.mimi, fen.players.leo];
 	let deck1 = decks.B[1]; let deck2 = decks.E[1];
 	inno_undo_random_deal(fen);
-	//now re-deal staged:
 	elem_from_to('agriculture', deck1, mimi.hand);
 	elem_from_to('comb', deck2, mimi.hand);
 	elem_from_to('metalworking', deck1, leo.hand);
@@ -12127,7 +11137,6 @@ function inno_ut3_create_staged() {
 	let [decks, mimi, leo, felix, amanda] = [fen.decks, fen.players.mimi, fen.players.leo, fen.players.felix, fen.players.amanda];
 	let deck1 = decks.B[1]; let deck2 = decks.E[1];
 	inno_undo_random_deal(fen);
-	//now re-deal staged:
 	elem_from_to('wheel', deck1, mimi.hand);
 	elem_from_to('comb', deck2, mimi.hand);
 	elem_from_to('metalworking', deck1, leo.hand);
@@ -12148,7 +11157,6 @@ function inno_ut4_create_staged() {
 	let [decks, mimi, leo, felix] = [fen.decks, fen.players.mimi, fen.players.leo, fen.players.felix];
 	let deck1 = decks.B[1]; let deck2 = decks.E[1];
 	inno_undo_random_deal(fen);
-	//now re-deal staged:
 	elem_from_to('pottery', deck1, mimi.hand);
 	elem_from_to('comb', deck2, mimi.hand);
 	elem_from_to('metalworking', deck1, leo.hand);
@@ -12167,7 +11175,6 @@ function inno_ut5_create_staged() {
 	let [decks, mimi, leo, felix] = [fen.decks, fen.players.mimi, fen.players.leo, fen.players.felix];
 	let deck1 = decks.B[1]; let deck2 = decks.E[1];
 	inno_undo_random_deal(fen);
-	//now re-deal staged:
 	elem_from_to('wheel', deck1, mimi.hand);
 	elem_from_to('comb', deck2, mimi.hand);
 	elem_from_to('metalworking', deck1, leo.hand);
@@ -12186,7 +11193,6 @@ function inno_ut6_create_staged() {
 	let [decks, mimi, leo] = [fen.decks, fen.players.mimi, fen.players.leo];
 	let deck1 = decks.B[1]; let deck2 = decks.E[1];
 	inno_undo_random_deal(fen);
-	//now re-deal staged:
 	elem_from_to('wheel', deck1, mimi.hand);
 	elem_from_to('comb', deck2, mimi.hand);
 	elem_from_to('metalworking', deck1, leo.hand);
@@ -12203,7 +11209,6 @@ function inno_ut7_create_staged() {
 	let [decks, mimi, leo] = [fen.decks, fen.players.mimi, fen.players.leo];
 	let deck1 = decks.B[1]; let deck2 = decks.E[1];
 	inno_undo_random_deal(fen);
-	//now re-deal staged:
 	elem_from_to('wheel', deck1, mimi.hand);
 	elem_from_to('comb', deck2, mimi.hand);
 	elem_from_to('metalworking', deck1, leo.hand);
@@ -12220,7 +11225,6 @@ function inno_ut8_create_staged() {
 	let [decks, mimi, leo] = [fen.decks, fen.players.mimi, fen.players.leo];
 	let deck1 = decks.B[1]; let deck2 = decks.E[1];
 	inno_undo_random_deal(fen);
-	//now re-deal staged:
 	elem_from_to('agriculture', deck1, mimi.hand);
 	elem_from_to('comb', deck2, mimi.hand);
 	elem_from_to('metalworking', deck1, leo.hand);
@@ -12240,7 +11244,6 @@ function inno_ut9_create_staged() {
 	let [decks, mimi, leo] = [fen.decks, fen.players.mimi, fen.players.leo];
 	let deck1 = decks.B[1]; let deck2 = decks.E[1];
 	inno_undo_random_deal(fen);
-	//now re-deal staged:
 	elem_from_to('agriculture', deck1, mimi.hand);
 	elem_from_to('comb', deck2, mimi.hand);
 	elem_from_to('metalworking', deck1, leo.hand);
@@ -12259,14 +11262,12 @@ function inno_ut9_create_staged() {
 	return [fen, player_names];
 }
 function inno_ut10_create_staged() {
-	//console.log('*** TEST: draw ***');
 	Session.cur_game = 'gPreinno';
 	let player_names = ['mimi', 'leo'];
 	let fen = inno_setup(player_names);
 	let [decks, mimi, leo] = [fen.decks, fen.players.mimi, fen.players.leo];
 	let deck1 = decks.B[1]; let deck2 = decks.E[1];
 	inno_undo_random_deal(fen);
-	//now re-deal staged:
 	elem_from_to('agriculture', deck1, mimi.hand);
 	elem_from_to('comb', deck2, mimi.hand);
 	elem_from_to('metalworking', deck1, leo.hand);
@@ -12276,20 +11277,17 @@ function inno_ut10_create_staged() {
 	return [fen, player_names];
 }
 function inno_ut11_create_staged() {
-	//console.log('*** TEST: meld ***');
 	Session.cur_game = 'gPreinno';
 	let player_names = ['mimi', 'leo'];
 	let fen = inno_setup(player_names);
 	let [decks, mimi, leo] = [fen.decks, fen.players.mimi, fen.players.leo];
 	let deck1 = decks.B[1]; let deck2 = decks.E[1];
 	inno_undo_random_deal(fen);
-	//now re-deal staged:
 	elem_from_to('agriculture', deck1, mimi.hand);
 	elem_from_to('comb', deck2, mimi.hand);
 	elem_from_to('metalworking', deck1, leo.hand);
 	elem_from_to('soap', deck2, leo.hand);
 	DA.staged_moves = ['mimi.hand.agriculture', 'leo.hand.metalworking', 'draw', 'draw', 'draw', 'draw', 'meld', 'meld', 'draw', 'draw', 'meld', 'meld'];
-	//wo kommen eigentlich die meld actions (hand_actions) hin? gleich die ersten provided hand hat cards!
 	DA.iter = 100;
 	return [fen, player_names];
 }
@@ -12301,7 +11299,6 @@ function inno_ut12_create_staged() {
 	let [decks, mimi, leo] = [fen.decks, fen.players.mimi, fen.players.leo];
 	let deck1 = decks.B[1]; let deck2 = decks.E[1];
 	inno_undo_random_deal(fen);
-	//now re-deal staged:
 	elem_from_to('code_of_laws', deck1, mimi.hand);
 	elem_from_to('puppet', deck2, mimi.hand);
 	elem_from_to('sailing', deck1, leo.hand);
@@ -12313,47 +11310,37 @@ function inno_ut12_create_staged() {
 function test_engine_run_next(list) {
 	if (nundef(list)) {
 		list = DA.test.list = arrRange(100, DA.test.number - 1); //[101, 102, 103];
-		//console.log('setting DA.test.list to',DA.test.list,'DA.test.number',DA.test.number)
 	}
-	//console.log('list',jsCopy(list))
 	if (isEmpty(list)) {
 		console.log('*** all tests finished ***');
 		DA.test.suiteRunning = DA.test.running = false;
 		shield_off();
-		//remove test shield!
 		return;
 	}
 	let n = list.shift();
-	//console.log('list',jsCopy(list));
 	DA.test.iter = 0;
 	onclick_ut_n('ari', n);
 }
 function verify_unit_test(otree) {
-	//console.log('hallo verify!')
 	if (isdef(DA.verify) && DA.test.iter == DA.iter_verify) {
 		DA.test.running = false;
 		let res = DA.verify(otree);
 		console.log('***UNIT TEST ' + DA.test.number, res ? 'passed...' : 'FAILED!!!!!!!!!!!!!!!!');
 		console.assert(res, '*** _ TEST FAIL ***')
-		//hier ist test zu ende!
-		//console.log('===>DA.test.list',DA.test.list);
 		if (DA.test.suiteRunning) test_engine_run_next(DA.test.list);
 	}
 	return true;
 }
 function add_to_chain(list) { DA.chain = DA.chain.concat(list); }
 function arisim_stage_3(fen) {
-	//move 2 cards from deck to market
 	top_elem_from_to(fen.deck, fen.market);
 	top_elem_from_to(fen.deck, fen.market);
 	if (fen.phase == 'jack') top_elem_from_to(fen.deck, fen.market);
 	fen.stage = 4;
 }
 function arisim_stage_4(fen, n_mimi = 2, n_leo = 3) {
-	//move 2 or 3 cards to stalls
 	for (let i = 0; i < n_mimi; i++) top_elem_from_to(fen.players.mimi.hand, fen.players.mimi.stall);
 	for (let i = 0; i < n_leo; i++)	top_elem_from_to(fen.players.leo.hand, fen.players.leo.stall);
-	//need to set num_actions! and iturn to player with least stall value!
 	fen.stage = 5;
 	let valmimi = fen.players.mimi.stall_value = arrSum(fen.players.mimi.stall.map(x => ari_get_card(x).val));
 	let valleo = fen.players.leo.stall_value = arrSum(fen.players.leo.stall.map(x => ari_get_card(x).val));
@@ -12361,10 +11348,8 @@ function arisim_stage_4(fen, n_mimi = 2, n_leo = 3) {
 	fen.iturn = fen.plorder.indexOf(minplayer); fen.turn = [minplayer];
 	fen.num_actions = fen.total_pl_actions = fen.players[minplayer].stall.length;
 	fen.action_number = 1;
-	//console.log('HAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAALLLLLLLLLLLLLOOOOOOOOO', minplayer, fen.num_actions)
 }
 function arisim_stage_4_all_mimi_starts(fen, n = 3) {
-	//move 2 or 3 cards to stalls
 	for (let i = 0; i < n; i++) top_elem_from_to(fen.players.mimi.hand, fen.players.mimi.stall);
 	let others = get_keys(fen.players).filter(x => x != 'mimi');
 	for (const uname of others) {
@@ -12375,11 +11360,9 @@ function arisim_stage_4_all_mimi_starts(fen, n = 3) {
 		fen.players[uname].stall_value = arrSum(fen.players[uname].stall.map(x => ari_get_card(x).val));
 		list.push({ uname: uname, val: fen.players[uname].stall_value });
 	}
-	//need to set num_actions! and iturn to player with least stall value!
 	fen.stage = 5;
 	list = sortBy(list, 'val');
 	let minplayer = list[0].uname;
-	//change minplayer stall with mimi stall and set mimi minplayer!
 	if (minplayer != 'mimi') {
 		console.log('NOT mimi!!! minplayer', minplayer)
 		let best_stall = fen.players[minplayer].stall;
@@ -12395,10 +11378,8 @@ function arisim_stage_4_all_mimi_starts(fen, n = 3) {
 	console.assert(fen.turn == ['mimi'], 'WTF?????????????????');
 	fen.num_actions = fen.total_pl_actions = fen.players[minplayer].stall.length;
 	fen.action_number = 1;
-	//console.log('HAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAALLLLLLLLLLLLLOOOOOOOOO', minplayer, fen.num_actions)
 }
 function arisim_stage_4_all(fen, n = 3, changeturn = true) {
-	//move 2 or 3 cards to stalls
 	for (let i = 0; i < n; i++) top_elem_from_to(fen.players.mimi.hand, fen.players.mimi.stall);
 	let others = get_keys(fen.players).filter(x => x != 'mimi');
 	for (const plname of others) {
@@ -12409,7 +11390,6 @@ function arisim_stage_4_all(fen, n = 3, changeturn = true) {
 		fen.players[plname].stall_value = arrSum(fen.players[plname].stall.map(x => ari_get_card(x).val));
 		list.push({ uname: plname, val: fen.players[plname].stall_value });
 	}
-	//need to set num_actions! and iturn to player with least stall value!
 	fen.stage = 5;
 	list = sortBy(list, 'val');
 	let minplayer = list[0].uname;
@@ -12417,40 +11397,29 @@ function arisim_stage_4_all(fen, n = 3, changeturn = true) {
 	if (changeturn) fen.turn = [minplayer];
 	fen.num_actions = fen.total_pl_actions = fen.players[fen.turn[0]].stall.length;
 	fen.action_number = 1;
-	//console.log('HAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAALLLLLLLLLLLLLOOOOOOOOO', minplayer, fen.num_actions)
 }
 function ari_test_hand_to_discard(fen, uname, keep = 0) {
 	let list = fen.players[uname].hand;
-	//fill up open discard
 	while (fen.open_discard.length < 4 && list.length > keep) top_elem_from_to(list, fen.open_discard);
 	while (list.length > keep) top_elem_from_to(list, fen.deck_discard);
-	//fen.players[uname].hand = [];
 }
 function stage_building_new(fen, i_pl, type, n_openschwein, n_closedschwein) {
 	let n = type == 'chateau' ? 6 : type == 'estate' ? 5 : 4;
 	let plname = fen.plorder[i_pl];
-	//console.log('fen',fen, plname);
 	lookupSet(fen.players[plname], ['buildings', type], []);
 	let building = { list: deck_deal(fen.deck, 1), h: null, type: type, schweine: [] };
-	//console.log('building.list', building.list);
 	let k = building.lead = building.list[0];
-	//console.log('===>lead',k,'n_openschwein', n_openschwein, 'n_closedschwein', n_closedschwein);
 	let other = k[0] == 'Q' ? '2' : 'Q';
 	let i, j;
 	for (i = 1; i <= n_openschwein; i++) { building.schweine.push(i); building.list.push(other + rSuit('CSHD') + 'n'); }
-	//console.log('i', i, 'j', j, 'n', n, 'n_openschwein', n_openschwein);
 	for (j = 1; j <= n_closedschwein; j++) { building.list.push(other + rSuit('CSHD') + 'n'); }
-	//console.log('i', i, 'j', j, 'n', n, 'n_closedschwein', n_closedschwein);
 	while (building.list.length < n) { building.list.push(k); j++; }
-	//console.log('i', i, 'j', j);
-	//console.log('building', type, building.list);
 	fen.players[plname].buildings[type].push(building); 
 	return building;
 }
 function stage_building(fen, i_pl, type) {
 	let n = type == 'chateau' ? 6 : type == 'estate' ? 5 : 4;
 	let plname = fen.plorder[i_pl];
-	//console.log('fen',fen, plname);
 	lookupSet(fen.players[plname], ['buildings', type], []);
 	let building = { list: deck_deal(fen.deck, n), h: null, type: type, schweine: [] };
 	building.lead = building.list[0];
@@ -12458,9 +11427,6 @@ function stage_building(fen, i_pl, type) {
 	return building;
 }
 function stage_correct_buildings(fen, o) { //unames, types, ranks) {
-	//eg. o={mimi:{farm:2,estate:2,chateau:1},leo:{farm:3}};
-	//only use yellow and green cards!
-	//first count how many ranks we need! or: take ranks der reihe nach
 	let ranks = toLetters('A23456789TJQK');
 	let irank = 0;
 	for (const uname in o) {
@@ -12479,29 +11445,11 @@ function stage_correct_buildings(fen, o) { //unames, types, ranks) {
 	}
 }
 function stage_replace_hand_cards_by(fen, uname, keys) { let i = 0; for (const key of keys) fen.players[uname].hand[i++] = key; }
+//#endregion sim
+
+//#region test
 function landing() { if (isdef(DA.landing)) DA.landing(); } //onclick_by_rank(); } //show_strategy_popup(); } //onclick_random(); }//show_history_popup(); }
 function start_tests() {
-	//dTable = mBy('dTable'); mCenterFlex(dTable); mStyle(dTable, { hmin: 500 }); mClass(dTable, 'wood')
-	//ltest6_bluff_skin();	//ltest11_ferro_discard(); //ltest10_ferro_sim();  //ltest5_jokerhtml(); 	//ltest4_sheriff(); 	//ltest0_card();
-	//ltest31_ferro_rollback(); //ltest29_ferro_play(); //ltest28_ferro_jolly_complex(); //ltest27_ferro_commands(); //ltest26_ferro_endgame(); //ltest12_ferro_buy();
-	//ltest21_spotit(); //ltest20_spotit_adaptive();	//	ltest23_aristo_building_downgrade();
-	//test100_partial_sequences(); 
-	//ltest44_ferro_7R(); //ltest37_ferro_4_players(); //ltest35_ferro_sequence_anlegen(); //ltest31_ferro_rollback();
-	//test_ferro_is_set(); //
-	//ltest43_fritz_discard_pile();
-	//ltest52_aristo_church_empty(); //ltest23_aristo_building_downgrade(); //ltest50_aristo_church();
-	//ltest55_fritz_set_with_same_suits(); //ltest54_fritz_outoftime();
-	//ltest56_algo_overlapping_sets(); //
-	//ltest55_fritz_set_with_same_suits();
-	//console.log('arrFunc',arrFunc(4,rCard));	console.log('rCard',rCard('r'));
-	//ltest59_arrTakeLast();
-	//ltest65_stamp(); //ltest58_aristo_building_rumor_harvest();
-	//ltest69_ferro_is_group(); //
-	//ltest70_aristo_church(); //ltest57_aristo();
-	//ltest82_ferro(); //ltest85_card_short_text(); //ltest83_svg();
-	//ltest89_aristo_journey();
-	//ltest93_bluff(); //ltest90_bluff(); //ltest90_bluff_ueberbiete();
-	//ltest82_ferro(); //ltest_aristo_simple(); //ltest110_fritz(); //ltest108_animate_coin(); //ltest38_ferro_end_of_round(); //ltest109_spotit(); //ltest93_bluff(); //ltest110_auction(); //ltest102_luxurycard(); //ltest101_commission(); //ltest100_auction();//ltest97_find_sequences(); //ltest96_aristo_visit(); //ltest95_aristo_rumor_action();
 	ltest99_fritz(); //ltest_aristo_simple(); //ltest105_aristo_church(); //ltest107_aristo_build(); //ltest111_start();
 }
 function ltest111_start() {
@@ -12529,20 +11477,8 @@ function ltest108_animate_coin() {
 	DA.auto_moves = [];
 	let playernames = [U.name, 'felix'];
 	DA.landing = () => {
-		// let d = iDiv(UI.player_stat_items[Z.uplayer]); //.dCoin;
 		d = UI.player_stat_items[Z.uplayer].dCoin;
 		anim1(d);
-		// let els = document.getElementsByTagName('div');
-		// //animate all els
-		// for (let i = 0; i < els.length; i++) {
-		// 	let x = els[i];
-		// 	let svg=x.getElementsByTagName('svg')[0];
-		// 	if (isdef(svg)) anim1(x);
-		// 	//if (startsWith(x.id,'u_') && mGetStyle(x,'height') == 100) anim1(x); 
-		// }
-		//console.log('was',ui);
-		//mPulse3(ui);
-		//anipulse(UI.player_stat_items[Z.uplayer].dCoin,3000,()=>console.log('HA!'));		
 	};
 	startgame('aristo', playernames.map(x => ({ name: x, playmode: 'human' })), { mode: 'hotseat' });
 }
@@ -12561,7 +11497,6 @@ function ltest110_auction() {
 	startgame('aristo', playernames.map(x => ({ name: x, playmode: 'human' })), { mode: 'hotseat', commission: 'no', rumors: 'no' });
 }
 function ltest109_ferro() {
-	//let x=length_of_each_array([[3,3,3],[4,4,4,4],[1,1],[5,5,5,5,5],[5,5,5,5,5]]);	console.log('x',x);
 	TESTING = true; DA.testing = true; DA.test = { mods: [give_player_achieve_5], iter: 0, maxiter: 200, running: false, step: true, suiteRunning: false, number: 0, list: [0] };
 	DA.test.end = () => { }; //console.log('discard:',Z.fen.deck_discard);}
 	DA.auto_moves = [];
@@ -12569,10 +11504,7 @@ function ltest109_ferro() {
 	startgame('ferro', playernames.map(x => ({ name: x, playmode: 'human' })), { mode: 'hotseat' });
 }
 function ltest108_aristo_inspect_schwein() {
-	//console.log('hallo');
-	//return;
 	TESTING = true; DA.testing = true; DA.test = { mods: [give_players_schweine_variety, set_queen_phase], iter: 0, maxiter: 200, running: false, step: true, suiteRunning: false, number: 0, list: [0] };
-	//console.log('hallo!!!!!!!!!!!!!');
 	DA.test.end = () => { };
 	DA.auto_moves = [];
 	let playernames = [U.name, 'felix'];
@@ -12594,7 +11526,6 @@ function ltest106_aristo_build() {
 }
 function ltest105_aristo_church() {
 	TESTING = true; DA.testing = true;
-	// DA.test = { mods: [give_players_stalls, make_church, set_player_tithes], iter: 0, maxiter: 200, running: false, step: true, suiteRunning: false, number: 0, list: [0] };
 	DA.test = { mods: [give_players_stalls, make_church], iter: 0, maxiter: 200, running: false, step: true, suiteRunning: false, number: 0, list: [0] };
 	DA.test.end = () => { }; //console.log('discard:',Z.fen.deck_discard);}
 	DA.auto_moves = [];//[['random']];
@@ -12749,17 +11680,10 @@ function ltest86_ferro() {
 }
 function ltest85_card_short_text() {
 	let dTable = mBy('dTable'); clearElement(dTable); mStyle(dTable, { hmin: 400 });
-	// let [d,ckey,sz]=[mDiv(dTable,{},null,`hallo das ist ein <span style='color:green;font-size:20px'>&spadesuit;</span>K`),'KSn',25];
 	let ckey = 'KCn';
 	let sz = 20;
-	//let d=mDiv(dTable,{},null,`hallo das ist ein ${mSuit(ckey,sz)}K`);
 	let d = mDiv(dTable, {}, null, `hallo das ist ein ${mCardText(ckey)}.`);
 	return;
-	//let card = cBlank(dTable); let d = iDiv(card); let sz = card.h / 6;
-	// let [d,ckey,sz]=[mDiv(dTable,{},null,'hallo das ist ein '),'KSn',25];
-	// let s1 = mSuit(ckey, d, { w: sz, h: sz }); //console.log('s1', s1);
-	// mStyle(s1,{display:'inline-block',matop:4});
-	// d.innerHTML += 'K';
 }
 function ltest84_svg() {
 	let dTable = mBy('dTable'); clearElement(dTable); mStyle(dTable, { hmin: 400 })
@@ -12777,13 +11701,8 @@ function ltest83_svg() {
 	card = cBlankSvg(dTable);
 	console.log('card', card); //mClass(iDiv(card),'hoverScale')
 	let g = iG(card); //console.log('g', g);
-	//1 produce
 	let x = mgSuit('Pik'); //console.log('x', x);
-	//2 attach
-	//mAppend(iG(card),x); // braucht man nicht!
-	//3 size
 	mgSize(x, 40);
-	//4 position
 	mgPos(card, x); //,50,50);
 }
 function ltest83_ferro_multi() {
@@ -12906,7 +11825,6 @@ function ltest67_aristo_blackmail_owner() {
 }
 function ltest66_stamp_style() {
 	dTable = mBy('dTable'); mClass('dTexture', 'wood'); mCenterFlex(dTable);
-	//let d=mDiv(dTable,{},null,'HALLO');
 	let hand = ['2Hn', '3Hn', '4Hn', '5Hn', '6Hn', '7Hn', '8Hn', '9Hn', 'THn', 'JHn', 'QHn', 'KHn', 'AHn'];
 	let ui = ui_type_hand(hand, dTable);
 	mStamp(ui.container, 'blackmail');
@@ -12966,7 +11884,6 @@ function ltest57_aristo() {
 	startgame('aristo', playernames.map(x => ({ name: x, playmode: 'human' })), { mode: 'hotseat' });
 }
 function ltest56_algo_overlapping_sets() {
-	// let cards = ['2Hn','3Hn','4Hn','5Hn','6Hn','7Hn','7Cn','7Dn','7Hn'].map(x=>({key:x,suit:x[0],rank:x[1]}));
 	let cards = ['2Hn', '3Hn', '4Hn', '5Hn', '6Hn', '7Hn', '7Cn', '7Dn', '7Hn'].map(x => fritz_get_card(x));
 	let res = is_overlapping_set(cards, 1, 3, false); //ok
 	console.log('res:', res);
@@ -13094,9 +12011,6 @@ function ltest44_ferro_7R() {
 	startgame('ferro', [{ name: U.name, playmode: 'human' }, { name: 'amanda', playmode: 'human' }, { name: 'felix', playmode: 'human' }, { name: 'gul', playmode: 'human' }], { mode: 'hotseat' });
 }
 function test_ferro_is_set() {
-	//wie  mach ich auf einfachste art ein Z?
-	//startgame('fritz', [{ name: U.name, playmode: 'human' }, { name: 'amanda', playmode: 'human' }], { mode: 'hotseat' });
-	//Z = { options: { jokers_per_group: 1 } };
 	let cards = ['9Sn', '7Sn', '8Sn', '9Sn'].map(x => fritz_get_card(x));
 	let set = ferro_is_set(cards, 1, 3);
 	console.log(set);
@@ -13300,7 +12214,6 @@ function ltest6_bluff_skin() {
 	startgame('bluff', [{ name: 'valerie', playmode: 'human' }, { name: 'felix', playmode: 'human' }], { mode: 'hotseat' });
 }
 function ltest5_jokerhtml() {
-	//let d=mDiv(dTable,{},null,'HALLO');return;
 	let html = `
 		<div style="position: absolute; top: 0px; left: 0px; width: 200px; height: 300px; background: blue">
 			HALLLLLLLLLLLLLLLLLLLLOOOOOOOOOOOOOOOOOOO
@@ -13356,14 +12269,6 @@ function ltest4_sheriff() {
 	for (const name in di) { let c = sheriff_card(name); mAppend(dTable, iDiv(c)); }
 }
 function ltest3_card() {
-	// let name, type, color, c;
-	// [name, type, color] = ['cheese', 'legal', 'lightgoldenrodyellow'];
-	// [name, type, color] = ['pretzel', 'legal', 'lightgoldenrodyellow']; c = sheriff_card(name, type, color); mAppend(dTable, iDiv(c));
-	// [name, type, color] = ['pineapple', 'legal', 'lightgoldenrodyellow']; c = sheriff_card(name, type, color); mAppend(dTable, iDiv(c));
-	// [name, type, color] = ['mead', 'contraband', 'lightgoldenrodyellow']; c = sheriff_card(name, type, color); mAppend(dTable, iDiv(c));
-	// [name, type, color] = ['silk', 'contraband', 'lightgoldenrodyellow']; c = sheriff_card(name, type, color); mAppend(dTable, iDiv(c));
-	// [name, type, color] = ['crossbow', 'contraband', 'lightgoldenrodyellow']; c = sheriff_card(name, type, color); mAppend(dTable, iDiv(c));
-	// [name, type, color] = ['pepper', 'contraband', 'lightgoldenrodyellow']; c = sheriff_card(name, type, color); mAppend(dTable, iDiv(c));
 	let di = SHERIFF.cards;
 	for (const name in di) {
 		let c = sheriff_card(name); //, color); 
@@ -13379,8 +12284,6 @@ function ltest2_card() {
 	ds = mText('APPLES', d, { family: 'Algerian', w: '100%', fz: 12, align: 'center', position: 'absolute', bottom: 0 });//mPlace(ds,'tc',0,8)
 	ds = mSymText(2, d, { sz: 25, rounding: '50%', bg: 'crimson', margin: 3 }, 'br');
 	ds = mSym('green apple', d, { sz: 70 }, 'cc');
-	// ds = mText('penalty:',d,{fz:12,display:'inline'});mPlace(ds,'bc',0,8)
-	//set_card_border(c,5,'lime')
 }
 function ltest1_card() { let c = cLandscape(dTable, { margin: 12 }); }
 function ltest0_card() { let c = ari_get_card('QSn'); mAppend(dTable, iDiv(c)); }
@@ -13493,13 +12396,6 @@ function fentest4_emptyvotes_no_policies() {
 function fentest3_clear_players() {
 	let [game, A, fen, uplayer, plorder] = [Z.game, Z.A, Z.fen, Z.uplayer, Z.plorder];
 	take_turn_fen_clear();
-	// let pl = fen.players[plorder[0]];
-	// pl.hand = ['3Hn','3Hn', '3Hn', '3Hn'];
-	// pl = fen.players[plorder[1]];
-	// pl.journeys = [['3Cn','3Hn', '3Hn', '3Hn']];
-	// pl.goals['4'] = true;
-	// pl.hand = ['3Hn','KSn'];
-	// take_turn_fen();
 }
 function fentest2_accuse() {
 	TESTING = true; DA.testing = true; DA.test = { mods: [], iter: 0, maxiter: 200, running: false, step: true, suiteRunning: false, number: 0, list: [0] };
@@ -13508,7 +12404,6 @@ function fentest2_accuse() {
 	let numplayers = 5;
 	let list = jsCopy(Serverdata.users).map(x => x.name);
 	let list1 = arrWithout(list, ['mimi', 'felix']);
-	//console.log('list1',list1)
 	let playernames = arrTake(list1, numplayers - 2);
 	playernames = ['mimi', 'felix'].concat(playernames);
 	startgame('accuse', playernames.map(x => ({ name: x, playmode: ['mimi', 'felix'].includes(x) ? 'human' : 'bot' })), { mode: 'hotseat' });
@@ -13521,12 +12416,8 @@ function fentest_accuse() {
 	let list = jsCopy(Serverdata.users).map(x => x.name);
 	let list1 = arrWithout(list, ['mimi', 'felix']);
 	console.log('list1', list1)
-	//let list = jsCopy(Serverdata.users);
-	//['mimi','felix'].map(x=>removeInPlace(list,x));
 	let playernames = arrTake(list1, numplayers - 2);
 	playernames = ['mimi', 'felix'].concat(playernames);
-	//playernames.unshift(U.name); //[U.name, 'felix'];
-	//startgame('aristo', playernames.map(x => ({ name: x, playmode: 'human' })), { mode: 'hotseat' });
 	startgame('accuse', playernames.map(x => ({ name: x, playmode: ['mimi', 'felix'].includes(x) ? 'human' : 'bot' })), { mode: 'multi' });
 }
 function fentest_wise() {
@@ -13534,7 +12425,6 @@ function fentest_wise() {
 	DA.test.end = () => { };
 	DA.auto_moves = [];
 	let playernames = [U.name, 'felix'];
-	//startgame('aristo', playernames.map(x => ({ name: x, playmode: 'human' })), { mode: 'hotseat' });
 	startgame('wise', playernames.map(x => ({ name: x, playmode: 'human' })), { mode: 'hotseat' });
 }
 function fentest10_ferro_end_of_round_goals() {
@@ -13556,7 +12446,6 @@ function fentest9_ferro_transation_error() {
 	pl.hand = ['3Hn', '3Hn', '3Hn', '2Cn', '2Cn', '2Cn', '*Cn', 'ACn', '*Cn'];
 	Z.turn = ['mimi'];
 	let other = firstCond(Z.playerlist, x => x != uplayer);
-	//console.log('other', other);
 	pl = fen.players[other];
 	pl.goals['4'] = true;
 	pl.journeys = [['3Hn', '3Hn', '3Hn'], ['AHn', 'ACn', 'ACn', '*Cn']];
@@ -13576,7 +12465,6 @@ function fentest7_gameover() {
 	else if (game == 'spotit') {
 		for (const plname in fen.players) { fen.players[plname].score = Z.options.winning_score - 1; }
 		take_turn_fen();
-		//fen.players[uplayer].score = Z.options.winning_score - 1;
 	} else if (game == 'bluff') {
 		let pl = fen.players[uplayer];
 		while (pl.handsize < Z.options.max_handsize) inc_handsize(fen, uplayer); //.handsize = Z.options.max_handsize; }
@@ -13587,7 +12475,6 @@ function fentest7_gameover() {
 function fentest6_endgame() {
 	let [A, fen, uplayer] = [Z.A, Z.fen, Z.uplayer];
 	fen.actionsCompleted = [];
-	//erstmal: jeder bakommt ein chateau + 1 or 2 random buildings!
 	for (const plname of fen.plorder) {
 		add_a_correct_building_to(fen, plname, 'chateau');
 		add_a_correct_building_to(fen, plname, rChoose(['farm', 'estate', 'chateau']));
@@ -13598,11 +12485,9 @@ function fentest6_endgame() {
 	for (const plname of fen.plorder) {
 		let bcorrect = ari_get_correct_buildings(fen.players[plname].buildings);
 		let can_end = ari_check_end_condition(bcorrect);
-		//console.log('end cond met:', can_end ? 'yes' : 'no');
 		if (can_end) fen.pl_gameover.push(plname);
 	}
 	if (isEmpty(fen.pl_gameover)) { console.log('try again!!!!!!!!!!!'); return; }
-	//test_skip_to_actions();
 	Z.stage = 10;
 	Z.phase = 'king';
 	take_turn_fen(true);
@@ -13615,12 +12500,9 @@ function fentest5_market_opens() {
 function fentest4_visit() {
 	let [A, fen, uplayer] = [Z.A, Z.fen, Z.uplayer];
 	fen.actionsCompleted = [];
-	//erstmal: jeder bakommt ein chateau + 1 or 2 random buildings!
 	for (const plname of fen.plorder) {
 		add_a_schwein(fen, plname);
-		//if (coin()) add_a_correct_building_to(fen, plname, rChoose(['farm', 'estate', 'chateau']));
 	}
-	//test_skip_to_actions();
 	Z.stage = 5;
 	Z.phase = 'queen';
 	take_turn_fen();
@@ -13808,7 +12690,6 @@ function test_ferro_goal_sorting() {
 	let av = ['7R', '3', '5', '33'];
 	av = ['33', '3', '5', '4'];
 	av.sort((a, b) => Z.fen.allGoals.indexOf(a) - Z.fen.allGoals.indexOf(b));
-	//console.log('ergebnis:',av);
 	return av;
 }
 function test100_partial_sequences() {
@@ -13823,20 +12704,6 @@ function test100_partial_sequences() {
 	sortCardItemsToSequence(items);
 }
 function test12_try_svg() {
-	// let d = iDiv(item);
-	// let svg = findDescendantOfType('svg', d);
-	// let rect = findDescendantOfType('rect', svg);
-	// let rs = Array.from(d.getElementsByTagName('rect'));
-	// let rlast = arrLast(rs);
-	// let rfirst = arrFirst(rs);
-	// // rlast.setAttribute('fill', colorFrom(styles.bg));
-	// // rlast.setAttribute('stroke', colorFrom(styles.fg)); //border vom auesseren rect
-	// // //rfirst.setAttribute('fill', 'pink'); //das loescht den path aus! 
-	// // rfirst.setAttribute('stroke', 'lime'); //border von innerem rect (bei Q)
-	// svg.setAttribute('fill', colorFrom(styles.bg));
-	// svg.setAttribute('stroke', colorFrom(styles.fg)); //border vom auesseren rect
-	//fuer bg muss ich rect fill attribute setzen
-	// svg.setAttribute('fill',colorFrom(styles.bg));
 }
 function test11_cardcoloring() {
 	let dTable = mBy('dTable'); clearElement(dTable);
@@ -13856,29 +12723,15 @@ function test10_0() {
 	`
 }
 function testKartePositionSuit() {
-	//stress test: for (let i = 0; i < 100; i++) { testKartePositionSuit(); }
 	let dTable = mBy('dTable'); clearElement(dTable); mStyle(dTable, { hmin: 400 })
-	//mStyle(dTable, { gap: 10 }); 
 	let card = cBlank(dTable); let d = iDiv(card); let sz = card.h / 6;
-	//console.log('card', card);
-	//alles auf einmal:
-	//let sz = 30;
 	let i = 0;
 	for (let suit of ['H', 'S', 'D', 'C']) {
 		let s1 = mSuit(suit, d, { w: sz, h: sz }); //console.log('s1', s1);
 		mPos(s1, sz * i, 0); i++;
 	}
-	// let s2 = mSuit('Herz', d, { sz: sz }, 'cr'); //console.log('s2', s2);
-	// let s3 = mSuit('Herz', d, { sz: sz }, 'bc'); //console.log('s3', s3);
-	// let s4 = mSuit('Herz', d, { sz: sz }, 'cl'); //console.log('s4', s4);
-	// let s5 = mSuit('Pik', d, { sz: sz * 2 }, 'cc'); //console.log('s5', s5);
-	// s5 = mSuit('Treff', d, { sz: sz * 1.5 }, 'tl'); //console.log('s5', s5);
-	// s5 = mSuit('Treff', d, { sz: sz * 1.5 }, 'tr'); //console.log('s5', s5);
-	// s5 = mSuit('Treff', d, { sz: sz * 1.5 }, 'bl'); //console.log('s5', s5);
-	// s5 = mSuit('Treff', d, { sz: sz * 1.5 }, 'br'); //console.log('s5', s5);
 }
 function test10_verrueckt() {
-	//let item = ari_get_card('QSn',200);	mAppend(dTable,iDiv(item));
 	let styles = { bg: 'yellow', fg: 'red', border: 'random', thickness: 20, shadow: 'green', rotate: 45, scale: 2 };
 	let html = `
 			<svg
@@ -14135,7 +12988,6 @@ function ensure_market(fen, n) { fen.stallSelected = []; deck_add(fen.deck, n - 
 function ensure_stall(fen, uplayer, n) { let pl = fen.players[uplayer]; deck_add(fen.deck, n - pl.stall.length, pl.stall); }
 function ensure_stallSelected(fen) { if (nundef(fen.stallSelected)) fen.stallSelected = []; }
 function add_rumors_to_buildings(o) {
-	//console.log('deck', jsCopy(otree.deck));
 	fen = o.fen;
 	for (const plname of fen.plorder) {
 		let buildings = fen.players[plname].buildings;
@@ -14157,7 +13009,6 @@ function add_a_correct_building_to(fen, uname, type) {
 	let keys = [`${r}Sn`, `${r}Hn`, `${r}Cn`, `${r}Dn`];
 	if (type != 'farm') keys.push(`${r}Cn`); if (type == 'chateau') keys.push(`${r}Hn`);
 	fen.players[uname].buildings[type].push({ list: keys, h: null });
-	//console.log('keys', keys);
 }
 function add_a_schwein(fen, uname) {
 	let type = rChoose(['farm', 'estate', 'chateau']);
@@ -14180,7 +13031,6 @@ function drawcard(key, dParent, sz) {
 	let bottom = sz >= 300 ? 0 : sz >= 200 ? -1 : sz >= 100 ? -2 : -3;
 	let matop = (sz - h) / 2;
 	let html = `<img height=${sz / 3} src="./base/assets/images/icons/deco0.svg" style="transform:scaleX(-1);">`;
-	// d1 = mDiv(d, {position:'absolute',top:matop,left:left}, null, html); 
 	d1 = mDiv(d, { position: 'absolute', bottom: bottom, left: left, opacity: .5 }, null, html);
 	let dt = mDiv(d, { family: 'Algerian' }, null, 'luxury');
 	mPlace(dt, 'tc', 0, '50%')
@@ -14304,7 +13154,6 @@ function give_other_various_buildings(o) {
 function give_various_buildings_to(o, plname) {
 	let [fen, uplayer] = [o.fen, o.fen.turn[0]];
 	let i = fen.plorder.indexOf(plname);
-	//console.log('other is',plname,'index',i,'plorder',fen.plorder);
 	let b1 = stage_building(fen, i, 'farm'); b1.rumors = ['KHr'];
 	let b2 = stage_building(fen, i, 'farm');
 	let lead = b2.lead; //console.log('lead', lead);
@@ -14496,18 +13345,14 @@ function set_blackmail_owner_stage_defend(o) {
 function set_blackmail_owner_stage(o) {
 	set_queen_phase(o); //hier wird manchmal trn geaendert!!!
 	let fen = o.fen;
-	//console.log(fen)
 	let uplayer = fen.turn[0];
 	console.log('blackmailed is', uplayer)
 	give_various_buildings_to(o, uplayer);
 	let other = firstCond(fen.plorder, (p) => p != uplayer);
-	//console.log('uplayer',uplayer,'other',other,'fen',fen.players[uplayer].buildings);
 	let building = get_building_with_rumor(o.fen, uplayer);
-	//console.log('building',building);
 	let payment = { o: null, a: 'coin', key: 'coin', friendly: 'coin', path: null };
 	fen.blackmail = { blackmailer: other, blackmailed: uplayer, payment: payment, building_path: building.path };
 	building.isblackmailed = true;
-	// console.log('blackmail',fen.blackmail);
 	fen.stage = o.stage = 33;
 }
 function set_player_tithes(o) {
@@ -14524,7 +13369,6 @@ function set_player_tithes(o) {
 	let sorted = sortByDescending(fen.plorder, x => fen.players[x].tithes.val);
 	fen.church_order = jsCopy(fen.plorder);
 	fen.tithe_minimum =
-		//fen.selection_order = sorted;
 		fen.stage = 21;
 }
 function set_auction_phase(o) {
@@ -14533,10 +13377,6 @@ function set_auction_phase(o) {
 	fen.turn = [fen.plorder[0]];
 	fen.stage = 12;
 	ensure_market(fen, 3);
-	//fen.market=['2Hn','2Hn','2Hn'];  //test uniqueness wenn mehrere cards gleich sind: sollte KAUFEN koennen!!!!
-	// arisim_stage_3(fen);
-	// arisim_stage_4_all(fen, 3, false);
-	// ensure_actions(fen);
 }
 function set_king_phase(o) { set_queen_phase(o); o.phase = o.fen.phase = 'king'; }
 function set_queen_phase(o) {
@@ -14555,16 +13395,16 @@ function small_hands(o) {
 		pl.hand = arrTake(pl.hand, 7); //journeys.push(['4Hn', '4Sn', '*Hn']);
 	}
 }
+//#endregion test
+
+//#region accuse
 function accuse() {
 	function state_info(dParent) {
 		let histinfo = !isEmpty(Z.fen.generations) ? '(' + Z.fen.generations.map(x => x.color == 'white' ? '_' : x.color).join(', ') + ')' : '';
-		//console.log('generations', histinfo);
 		dParent.innerHTML = Z.phase > Z.options.rounds ? `game over ${histinfo}!` : `generation ${Z.fen.phase}/${Z.options.rounds} ${histinfo}`; //`phase: ${Z.phase}, turn: ${Z.turn}, stage:${Z.stage}`; 
 		return false;
 	}
 	function setup(players, options) {
-		//console.log('SETUP!!!!!!!!!!!!!!!!!!!')
-		//console.log('players', players, 'options', options)
 		let fen = {
 			players: {}, plorder: jsCopy(players),
 			history: [{ title: '*** game start ***', lines: [] }],
@@ -14580,12 +13420,9 @@ function accuse() {
 			for (const c of fen.colors) {
 				deck_identities.push(c);
 			}
-			// deck_identities.push(ranks[i] + 'Hh'); deck_identities.push(ranks[i] + 'Sh'); 
 		}
 		shuffle(deck_identities);
-		//console.log('plorder', plorder)
 		for (const plname of plorder) {
-			//console.log('plname', plname)
 			let pl = fen.players[plname] = {
 				score: 0,
 				experience: 0,
@@ -14594,20 +13431,16 @@ function accuse() {
 				color: get_user_color(plname),
 			};
 		}
-		//each player gets idright = idleft of next player
 		for (let i = 0; i < plorder.length; i++) {
 			let j = (i + 1) % plorder.length;
 			fen.players[plorder[i]].idright = fen.players[plorder[j]].idleft;
 		}
 		[fen.phase, fen.stage, fen.step, fen.turn] = ['1', 'membership', 0, jsCopy(fen.plorder)];
 		start_new_generation(fen, fen.plorder, options);
-		//show_sitting_order
-		//accuse_show_sitting_order(fen);
 		return fen;
 	}
 	function check_gameover() {
 		if (Z.phase <= Z.fen.rounds) return false;
-		//end reached: final scoring:
 		let [fen, num] = [Z.fen, Z.fen.rounds];
 		for (const plname in fen.players) {
 			let pl = fen.players[plname];
@@ -14617,25 +13450,20 @@ function accuse() {
 				if (sess.color == cleft) pl.score += 1;
 				if (sess.color == cright) pl.score += 1;
 			}
-			//if ( == color) pl.score += num;
-			//if (get_color_of_card(pl.idright) == color) pl.score += num;
 		}
 		let playerlist = dict2list(fen.players, 'name');
 		let sorted = sortByDescending(playerlist, 'score');
-		//console.log('scores', sorted.map(x => `${x.name}:${x.score}`));
 		let max_score = sorted[0].score;
 		let all_winners = sorted.filter(x => x.score == max_score);
 		let sorted2 = sortByDescending(all_winners, 'experience');
 		let max_experience = sorted2[0].experience;
 		let all_experience = sorted2.filter(x => x.experience == max_experience);
 		fen.winners = all_experience.map(x => x.name);
-		//console.log('generations:', fen.generations)
 		return fen.winners;
 	}
 	return { state_info, setup, present: accuse_present, check_gameover, activate_ui: accuse_activate };
 }
 function accuse_present(dParent) {
-	//console.log('options',Z.options)
 	mStyle(mBy('dTitle'), { display: 'grid', 'grid-template-columns': 'auto 1fr auto', h: 32 });
 	DA.no_shield = true;
 	let [fen, ui, stage, uplayer] = [Z.fen, UI, Z.stage, Z.uplayer];
@@ -14648,10 +13476,8 @@ function accuse_present(dParent) {
 	let [hpolcard, hvotecard, himg, hstatfz, hnetcard, hhandcard, gap] = [hsm, hlg, 50, 8, hsm, hlg, 4];
 	let [hpol, hstat, hhand] = [hpolcard + 25, hvotecard + himg + hstatfz * 5 + gap * 2, hhandcard + 25];
 	let [d1, d2, d3, d4, d5] = [mDiv(dt), mDiv(dt), mDiv(dt), mDiv(dt), mDiv(dt)];
-	// *** d1 policies ***
 	let [color, n] = get_policies_to_win();
 	UI.policies = ui_type_accuse_policies(fen.policies, d1, { h: hpol }, '', 'policies', accuse_get_card_func(hsm, GREEN), false);
-	//UI.policies.items.map(x=>mStyle(iDiv(x),{border:x.bg,bg:'silver'})); //:.75}))
 	mStyle(d1, { h: isEmpty(fen.policies) ? 40 : hpol, w: '90%', display: 'flex', gap: 12 })
 	let msg = color == 'any' ? `${n} policies are needed to win!` : n <= 0 ? `${capitalize(color)} wins generation ${fen.generations.length}!` : `${capitalize(color)} needs ${n} more policies`
 	let x = mDiv(d1, { h: isEmpty(fen.policies) ? 40 : hpolcard }, null, msg); mCenterCenterFlex(x)
@@ -14661,9 +13487,7 @@ function accuse_present(dParent) {
 	let wouter = '95%';
 	let order = get_present_order();
 	let me = order[0];
-	// *** d2 players ***
 	if (Z.phase > Z.options.rounds) show_playerstats_over(d2); else show_playerstats_orig(d2);
-	// *** d3 me ***
 	mStyle(d3, { hmin: hstat, w: wouter }); mCenterFlex(d3);
 	let dnet = mDiv(d3, { w: wneeded });
 	let wrest = wneeded - 2 * himg;
@@ -14678,26 +13502,21 @@ function accuse_present(dParent) {
 	let dx = accuse_player_stat(dme_stats, me, hvotecard, himg, hstatfz, gap);
 	let d_idleft = mDiv(dnet, { w: 64, padding: par });
 	let idleft = get_color_card(pl.idleft, hnetcard); mAppend(d_idleft, iDiv(idleft))
-	// *** d4 hand ***
 	mStyle(d4, { margin: 10, h: hhand, w: '90%' }); mCenterFlex(d4);
 	let handui = ui_type_accuse_hand(pl.hand, d4, { h: hhand }, `players.${uplayer}.hand`, 'hand', accuse_get_card_func(hhandcard));
 	lookupSetOverride(ui, ['players', uplayer, 'hand'], handui);
 	presentcards(hvotecard);
-	// *** show membership color for me (or in 'round' stage for all)
 	let plnames = stage == 'round' || stage == 'gameover' ? order : [me];
 	plnames.map(x => show_membership_color(x, hnetcard, himg));
 }
 function accuse_activate() {
 	let [pldata, stage, A, fen, phase, uplayer, turn, uname, host] = [Z.playerdata, Z.stage, Z.A, Z.fen, Z.phase, Z.uplayer, Z.turn, Z.uname, Z.host];
 	let donelist = Z.playerdata.filter(x => isDict(x.state) && isdef(x.state.item));
-	//if (!isEmpty(donelist)) console.log('.................donelist',donelist)
 	let complete = ['hand', 'membership', 'tied_consensus'].includes(stage) && donelist.length >= turn.length || stage == 'round' && firstCond(pldata, x => isDict(x.state));
 	if (complete && !sameList(turn, [Z.host])) {
-		//console.log('COMPLETE! donelist', donelist)
 		relegate_to_host(donelist);
 		return;
 	}
-	//if still here and multiturn: it cannot be complete or Z.host is only player on turn now!
 	let waiting = isdef(donelist.find(x => x.name == uplayer)) && turn.length > 1;
 	assertion(!complete || sameList(turn, [Z.host]), 'complete hat nicht zu host uebergeben!!!!!!!!!!')
 	assertion(!complete || !waiting, 'ERROR WAITING WHEN COMPLETE!!!')
@@ -14705,23 +13524,19 @@ function accuse_activate() {
 	assertion(turn.length == 1 || ['membership', 'hand', 'round'].includes(stage), "FALSCHE ASSUMPTION!!!!!!!!!!!!!");
 	if (turn.length == 1) check_experience_states();
 	if (waiting) {
-		//console.log('WAITING!!', stage, uplayer);
 		accuse_show_selected_state(donelist.find(x => x.name == uplayer).state);
 		if (Z.mode != 'multi') { take_turn_waiting(); return; }
 		autopoll();
 	} else if (stage == 'handresolve') {
 		assertion(uplayer == Z.host && fen.cardsrevealed, 'NOT THE STARTER WHO COMPLETES THE STAGE!!!')
-		//console.log('RESOLVING votes on click!!!!!!!!!!!!!')
 		DA.gobutton = mButton('evaluate cards', accuse_evaluate_votes, dTable, {}, ['donebutton', 'enabled']);
 	} else if (stage == 'membershipresolve') {
 		assertion(uplayer == Z.host, 'NOT THE STARTER WHO COMPLETES THE STAGE!!!')
-		//console.log('RESOLVING membership!!!!!!!!!!!!!')
 		let histest = [];
 		for (const pldata of fen.pldata) { //Z.playerdata) {
 			let plname = pldata.name;
 			let card = pldata.state.item;
 			assertion(!isEmpty(card), "INVALID MEMBERSHIP SELECTION!!!!!!!!!!!!", uplayer)
-			//selected card goes from hand to membership
 			let pl = fen.players[plname];
 			pl.membership = card;
 			removeInPlace(pl.hand, card);
@@ -14731,7 +13546,6 @@ function accuse_activate() {
 		start_new_poll();
 	} else if (stage == 'roundresolve') {
 		assertion(uplayer == Z.host, 'NOT THE STARTER WHO COMPLETES THE STAGE!!!')
-		//console.log('RESOLVING round => new generation!!!!!!!!!!!!!')
 		Z.turn = jsCopy(Z.plorder);
 		Z.phase = Number(Z.phase) + 1;
 		stage = Z.stage = Z.phase > fen.rounds ? 'gameover' : 'membership';
@@ -14746,7 +13560,6 @@ function accuse_activate() {
 		if (parley_action_available) {
 			select_add_items(ui_get_string_items(['parley']), president_parley, 'may parley cards', 0, 1);
 		} else {
-			//proceed to president_2
 			Z.stage = 'president_2';
 			accuse_activate();
 		}
@@ -14786,7 +13599,6 @@ function accuse_activate() {
 	} else if (stage == 'hand') {
 		select_add_items(ui_get_hand_items(uplayer), accuse_submit_card, 'may select card to play', 0, 1);
 	} else if (stage == 'round') {
-		//let d = mDiv(dTable, {}, null, `generation end! ${fen.generations[fen.phase - 1].color} wins`);
 		show_special_message(`generation end! ${fen.generations[fen.phase - 1].color} wins`, false, 3000, 0, { top: 67 })
 		if (is_ai_player(uplayer)) accuse_onclick_weiter();
 		else {
@@ -14794,16 +13606,13 @@ function accuse_activate() {
 			mButton('WEITER', accuse_onclick_weiter, dTable, {}, ['donebutton', 'enabled']);
 		}
 	} else {
-		//console.log('Z',Z)
 		alert(`PROBLEM!!! unknown stage ${stage}`)
 	}
 }
 function president_action() {
 	let [A, uplayer, fen] = [Z.A, Z.uplayer, Z.fen];
 	let action = A.items[A.selected[0]].a;
-	//console.log('president', Z.uplayer, 'selects action', action)
 	if (action == 'accuse') {
-		//Z.stage = fen.isprovisional ? 'pay_for_accuse' : 'accuse_action_select_player';
 		Z.stage = 'accuse_action_select_player'; //provisional does NOT pay anymore
 		accuse_activate();
 	} else if (action == 'parley') {
@@ -14829,7 +13638,6 @@ function pay_for_accuse_action() {
 function accuse_submit_accused() {
 	let [A, uplayer, fen] = [Z.A, Z.uplayer, Z.fen];
 	let plname = A.items[A.selected[0]].a;
-	//console.log('president', Z.uplayer, 'accuses', plname);
 	fen.accused = plname;
 	Z.stage = 'accuse_action_select_color';
 	ari_history_list(`${uplayer} accuses ${plname}`, 'accuse')
@@ -14838,32 +13646,22 @@ function accuse_submit_accused() {
 function accuse_submit_accused_color() {
 	let [A, uplayer, fen, accused] = [Z.A, Z.uplayer, Z.fen, Z.fen.accused];
 	let color = A.items[A.selected[0]].a;
-	//console.log('president', uplayer, 'accused', accused, 'of being', color);
-	//now check the color
 	let card = fen.players[accused].membership;
 	let real_color = get_color_of_card(card);
 	ari_history_list(`${uplayer} guesses ${color == real_color ? 'CORRECT' : 'WRONG'} (${color})`, 'accuse')
 	console.log(`PRESIDENT GUESSES ${color == real_color ? 'CORRECT' : 'WRONG!!!'}!!!`);
 	fen.msg = `PRESIDENT GUESSES ${color == real_color ? 'CORRECT' : 'WRONG!!!'}!!!`;
 	if (color == real_color) {
-		//guess was correct!
-		//president keeps membership card
-		//accused needs to replace membership card
-		//console.log('PRESIDENT GUESSES CORRECTLY!!!')
 		Z.turn = [accused];
-		//console.log(fen.players[uplayer], fen.players[uplayer].hand, card)
 		fen.players[uplayer].hand.push(card);
 		fen.wrong_guesses = 0;
 		delete fen.players[accused].membership;
 		Z.stage = 'accuse_action_entlarvt';
 		take_turn_fen_clear(); //!!!!clear added!!!!
 	} else {
-		//console.log('PRESIDENT GUESSES WRONG!!!!!!!!!!!!');
 		Z.turn = [accused];
 		fen.players[accused].hand.push(card);
 		fen.wrong_guesses += 1;
-		//fen.president = accused;
-		//fen.isprovisional = true;
 		delete fen.players[accused].membership;
 		Z.stage = 'accuse_action_provisional';
 		take_turn_fen_clear(); //!!!!clear added!!!!
@@ -14873,7 +13671,6 @@ function accuse_replaced_membership() {
 	let [stage, A, uplayer, fen, accused] = [Z.stage, Z.A, Z.uplayer, Z.fen, Z.fen.accused];
 	assertion(accused == uplayer, "accuse_replace_membership: WRONG PLAYER!!!!")
 	let card = A.items[A.selected[0]].a;
-	//remove from hand, set membership
 	let pl = fen.players[uplayer];
 	accuse_discard(pl.membership)
 	pl.membership = card;
@@ -14892,23 +13689,18 @@ function accuse_replaced_membership() {
 function accuse_enact_policy() {
 	let [A, uplayer, fen, accused] = [Z.A, Z.uplayer, Z.fen, Z.fen.accused];
 	let card = isEmpty(A.selected) ? '' : A.items[A.selected[0]].a;
-	//this card is chosen as a policy
 	if (!isEmpty(card)) {
 		lookupAddToList(fen, ['policies'], get_color_of_card(card));
 		removeInPlace(fen.players[uplayer].hand, card);
 		ari_history_list(`${uplayer} enacts a ${get_color_of_card(card)} policy`, 'policy')
-		//look if last X policies are same color =>dominance
 		let policies_needed = fen.stability - fen.crisis;
 		let arr = arrTakeLast(fen.policies, policies_needed);
 		let color = arrAllSame(arr, get_color_of_card);
 		if (color && arr.length >= policies_needed) {
-			//generation ends here!!! 
 			fen.dominance = true;
 			ari_history_list(`${color} dominance reached!`, 'generation ends')
-			//update score
 			accuse_score_update(color);
 			Z.turn = jsCopy(Z.plorder);
-			//Z.phase += 1
 			Z.stage = 'round';
 			take_turn_fen_clear();
 		} else {
@@ -14921,7 +13713,6 @@ function accuse_enact_policy() {
 function set_new_president() {
 	let fen = Z.fen;
 	if (fen.wrong_guesses >= 3) {
-		//at this point it is still old president's turn!
 		ari_history_list(`too many wrong guesses!!!`, 'abort');
 		president_end();
 	} else {
@@ -14937,7 +13728,6 @@ function set_new_president() {
 function president_parley() {
 	let [A, uplayer, fen] = [Z.A, Z.uplayer, Z.fen];
 	if (!isEmpty(A.selected)) {
-		//console.log('president selected parley', Z.uplayer);
 		Z.stage = 'parley_select_player';
 		accuse_activate();
 	} else {
@@ -14962,7 +13752,6 @@ function parley_cards_selected() {
 function parley_opponent_selected() {
 	let [A, uplayer, fen] = [Z.A, Z.uplayer, Z.fen];
 	let opp_cards = A.selected.map(x => A.items[x].a);
-	//resolve!
 	let pl1 = fen.players[fen.president];
 	let pl2 = fen.players[uplayer];
 	fen.player_cards.map(x => removeInPlace(pl1.hand, x))
@@ -14973,7 +13762,6 @@ function parley_opponent_selected() {
 	Z.stage = 'president_2';
 	Z.turn = [fen.president];
 	take_turn_fen_clear();
-	//president_end();
 }
 function defect_resolve() {
 	let [A, uplayer, fen] = [Z.A, Z.uplayer, Z.fen];
@@ -15011,23 +13799,16 @@ function accuse_evaluate_votes() {
 		else removeInPlace(fen.validvoters, plname);
 	}
 	ari_history_list(votes.map(x => `${x.plname} ${x.card}`), 'votes');
-	//resolve votes
-	//0. check if unsuccessful (no votes)
 	if (isEmpty(votes)) { eval_empty_votes(votes); return; }
-	//1. check if all votes same color (consensus)
 	let color = arrSame(votes, x => get_color_of_card(x.card));
 	if (color) { eval_consensus(votes, color); return; }
-	//2. check single winner if any (presidency)
 	let max_votes = get_max_votes(votes);
 	if (max_votes.length == 1) { eval_president(max_votes[0]); }
 	else { eval_tie(max_votes, votes); }
 }
 function eval_consensus(votes, color) {
 	let [stage, A, fen, phase, uplayer, turn, uname, host] = [Z.stage, Z.A, Z.fen, Z.phase, Z.uplayer, Z.turn, Z.uname, Z.host];
-	//check ob es eindeutiges maximum rank gibt
 	let vsorted = sortCardObjectsByRankDesc(votes, fen.ranks, 'card');
-	//console.log(vsorted.map(x => x.card));
-	//console.log('...CONSENSUS!!!!!!!!!!!!!', color, votes);
 	let opt = valf(Z.options.consensus, 'policy');
 	if (opt == 'policy') {
 		fen.policies.push(color); //get_color_card(color)); //color == 'red' ? 'QDn' : 'QSn'); //last_policy);
@@ -15035,7 +13816,6 @@ function eval_consensus(votes, color) {
 		check_enough_policies_or_start_new_poll(`consensus on ${color}`);
 	} else if (opt == "coupdetat") {
 		let ace_present = vsorted.find(x => is_ace(x.card));
-		//console.log('ace_present', ace_present);
 		if (isdef(ace_present)) {
 			ari_history_list(`coup succeeded! ${color} wins!`, 'generation ends');
 			accuse_score_update(color);
@@ -15054,10 +13834,8 @@ function eval_consensus(votes, color) {
 		Z.stage = 'round';
 		take_turn_fen_clear();
 	} else if (opt == 'playerpolicy') { // opt == 'policy'
-		//what if there is a tie?
 		let tie = vsorted.length > 1 && getRankOf(vsorted[0].card) == getRankOf(vsorted[1].card);
 		if (tie) {
-			//need to go into a dialogue: each of the tied players must select a victim (tied player) who will pay!
 			let maxrank = getRankOf(vsorted[0].card);
 			let tied_votes = arrTakeWhile(vsorted, x => getRankOf(x.card) == maxrank);
 			let tied_players = tied_votes.map(x => x.plname);
@@ -15068,7 +13846,6 @@ function eval_consensus(votes, color) {
 			take_turn_fen_clear();
 		} else {
 			let winner = vsorted[0];
-			//remove winning vote from player hand and add it to policies!
 			fen.policies.push(winner.card);
 			removeInPlace(fen.players[winner.plname].hand, winner.card);
 			fen.validvoters = jsCopy(Z.plorder);
@@ -15080,7 +13857,6 @@ function eval_empty_votes(votes) {
 	let [stage, A, fen, phase, uplayer, turn, uname, host] = [Z.stage, Z.A, Z.fen, Z.phase, Z.uplayer, Z.turn, Z.uname, Z.host];
 	let last_policy = arrLast(fen.policies);
 	if (last_policy) {
-		// console.log('add policy, last:', last_policy)
 		fen.policies.push(last_policy);
 	}
 	fen.validvoters = jsCopy(Z.plorder);
@@ -15089,14 +13865,11 @@ function eval_empty_votes(votes) {
 function eval_president(winning_vote) {
 	let [stage, A, fen, phase, uplayer, turn, uname, host] = [Z.stage, Z.A, Z.fen, Z.phase, Z.uplayer, Z.turn, Z.uname, Z.host];
 	let plwinner = winning_vote.plname;
-	//console.log('...WINNER PRESIDENT!!!!!!!!!!!!!', plwinner, winning_vote.card);
-	//return all pending cards (from previous votes) to resp hands
 	for (const plname in fen.players) {
 		let pl = fen.players[plname];
 		if (isdef(pl.pending) && !isEmpty(pl.pending)) pl.pending.map(x => pl.hand.push(x));
 		delete pl.pending;
 	}
-	//discard winning vote
 	removeInPlace(fen.players[plwinner].hand, winning_vote.card);
 	fen.deck_discard.push(winning_vote.card);
 	fen.president = plwinner;
@@ -15109,9 +13882,7 @@ function eval_president(winning_vote) {
 }
 function eval_tie(max_votes, votes) {
 	let [stage, A, fen, phase, uplayer, turn, uname, host] = [Z.stage, Z.A, Z.fen, Z.phase, Z.uplayer, Z.turn, Z.uname, Z.host];
-	//console.log('Tie!!!!!!!!!!!!!', vsorted);
 	ari_history_list('tie! new poll round', 'poll');
-	//played cards go into pending
 	for (const v of votes) {
 		let plname = v.plname;
 		let pl = fen.players[plname];
@@ -15122,11 +13893,8 @@ function eval_tie(max_votes, votes) {
 }
 function check_experience_states() {
 	let [pldata, stage, A, fen, phase, uplayer, turn, uname, host] = [Z.playerdata, Z.stage, Z.A, Z.fen, Z.phase, Z.uplayer, Z.turn, Z.uname, Z.host];
-	//read playerdata state2
 	let donelist = Z.playerdata.filter(x => isDict(x.state1));
-	//console.log('...state1',donelist,stage);
 	for (const x of donelist) {
-		//this is a gift from 
 		let plfrom = x.name;
 		let plto = x.state1.plname;
 		let num = Number(x.state1.num);
@@ -15139,19 +13907,15 @@ function check_experience_states() {
 function gift_experience_points() {
 	let selected = DA.popupitems.filter(x => x.isSelected);
 	if (selected.length < 2) {
-		//console.log('cannot send experience points!!!!');
 		return;
 	}
 	let plname_item = selected.find(x => x.irow == 0);
 	let plname = plname_item.a;
 	let num_item = selected.find(x => x.irow == 1);
 	let num = Number(num_item.a);
-	//console.log('player', Z.uplayer, 'gives', num, 'points to', plname);
-	//close the popup
 	mRemove('dBandMessage');
 	Z.state1 = { plname: plname, num: num };
 	take_turn_state1();
-	//now I need reload with write player!!!!
 }
 function send_experience_points() {
 	console.log('sending experience points.....')
@@ -15176,15 +13940,9 @@ function show_special_popup(title, onsubmit, styles = {}) {
 		let items = ui_get_string_items(list);
 		DA.popupitems = DA.popupitems.concat(items);
 		let sample = items[0];
-		//console.log('sample', sample); //continue;
 		let type = sample.itemtype = isNumber(sample.a) ? 'number' : is_card(sample.a) ? 'card' : is_player(sample.a) ? 'player' : isdef(sample.o) ? 'container' : is_color(sample.a) ? 'color' : 'string';
-		//console.log('type', type); //continue;
-		//lookupSet(DA,['selections',idx],null);
-		//DA.selections[irow]=null;
 		let icol = 0;
 		for (const item of items) {
-			//console.log('type', type, items[0].a);
-			//let handler = x=> ev => DA.selections[x]=ev.target; //console.log(ev.target.innerHTML,x); //lookupSetOverride(DA,['selections',idx],ev.target.innerHTML);
 			item.div = mButton(item.a, unselect_select, d, buttonstyle, 'selectable_button', `b_${irow}_${icol}`);
 			item.id = item.div.id;
 			item.irow = irow;
@@ -15193,20 +13951,15 @@ function show_special_popup(title, onsubmit, styles = {}) {
 			icol++;
 		}
 		irow++;
-		//for (const el of list) { mButton(el, x => console.log(x.target.innerHTML), d); }
 	}
 	mButton("submit", gift_experience_points, dContent, buttonstyle, ['donebutton', 'enabled']);
 	mButton("cancel", () => { mRemove('dBandMessage'); }, dContent, buttonstyle, ['donebutton', 'enabled']);
 }
 function unselect_select(ev) {
 	let id = evToId(ev);
-	//console.log('clicked', id)
 	let [irow, icol] = allNumbers(id);
-	//console.log('row', irow, 'col', icol);
 	let newitem = null;
-	//check if there is an item selected in that row already
 	for (const item of DA.popupitems) {
-		//console.log('item', item, item.isSelected);
 		let id1 = iDiv(item).id;
 		let [irow1, icol1] = allNumbers(id1);
 		if (irow1 == irow && icol1 != icol && item.isSelected) {
@@ -15216,18 +13969,14 @@ function unselect_select(ev) {
 			newitem = item;
 		}
 	}
-	//newitem should be selected or unselected
-	//console.log('newitem', newitem)
 	if (newitem.isSelected) { make_string_unselected(newitem); newitem.isSelected = false; }
 	else { make_string_selected(newitem); newitem.isSelected = true; }
 }
 function accuse_ai_move(bot) {
 	let [pl, fen, stage] = [Z.fen.players[bot], Z.fen, Z.stage];
 	if (stage == 'hand') {
-		//this is where hand card or empty can be played
 		pl.move = { state: { item: '' } }
 	} else if (stage == 'membership') {
-		//this is where a membership card has to be chosen
 	}
 }
 function accuse_discard(card) { Z.fen.deck_discard.push(card) }
@@ -15242,25 +13991,19 @@ function accuse_score_update(color) {
 	for (const plname in fen.players) {
 		let pl = fen.players[plname];
 		plgeneration[plname] = get_color_of_card(pl.membership); // { left: get_color_of_card(pl.idleft), middle: get_color_of_card(pl.membership), right: get_color_of_card(pl.idright) };
-		//if (get_color_of_card(pl.idleft) == color) pl.score += 1;
-		//if (get_color_of_card(pl.idright) == color) pl.score += 1;
 		if (get_color_of_card(pl.membership) == color) pl.score += 1;
 	}
 	lookupAddToList(fen, ['generations'], generation_entry);
-	//console.log('SCORE UPDATE!!!', fen.phase, color, '\nentry', generation_entry);
 }
 function accuse_player_stat(dParent, plname, hvotecard, himg, hstatfz, gap) {
 	let players = Z.fen.players;
 	let pl = players[plname];
-	//console.log('plname',plname,pl)
-	//console.log()
 	let onturn = Z.turn.includes(plname);
 	let sz = himg; //onturn?100:50;
 	let bcolor = plname == Z.uplayer ? 'lime' : 'silver';
 	let border = pl.playmode == 'bot' ? `double 5px ${bcolor}` : `solid 5px ${bcolor}`;
 	let rounding = pl.playmode == 'bot' ? '0px' : '50%';
 	let d = mDiv(dParent, { align: 'center' });
-	//let d = mDiv(dParent); mCenterFlex(d); //, { margin: 4, align: 'center' });
 	let card = mDiv(d, { hmin: hvotecard + gap, bg: 'transparent', mabottom: gap, paright: 4 }); mCenterFlex(card);
 	let wstats = sz * 1.3;
 	let dcombine = mDiv(d, { w: wstats, margin: 'auto' }); //,{padding:6});
@@ -15274,15 +14017,11 @@ function accuse_player_stat(dParent, plname, hvotecard, himg, hstatfz, gap) {
 	return x;
 }
 function accuse_player_stat_count(key, n, dParent, styles = {}, numcols) {
-	//mStyle(dParent,{align:'center'});
 	let sz = valf(styles.sz, 8);
 	let d = mDiv(dParent, { w: `${100 / numcols}%`, align: 'center' });
 	let dsym;
 	if (isdef(Syms[key])) dsym = mSym(key, d, { h: sz, 'line-height': sz, w: '100%' });
 	else dsym = mText(key, d, { h: sz, fz: sz, w: '100%' });
-	//console.log('hallo!!!')
-	//if (nundef(styles.wmax)) styles.wmax = sz;
-	//addKeys({ display: 'flex', margin: 4, dir: 'column', hmax: 2 * sz, 'align-content': 'start', fz: sz, align: 'center' }, styles);
 	let dn = mDiv(d, { fz: 2 * sz, weight: 'bold' }, null, n);
 	return d;
 }
@@ -15300,30 +14039,22 @@ function accuse_show_selected_state(state) {
 }
 function accuse_show_sitting_order(fen) {
 	if (nundef(fen)) fen = Z.fen;
-	//ist der turn immer wie der sitting order?
-	//console.log('turn');
 	for (const plname of fen.turn) {
 		let pl = fen.players[plname];
-		//console.log(pl.idleft,plname,pl.idright)
 	}
-	//console.log('plorder');
 	for (const plname of fen.plorder) {
 		let pl = fen.players[plname];
-		//console.log(pl.idleft,plname,pl.idright)
 	}
 }
 function accuse_submit_card() {
-	//console.log('A',Z.A);
 	let A = Z.A;
 	let card = isEmpty(A.selected) ? '' : A.items[A.selected[0]].a;
 	Z.state = { item: card };
 	take_turn_multi();
 }
 function accuse_submit_membership() {
-	//console.log('A',Z.A);
 	let A = Z.A;
 	let card = A.items[A.selected[0]].a;
-	//console.log('player',Z.uplayer,'selectes membership',card,Z.fen.players[Z.uplayer].hand)
 	Z.state = { item: card };
 	take_turn_multi();
 }
@@ -15341,7 +14072,6 @@ function arrSame(arr, func) {
 }
 function arrAllSame(arr, func) {
 	if (isEmpty(arr)) return false;
-	//console.log('arr',arr)
 	let arr1 = arr.map(x => func(x));
 	let sample = arr1[0];
 	for (let i = 1; i < arr1.length; i++) if (arr1[i] != sample) return false;
@@ -15353,19 +14083,14 @@ function calcNumRanks(total, repeat, ncolors) {
 }
 function check_enough_policies_or_start_new_poll(msg_new_poll) {
 	let [stage, A, fen, phase, uplayer, turn, uname, host] = [Z.stage, Z.A, Z.fen, Z.phase, Z.uplayer, Z.turn, Z.uname, Z.host];
-	//look if last X policies are same color =>dominance
 	let policies_needed = fen.stability - fen.crisis;
 	let arr = arrTakeLast(fen.policies, policies_needed);
-	//console.log('arr',arr)
 	let color = arrAllSame(arr, get_color_of_card);
 	if (color && arr.length >= policies_needed) {
-		//generation ends here!!! 
 		fen.dominance = true;
 		ari_history_list(`${color} dominance reached!`, 'generation ends')
-		//update score
 		accuse_score_update(color);
 		Z.turn = jsCopy(Z.plorder);
-		//Z.phase += 1
 		Z.stage = 'round';
 		take_turn_fen_clear();
 		return true;
@@ -15376,7 +14101,6 @@ function check_enough_policies_or_start_new_poll(msg_new_poll) {
 	}
 }
 function get_advanced_menu_button() {
-	// let html = `<a id="aAdvancedMenu" href="javascript:onclick_advanced_menu()">≡</a>`;
 	let html = `<a id="aAdvancedMenu" href="javascript:onclick_advanced_menu()">T</a>`;
 	let b = mCreateFrom(html);
 	mStyle(b, { bg: 'silver', hpadding: 6, maright: 10, rounding: 4 });
@@ -15385,7 +14109,6 @@ function get_advanced_menu_button() {
 	return b;
 }
 function get_advanced_menu_buttons() {
-	// let html = `<a id="aAdvancedMenu" href="javascript:onclick_advanced_menu()">≡</a>`;
 	let html = `<a href="javascript:onclick_advanced_test()">T</a>`;
 	let btest = mCreateFrom(html);
 	let mode = 'multi';
@@ -15397,8 +14120,6 @@ function get_advanced_menu_buttons() {
 	let styles = { bg: 'silver', wmin: 25, h: 25, rounding: '50%', maright: 10, align: 'center' };
 	mStyle(btest, styles);
 	mStyle(bmode, styles);
-	//mStyle(b, { bg: 'silver', hpadding: 6, maright: 10, rounding: 4 });
-	// mStyle(b, { bg: 'silver', hpadding: 6, maright: 10, rounding: 4 });
 	mClass(btest, 'hop1')
 	mClass(bmode, 'hop1')
 	return d;
@@ -15408,10 +14129,8 @@ function get_bots_on_turn() {
 	return players.filter(x => Z.fen.players[x].playmode != 'human');
 }
 function get_color_card(ckey, h, opts = {}) {
-	//console.log('ckey', ckey);
 	let color;
 	if (nundef(ckey)) color = 'transparent'; else color = is_color(ckey) ? ckey : get_color_of_card(ckey);
-	//console.log('color',color)
 	let type = 'color';
 	let info = { friendly: color, color: valf(opts.bg, BLUE) }
 	info.ckey = color;
@@ -15426,7 +14145,6 @@ function get_color_card(ckey, h, opts = {}) {
 	return card;
 }
 function get_max_votes(votes) {
-	//assume: votes non empty list of {plname:,card:}
 	let [stage, A, fen, phase, uplayer, turn, uname, host] = [Z.stage, Z.A, Z.fen, Z.phase, Z.uplayer, Z.turn, Z.uname, Z.host];
 	let vsorted = sortCardObjectsByRankDesc(votes, fen.ranks, 'card');
 	let maxrank = getRankOf(vsorted[0].card);
@@ -15447,18 +14165,11 @@ function get_number_card(ckey, h = 100, w = null, backcolor = BLUE, ov = .3) {
 	let sz = info.sz = info.h = h;
 	w = info.w = valf(w, sz * .7);
 	if (!isList(Z.fen.ranks)) Z.fen.ranks = calcNumRanks(get_keys(Z.fen.players).length * Z.fen.handsize, 2, Z.fen.colors.length);
-	//console.log('ranks',Z.fen.ranks);
 	let ranks = valf(lookup(Z, ['fen', 'ranks']), range(100)); //Z.fen.ranks;
 	info.irank = ranks.indexOf(r);
 	info.isuit = valf(lookup(Z, ['fen', 'colors']), get_nc_color_array()).indexOf(s); //range(100));'SHCD'.indexOf(s);
 	info.isort = info.isuit * ranks.length + info.irank;
-	//card face
-	//let card = cBlank(dTable, { h: sz, w:w, border: 'silver' });
-	//let dcard = mDiv(dTable,{h:h,w:w,rounding:4,bg:'white',border:'silver'});
-	//console.log('________w',w)
 	let d = mDiv(null, { h: h, w: w, rounding: 4, bg: 'white', border: 'silver' }, null, null, 'card');
-	//console.log('ui',d)
-	//let d = iDiv(ui, { margin: 10 });
 	let [sm, lg] = [sz / 8, sz / 4]
 	let styles = { fg: color, h: sm, fz: sm, hline: sm, weight: 'bold' };
 	for (const pos of ['tl', 'tr']) {
@@ -15471,8 +14182,6 @@ function get_number_card(ckey, h = 100, w = null, backcolor = BLUE, ov = .3) {
 		mPlace(d1, pos, 2, 2);
 	}
 	let dbig = mDiv(d, { matop: (h - lg) / 2, family: 'algerian', fg: color, fz: lg, h: lg, w: w, hline: lg, align: 'center' }, null, num);
-	//mPlace(dbig, 'cc');
-	// mSize(ui, info.w, info.h);
 	let res = {};
 	copyKeys(info, res);
 	copyKeys({ w: info.w, h: info.h, faceUp: true, div: d }, res);
@@ -15481,18 +14190,15 @@ function get_number_card(ckey, h = 100, w = null, backcolor = BLUE, ov = .3) {
 }
 function get_random_ballot_card() {
 	let [fen] = [Z.fen];
-	//console.log('fen.cardtype', fen.cardtype, '\nranks', fen.ranks);
 	return fen.cardtype == 'num' ? `${rChoose(fen.ranks)}_${rChoose(fen.colors)}` : `${rCard('n', fen.ranks, 'SHDC')}`;
 }
 function get_policies_to_win() {
 	let fen = Z.fen;
 	let policies_needed = fen.stability - fen.crisis;
 	if (isEmpty(fen.policies)) return ['any', policies_needed];
-	//console.log('fen.policies',fen.policies)
 	let revlist = jsCopy(fen.policies).reverse();
 	let color = get_color_of_card(revlist[0]);
 	let samecolorlist = arrTakeWhile(revlist, x => get_color_of_card(x) == color);
-	//console.log('samecolorlist',samecolorlist)
 	return [color, Math.max(0, policies_needed - samecolorlist.length)];
 }
 function get_player_data(plname) { return firstCond(Z.playerdata, x => x.name == plname); }
@@ -15503,11 +14209,9 @@ function get_players_with_at_least_one_hand_card() {
 }
 function get_other_players() { return get_keys(Z.fen.players).filter(x => x != Z.uplayer); }
 function get_others_with_at_least_one_hand_card() {
-	//console.log('uplayer',Z.uplayer)
 	return get_keys(Z.fen.players).filter(x => x != Z.uplayer && Z.fen.players[x].hand.length >= 1);
 }
 function getRankOf(ckey, ranks) {
-	//console.log('ckey',ckey,ranks)
 	if (is_nc_card(ckey)) return Number(stringBefore(ckey, '_'));
 	if (nundef(ranks)) ranks = valf(lookup(Z, ['fen', 'ranks']), 'A23456789TJQK');
 	return ckey[0];
@@ -15527,10 +14231,8 @@ function presentcards(h) {
 		let plui = lookup(UI, ['stats', plname]);
 		let dcard = plui.dcard;
 		if (isEmpty(arrChildren(dcard))) {
-			// console.log('dcard',dcard)
 			let card = pld.state.item;
 			let actualcard = plui.actualcard = !isEmpty(card);
-			//console.log('card', card)
 			let card1 = plui.card = accuse_get_card(actualcard ? card : 'AHn', h)
 			mAppend(dcard, iDiv(card1));
 		}
@@ -15542,14 +14244,11 @@ function redraw_hand() {
 	let ch = arrChildren(dt);
 	let handui = UI.players[uplayer].hand.container;
 	handui.remove();
-	//dt.lastchild.remove();
 	let pl = fen.players[uplayer];
 	lookupSetOverride(ui, ['players', uplayer, 'hand'], ui_type_hand(pl.hand, dt, { paleft: 25 }, `players.${uplayer}.hand`));
 }
 function relegate_to_host(list) {
-	//console.log('***', list)
 	let [stage, A, fen, phase, uplayer, turn, uname, host] = [Z.stage, Z.A, Z.fen, Z.phase, Z.uplayer, Z.turn, Z.uname, Z.host];
-	//console.log('complete', turn, sameList(turn, [Z.host]), 'uplayer', uplayer);
 	if (stage == 'hand') fen.cardsrevealed = true;
 	Z.turn = [Z.host];
 	fen.pldata = list;
@@ -15559,18 +14258,14 @@ function relegate_to_host(list) {
 }
 function show_advanced_ui_buttons() {
 	let dParent = mBy('dAdvancedUI');
-	//if (nundef(dParent)) return;
 	mClear(dParent)
 	let sz = 20;
 	let styles = { bg: 'silver', wmin: sz, h: sz, rounding: '50%', maright: 10, align: 'center' };
 	mButton(' ', onclick_advanced_test, dParent, styles, 'enabled');
 	style_advanced_button();
-	//let mode = Z.mode;
-	//mButton(mode[0].toUpperCase(),onclick_advanced_mode,dParent,styles,'enabled');
 }
 function show_membership_color(plname, hnetcard, himg) {
 	let dx = lookup(UI, ['stats', plname]);
-	//console.log('dx',dx,plname);
 	let pl = Z.fen.players[plname];
 	if (nundef(pl.membership)) return;
 	let c = get_color_of_card(pl.membership);
@@ -15579,12 +14274,10 @@ function show_membership_color(plname, hnetcard, himg) {
 	dx.dimg.firstChild.width = dx.dimg.firstChild.height = himg - 10;
 }
 function show_number_card(ckey, sz) {
-	//console.log('show_card', ckey)
 	let card = cBlank(dTable, { h: sz, border: 'silver' });
 	let d = iDiv(card, { margin: 10 });
 	let color = stringAfter(ckey, '_');
 	let num = stringBefore(ckey, '_');
-	//let d=mMeasure()
 	let [sm, lg] = [sz / 8, sz / 4]
 	let styles = { fg: color, h: sm, fz: sm, hline: sm, weight: 'bold' };
 	for (const pos of ['tl', 'tr']) {
@@ -15605,7 +14298,6 @@ function show_playerstats_over(d2) {
 	let [hlg, hsm] = [80, 50];
 	let [hpolcard, hvotecard, himg, hstatfz, hnetcard, hhandcard, gap] = [hsm, hlg, 50, 8, hsm, hlg, 4];
 	let [hpol, hstat, hhand] = [hpolcard + 25, hvotecard + himg + hstatfz * 5 + gap * 2, hhandcard + 25];
-	// *** d2 players ***
 	let [wgap, hgap] = [10, 12]; //NEW!
 	let players = fen.players;
 	let order = get_present_order();
@@ -15623,7 +14315,6 @@ function show_playerstats_over(d2) {
 	for (const plname of order.slice(1)) {
 		let dshell1 = mDiv(dstats); mCenterCenterFlex(dshell1)
 		accuse_player_stat(dshell1, plname, hvotecard, himg, hstatfz, gap);
-		//if game is over and this is NOT the last one in order, show his left net card!!!
 		if (plname == arrLast(order)) break;
 		let dshell2 = mDiv(dstats); mCenterCenterFlex(dshell2)
 		let dncshell = mDiv(dshell2); //,{bg:'green'}); //{h:141,patop:90,bg:GREEN});
@@ -15638,7 +14329,6 @@ function show_playerstats_orig(d2) {
 	let [hlg, hsm] = [80, 50];
 	let [hpolcard, hvotecard, himg, hstatfz, hnetcard, hhandcard, gap] = [hsm, hlg, 50, 8, hsm, hlg, 4];
 	let [hpol, hstat, hhand] = [hpolcard + 25, hvotecard + himg + hstatfz * 5 + gap * 2, hhandcard + 25];
-	// *** d2 players ***
 	let [wgap, hgap] = [20, 12];
 	let players = fen.players;
 	let wneeded = (himg + wgap) * fen.plorder.length + wgap;
@@ -15662,15 +14352,10 @@ function show_role_accuse() {
 	let boldstyle = { fg: 'red', weight: 'bold', fz: 20 };
 	let normalstyle = { fg: 'black', weight: null, fz: null };
 	if (mode == 'hotseat') {
-		// let dpics = mDiv(d,{gap:10}); mCenterCenterFlex(dpics);
-		// let pic = get_user_pic(uplayer, sz = 30, border = 'solid medium white');
-		// mStyle(pic, { cursor: 'pointer' });
 		text = `hotseat: <span style='color:${get_user_color(uplayer)}'>${uplayer}</span>`;
 		styles = boldstyle;
 		styles.wmin = 220;
-		// let d1=mDiv(dpics,styles,text); mCenterCenterFlex(d1);
 		d.innerHTML = text; mStyle(d, styles);
-		// mAppend(dpics, pic);
 	} else if (role == 'spectator') {
 		styles = normalstyle;
 		text = `(spectating)`;
@@ -15691,7 +14376,6 @@ function show_role_accuse() {
 		let pls = turn.filter(x => x != uname && !has_player_state(x));
 		if (isEmpty(pls)) pls = [host];
 		let dpics = mDiv(d, { gap: 10 }); mCenterCenterFlex(dpics);
-		//console.log('host is',host, 'pls is',pls)
 		for (const plname of pls) {
 			let pic = get_user_pic(plname, sz = 30, border = 'solid medium white');
 			mStyle(pic, { cursor: 'pointer' })
@@ -15707,8 +14391,6 @@ function show_role_accuse() {
 function show_takeover_ui() {
 	DA.omnipower = true;
 	let [pldata, stage, A, fen, phase, uplayer, turn, uname, host, mode] = [Z.playerdata, Z.stage, Z.A, Z.fen, Z.phase, Z.uplayer, Z.turn, Z.uname, Z.host, Z.mode];
-	//entweder zeigen wenn uname not in turn
-	//oder wenn uname in turn aber schon gespielt hat
 	if (mode != 'multi') return;
 	if (turn.length > 1 && turn.includes(uname) && !has_player_state(uname)) return;
 	if (turn.length == 1 && turn[0] == uplayer) return;
@@ -15716,7 +14398,6 @@ function show_takeover_ui() {
 	dTakeover.innerHTML = '' + stage + ': ';
 	let pls = turn.filter(x => x != uname && !has_player_state(x));
 	if (isEmpty(pls)) pls = [host];
-	//console.log('host is',host, 'pls is',pls)
 	for (const plname of pls) {
 		let pic = get_user_pic(plname, sz = 35, border = 'solid medium white');
 		mStyle(pic, { cursor: 'pointer' })
@@ -15774,15 +14455,11 @@ function start_new_generation(fen, players, options) {
 			}
 		}
 		if (N == 14) { for (const suit of 'SHDC') { deck_ballots.push('T' + suit + 'n'); } }
-		// *** jokers ***
-		// for (let i = 0; i < jo; i++) { deck_ballots.push('A' + (i % 2 ? 'H' : 'S') + 'n'); }  //'' + (i%2) + 'J' + 'n');
-		// for (let i = 0; i < jo; i++) { deck_ballots.push('' + (i%2) + 'J' + 'n'); } 
 		for (let i = 0; i < jo; i++) { deck_ballots.push('*' + (i % 2 ? 'H' : 'S') + 'n'); }
 	} else if (ctype == 'num') {
 		let ncolors = fen.colors.length;
 		let nplayers = get_keys(fen.players).length;
 		let ranks = fen.ranks = calcNumRanks(players.length * handsize, 2, ncolors);
-		//console.log('ranks',ranks);
 		let ncards = handsize * nplayers;
 		let colors = fen.colors;
 		let n = 1;
@@ -15795,16 +14472,13 @@ function start_new_generation(fen, players, options) {
 		}
 		n--;
 		fen.ranks = range(1, n);
-		//console.log('new gen: ranks=', fen.ranks, 'n', n)
 	}
 	shuffle(deck_ballots); //console.log('deck', deck_ballots);
 	fen.deck_ballots = deck_ballots;
-	//console.log('deck_ballots:::',deck_ballots.length);
 	for (const plname in fen.players) {
 		let pl = fen.players[plname];
 		pl.hand = deck_deal(deck_ballots, handsize);
 	}
-	//console.log('phase',fen.phase)
 	let gens = lookup(fen, ['generations']);
 	let last_winning_color = gens && gens.length >= 1 ? arrLast(gens).color : null;
 	fen.policies = [];
@@ -15819,7 +14493,6 @@ function start_new_generation(fen, players, options) {
 	delete fen.player_cards;
 	delete fen.accused;
 	delete fen.dominance;
-	//ari_history_list(`*** generation ${fen.phase} starts ***`,'',fen)
 }
 function start_new_poll() {
 	Z.stage = 'hand';
@@ -15827,7 +14500,6 @@ function start_new_poll() {
 	Z.fen.wrong_guesses = 0;
 	Z.fen.presidents_poll = [];
 	Z.turn = get_valid_voters();
-	//console.log('...turn', Z.turn)
 	take_turn_fen_clear();
 }
 function there_are_bots() {
@@ -15843,7 +14515,6 @@ function toggle_mode() {
 	return newmode;
 }
 function toggle_visibility(elem) {
-	//returns new visibility (true or false)
 	elem = toElem(elem);
 	if (nundef(elem)) return;
 	let vis = elem.style.display;
@@ -15861,14 +14532,11 @@ function turn_has_bots_that_must_move() {
 	if (isEmpty(pldata)) return [];
 	let pldata_dict = list2dict(pldata, 'name');
 	let bots_on_turn = turn.filter(x => Z.fen.players[x].playmode != 'human');
-	//console.log('bots_on_turn',bots_on_turn)
 	for (const bot of bots_on_turn) {
-		//console.log(bot,pldata_dict[bot])
 	}
 	let no_pldata = bots_on_turn.filter(x => !isDict(pldata_dict[x].state));
 	let is_bot_turn = turn.length == bots_on_turn.length;
 	if (is_bot_turn && turn.length == 1) return [turn];
-	//is_bot_turn.map(x=>addIf(no_pldata,x));
 	return no_pldata;
 }
 function ui_add_accuse_container_title(title, cont, items, show_if_empty) {
@@ -15899,7 +14567,6 @@ function ui_type_accuse_hand(list, dParent, styles = {}, path = 'hand', title = 
 	mContainerSplay(cardcont, splay, card.w, card.h, items.length, card.ov * card.w);
 	ui_add_cards_to_hand_container(cardcont, items, list);
 	let dtitle = ui_add_accuse_container_title(title, cont, items, show_if_empty);
-	//console.log('hand container',cont, cardcont)
 	return {
 		ctype: 'hand',
 		list: list,
@@ -15916,12 +14583,9 @@ function ui_type_accuse_policies(list, dParent, styles = {}, path = 'hand', titl
 	let items = list.map(x => get_card_func(x));
 	for (const item of items) {
 		let d = iDiv(item);
-		//console.log('item', item)
 		let color = item.ckey;
 		let c = get_nc_complement_array(color); //colorMix((color,.7)
 		mStyle(d, { bg: c, border: color }); //`solid 2px ${color}`,box:true}); //color,thickness:3,box:true}); //'#ddd',border:item.ckey});
-		// mStyle(d,{bg:'#eee',border:`solid 2px ${color}`,box:true}); //color,thickness:3,box:true}); //'#ddd',border:item.ckey});
-		// mStyle(d,{bg:'#eee',border:`solid 2px ${color}`,box:true}); //color,thickness:3,box:true}); //'#ddd',border:item.ckey});
 	}
 	let cardcont = mDiv(cont);
 	let card = isEmpty(items) ? { w: 1, h: valf(styles.h, Config.ui.card.h), ov: 0 } : items[0];
@@ -15929,7 +14593,6 @@ function ui_type_accuse_policies(list, dParent, styles = {}, path = 'hand', titl
 	mContainerSplay(cardcont, splay, card.w, card.h, items.length, card.ov * card.w);
 	ui_add_cards_to_hand_container(cardcont, items, list);
 	let dtitle = ui_add_accuse_container_title(title, cont, items, show_if_empty);
-	//console.log('hand container',cont, cardcont)
 	return {
 		ctype: 'hand',
 		list: list,
@@ -15941,13 +14604,15 @@ function ui_type_accuse_policies(list, dParent, styles = {}, path = 'hand', titl
 		dtitle: dtitle,
 	};
 }
+//#endregion accuse
+
+//#region aristo
 function animcoin(plname, ms = 800, callback = null) {
 	let d = UI.player_stat_items[plname].dCoin;
 	let ani = [{ transform: 'scale(1)' }, { transform: 'scale(3)' }, { transform: 'scale(1)' }];
 	let options = {
 		duration: ms,
 		iterations: 1,
-		//fill: 'forwards',
 		easing: 'ease-out',
 	};
 	let a = d.animate(ani, options);
@@ -15965,7 +14630,6 @@ function animbuilding(ui_building, ms = 800, callback = null) {
 	let options = {
 		duration: ms,
 		iterations: 1,
-		//fill: 'forwards',
 		easing: 'ease-out',
 	};
 	let a = d.animate(ani, options);
@@ -15986,26 +14650,10 @@ function animtest(d, ms = 1000, callback) {
 		{ transform: 'scale(3)' },
 		{ transform: 'scale(1)' }
 	];
-	// spinAway = [
-	// 	{ transform: 'scale(1)' },
-	// 	{ transform: 'scale(3)' },
-	// 	{ transform: 'scale(.8)' },
-	// 	{ transform: 'scale(1)' },
-	// ];
-	// spinAway = [
-	// 	{ transform: 'scale(1)', 'box-shadow': '0 0 33px 0' },
-	// 	{ transform: 'scale(3)', 'box-shadow': '0 0 33px 0' },
-	// 	{ transform: 'scale(.8)' },
-	// 	{ transform: 'scale(1)' },
-	// ];
 	let options = {
 		duration: ms,
 		iterations: 1,
-		//fill: 'forwards',
 		easing: 'ease-out', //'cubic-bezier(.24,.65,.78,.03)',
-		// easing: 'cubic-bezier(.51,.65,.88,.65)',
-		// easing: 'cubic-bezier(.71,.53,.08,.93)',
-		//easing: 'cubic-bezier(.89,.31,.67,1.05)', // 'cubic-bezier(.55,.22,.52,.98)' //'cubic-bezier(1,-0.03,.86,.68)'
 	}
 	d.addEventListener('click', (ev) => {
 		evNoBubble(ev);
@@ -16014,7 +14662,6 @@ function animtest(d, ms = 1000, callback) {
 	});
 }
 function anipulse(d, ms = 3000, callback) {
-	//create a glow animation
 	let a = d.animate(
 		[{
 			'background-color': '#2ba805',
@@ -16032,7 +14679,6 @@ function anipulse(d, ms = 3000, callback) {
 	return a;
 }
 function remove_ui_items(items) {
-	//UI muss NICHT consistent bleiben!!!! das wird nur bevor take turn gemacht!!!
 	console.log('remove_ui_items', items);
 	for (const item of items) {
 		let card = item.o;
@@ -16047,8 +14693,6 @@ function aristo() {
 		let n = players.length;
 		let num_decks = fen.num_decks = 2 + (n >= 8 ? 2 : n >= 6 ? 1 : 0); // 2 + (n > 5 ? Math.ceil((n - 5) / 2) : 0); //<=5?2:Math.max(2,Math.ceil(players.length/3));
 		let deck = fen.deck = create_fen_deck('n', num_decks);
-		//console.log('deck',deck)
-		//console.log('deck length is',deck.length);
 		shuffle(deck);
 		let deck_commission = fen.deck_commission = create_fen_deck('c'); shuffle(deck_commission);
 		let deck_luxury = fen.deck_luxury = create_fen_deck('l'); shuffle(deck_luxury);
@@ -16082,7 +14726,6 @@ function aristo() {
 		fen.heraldorder = jsCopy(fen.plorder);
 		if (exp_commissions(options)) {
 			ari_history_list([`commission trading starts`], 'commissions', fen);
-			//[fen.stage, fen.turn] = [23, [fen.plorder[0]]]; fen.comm_setup_num = 3;
 			[fen.stage, fen.turn] = [23, options.mode == 'hotseat' ? [fen.plorder[0]] : fen.plorder]; fen.comm_setup_num = 3; fen.keeppolling = true;
 		} else if (exp_rumors(options) && fen.plorder.length > 2) {
 			ari_history_list([`gossiping starts`], 'rumors', fen);
@@ -16096,7 +14739,6 @@ function aristo() {
 	function stats(dParent) { ari_stats(dParent); }
 	function state_info(dParent) { ari_state(dParent); }
 	function get_selection_color(item) {
-		//console.log('stage', Z.stage, 'A.selected',Z.A.selected,'item', item);
 		if (Z.stage == 41 && Z.A.selected.length == 1) return 'blue'; return 'red';
 	}
 	return { get_selection_color, rankstr, setup, activate_ui, check_gameover, present, state_info, stats };
@@ -16132,7 +14774,6 @@ function ari_pre_action() {
 		case 'rumors_weitergeben':
 			let rumitems = ui_get_rumors_and_players_items(uplayer);
 			if (isEmpty(rumitems)) {
-				//console.log(`ALL RUMOR ITEMS FOR PLAYER ${uplayer} HAVE BEEN ASSIGNED!!!`);
 				show_waiting_message('waiting for other players...');
 				Z.state = null;
 				let done = rumor_playerdata_complete();
@@ -16166,30 +14807,20 @@ function ari_pre_action() {
 		case 'church_minplayer_tithe_add': select_add_items(ui_get_hand_and_stall_items(uplayer), post_tithe_minimum, `must select cards to reach at least ${fen.tithe_minimum}`, 1, 100); break;
 		case 'church_minplayer_tithe_downgrade': select_add_items(ui_get_building_items(uplayer, A.payment), process_downgrade, 'must select a building to downgrade', 1, 1); break;
 		case 'church_minplayer_tithe': console.log('NOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO');
-			//fen.tithe_minimum is what fen.minplayer (=uplayer) must reach to tithe
-			//first compute if hand and stall cards can get up to minimum
-			//console.log('church_minplayer_tithe!', Z.stage, fen.stage);
 			let pl = fen.players[uplayer];
 			let hst = pl.hand.concat(pl.stall);
 			let vals = hst.map(x => ari_get_card(x).val);
 			let sum = arrSum(vals);
-			//console.log('gesamtes minplayer blatt + stall', sum);
 			let min = fen.tithe_minimum;
 			if (sum < min) {
-				//jetzt gibt es ein problem! player muss ein building downgraden!
-				//fahre fort wie bei downgrade!
-				//aber danach muss ich wieder zurueck zu church!!!
-				//uplayer looses all hand and stall cards!!!
 				ari_history_list([`${uplayer} must downgrade a building to tithe ${min}!`], 'downgrade');
 				select_add_items(ui_get_building_items(uplayer, A.payment), process_downgrade, 'must select a building to downgrade', 1, 1);
 			} else {
-				//must select more cards to tithe!
 				ari_history_list([`${uplayer} must tithe more cards to reach ${min}!`], 'tithe');
 				select_add_items(ui_get_hand_and_stall_items(uplayer), post_tithe_minimum, `must select cards to reach at least ${fen.tithe_minimum}`, 1, 100);
 			}
 			break;
 		case 'church_newcards':
-			//console.log('church_newcards!', Z.stage, fen.stage);
 			reveal_church_cards();
 			let items = ui_get_church_items(uplayer);
 			let num_select = items.length == fen.church.length ? 1 : 2;
@@ -16221,12 +14852,10 @@ function ari_present(dParent) {
 	let [fen, ui, uplayer, stage, pl] = [Z.fen, UI, Z.uplayer, Z.stage, Z.pl];
 	let [dOben, dOpenTable, dMiddle, dRechts] = tableLayoutMR(dParent);
 	if (fen.num_actions > 0 && (Z.role == 'active' || Z.mode == 'hotseat')) {
-		//console.log('hmin wird gemacht!')
 		mStyle(dOben, { hmin: 110 })
 	}
 	ari_stats(dRechts);
 	show_history(fen, dRechts);
-	//let h=ARI.hcontainer;
 	let deck = ui.deck = ui_type_deck(fen.deck, dOpenTable, { maleft: 12 }, 'deck', 'deck', ari_get_card);
 	let market = ui.market = ui_type_market(fen.market, dOpenTable, { maleft: 12 }, 'market', 'market', ari_get_card, true);
 	let open_discard = ui.open_discard = ui_type_market(fen.open_discard, dOpenTable, { maleft: 12 }, 'open_discard', 'discard', ari_get_card);
@@ -16235,13 +14864,11 @@ function ari_present(dParent) {
 		let open_commissions = ui.open_commissions = ui_type_market(fen.open_commissions, dOpenTable, { maleft: 12 }, 'open_commissions', 'bank', ari_get_card);
 		mMagnifyOnHoverControlPopup(ui.open_commissions.cardcontainer);
 		let deck_commission = ui.deck_commission = ui_type_deck(fen.deck_commission, dOpenTable, { maleft: 4 }, 'deck_commission', '', ari_get_card);
-		// let commissioned = ui.commissioned = ui_type_list(fen.commissioned, ['rank','count'], dOpenTable, {h:130}, 'commissioned', 'commissioned');
 		let comm = ui.commissioned = ui_type_rank_count(fen.commissioned, dOpenTable, {}, 'commissioned', 'sentiment', ari_get_card);
 		if (comm.items.length > 0) { let isent = arrLast(comm.items); let dsent = iDiv(isent); set_card_border(dsent, 15, 'green'); }
 	}
 	if (exp_church(Z.options)) {
 		let church = ui.church = ui_type_church(fen.church, dOpenTable, { maleft: 28 }, 'church', 'church', ari_get_card);
-		//mMagnifyOnHoverControlPopup(ui.church.cardcontainer);
 	}
 	if (exp_rumors(Z.options)) {
 		let deck_rumors = ui.deck_rumors = ui_type_deck(fen.deck_rumors, dOpenTable, { maleft: 25 }, 'deck_rumors', 'rumors', ari_get_card);
@@ -16255,7 +14882,6 @@ function ari_present(dParent) {
 		let d = mDiv(dMiddle, playerstyles, null, get_user_pic_html(plname, 25));
 		mFlexWrap(d);
 		mLinebreak(d, 9);
-		//R.add_ui_node(d, getUID('u'), uplayer);
 		let hidden = compute_hidden(plname);
 		ari_present_player(plname, d, hidden);
 	}
@@ -16263,15 +14889,11 @@ function ari_present(dParent) {
 	show_view_buildings_button(uplayer);
 	let desc = ARI.stage[Z.stage];
 	Z.isWaiting = false;
-	//console.log('Z.stage', Z.stage, 'uplayer',uplayer, 'desc', desc, 'pldata',firstCond(Z.playerdata,x=>x.name == uplayer));
 	if (isdef(fen.winners)) ari_reveal_all_buildings(fen);
 	else if (desc == 'comm_weitergeben' && is_playerdata_set(uplayer)) {
-		//console.log('hallo')
 		if ((Z.mode == 'hotseat' || Z.host == uplayer) && check_resolve()) {
-			//console.log('waiting and hotseat or host && can_resolve!!!!');
 			Z.turn = [Z.host];
 			Z.stage = 104; //'next_comm_setup_stage';
-			//take_turn_fen();
 		}
 		show_waiting_message(`waiting for other players...`);
 		Z.isWaiting = true;
@@ -16281,21 +14903,16 @@ function ari_present_player(plname, d, ishidden = false) {
 	let fen = Z.fen;
 	let pl = fen.players[plname];
 	let ui = UI.players[plname] = { div: d };
-	// pl.hand = fen.stage == '1' ? sort_cards(pl.hand, true, 'CDSH', true, 'A23456789TJQK') : sort_cards(pl.hand, false, null, true, 'A23456789TJQK'); //pl.hand.sort(); GEHT!
-	//pl.hand = fen.stage == '1' ? sort_cards(pl.hand, true, 'CDSH', true, 'A23456789TJQK') : sort_cards(pl.hand, false, null, true, 'A23456789TJQK'); //pl.hand.sort(); GEHT!
-	// if (!ishidden) pl.hand = correct_handsorting(pl.hand, plname); //NO automatic handsorting
 	let hand = ui.hand = ui_type_hand(pl.hand, d, {}, `players.${plname}.hand`, 'hand', ari_get_card);
 	if (ishidden) { hand.items.map(x => face_down(x)); }
 	let stall = ui.stall = ui_type_market(pl.stall, d, { maleft: 12 }, `players.${plname}.stall`, 'stall', ari_get_card);
 	if (fen.stage < 5 && ishidden) { stall.items.map(x => face_down(x)); }
-	//present commissions
 	if (exp_commissions(Z.options)) { 
 		if (!ishidden) pl.commissions = correct_handsorting(pl.commissions, plname);
 		ui.commissions = ui_type_market(pl.commissions, d, { maleft: 12 }, `players.${plname}.commissions`, 'commissions', Z.stage == 23 ? ari_get_card_large : ari_get_card);
 		if (ishidden) { ui.commissions.items.map(x => face_down(x)); }
 		else mMagnifyOnHoverControlPopup(ui.commissions.cardcontainer);
 	}
-	//present rumors
 	if (exp_rumors(Z.options)) { 
 		if (!ishidden) pl.rumors = correct_handsorting(pl.rumors, plname);
 		ui.rumors = ui_type_market(pl.rumors, d, { maleft: 12 }, `players.${plname}.rumors`, 'rumors', Z.stage == 24 ? ari_get_card_large : ari_get_card);
@@ -16306,7 +14923,6 @@ function ari_present_player(plname, d, ishidden = false) {
 	let i = 0;
 	for (const j of pl.journeys) {
 		let jui = ui_type_hand(j, d, { maleft: 12 }, `players.${plname}.journeys.${i}`, '', ari_get_card);//list, dParent, path, title, get_card_func
-		//jui.path = `players.${uplayer}.journeys.${i}`;
 		i += 1;
 		ui.journeys.push(jui);
 	}
@@ -16321,14 +14937,10 @@ function ari_present_player(plname, d, ishidden = false) {
 			b_ui.type = k;
 			ui.buildinglist.push(b_ui);
 			if (b.isblackmailed) { mStamp(b_ui.cardcontainer, 'blackmail'); }
-			//if (!ishidden) b_ui.items.map(x=>face_up(x));// {let j=0;b_ui.items.map(x=>{face_up(x));} //if (j++>0) mStyle(iDiv(x),{transform:'scale(.94)',origin:'bottom left'});});}
 			lookupAddToList(ui, ['buildings', k], b_ui); //GEHT!!!!!!!!!!!!!!!!!!!!!
 			i += 1;
-			//console.log('bui eingetragener path ist',b_ui.path)
 		}
 	}
-	//console.log('buildingslist',plname,ui.buildinglist.map(x=>x.type)); // correct!
-	//console.log('ui_buildings',ui.buildings);
 }
 function ari_activate_ui() { ari_pre_action(); }
 function ari_state(dParent) {
@@ -16341,7 +14953,6 @@ function ari_state(dParent) {
 		return iDiv(card).outerHTML;
 	}
 	if (DA.TEST0 == true) {
-		//testing output
 		let html = `${Z.stage}`;
 		if (isdef(Z.playerdata)) {
 			let trigger = get_multi_trigger();
@@ -16350,11 +14961,8 @@ function ari_state(dParent) {
 				if (data.name == trigger) continue;
 				let name = data.name;
 				let state = data.state;
-				//console.log('state', name, state, typeof(state));
 				let s_state = object2string(state);
 				html += ` ${name}:'${s_state}'`; // (${typeof state})`;
-				//let buys=!isEmpty(data.state)?data.state.buy:'_';
-				//html += ` ${name}:${buys}`;
 			}
 			dParent.innerHTML += ` ${Z.playerdata.map(x => x.name)}`;
 		}
@@ -16369,8 +14977,6 @@ function ari_state(dParent) {
 	else if (TESTING) { html += `&nbsp;&nbsp;&nbsp;stage: ${ARI.stage[Z.stage]}`; }
 	else html += `&nbsp;player: ${user_html} `;
 	dParent.innerHTML = html;
-	//if (phase_html) dParent.innerHTML = `${Z.phase}:&nbsp;${phase_html}&nbsp;player: ${user_html} `;
-	// if (phase_html) dParent.innerHTML = `${Z.phase}:&nbsp;${phase_html},&nbsp;&nbsp;stage: ${Z.stage}`;
 }
 function ari_stats(dParent) {
 	let player_stat_items = UI.player_stat_items = ui_player_info(dParent); //fen.plorder.map(x => fen.players[x]));
@@ -16381,7 +14987,6 @@ function ari_stats(dParent) {
 		let item = player_stat_items[plname];
 		let d = iDiv(item); mCenterFlex(d); mLinebreak(d);
 		if (plname == herald) {
-			//console.log('d', d, d.children[0]); let img = d.children[0];
 			mSym('tied-scroll', d, { fg: 'gold', fz: 24, padding: 4 }, 'TR');
 		}
 		if (exp_church(Z.options)) {
@@ -16408,13 +15013,11 @@ function ari_stats(dParent) {
 }
 function ari_get_actions(uplayer) {
 	let fen = Z.fen;
-	//actions include market card exchange
 	let actions = exp_rumors(Z.options) ? ['trade', 'exchange', 'build', 'upgrade', 'downgrade', 'buy', 'buy rumor', 'rumor', 'inspect', 'blackmail', 'harvest', 'pickup', 'sell', 'tithe', 'commission']
 		: ['trade', 'exchange', 'build', 'upgrade', 'downgrade', 'buy', 'visit', 'harvest', 'pickup', 'sell', 'tithe', 'commission'];
 	if (Config.autosubmit) actions.push('pass'); ////, 'pass'];
 	let avail_actions = [];
 	for (const a of actions) {
-		//check if this action is possible for uplayer
 		let avail = ari_check_action_available(a, fen, uplayer);
 		if (avail) avail_actions.push(a);
 	}
@@ -16424,35 +15027,26 @@ function ari_check_action_available(a, fen, uplayer) {
 	let cards;
 	let pl = fen.players[uplayer];
 	if (a == 'trade') {
-		//there must be 2 cards visible in stalls & market
 		cards = ari_get_all_trading_cards(fen);
-		//console.log('trade', cards);
-		//there must be at least 1 card visible that does NOT belong to pl stall!!!!!
 		let not_pl_stall = cards.filter(x => !pl.stall.includes(x.key));
 		return cards.length >= 2 && pl.stall.length > 0 && not_pl_stall.length > 0;
 	} else if (a == 'exchange') {
 		cards = ari_get_all_wrong_building_cards(fen, uplayer);
 		return cards.length > 0 && (pl.hand.length + pl.stall.length > 0);
 	} else if (a == 'build') {
-		//this player needs to have at least 4 cards in total (stall+hand)
 		let res = ari_get_player_hand_and_stall(fen, uplayer);
 		if (res.length < 4) return false;
-		//it has to be a king phase and player has money
 		let has_a_king = firstCond(res, x => x[0] == 'K');
 		if (pl.coins < 1 && !has_a_king) return false;
-		//or player needs a king in addition to 4 cards
 		if (fen.phase != 'king' && (!has_a_king || res.length < 5)) return false;
 		if (pl.coin == 0 && res.length < 5) return false;
 		return true;
 	} else if (a == 'upgrade') {
-		//player has to have at least 1 farm or estate
 		if (isEmpty(pl.buildings.farm) && isEmpty(pl.buildings.estate)) return false;
-		//it has to be a king phase and player has money
 		let res = ari_get_player_hand_and_stall(fen, uplayer);
 		if (isEmpty(res)) return false;
 		let has_a_king = firstCond(res, x => x[0] == 'K');
 		if (pl.coins < 1 && !has_a_king) return false;
-		//or player needs a king in addition to 4 cards
 		if (fen.phase != 'king' && !has_a_king) return false;
 		if (pl.coin == 0 && res.length < 2) return false;
 		return true;
@@ -16460,16 +15054,13 @@ function ari_check_action_available(a, fen, uplayer) {
 		if (isEmpty(pl.buildings.chateau) && isEmpty(pl.buildings.estate)) return false;
 		return true;
 	} else if (a == 'buy') {
-		//there has to be some card in open_discard
 		if (fen.open_discard.length == 0) return false;
-		//player needs to have a jack or coin>0 and jack phase
 		let res = ari_get_player_hand_and_stall(fen, uplayer);
 		let has_a_jack = firstCond(res, x => x[0] == 'J');
 		if (pl.coins < 1 && !has_a_jack) return false;
 		if (fen.phase != 'jack' && !has_a_jack) return false;
 		return true;
 	} else if (a == 'visit') {
-		//there has to be some building in any other player
 		let others = fen.plorder.filter(x => x != uplayer);
 		let n = 0;
 		for (const plname of others) {
@@ -16478,38 +15069,28 @@ function ari_check_action_available(a, fen, uplayer) {
 			}
 		}
 		if (n == 0) return false;
-		//player needs to have a jack or coin>0 and jack phase
 		let res = ari_get_player_hand_and_stall(fen, uplayer);
 		let has_a_queen = firstCond(res, x => x[0] == 'Q');
 		if (pl.coins < 1 && !has_a_queen) return false;
 		if (fen.phase != 'queen' && !has_a_queen) return false;
 		return true;
 	} else if (a == 'harvest') {
-		//there has to be some harvest card
 		let harvests = ari_get_all_building_harvest_cards(fen, uplayer);
 		return !isEmpty(harvests);
 	} else if (a == 'pickup') {
-		//there has to be some card in stall
 		return !isEmpty(pl.stall);
 	} else if (a == 'sell') {
-		//there has to be at least 2 cards in stall
 		return pl.stall.length >= 2;
 	} else if (a == 'pass') {
-		//there has to be at least 2 cards in stall
 		return true;
 	} else if (a == 'commission') {
-		//muss dieselbe rank in pl.commissions und pl.hand or pl.stall haben!
 		for (const c of pl.commissions) {
 			let rank = c[0];
 			if (firstCond(pl.stall, x => x[0] == rank)) return true; //nur wenn in stall!!!!!!
-			//if (firstCond(pl.hand, x => x[0] == rank) || firstCond(pl.stall, x => x[0] == rank)) return true;
 		}
 		return false;
 	} else if (a == 'rumor') {
-		//console.log('yes, checking rumor command',pl.rumors)
-		//uplayer needs to have at least 1 rumor card
 		if (isEmpty(pl.rumors)) return false;
-		//there has to be some building in any other player
 		let others = fen.plorder.filter(x => x != uplayer);
 		let n = 0;
 		for (const plname of others) {
@@ -16517,19 +15098,10 @@ function ari_check_action_available(a, fen, uplayer) {
 				n += fen.players[plname].buildings[k].length;
 			}
 		}
-		//console.log('other players have buildings:',n);
 		if (n == 0) return false;
 		return true;
-		//NO to the following: rumor action kostet nichts!!!
-		//player needs to have a queen or coin>0 and queen phase
-		// let res = ari_get_player_hand_and_stall(fen, uplayer);
-		// let has_a_queen = firstCond(res, x => x[0] == 'Q');
-		// if (pl.coins < 1 && !has_a_queen) return false;
-		// if (fen.phase != 'queen' && !has_a_queen) return false;
-		// return true;
 	} else if (a == 'inspect') {
 		if (isEmpty(pl.rumors)) return false;
-		//there has to be some building in any other player
 		let others = fen.plorder.filter(x => x != uplayer);
 		let n = 0;
 		for (const plname of others) {
@@ -16539,7 +15111,6 @@ function ari_check_action_available(a, fen, uplayer) {
 		}
 		return n > 0;
 	} else if (a == 'blackmail') {
-		//there has to be some building in any other player with a rumor
 		let others = fen.plorder.filter(x => x != uplayer);
 		let n = 0;
 		for (const plname of others) {
@@ -16550,22 +15121,18 @@ function ari_check_action_available(a, fen, uplayer) {
 			}
 		}
 		if (n == 0) return false;
-		//player needs to have a jack or coin>0 and jack phase
 		let res = ari_get_player_hand_and_stall(fen, uplayer);
 		let has_a_queen = firstCond(res, x => x[0] == 'Q');
 		if (pl.coins < 1 && !has_a_queen) return false;
 		if (fen.phase != 'queen' && !has_a_queen) return false;
 		return true;
 	} else if (a == 'buy rumor') {
-		//there has to be some card in deck_rumors
 		if (fen.deck_rumors.length == 0) return false;
-		//player needs to coin>0
 		if (pl.coins < 1) return false;
 		return true;
 	}
 }
 function ari_get_all_building_harvest_cards(fen, uplayer) {
-	//let fen = Z.fen;
 	let res = [];
 	let pl = fen.players[uplayer];
 	for (const b of pl.buildings.farm) {
@@ -16574,8 +15141,6 @@ function ari_get_all_building_harvest_cards(fen, uplayer) {
 	return res;
 }
 function ari_get_all_wrong_building_cards(fen, uplayer) {
-	//let fen = Z.fen;
-	//console.log('fen', fen, 'uplayer', uplayer, fen.players[uplayer]);
 	let res = [];
 	let pl = fen.players[uplayer];
 	for (const k in pl.buildings) {
@@ -16591,24 +15156,16 @@ function ari_get_all_wrong_building_cards(fen, uplayer) {
 	return res;
 }
 function ari_get_all_trading_cards(fen) {
-	//each co_action is of the form {ckey,path} path is path in Z and otree
-	//let fen = Z.fen;
 	let res = [];
 	fen.market.map(c => res.push({ key: c, path: 'market' }));
 	for (const uplayer of fen.plorder) {
 		let pl = fen.players[uplayer];
-		//console.log('uplayer',uplayer,'pl',pl)
 		let stall = pl.stall;
-		//console.log('stall',stall);
 		stall.map(x => res.push({ key: x, path: `players.${uplayer}.stall` }));
 	}
-	// let plcardlists = otree.plorder.map(x => otree[x].stall);
-	// plcardlists.map(x => x.map(c => res.push[{ c: c, path: `${x}.stall` }]));
 	return res;
 }
 function ari_get_player_hand_and_stall(fen, uplayer) {
-	//let [fen, uplayer] = [Z.fen, Z.uplayer];
-	//let fen = Z.fen;
 	let res = [];
 	res = res.concat(fen.players[uplayer].hand);
 	res = res.concat(fen.players[uplayer].stall);
@@ -16627,15 +15184,11 @@ function ari_next_action() {
 	let [fen, uplayer] = [Z.fen, Z.uplayer];
 	deactivate_ui();
 	console.assert(isdef(Z.num_actions));
-	//if (nundef(fen.num_actions)) fen.num_actions = 0;
-	//console.log('ari_next', fen.num_actions);
 	fen.num_actions -= 1;
 	fen.action_number += 1;
 	if (fen.num_actions <= 0) {
-		//console.log('NO MORE ACTIONS FOR!!!!!!', uplayer);
 		fen.total_pl_actions = 0;
 		lookupAddIfToList(fen, ['actionsCompleted'], uplayer);
-		//fen.actionsCompleted.push(uplayer);
 		let next = ari_select_next_player_according_to_stall_value(fen);
 		if (!next) {
 			ari_next_phase();
@@ -16649,15 +15202,11 @@ function ari_next_action() {
 }
 function process_auction() {
 	let [fen, A, uplayer, plorder] = [Z.fen, Z.A, Z.uplayer, Z.plorder];
-	//console.log('A', A.selected);
 	if (isEmpty(A.selected)) A.selected = [0];
 	let playerbid = Number(valf(A.items[A.selected[0]].a, '0')); //A.selected.map(x => A.items[x]); 
-	//console.log('player', uplayer, 'bids', playerbid);
 	lookupSet(fen, ['auction', uplayer], playerbid);
-	//console.log('fen.auction', fen.auction);
 	let iturn = fen.plorder.indexOf(uplayer) + 1;
 	if (iturn >= fen.plorder.length) { //console.log('auction over!');
-		//find out max and second max investment
 		let list = dict2list(fen.auction, 'uplayer');
 		list = sortByDescending(list, 'value');
 		let max = list[0].value;
@@ -16668,65 +15217,49 @@ function process_auction() {
 			return;
 		}
 		let second = fen.second_most = list.length == 1 ? randomNumber(0, max) : list[1].value;
-		//all players with max amount have the right to buy a market card for second coins
 		Z.stage = 13;
 		let maxplayers = fen.maxplayers = list.filter(x => x.value == max).map(x => x.uplayer);
-		//fen.round = arrMinus(fen.plorder, maxplayers);
 		Z.turn = [maxplayers[0]];
 		for (const plname of plorder) {
 			ari_history_list([`${plname} bids ${fen.auction[plname]}`], 'auction');
 		}
 		ari_history_list([`auction winner${if_plural(fen.maxplayers.length)}: ${fen.maxplayers.join(', ')} (price: ${fen.second_most} coin)`], 'auction');
-		//iturn = fen.plorder.indexOf(maxplayers[0]);
 	} else {
 		Z.turn = [fen.plorder[iturn]];
 	}
-	//console.log('next player is', Z.turn[0]);
 	take_turn_fen(); //wenn send mache muss ich die ui nicht korrigieren!
 }
 function post_auction() {
 	console.assert(Z.stage == 13, 'WRONG STAGE IN POST AUCTION ' + Z.stage);
 	let [fen, A, uplayer] = [Z.fen, Z.A, Z.uplayer];
-	//console.log('selected', A.selected)
 	let item = A.selected.map(x => A.items[x])[0]; // A.items.filter(x => A.selected.includes(x.index)).map(x => x.key);
 	lookupSet(fen, ['buy', uplayer], { key: item.key, index: A.selected[0] });
 	ari_history_list([`${uplayer} selects ${item.key}`], 'auction');
 	for (const plname of fen.maxplayers) {
 		if (!lookup(fen, ['buy', plname])) {
-			//let iturn = fen.plorder.indexOf(uplayer);
 			Z.turn = [plname]; //fen.plorder[iturn];
 			take_turn_fen(); //wenn send mache muss ich die ui nicht korrigieren!
 			return;
 		}
 	}
-	//arriving here, everyone has determined what to buy
-	//the choices are in fen.buy[plname]
-	//if 2 or more players selected the same card, this card is discarded
-	//otherwise the player buys the card
 	let buylist = dict2list(fen.buy, 'playername');
-	//console.log('buylist', buylist);
 	let discardlist = [];
 	for (const plname of fen.maxplayers) {
 		let choice = fen.buy[plname]; //{key:item.key,index:A.selected[0]}
-		//console.log('choice of', plname, 'was', choice)
 		let n = arrCount(buylist, x => x.index == choice.index);
 		let is_unique = n == 1; //!firstCond(buylist, x => x.id != plname && x.key == choice);
-		//console.log('choice', choice, 'is_unique', is_unique);
 		if (is_unique) {
 			fen.players[plname].coins -= fen.second_most;
 			let x = UI.player_stat_items[plname].dCoin; mPulse1(x); //console.log('dCoin: ', x); 
 			elem_from_to(choice.key, fen.market, fen.players[plname].hand);
 			ari_history_list([`${plname} buys ${choice.key} for ${fen.second_most}`], 'auction');
-			//wenn choice gekauft wird, dann animate to player stats
 			let card = find_card(choice.index, UI.market);
-			//console.log('card', card);
 			animate_card_transfer(card, arrLast(UI.players[plname].hand.items)); //UI.player_stat_items[plname]);
 		} else {
 			addIf(discardlist, choice.key);
 			delete fen.buy[plname];
 		}
 	}
-	//console.log('discardlist', discardlist);
 	for (const key of discardlist) {
 		elem_from_to(key, fen.market, fen.deck_discard);
 		ari_reorg_discard(fen);
@@ -16766,7 +15299,6 @@ function post_buy() {
 	elem_from_to(item.key, fen.open_discard, fen.players[uplayer].hand);
 	ari_history_list([`${uplayer} buys ${item.key}`], 'buy')
 	ari_reorg_discard();
-	//console.log('buy item',item)
 	console.log('hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh')
 	process_payment();
 	setTimeout(ari_next_action, 1000); //ari_next_action();
@@ -16774,22 +15306,15 @@ function post_buy() {
 function post_ball() {
 	let [stage, A, fen, uplayer] = [Z.stage, Z.A, Z.fen, Z.uplayer];
 	let keys = A.selected.map(x => A.items[x]).map(x => x.key);
-	//console.log('keys', keys)
 	keys.map(x => lookupAddIfToList(fen, ['ball', uplayer], x));
-	//console.log('ball', fen.ball);
 	keys.map(x => removeInPlace(fen.players[uplayer].hand, x));
 	let iturn = fen.plorder.indexOf(uplayer) + 1;
 	if (iturn >= fen.plorder.length) { //alle sind durch ball selection
-		//distribute ball cards according to what each player gave for ball!
-		//console.log('TODO: distribute all cards from', otree.ball);
-		//console.log('ball over!');
 		if (isdef(fen.ball)) {
 			let all = [];
 			for (const c of fen.market) all.push(c);
 			for (const uplayer in fen.ball) for (const c of fen.ball[uplayer]) all.push(c);
-			//console.log('all ball cards', all);
 			shuffle(all);
-			//give 2 cards from all to market
 			fen.market = [];
 			for (let i = 0; i < 2; i++) top_elem_from_to(all, fen.market);
 			for (const uplayer in fen.ball) for (let i = 0; i < fen.ball[uplayer].length; i++) top_elem_from_to(all, fen.players[uplayer].hand);
@@ -16800,7 +15325,6 @@ function post_ball() {
 		console.assert(fen.phase == 'queen', 'wie bitte noch nicht in queen phase?!!!!!!!!!!!');
 	}
 	Z.turn = [fen.plorder[iturn]];
-	//console.log('turn', Z.turn);
 	ari_history_list([`${uplayer} added ${keys.length} card${plural(keys.length)} to ball!`], 'ball');
 	take_turn_fen(); //wenn send mache muss ich die ui nicht korrigieren!
 }
@@ -16812,24 +15336,16 @@ function post_build() {
 	}
 	let building_items = A.selected.map(x => A.items[x]);
 	let building_type = building_items.length == 4 ? 'farm' : building_items.length == '5' ? 'estate' : 'chateau';
-	//add the building to the fen
 	fen.players[uplayer].buildings[building_type].push({ list: building_items.map(x => x.key), h: null, schweine: [], lead: building_items[0].key });
-	//remove building_items from hand/stall
 	for (const item of building_items) {
 		let source = lookup(fen, item.path.split('.'));
-		//console.log('item.path', item.path);
-		//console.log('source', source);
 		removeInPlace(source, item.key);
 	}
 	ari_history_list([`${uplayer} builds a ${building_type}`], 'build');
 	let is_coin_pay = process_payment();
 	let ms = 1800;
 	if (is_coin_pay) animcoin(Z.uplayer, 1000);
-	//animate_build_action(building_items.map(x=>x.o), is_coin_pay, null); //ari_next_action);
-	//geht das: einfach presenten?
 	remove_ui_items(building_items);
-	//find index of new building in fen.players[uplayer].buildings[building_type]
-	//make a list of all fen buildings
 	let pl = fen.players[uplayer];
 	let nfarms = pl.buildings.farm.length;
 	let nestates = pl.buildings.estate.length;
@@ -16842,8 +15358,6 @@ function post_build() {
 	let akku = [];
 	while (dpl.children.length > ifinal) { akku.push(dpl.lastChild); dpl.removeChild(dpl.lastChild); }
 	let fenbuilding = arrLast(fen.players[uplayer].buildings[building_type]);
-	// let d=iDiv(UI.players[uplayer]);
-	//ui_type_building(b, d, { maleft: 8 }, `players.${plname}.buildings.${k}.${i}`, type, ari_get_card, true, ishidden);
 	let newbuilding = ui_type_building(fenbuilding, dpl, { maleft: 8 }, `players.${uplayer}.buildings.${building_type}.${index}`, building_type, ari_get_card, true, false);
 	animbuilding(newbuilding, ms, ari_next_action);
 	akku.map(x => mAppend(dpl, x));
@@ -16854,7 +15368,6 @@ function ari_clear_church() {
 	for (const plname in fen.players) {
 		delete fen.players[plname].tithes;
 	}
-	//console.log('fen.deck', fen.deck, 'n',Z.plorder.length);
 	fen.church = ari_deck_deal_safe(fen, Z.plorder.length);
 }
 function check_if_church() {
@@ -16868,12 +15381,10 @@ function check_if_church() {
 		jacks = jacks.concat(pl_jacks);
 		queens = queens.concat(pl_queens);
 	}
-	//console.log('jacks', jacks, 'queens', queens);
 	let ischurch = false;
 	for (const j of jacks) {
 		if (firstCond(queens, x => x[1] != j[1])) ischurch = true;
 	}
-	//console.log('ischurch', ischurch);
 	return ischurch;
 }
 function determine_church_turn_order() {
@@ -16885,11 +15396,8 @@ function determine_church_turn_order() {
 		pl.max_journey_length = ari_get_max_journey_length(fen, plname);
 		pl.score = pl.vps * 10000 + pl.max_journey_length * 100 + pl.coins;
 		initial.push(pl);
-		//console.log('score', plname, pl.score);
 	}
-	//let playerlist = dict2list(fen.players, 'name');
 	let sorted = sortByDescending(initial, 'score');
-	//console.log('church order: scores', sorted.map(x => `${x.name}:${x.score}`));
 	return sorted.map(x => x.name);
 }
 function is_in_middle_of_church() {
@@ -16900,37 +15408,25 @@ function post_church() {
 	let [fen, A, uplayer] = [Z.fen, Z.A, Z.uplayer];
 	let pl = fen.players[uplayer];
 	let items = A.selected.map(x => A.items[x]);
-	//console.log('post_church num selected',items.length)
-	//console.log('post_church', items);
-	//which of items is a card and which one is a string item?
 	let card = items.find(x => x.path && x.path.includes('church')); if (isdef(card)) card = card.key;
 	let cand = items.length > 1 ? items.find(x => !x.path) : fen.candidates[0];
 	if (isdef(cand) && isDict(cand)) cand = cand.key;
-	//console.log('card', card, 'cand', cand);
 	if (nundef(card) || nundef(cand)) {
 		select_error(`You must select a card ${items.length > 1 ? 'and a candidate' : ''}!`);
 		return;
 	}
-	//card has to be removed from church and given to cand hand
 	elem_from_to(card, fen.church, fen.players[cand].hand);
 	ari_history_list([`${uplayer} gives ${cand} card ${card}`], 'new cards');
-	//remove cand from toBeSelected
 	removeInPlace(fen.toBeSelected, cand);
-	//if church only contains 1 more card, give it to the remaining player in toBeSelected
 	if (fen.church.length == 1) {
-		//console.log('nur noch ein element in church!!! proceed to stage 5...')
 		let cand = fen.toBeSelected[0];
 		let card = fen.church[0];
 		elem_from_to(card, fen.church, fen.players[cand].hand);
 		ari_history_list([`${cand} receives last card: ${card}`], 'new cards');
-		//proceed to next stage after church! also mark this round not to contain any more churches!!!
-		//list all properties related to churches in fen.players and fen: delete them!
 		Z.stage = 14;
 		let plorder = fen.plorder = jsCopy(fen.heraldorder);
 		Z.turn = [plorder[0]];
-		//church ends here!!!
 		take_turn_fen();
-		//ari_start_action_stage(); NEIN! zuerst kommt ein complementing_market stage!
 	} else {
 		Z.turn = [get_next_in_list(uplayer, fen.selorder)];
 		take_turn_fen();
@@ -16940,48 +15436,29 @@ function post_tithe() {
 	let [fen, A, uplayer, plorder] = [Z.fen, Z.A, Z.uplayer, Z.plorder];
 	let items = A.selected.map(x => A.items[x]);
 	if (items.length == 0) { select_error('No cards selected!'); return; }
-	//calc value of cards in items
 	let st = items.map(x => ({ key: x.key, path: x.path }));
 	let val = arrSum(st.map(x => ari_get_card(x.key).val));
-	//console.log('player', uplayer, 'tithes', st, 'value', val);
 	lookupSet(fen, ['players', uplayer, 'tithes'], { keys: st, val: val });
 	remove_tithes_from_play(fen, uplayer);
-	//calc tithe minimum so far
 	let pldone = plorder.filter(x => isdef(fen.players[x].tithes));
 	let minplayers = arrMin(pldone, x => fen.players[x].tithes.val);
 	let minplayer = isList(minplayers) ? minplayers[0] : minplayers;
 	let minval = fen.tithemin = fen.players[minplayer].tithes.val;
 	let next = get_next_in_list(uplayer, fen.church_order);
 	if (next == fen.church_order[0]) {
-		//this stage is done! ALL PLAYERS HAVE TITHED!!!
-		//goto church_tithe_eval stage (18)
-		//console.log('CHURCH TIDYING DONE!!! minplayers', minplayers);
 		assertion(sameList(pldone, plorder), 'NOT all players have tithes!!!!!!!', pldone);
-		//tithed cards have to be removed!
-		//for (const plname of pldone) { remove_tithes_from_play(fen, plname); }
 		if (minplayers.length > 1) { proceed_to_newcards_selection(); return; }
 		else {
-			//there is a minplayer, this player has to tithe at least as much as next higher player!
-			//remove minplayer from pldone
 			pldone = pldone.filter(x => x != minplayer);
-			//sort pldone by tithe value
 			let sorted = sortBy(pldone, x => fen.players[x].tithes.val);
 			let second_min = sorted[0];
 			fen.tithe_minimum = fen.players[second_min].tithes.val - minval;
-			//hier kann ich eigentlich schon checken ob der minplayer ueberhaupt genug hat!
-			//dann kann ich gleich entscheiden ob er zu downgrad muss oder zu additional_tithes_to_play
 			let pl = fen.players[minplayer];
 			let hst = pl.hand.concat(pl.stall);
 			let vals = hst.map(x => ari_get_card(x).val);
 			let sum = isEmpty(vals) ? 0 : arrSum(vals);
-			//console.log('gesamtes minplayer blatt + stall', sum);
 			let min = fen.tithe_minimum;
 			if (sum < min) {
-				//jetzt gibt es ein problem! player muss ein building downgraden!
-				//fahre fort wie bei downgrade!
-				//aber danach muss ich wieder zurueck zu church!!!
-				//was ist wenn player kein building hat!!!
-				//uplayer looses all hand and stall cards!!!
 				pl.hand = [];
 				pl.stall = [];
 				let buildings = arrFlatten(get_values(pl.buildings));
@@ -16994,12 +15471,9 @@ function post_tithe() {
 				ari_history_list([`${minplayer} must downgrade a building to tithe ${min}!`], 'downgrade');
 				Z.stage = 22;
 			} else {
-				//must select more cards to tithe!
 				ari_history_list([`${minplayer} must tithe more cards to reach ${min}!`], 'tithe');
 				Z.stage = 21;
-				//
 			}
-			//Z.stage = 18;
 			Z.turn = [minplayer];
 		}
 	} else {
@@ -17011,25 +15485,17 @@ function post_tithe_minimum() {
 	let [fen, A, uplayer, plorder] = [Z.fen, Z.A, Z.uplayer, Z.plorder];
 	let pl = fen.players[uplayer];
 	let items = A.selected.map(x => A.items[x]);
-	//calc value of cards in items
 	let st = items.map(x => ({ key: x.key, path: x.path }));
-	// let val = arrSum(st.map(x => ari_get_card(x.key).val));
-	// let st = items.map(x => x.key);
-	//player already has tithes!
 	pl.tithes.keys = pl.tithes.keys.concat(st);
 	let newval = arrSum(st.map(x => ari_get_card(x.key).val));
 	pl.tithes.val += newval;
-	//console.log('player', uplayer, 'tithes', st, 'value', pl.tithes.val);
-	//verify that val is at least tithe_minimum
 	console.log('tithe_minimum', fen.tithe_minimum);
 	console.log('val', pl.tithes.val);
 	if (newval < fen.tithe_minimum) {
 		select_error(`you need to tithe at least ${fen.tithe_minimum} to reach minimum`);
 		return;
 	}
-	//tithed cards have to be removed!
 	remove_tithes_from_play(fen, uplayer, st);
-	// for (const tithe of st) { removeInPlace(pl.hand, tithe); }
 	proceed_to_newcards_selection();
 }
 function post_complementing_market_after_church() {
@@ -17039,7 +15505,6 @@ function post_complementing_market_after_church() {
 	for (const ckey of selectedKeys) {
 		elem_from_to(ckey, fen.players[uplayer].hand, fen.players[uplayer].stall);
 	}
-	//ari_history_list([`${uplayer} chose ${selectedKeys.length == 0 ? 'NOT ' : ''} to complement stall`], 'complement stall');
 	if (selectedKeys.length > 0) ari_history_list([`${uplayer} complements stall`], 'complement stall');
 	let next = get_next_player(Z, uplayer);
 	if (next == plorder[0]) {
@@ -17051,11 +15516,8 @@ function post_complementing_market_after_church() {
 	}
 }
 function proceed_to_newcards_selection() {
-	//determine selection order for _newcards selection
 	let fen = Z.fen;
 	let selorder = fen.selorder = sortByFuncDescending(fen.church_order, x => fen.players[x].tithes.val);
-	//console.log('church_order',fen.church_order);
-	//console.log('selorder',selorder);
 	fen.toBeSelected = jsCopy(selorder);
 	fen.plorder = selorder;
 	Z.turn = [selorder[0]];
@@ -17066,11 +15528,8 @@ function remove_tithes_from_play(fen, plname, tithes) {
 	let pl = fen.players[plname];
 	if (nundef(tithes)) tithes = pl.tithes.keys;
 	for (const tithe of tithes) {
-		//console.log('*** removing tithe from', tithe.path, tithe.key);
 		if (tithe.path.includes('hand')) { removeInPlace(pl.hand, tithe.key); }
 		else if (tithe.path.includes('stall')) { removeInPlace(pl.stall, tithe.key); }
-		//console.log('*** hand after removing tithe', pl.hand);
-		//console.log('*** stall after removing tithe', pl.stall);
 	}
 	ari_history_list([`${plname} tithes ${tithes.map(x => x.key).join(', ')}!`], 'tithe');
 }
@@ -17080,24 +15539,19 @@ function reveal_church_cards() {
 	let uichurch = UI.church;
 	let dOpenTable = UI.dOpenTable;
 	let church_cards = uichurch.items;
-	//console.log('reveal_church_cards', uichurch);
 	uichurch.container.remove();
 	UI.church = uichurch = ui_type_market(fen.church, dOpenTable, { maleft: 25 }, 'church', 'church');
 }
 function ui_get_church_items(uplayer) {
 	let fen = Z.fen;
-	//console.log('uplayer',uplayer,UI.players[uplayer])
 	let items = [], i = 0;
 	let church = UI.church;
 	for (const o of church.items) {
-		//console.log('path', hand.path);
-		//console.log(UI.players[uplayer].hand.path);
 		let item = { o: o, a: o.key, key: o.key, friendly: o.short, path: church.path, index: i };
 		i++;
 		items.push(item);
 	}
 	let candidates = fen.candidates = arrMinus(fen.toBeSelected, uplayer);
-	//console.log('can pick player to give a card to', candidates);
 	if (candidates.length > 1) {
 		let player_items = ui_get_string_items(candidates);
 		items = items.concat(player_items);
@@ -17108,32 +15562,21 @@ function ui_get_church_items(uplayer) {
 function process_comm_setup() {
 	let [fen, A, uplayer, plorder,pl] = [Z.fen, Z.A, Z.uplayer, Z.plorder,Z.pl];
 	assertion(fen.keeppolling == true, "keeppolling must be true for process_comm_setup!!!");
-	//console.log('OK 1');
 	if (DA.hallo) {
 		console.log('process_comm_setup:', Z.playerdata, Z.stage,uplayer,pl);
 		return;
 	}
-	//get keys of selected cards
 	let items = A.selected.map(x => A.items[x]);
 	let next = get_next_player(Z, uplayer);
 	let receiver = next;
 	let giver = uplayer;
 	let keys = items.map(x => x.key);
-	//must write to pldata (=Z.state) {giver, receiver, keys}
 	Z.state = { giver:giver, receiver:receiver, keys:keys };
-	//console.log('uplayer',uplayer,'commissions',pl.commissions);
-	//console.log('other player',receiver,'commissions',fen.players[receiver].commissions);
-	//console.log('setting playerdata for', giver, 'to', receiver, keys);
-	//console.log('Z.state', Z.state);
 	assertion(isdef(Z.playerdata), "Z.playerdata must be defined for process_comm_setup!!!");
 	let data = firstCond(Z.playerdata, x => x.name == uplayer);
 	assertion(isdef(data), `MISSING: playerdata for ${uplayer}`);
 	data.state = Z.state;
-	//console.log('OK 2');
-	//check if playerdata set for all players
 	let can_resolve = check_resolve();
-	//console.log('can_resolve', can_resolve);
-	//if (uplayer == 'felix') return; //************************TEST TEST TEST*************** */
 	if (can_resolve) {
 		Z.turn = [Z.host];
 		Z.stage = 104; //'next_comm_setup_stage';
@@ -17152,10 +15595,7 @@ function check_resolve(){
 	return can_resolve;
 }
 function post_comm_setup_stage() {
-	//erst uebertrage alle cards from pldata.state.keys to pldata.state.receiver
 	let [fen, A, uplayer, plorder, pl] = [Z.fen, Z.A, Z.uplayer, Z.plorder, Z.pl];
-	// console.log('OK 3: resolving__________________',uplayer);
-	// console.log('playerdata',jsCopy(Z.playerdata));
 	let achtungHack=false;
 	let new_playerdata=[];
 	for (const data of Z.playerdata) {
@@ -17170,27 +15610,14 @@ function post_comm_setup_stage() {
 			achtungHack = true;
 		}
 		new_playerdata.push(o);
-		//if (!isDict(data)) data
 		let state = o.state;
-		//console.log('state', state)
 		let giver = state.giver;
 		let receiver = state.receiver;
 		let keys = state.keys;
-		// console.log('giver', giver, fen.players[giver].commissions)
-		// console.log('receiver', receiver, fen.players[receiver].commissions);
-		// console.log('state.keys', keys);
 		keys.map(x => elem_from_to(x, fen.players[giver].commissions, fen.players[receiver].commissions));
-		//fen.players[giver].commissions = arrMinus(fen.players[giver].commissions, keys);
-		//fen.players[receiver].commissions = fen.players[receiver].commissions.concat(keys); //arrPlus(fen.players[receiver].commissions, keys);
-		//fen.players[receiver].commissions = arrPlus(fen.players[receiver].commissions, keys);
 	}
 	if (achtungHack) {Z.playerdata = new_playerdata;}
 	fen.comm_setup_num -= 1;
-	//console.log('OK 4',fen.comm_setup_num);
-	// console.log('mimi commissions',pl.commissions);
-	// console.log('felix commissions',fen.players.felix.commissions);
-	//assertion(fen.comm_setup_num > 1, "fen.comm_setup_num must be > 1");
-	//return;
 	if (fen.comm_setup_num <= 0) {
 		delete fen.comm_setup_di;
 		delete fen.comm_setup_num;
@@ -17201,15 +15628,9 @@ function post_comm_setup_stage() {
 			ari_history_list([`gossiping starts`], 'rumors');
 		} else { [Z.stage, Z.turn] = set_journey_or_stall_stage(fen, Z.options, fen.phase); }
 	} else {
-		//muss auf jeden fen clear aufrufen!
-		//mach dasselbe wie beim ersten mal!
 		[Z.stage, Z.turn] = [23, Z.options.mode == 'hotseat' ? [fen.plorder[0]] : fen.plorder];
-		//
 	}
-	//DA.hallo=true;
 	take_turn_fen_clear();
-	//if fen.comm_setup_num is 1, then go to next stage 
-	//console.log('fen', fen);
 }
 function process_commission_stall() {
 	let [fen, A, uplayer] = [Z.fen, Z.A, Z.uplayer];
@@ -17220,11 +15641,7 @@ function process_commission_stall() {
 }
 function process_commission() {
 	let [fen, A, uplayer] = [Z.fen, Z.A, Z.uplayer];
-	//console.log('process_commission:', A.items[A.selected[0]]);
-	//was muss jetzt passieren?
-	//1. frage den player was er auswaehlen wird?
 	A.commission = A.items[A.selected[0]];
-	//hier muss was her fuer wenn multiple stall items die passen hat!!!
 	if (A.commission.similar.length > 1) {
 		Z.stage = 37;
 	} else {
@@ -17238,18 +15655,12 @@ function post_commission() {
 	let comm_selected = A.items[A.selected[0]];
 	let stall_item = A.commission_stall_item;
 	console.log('stall_item:', stall_item);
-	//console.log('process_commission:', comm_selected);
-	//1. berechne wieviel der player bekommt!
-	//first check N1 = wie oft im fen.commissioned der rank von A.commission schon vorkommt
-	//fen.commissioned koennte einfach sein: array of {rank:rank,count:count} und sorted by latest
 	let rank = A.commission.key[0];
 	if (nundef(fen.commissioned)) fen.commissioned = [];
 	let x = firstCond(fen.commissioned, x => x.rank == rank);
 	if (x) { removeInPlace(fen.commissioned, x); }
 	else { x = { key: A.commission.key, rank: rank, count: 0 }; }
-	//console.log('x', x)
 	x.count += 1;
-	//is the rank >= that the rank of the topmost commissioned card
 	let pl = fen.players[uplayer];
 	let top = isEmpty(fen.commissioned) ? null : arrLast(fen.commissioned);
 	let rankstr = 'A23456789TJQK';
@@ -17257,30 +15668,23 @@ function post_commission() {
 	points += Number(x.count);
 	pl.coins += points;
 	fen.commissioned.push(x);
-	// let key = A.commission.similar.key;
 	let key = stall_item.key;
 	removeInPlace(pl.stall, key); // das muss aendern!!!!!!!!!!!!!
 	if (comm_selected.path == 'open_commissions') {
-		//top comm deck card goes to open commissions
 		removeInPlace(fen.open_commissions, comm_selected.key);
 		top_elem_from_to(fen.deck_commission, fen.open_commissions);
 	} else {
 		removeInPlace(fen.deck_commission, comm_selected.key);
 	}
-	//console.log('pl', pl, pl.commissions);
 	arrReplace(pl.commissions, [A.commission.key], [comm_selected.key]);
-	//ari_history_list([`${uplayer} replaced commission card ${A.commission.key} by ${comm_selected.key}`, `${uplayer} gets ${points} for commissioning ${A.commission.key}`], 'commission');
 	ari_history_list([`${uplayer} commissions card ${A.commission.key}`, `${uplayer} gets ${points} coin${if_plural(points)} for commissioning ${A.commission.key}`], 'commission');
 	ari_next_action();
 }
 function process_downgrade() {
 	let [fen, A, uplayer] = [Z.fen, Z.A, Z.uplayer];
 	A.building = A.items[A.selected[0]];
-	//console.log('A.building is', A.building, 'A.selected', A.selected);
-	//next have to select 1 or more cards to take into hands from building
 	fen.stage = Z.stage = 103;
 	let items = ui_get_hidden_building_items(A.building.o);
-	//console.log('items to select:',items);
 	items.map(x => face_up(x.o));
 	A.possible_downgrade_cards = items;
 	ari_pre_action();
@@ -17289,38 +15693,27 @@ function post_downgrade() {
 	let [fen, A, uplayer] = [Z.fen, Z.A, Z.uplayer];
 	let pl = fen.players[uplayer];
 	A.downgrade_cards = A.selected.map(x => A.items[x]); //
-	//console.log('A.candidates',A.possible_downgrade_cards);
-	//console.log('selected indices',A.selected);
-	//console.log('selected these cards to downgrade:',A.downgrade_cards);
 	let obuilding = lookup(fen, A.building.path.split('.'));
-	//get number of cards in this building
 	let n = obuilding.list.length;
 	let nremove = A.downgrade_cards.length;
 	let nfinal = n - nremove;
-	//remove this building from its list
 	let type = A.building.o.type;
 	let list = pl.buildings[type];
 	removeInPlace(list, obuilding);
 	let cards = A.downgrade_cards.map(x => x.key);
 	if (nfinal < 4) {
-		//entire building take to hand
 		pl.hand = pl.hand.concat(obuilding.list);
 	} else if (nfinal == 4) {
-		//add the building to farm
 		pl.buildings.farm.push(obuilding);
 		pl.hand = pl.hand.concat(cards);
 	} else if (nfinal == 5) {
-		//add the building to estate
 		pl.buildings.estate.push(obuilding);
 		pl.hand = pl.hand.concat(cards);
 	} else if (nfinal == 6) {
-		//add the building to chateau
 		pl.buildings.chateau.push(obuilding);
 		pl.hand = pl.hand.concat(cards);
 	}
 	A.downgrade_cards.map(x => removeInPlace(obuilding.list, x.key));
-	//aenderung fuer church!!!
-	//if this is a church forced downgrade, cards are removed from hand (and play) permanently
 	if (isdef(pl.tithes)) {
 		for (const c of cards) removeInPlace(pl.hand, c);
 	}
@@ -17332,16 +15725,13 @@ function ari_reveal_all_buildings(fen) {
 		let gbs = UI.players[plname].buildinglist;
 		for (const gb of gbs) {
 			gb.items.map(x => face_up(x));
-			//console.log('gb',gb);
 		}
 	}
 }
 function post_endgame() {
 	let [fen, A, uplayer] = [Z.fen, Z.A, Z.uplayer];
-	// console.log('post_endgame...................................?', A.selected[0])
 	if (A.selected[0] == 0) {
 		console.log('GAMEOVER!!!!!!!!!!!!!!!!!!!');
-		//berechne fuer jeden real vps!
 		for (const plname of fen.plorder) {
 			let pl = fen.players[plname];
 			pl.vps = ari_calc_real_vps(fen, plname);
@@ -17358,7 +15748,6 @@ function post_endgame() {
 		console.log('winners:', fen.winners)
 		take_turn_fen();
 	} else {
-		// *** this potential winners chose go on! ***
 		let iturn = fen.pl_gameover.indexOf(uplayer) + 1;
 		if (iturn >= fen.pl_gameover.length) { //niemand wollte beenden: move to queen phase!
 			delete fen.pl_gameover;
@@ -17373,9 +15762,7 @@ function post_endgame() {
 	}
 }
 function ai_pick_legal_exchange() {
-	//mach einfach alle pairs von legal trades
 	let [A, fen, uplayer, items] = [Z.A, Z.fen, Z.uplayer, Z.A.items];
-	//console.log('A',A);
 	let firstPick = rChoose(items, 1, x => x.path.includes('building'));
 	let secondPick = rChoose(items, 1, x => !x.path.includes('building'));
 	return [firstPick, secondPick];
@@ -17388,20 +15775,15 @@ function post_exchange() {
 	}
 	let i0 = A.items[A.selected[0]];
 	let i1 = A.items[A.selected[1]];
-	//one of the cards has to be from a building
 	let [p0, p1] = [i0.path, i1.path];
 	if (p0.includes('build') == p1.includes('build')) {
 		select_error('select exactly one building card and one of your hand or stall cards!');
 		return;
 	}
-	//console.log('i0', i0, 'i1', i1);
-	//exchange_items_in_fen(fen, i0, i1); 
-	//instead, need to exchange exactly at the same position!!!
 	let ibuilding = p0.includes('build') ? i0 : i1;
 	let ihandstall = ibuilding == i0 ? i1 : i0;
 	let fenbuilding = lookup(fen, ibuilding.path.split('.')); //stringBeforeLast(ibuilding.path, '.').split('.'));
 	let ib_index = ibuilding.o.index; //index of the building card within building!
-	//if this index is in fenbuilding.schweine, remove index from schweine
 	if (fenbuilding.schweine.includes(ib_index)) {
 		fenbuilding.schweine.splice(fenbuilding.schweine.indexOf(ib_index), 1);
 	}
@@ -17425,7 +15807,6 @@ function aggregate_player(fen, prop) {
 	return res;
 }
 function ari_add_hand_card() {
-	//distribute cards
 	let fen = Z.fen;
 	for (const uplayer of fen.plorder) {
 		ari_ensure_deck(fen, 1);
@@ -17433,17 +15814,13 @@ function ari_add_hand_card() {
 	}
 }
 function ari_add_harvest_cards(fen) {
-	//console.log('deck', jsCopy(otree.deck));
 	for (const plname of fen.plorder) {
 		for (const f of fen.players[plname].buildings.farm) {
 			if (nundef(f.h)) {
-				//what is run out of cards!!!
 				let list = [];
 				ari_ensure_deck(fen, 1);
 				top_elem_from_to(fen.deck, list);
-				//let ckey = otree.deck.shift();
 				f.h = list[0];
-				//console.log('adding harvest key', f.h, jsCopy(otree.deck));
 			}
 		}
 	}
@@ -17456,13 +15833,11 @@ function ari_calc_real_vps(fen, plname) {
 	let pl = fen.players[plname];
 	let bs = ari_get_correct_buildings(pl.buildings);
 	let vps = calc_building_vps(bs);
-	//console.log('building vps for',plname,vps)
 	for (const btype in bs) {
 		let blist = bs[btype];
 		for (const b of blist) {
 			let lead = b.list[0];
 			if (firstCond(pl.commissions, x => x[0] == lead[0])) {
-				//console.log('player',plname,'has commission card for building of',lead);
 				vps += 1;
 			}
 		}
@@ -17486,32 +15861,24 @@ function ari_check_end_condition(blist) {
 }
 function ari_deck_deal_safe(fen, n) { ari_ensure_deck(fen, n); return deck_deal(fen.deck, n); }
 function ari_ensure_deck(fen, n) {
-	//console.log('fen', jsCopy(fen));
 	if (fen.deck.length < n) { ari_refill_deck(fen); }
 }
 function ari_get_building_type(obuilding) { let n = obuilding.list.length; return n == 4 ? 'farm' : n == 5 ? 'estate' : 'chateau'; }
 function ari_get_correct_buildings(buildings) {
 	let bcorrect = { farm: [], estate: [], chateau: [] };
-	//let realvps = 0;
 	for (const type in buildings) {
 		for (const b of buildings[type]) {
-			//console.log(',,,b', b);
 			let list = b.list;
-			//console.log('list', list)
 			let lead = list[0];
 			let iscorrect = true;
 			for (const key of arrFromIndex(list, 1)) {
 				if (key[0] != lead[0]) { iscorrect = false; continue; }
 			}
-			//console.log('building',list,'is',iscorrect?'correct':'_schwein!')
 			if (iscorrect) {
-				//console.log('type',type)
-				//realvps += (type == 'farm' ? 1 : type == 'estate' ? 2 : 3);
 				lookupAddIfToList(bcorrect, [type], b);
 			}
 		}
 	}
-	//console.log('realvps',realvps,'bcorrect',bcorrect);
 	return bcorrect; // [bcorrect, realvps];
 }
 function ari_get_max_journey_length(fen, uplayer) {
@@ -17524,12 +15891,8 @@ function ari_history_list(lines, title = '', fen) {
 	if (nundef(fen.history)) fen.history = [];
 	if (isString(lines)) lines = [lines];
 	fen.history.push({ title: title, lines: lines });
-	//lookupSetOverride(Z.fen,['history',title],lines);
-	//console.log('____history', fen.history);
 }
 function ari_move_herald(fen) {
-	// let cur_herald = fen.plorder[0];
-	// let next_herald = fen.plorder[1];
 	fen.heraldorder = arrCycle(fen.heraldorder, 1);
 	ari_history_list([`*** new herald: ${fen.heraldorder[0]} ***`], 'herald');
 	return fen.heraldorder[0];
@@ -17557,28 +15920,23 @@ function ari_next_phase() {
 	delete fen.stallSelected;
 	Z.turn = [fen.plorder[0]];
 	if (Z.stage == 10) {
-		//nach ende von king phase!
 		Z.phase = 'queen';
 		[Z.stage, Z.turn] = set_journey_or_stall_stage(fen, Z.options, Z.phase);
 	} else if (fen.phase == 'king') {
-		//geh nur in stage 10 wenn irgendwer meets endconditions!!!
 		fen.pl_gameover = [];
 		for (const plname of fen.plorder) {
 			let bcorrect = ari_get_correct_buildings(fen.players[plname].buildings);
 			let can_end = ari_check_end_condition(bcorrect);
-			//console.log('end cond met:', can_end ? 'yes' : 'no');
 			if (can_end) fen.pl_gameover.push(plname);
 		}
 		if (!isEmpty(fen.pl_gameover)) {
 			Z.stage = 10;
-			//console.log('plorder',otree.plorder,'pl_gameover',otree.pl_gameover,'iturn',otree.iturn);
 			Z.turn = [fen.pl_gameover[0]];
 		} else {
 			Z.phase = 'queen';
 			[Z.stage, Z.turn] = set_journey_or_stall_stage(fen, Z.options, Z.phase);
 		}
 	} else if (fen.phase == 'queen') {
-		//distribute coins
 		for (const uplayer of fen.plorder) {
 			for (const k in fen.players[uplayer].buildings) {
 				if (k == 'farm') continue;
@@ -17590,22 +15948,18 @@ function ari_next_phase() {
 		Z.phase = 'jack';
 		[Z.stage, Z.turn] = set_journey_or_stall_stage(fen, Z.options, Z.phase);
 	} else {
-		//gesamte runde fertig: herald moves!
 		fen.herald = ari_move_herald(fen, uplayer);
 		fen.plorder = jsCopy(fen.heraldorder);
 		ari_add_harvest_cards(fen);
 		Z.phase = 'king';
 		let taxneeded = ari_tax_phase_needed(fen);
 		Z.turn = taxneeded ? fen.turn : [fen.herald];
-		// if (taxneeded) Z.stage = 2; else Z.stage = set_journey_or_stall_stage(fen, Z.options, Z.phase);
-		// Z.stage = taxneeded ? 2 : 3;
 		if (taxneeded) Z.stage = 2; else[Z.stage, Z.turn] = set_journey_or_stall_stage(fen, Z.options, Z.phase);
 	}
 	return Z.stage;
 }
 function ari_reorg_discard() {
 	let fen = Z.fen;
-	//organize open_discard: if < 4, add cards from bottom of deck_discard to open_discard
 	while (fen.deck_discard.length > 0 && fen.open_discard.length < 4) {
 		bottom_elem_from_to(fen.deck_discard, fen.open_discard);
 	}
@@ -17618,7 +15972,6 @@ function ari_refill_deck(fen) {
 	console.log('deck refilled: contains', fen.deck.length, 'cards');
 }
 function calc_building_vps(bs) {
-	//console.log('bs',bs, bs.farm,bs.estate,bs.chateau)
 	let res = 0;
 	res += bs.farm.length;
 	res += bs.estate.length * 2;
@@ -17627,53 +15980,36 @@ function calc_building_vps(bs) {
 }
 function calc_stall_value(fen, plname) { let st = fen.players[plname].stall; if (isEmpty(st)) return 0; else return arrSum(st.map(x => ari_get_card(x).val)); }
 function exchange_items_in_fen(fen, o0, o1) {
-	//let fen = Z.fen;
 	let p0 = o0.path.split('.'); if (isdef(fen.players[p0[0]])) p0.unshift('players');
 	let p1 = o1.path.split('.'); if (isdef(fen.players[p1[0]])) p1.unshift('players');
 	let list0 = lookup(fen, p0);
-	//console.log('o0.path',o0.path);
-	//console.log('p0',p0);
-	//console.log('list0',list0)
 	let list1 = lookup(fen, p1); //['players'].concat(o1.path.split('.')));
-	//console.log('list1',list1);
 	if (isDict(list0) && isdef(list0.list)) list0 = list0.list;
 	if (isDict(list1) && isdef(list1.list)) list1 = list1.list;
 	elem_from_to(o0.key, list0, list1);
 	elem_from_to(o1.key, list1, list0);
 }
 function find_sequences(blatt, n = 2, rankstr = '23456789TJQKA', allow_cycle = false) {
-	//a sequence is several cards in a row of the same suit
-	//algo!
-	//let ranks = toLetters(rankstr);	//1. sort blatt into suitlists
 	let suitlists = get_suitlists_sorted_by_rank(blatt, rankstr, true); //true...remove_duplicates
-	//console.log('suitlists', suitlists);
 	let seqs = [];
-	//2. foreach list:
 	for (const lst of get_values(suitlists)) {
 		let len = lst.length;
 		if (len < n) continue;
 		let l = allow_cycle ? lst.concat(lst) : lst;
-		//console.log('lst',lst,'l',l);
-		//console.log('len',len);
 		for (let istart = 0; istart < len; istart++) {
 			let seq = [l[istart]];
 			let i = istart;
-			//console.log(follows_in_rank(l[i], l[i + 1],rankstr));
 			while (i + 1 < l.length && follows_in_rank(l[i], l[i + 1], rankstr)) {
 				seq.push(l[i + 1]);
-				//console.log('seq',seq);
 				i++;
 			}
-			//console.log('seq',seq,'n',n,seq.length>=n);
 			if (seq.length >= n) seqs.push(seq);
 		}
 	}
-	//console.log('seqs', seqs);
 	return seqs;
 }
 function follows_in_rank(c1, c2, rankstr) {
 	return get_rank_index(c2, rankstr) - get_rank_index(c1, rankstr) == 1;
-	//console.log('follows_in_rank:',c1,c2)
 	let i1 = rankstr.indexOf(c1[0]);
 	let i2 = rankstr.indexOf(c2[0]);
 	console.log('follows?', c1, i1, c2, i2, i2 - i1)
@@ -17687,7 +16023,6 @@ function get_suitlists_sorted_by_rank(blatt, rankstr = '23456789TJQKA', remove_d
 		if (nundef(di[suit])) di[suit] = [];
 		if (remove_duplicates) addIf(di[suit], k); else di[suit].push(k);
 	}
-	//let di_sorted = {};
 	for (const s in di) {
 		sortByRank(di[s], rankstr);
 	}
@@ -17701,45 +16036,35 @@ function set_hover_ui(b, item) {
 	b.onmouseenter = () => {
 		if (isCard) {
 			let rs = Array.from(d.getElementsByTagName('rect'));
-			//provision for rs is building (not a card)
 			let r = arrLast(rs);
-			//console.log('r', r);
 			let fill = b.fill = r.getAttribute('fill');
 			r.setAttribute('fill', 'silver');
 		} else {
 			let hallo = mGetStyle(d, 'bg');
-			//console.log('hallo',hallo,nundef(hallo),isString(hallo));
 			let bg = isEmpty(hallo) ? 'transparent' : valf(mGetStyle(d, 'bg'), 'transparent');
 			d.setAttribute('bg', bg);
-			//console.log('..................................style bg is',bg);
 			mStyle(d, { bg: 'silver' });
 		}
 	}
 	b.onmouseleave = () => {
 		if (isCard) {
 			let rs = Array.from(d.getElementsByTagName('rect'));
-			//provision for rs is building (not a card)
 			let r = arrLast(rs);
-			//console.log('r', r);
 			r.setAttribute('fill', b.fill);
 		} else {
 			let bg = d.getAttribute('bg');
-			//console.log('d.bg',bg)
 			mStyle(d, { bg: bg });
 		}
 	}
 }
 function set_journey_or_stall_stage(fen, options, phase) {
-	//check if any player has a potential journey!
 	let pljourney = exp_journeys(options) ? find_players_with_potential_journey(fen) : [];
-	//console.log('________ any journey?', pljourney);
 	let stage, turn;
 	if (isEmpty(pljourney)) { delete fen.passed; turn = [fen.plorder[0]]; ari_ensure_deck(fen, phase == 'jack' ? 3 : 2); stage = 3; }
 	else { turn = [pljourney[0]]; stage = 1; }
 	return [stage, turn];
 }
 function ui_get_all_commission_items(uplayer) {
-	//console.log('uplayer',uplayer,UI.players[uplayer])
 	let items = [], i = 0;
 	let comm = UI.players[uplayer].commissions;
 	for (const o of comm.items) {
@@ -17763,7 +16088,6 @@ function ui_get_blackmailed_items() {
 	let rumors = fen.players[uplayer].rumors;
 	let b = path2fen(fen, fen.blackmail.building_path);
 	if (nundef(b.lead)) b.lead = b.list[0];
-	//console.log('fenbuilding',b,b.list[0]);
 	if (isList(rumors) && firstCond(rumors, x => x[0] == b.lead[0])) {
 		commands.push('defend');
 	}
@@ -17772,7 +16096,6 @@ function ui_get_blackmailed_items() {
 function ui_get_build_items(uplayer, except) {
 	let items = ui_get_hand_and_stall_items(uplayer);
 	if (is_card(except)) items = items.filter(x => x.key != except.key);
-	//console.log('__________build items:', items)
 	reindex_items(items);
 	return items;
 }
@@ -17786,12 +16109,10 @@ function ui_get_building_items(uplayer) {
 		i++;
 		items.push(item);
 	}
-	//console.log('________building items', items)
 	return items;
 }
 function ui_get_building_items_of_type(uplayer, types = ['farm', 'estate', 'chateau']) {
 	let gblist = UI.players[uplayer].buildinglist.filter(x => types.includes(x.type));
-	//console.log('gblist', gblist);
 	let items = [], i = 0;
 	for (const o of gblist) {
 		let name = o.type + ' ' + (o.list[0][0] == 'T' ? '10' : o.list[0][0]);
@@ -17830,20 +16151,16 @@ function ui_get_commands(uplayer) {
 		i++;
 		items.push(item);
 	}
-	//console.log('available commands', items);
 	return items;
 }
 function ui_get_commission_items(uplayer) {
-	//console.log('uplayer',uplayer,UI.players[uplayer])
 	let items = [], i = 0;
 	let comm = UI.players[uplayer].commissions;
-	//let hand_and_stall = ui_get_hand_and_stall_items(uplayer); // nur comm from stall allowed!!!!
 	let stall = ui_get_stall_items(uplayer);
 	for (const o of comm.items) {
 		let rank = o.key[0];
 		let similar = firstCond(stall, x => x.key[0] == rank);
 		if (!similar) continue;
-		//console.log('rank', rank, 'has similar')
 		let item = { o: o, a: o.key, key: o.key, friendly: o.short, path: comm.path, index: i, similar: stall.filter(x => x.key[0] == rank) }; // similar: similar };
 		i++;
 		items.push(item);
@@ -17860,7 +16177,6 @@ function ui_get_commission_new_items(uplayer) {
 	}
 	let topdeck = UI.deck_commission.get_topcard();
 	items.push({ o: topdeck, a: topdeck.key, key: topdeck.key, friendly: topdeck.short, path: 'deck_commission', index: i });
-	//console.log('choose among:', items)
 	return items;
 }
 function ui_get_commission_stall_items() {
@@ -17878,26 +16194,19 @@ function ui_get_deck_item(uideck) {
 function ui_get_endgame(uplayer) { return ui_get_string_items(['end game', 'go on']); }
 function ui_get_estates_chateaus_items(uplayer) { return ui_get_building_items_of_type(uplayer, ['estate', 'chateau']); }
 function ui_get_exchange_items(uplayer) {
-	//all hand items
 	let ihand = ui_get_hand_items(uplayer);
-	//all stall items
 	let istall = ui_get_stall_items(uplayer);
-	//all invisible (1+) building items
 	let irepair = ui_get_all_hidden_building_items(uplayer);
 	irepair.map(x => face_up(x.o));
 	let items = ihand.concat(istall).concat(irepair);
 	reindex_items(items);
-	//console.log('exchange items',items)
 	return items;
 }
 function ui_get_farms_estates_items(uplayer) { return ui_get_building_items_of_type(uplayer, ['farm', 'estate']); }
 function ui_get_hand_items(uplayer) {
-	//console.log('uplayer',uplayer,UI.players[uplayer])
 	let items = [], i = 0;
 	let hand = UI.players[uplayer].hand;
 	for (const o of hand.items) {
-		//console.log('path', hand.path);
-		//console.log(UI.players[uplayer].hand.path);
 		o.index = i;
 		let item = { o: o, a: o.key, key: o.key, friendly: o.short, path: hand.path, index: i };
 		i++;
@@ -17906,14 +16215,11 @@ function ui_get_hand_items(uplayer) {
 	return items;
 }
 function ui_get_hand_items_minus(uplayer, cardlist) {
-	//console.log('uplayer',uplayer,UI.players[uplayer])
 	if (!isList(cardlist)) cardlist = [cardlist];
 	let items = [], i = 0;
 	let hand = UI.players[uplayer].hand;
 	for (const o of hand.items) {
 		if (cardlist.includes(o)) continue;
-		//console.log('path', hand.path);
-		//console.log(UI.players[uplayer].hand.path);
 		let item = { o: o, a: o.key, key: o.key, friendly: o.short, path: hand.path, index: i };
 		i++;
 		items.push(item);
@@ -17928,12 +16234,8 @@ function ui_get_hand_and_stall_items(uplayer) {
 }
 function ui_get_hand_and_journey_items(uplayer) {
 	let items = ui_get_hand_items(uplayer);
-	//console.log('hand items',items);
 	let matching = [];
 	for (const plname of Z.plorder) {
-		//items = items.concat(ui_get_journey_items(plname)); 
-		//ne, das muss besser werden!
-		//nur die journeys zu denen ich potentially anlegen kann sollen geadded werden!
 		let jitems = ui_get_journey_items(plname);
 		for (const j of jitems) {
 			for (const card of items) {
@@ -17948,7 +16250,6 @@ function ui_get_hand_and_journey_items(uplayer) {
 function ui_get_harvest_items(uplayer) {
 	let items = []; let i = 0;
 	for (const gb of UI.players[uplayer].buildinglist) {
-		//console.log('gbuilding', gb);
 		if (isdef(gb.harvest)) {
 			let d = gb.harvest;
 			mStyle(d, { cursor: 'pointer', opacity: 1 });
@@ -17965,7 +16266,6 @@ function ui_get_hidden_building_items(uibuilding) {
 	let items = [];
 	for (let i = 1; i < uibuilding.items.length; i++) {
 		let o = uibuilding.items[i];
-		//console.log('o',o);
 		o.index = i;
 		let item = { o: o, a: o.key, key: o.key, friendly: o.short, path: uibuilding.path, index: i - 1 };
 		items.push(item);
@@ -18041,7 +16341,6 @@ function ui_get_payment_items(pay_letter) {
 	return items;
 }
 function ui_get_rumors_items(uplayer) {
-	//console.log('uplayer',uplayer,UI.players[uplayer])
 	let items = [], i = 0;
 	let rum = UI.players[uplayer].rumors;
 	for (const o of rum.items) {
@@ -18052,14 +16351,10 @@ function ui_get_rumors_items(uplayer) {
 	return items;
 }
 function ui_get_rumors_and_players_items(uplayer) {
-	//console.log('uplayer',uplayer,UI.players[uplayer])
 	let items = [], i = 0;
 	let comm = UI.players[uplayer].rumors;
 	let [data, pl] = [Z.uplayer_data, Z.pl];
-	// let data = firstCond(Z.playerdata, x => x.name == uplayer);
 	assertion(isdef(data), 'no data for player ' + uplayer);
-	//console.log('ui: uplayer', Z.uplayer, 'data', data);
-	//sss();
 	if (!isDict(data.state)) data.state = { remaining: jsCopy(pl.rumors), receivers: [], di: {} };
 	let rem = data.state.remaining;
 	for (const k of rem) {
@@ -18069,15 +16364,12 @@ function ui_get_rumors_and_players_items(uplayer) {
 		items.push(item);
 	}
 	let players = [];
-	// let receivers = valf(Z.fen.receivers, []);
 	let receivers = data.state.receivers;
-	//console.log('receivers', receivers);
 	for (const plname in UI.players) {
 		if (plname == uplayer || receivers.includes(plname)) continue;
 		players.push(plname);
 	}
 	items = items.concat(ui_get_string_items(players));
-	//assertion(comm.items.length == players.length, 'irgendwas stimmt nicht mit rumors verteilung!!!!', players, comm)
 	reindex_items(items);
 	return items;
 }
@@ -18105,7 +16397,6 @@ function ui_get_string_items(commands) {
 		i++;
 		items.push(item);
 	}
-	//console.log('available commands', items);
 	return items;
 }
 function ui_get_top_rumors() {
@@ -18119,7 +16410,6 @@ function ui_get_top_rumors() {
 }
 function ui_get_trade_items(uplayer) {
 	let items = ui_get_market_items(uplayer);
-	//console.log('market items', items);
 	items = items.concat(ui_get_stall_items(uplayer));//zuerst eigene!
 	for (const plname of Z.fen.plorder) {
 		if (plname != uplayer) items = items.concat(ui_get_stall_items(plname));
@@ -18130,11 +16420,7 @@ function ui_get_trade_items(uplayer) {
 function post_harvest() {
 	let [A, fen, uplayer] = [Z.A, Z.fen, Z.uplayer];
 	let item = A.items[A.selected[0]];
-	//console.log('harvesting from farm', item.path, item);
-	//harvest card ist removed
 	let obuilding = lookup(fen, item.path.split('.'));
-	//console.log('obuilding', obuilding);
-	//add the harvest card to hand
 	fen.players[uplayer].hand.push(obuilding.h);
 	obuilding.h = null;
 	ari_history_list([`${uplayer} harvests`], 'harvest');
@@ -18151,7 +16437,6 @@ function process_journey() {
 		return;
 	}
 	let sel = A.selected.map(x => A.items[x].key);
-	//check if selection legal!
 	let [carditems, journeyitem, jlegal] = check_correct_journey(A, fen, uplayer);
 	if (!carditems) return;
 	delete fen.passed; //at this point, a player has selected successful journey so all players can enter journey round again!
@@ -18178,12 +16463,9 @@ function check_correct_journey(A, fen, uplayer) {
 	} else if (items.length - carditems.length > 1) {
 		select_error('please select no more than 1 journey!'); return [null, null, null];//at most one journey must be selected
 	}
-	//legal selection ONLY IF IT FITS!!!
-	//make a flat list of cards and check if this is a journey indeed
 	let journeyitem = firstCond(items, x => !is_card(x));
 	let cards = journeyitem ? jsCopy(journeyitem.o.list) : [];
 	cards = cards.concat(carditems.map(x => x.o.key));
-	//console.log('cards are:', cards);
 	let jlegal = is_journey(cards);
 	if (!jlegal || jlegal.length != cards.length) {
 		select_error('this is not a legal journey!!'); return [null, null, null];//is this a legal journey?
@@ -18192,43 +16474,31 @@ function check_correct_journey(A, fen, uplayer) {
 }
 function find_players_with_potential_journey(fen) {
 	let res = [];
-	//console.log('plorder',fen.plorder)
 	for (const uplayer of fen.plorder) {
 		if (isdef(fen.passed) && fen.passed.includes(uplayer)) continue;
 		let j = find_journeys(fen, uplayer);
-		//console.log('uplayer',uplayer,'journeys',j);
 		if (!isEmpty(j)) res.push(uplayer);
 	}
-	//console.log('res',res)
 	return res;
 }
 function find_journeys(fen, uplayer) {
-	//zuerst finde alle sequences von mindestens 2 in player's hand
 	let h = fen.players[uplayer].hand;
 	let seqs = find_sequences(h, 2, 'A23456789TJQK');
-	//console.log('seqs',seqs);
 	if (!isEmpty(seqs)) return seqs;
-	//danach aggregate all existing journeys and find all cards that fit any end of any journey
 	let existing_journeys = aggregate_player(fen, 'journeys');
 	for (const j of existing_journeys) {
 		let h1 = j.concat(h);
 		let seqs1 = find_sequences(h1, j.length + 1, 'A23456789TJQK');
 		if (!isEmpty(seqs1)) return seqs1;
-		//if (!isEmpty(seqs1)) seqs = seqs.concat(seqs1);
 	}
-	//console.log('seqs',seqs);
 	return seqs;
 }
 function is_journey(cards) {
 	let jlist = find_sequences(cards, cards.length, 'A23456789TJQK');
-	//console.log('jlist',jlist);
 	let j = firstCond(jlist, x => x.length == cards.length);
-	//console.log('jlegal',j);
 	return j;
-	// if (!isEmpty(jlist)) [0]; else return false;
 }
 function matches_on_either_end(card, j) {
-	//console.log('card',card,'j',j);
 	let key = card.key;
 	let jfirst = arrFirst(j.o.list);
 	let jlast = arrLast(j.o.list);
@@ -18236,8 +16506,6 @@ function matches_on_either_end(card, j) {
 	let [s, s1, s2] = [key[1], jfirst[1], jlast[1]];
 	let anfang = s == s1 && follows_in_rank(key, jfirst, rankstr);
 	let ende = s == s2 && follows_in_rank(jlast, key, rankstr);
-	//if (anfang) console.log('match anfang:', key, jfirst);
-	//if (ende) console.log('match ende:', jlast, key);
 	return anfang || ende; // follows_in_rank(rcard,rjfirst,rankstr) || follows_in_rank(rjlast, rcard, rankstr);
 }
 function post_luxury_or_journey_cards() {
@@ -18249,7 +16517,6 @@ function post_luxury_or_journey_cards() {
 		let cardstoreplace = A.carditems.map(x => x.key); //add n luxury cards to player hand
 		arrReplace(fen.players[uplayer].hand, cardstoreplace, deck_deal(fen.deck_luxury, n));
 	} else {
-		//need to remove n cards from the otherr side of journey and give them to player hand
 		let len = A.jlegal.length;
 		let handcards = firstCond(A.carditems, x => A.jlegal[0] == x.key) ? arrFromIndex(A.jlegal, len - n) : A.jlegal.slice(0, n);
 		console.log('handcards', handcards);
@@ -18258,7 +16525,6 @@ function post_luxury_or_journey_cards() {
 		let cardstoremove = A.carditems.map(x => x.key);
 		arrRemove(fen.players[uplayer].hand, cardstoremove);
 	}
-	//journey is replaced by jlegal
 	let path = A.journeyitem.path;
 	let parts = path.split('.');
 	let owner = parts[1];
@@ -18269,32 +16535,21 @@ function post_luxury_or_journey_cards() {
 	take_turn_fen();
 }
 function ari_open_market(fen, phase, deck, market) {
-	//let [fen, phase, deck, market] = [Z.fen, Z.phase, Z.deck, Z.market];
-	//console.log('*** MARKET OPENS!!! ***')
 	DA.qanim = [];
 	let n_market = phase == 'jack' ? 3 : 2;
 	fen.stage = Z.stage = phase == 'jack' ? 12 : phase == 'queen' ? 11 : 4;
 	fen.stallSelected = [];
 	delete fen.passed;
-	// ari_ensure_deck(fen,n_market); //nein es hat ja mit ui zu tun!!! muss es schon bei deck present machen!!!
-	//console.log('1. list',jsCopy(deck.list));
-	//console.log('n_market', n_market)
 	for (let i = 0; i < n_market; i++) {
 		DA.qanim.push([qanim_flip_topmost, [deck]]);
 		DA.qanim.push([qanim_move_topmost, [deck, market]]);
-		//console.log('2. list',jsCopy(deck.list));
 		DA.qanim.push([q_move_topmost, [deck, market]]);
-		//console.log('3. list',jsCopy(deck.list));
-		//console.log('deck',deck.items.map(x=>x.key));
 	}
-	//console.log('4. list',jsCopy(deck.list));
 	DA.qanim.push([q_mirror_fen, ['deck', 'market']]);
-	//console.log('5. list',jsCopy(deck.list));
 	DA.qanim.push([ari_pre_action, []]);
 	qanim();
 }
 function ari_select_next_player_according_to_stall_value() {
-	//all players have selected their stalls and now need to calc stall values and set turn order accordingly!
 	let [stage, A, fen, uplayer] = [Z.stage, Z.A, Z.fen, Z.uplayer];
 	Z.stage = 5;
 	let minval = 100000;
@@ -18307,7 +16562,6 @@ function ari_select_next_player_according_to_stall_value() {
 		if (val < minval) { minval = val; minplayer = uname; }
 	}
 	if (!minplayer) {
-		//maybe all players have empty stall,
 		return null;
 	} else {
 		Z.turn = fen.turn = [minplayer];
@@ -18319,7 +16573,6 @@ function ari_select_next_player_according_to_stall_value() {
 function is_stall_selection_complete() { return Z.fen.stallSelected.length == Z.fen.plorder.length; }
 function post_stall_selected() {
 	let [stage, A, fen, uplayer] = [Z.stage, Z.A, Z.fen, Z.uplayer];
-	//move selected keys from hand to stall
 	let selectedKeys = A.selected.map(i => A.items[i].key);
 	for (const ckey of selectedKeys) {
 		elem_from_to(ckey, fen.players[uplayer].hand, fen.players[uplayer].stall);
@@ -18327,9 +16580,7 @@ function post_stall_selected() {
 	ensure_stallSelected(fen);
 	fen.stallSelected.push(uplayer);
 	ari_history_list([`${uplayer} puts up a stall for ${selectedKeys.length} action${plural(selectedKeys.length)}`], 'market');
-	//if all players have selected, calc stall values and set uplayer to player with minimum
 	if (is_stall_selection_complete()) {
-		//console.log('stall selection complete!');
 		delete fen.stallSelected;
 		fen.actionsCompleted = [];
 		if (check_if_church()) ari_start_church_stage(); else ari_start_action_stage();
@@ -18340,12 +16591,10 @@ function post_stall_selected() {
 }
 function ari_start_action_stage() {
 	let next = ari_select_next_player_according_to_stall_value();
-	//console.assert(next, 'NOBODY PUT UP A STALL!!!!!!!');
 	if (!next) { ari_next_phase(); }
 	take_turn_fen();
 }
 function ari_start_church_stage() {
-	//need to sort players by their vps, and set Z.turn and Z.stage
 	let [fen] = [Z.fen];
 	let order = fen.plorder = fen.church_order = determine_church_turn_order();
 	[Z.turn, Z.stage] = [[order[0]], 17];
@@ -18354,12 +16603,10 @@ function ari_start_church_stage() {
 }
 function process_payment() {
 	let [fen, A, uplayer] = [Z.fen, Z.A, Z.uplayer];
-	//pay with card or coin
 	let item = A.payment;
 	is_coin_pay = nundef(item.o);
 	if (is_coin_pay) a2_pay_with_coin(uplayer); else a2_pay_with_card(item);
 	ari_history_list(get_pay_history(is_coin_pay ? 'coin' : item.o.key, uplayer), 'payment');
-	//if (is_coin_pay) { let x = UI.player_stat_items[uplayer].dCoin; mPulse1(x); } // console.log('dCoin: ', x)
 	A.payment_complete = true;
 	return is_coin_pay;
 }
@@ -18367,8 +16614,6 @@ function payment_complete() {
 	let [fen, A, uplayer] = [Z.fen, Z.A, Z.uplayer];
 	A.payment = A.items[A.selected[0]];
 	let nextstage = Z.stage = ARI.stage[A.command];
-	//console.log('........paying with:', A.payment);
-	//console.log('need to go back to stage', ARI.stage[nextstage]);
 	ari_pre_action();
 }
 function get_pay_history(payment, uplayer) { return [`${uplayer} pays with ${payment}`]; }
@@ -18381,8 +16626,6 @@ function a2_pay_with_card(item) {
 function a2_pay_with_coin(uplayer) {
 	let fen = Z.fen;
 	fen.players[uplayer].coins -= 1;
-	//animate_coin_pay();
-	//ari_redo_player_stats(otree, uplayer);
 }
 function post_pass() {
 	let [fen, uplayer] = [Z.fen, Z.uplayer];
@@ -18392,12 +16635,9 @@ function post_pass() {
 	ari_next_action();
 }
 function post_pickup() {
-	//console.log('post_pickup')
 	let [A, fen, uplayer] = [Z.A, Z.fen, Z.uplayer];
 	let item = A.items[A.selected[0]];
-	//move elem item.a from mimi.stall to mimi.hand
 	elem_from_to(item.key, fen.players[uplayer].stall, fen.players[uplayer].hand);
-	//take_turn_single();
 	ari_history_list([`${uplayer} picks up ${item.key}`], 'pickup');
 	ari_next_action();
 }
@@ -18435,16 +16675,7 @@ function qanim_move(card, uifrom, uito, ms = 400) {
 		ms, 'ease');
 }
 function q_move_topmost(uideck, uito) {
-	//console.log('q_move_topmost')
 	let topmost = pop_top(uideck); //pop_deck(uideck);
-	//console.log('topmost is',topmost.key, 'after pop',jsCopy(uideck.list),uideck.items.map(x=>x.key));
-	//console.log('deck items',uideck.items.map(x=>x.key))
-	//console.log('topmost', topmost);
-	//let dTopmost = iDiv(topmost);
-	//mAppend(uito.container, dTopmost);
-	// items.shift();
-	// uideck.list = uideck.items.map(x => x.key);
-	// uideck.topmost = uideck.items[0];
 	let dfrom = iDiv(topmost);
 	dfrom.remove();
 	dfrom.style.position = 'static';
@@ -18460,12 +16691,10 @@ function q_mirror_fen() {
 		let ui = UI[prop];
 		fen[prop] = ui.list;
 	}
-	//console.log('fen', fen, 'stage',Z.stage);
 	qanim();
 }
 function process_rumors_setup() {
 	let [fen, A, uplayer, plorder, data] = [Z.fen, Z.A, Z.uplayer, Z.plorder, Z.uplayer_data];
-	//check if items selected are exactly one player name and one rumor card
 	let items = A.selected.map(x => A.items[x]);
 	let receiver = firstCond(items, x => plorder.includes(x.key)).key;
 	let rumor = firstCond(items, x => !plorder.includes(x.key));
@@ -18477,17 +16706,14 @@ function process_rumors_setup() {
 	rumor_update_playerdata(data, receiver, rumor);
 	let playerdata_complete = rumor_playerdata_complete();
 	if (playerdata_complete) {
-		//pass turn to host and write fen AND playerdata
 		Z.turn = [Z.host];
 		Z.stage = 105; //'next_rumors_setup_stage';
 		clear_transaction();
 		take_turn_fen_write();
 	} else if (isEmpty(data.state.remaining)) {
-		//clear transaction and write playerdata
 		clear_transaction();
 		take_turn_write();
 	} else {
-		//add transaction and write playerdata
 		add_transaction('rumorsetup');
 		take_turn_write();
 	}
@@ -18495,23 +16721,13 @@ function process_rumors_setup() {
 function post_rumor_setup() {
 	let [fen, A, uplayer, plorder] = [Z.fen, Z.A, Z.uplayer, Z.plorder];
 	for (const plname of plorder) { fen.players[plname].rumors = []; }
-	//console.log('post_rumor_setup', plorder, jsCopy(fen.players));
 	for (const plname of plorder) {
-		//if (plname == uplayer) continue;
-		//let pl = fen.players[plname];
 		let data = firstCond(Z.playerdata, x => x.name == plname);
 		let di = data.state.di;
-		//console.log('di', plname, di);
 		for (const k in di) {
 			arrPlus(fen.players[k].rumors, di[k]);
-			//console.log('player', k, 'erhaelt', di[k]);
 		}
-		// 	assertion(isdef(fen.rumor_setup_di[plname]), 'no rumors for ' + plname);
-		// 	pl.rumors = fen.rumor_setup_di[plname];
 	}
-	//for (const plname of plorder) { let r = fen.players[plname].rumors; console.log('rumors', plname, jsCopy(r)); }
-	// delete fen.rumor_setup_di;
-	// delete fen.rumor_setup_receivers;
 	ari_history_list([`gossiping ends`], 'rumors');
 	[Z.stage, Z.turn] = set_journey_or_stall_stage(fen, Z.options, fen.phase);
 	take_turn_fen_clear();
@@ -18534,9 +16750,7 @@ function process_inspect() {
 	let item = A.items[A.selected[0]];
 	let cards = item.o.items;
 	cards.map(x => face_up(x))
-	//console.log('item', item); 
 	weiter_process_inspect();
-	//ari_make_unselected(item); //iDiv(item).style.zIndex = -10;
 }
 function weiter_process_inspect() {
 	let [stage, A, fen, uplayer] = [Z.stage, Z.A, Z.fen, Z.uplayer];
@@ -18545,39 +16759,25 @@ function weiter_process_inspect() {
 	let fenbuilding = A.fenbuilding = lookup(fen, uibuilding.path.split('.'));
 	let key = uibuilding.keycard.key;
 	let cards = uibuilding.items;
-	//find candidates for new schwein
 	let schweine_cand = [];
 	for (let i = 1; i < cards.length; i++) {
 		if (fenbuilding.schweine.includes(i)) continue; //if index i is already in schweine, skip this card
-		//if card key == key, skip this card
 		let card = cards[i];
-		//console.log('card.key', card.key,'lead',key);
 		if (card.key == key) continue;
 		assertion(i == card.index, 'wrong card index!!!!')
 		schweine_cand.push(card); //add this card to schweine_cand
 	}
-	//if candidates have been found
 	if (schweine_cand.length > 1) {
-		//need to go to another step of selecting the new schwein
-		//console.log('mehrere candidates', schweine_cand);
 		Z.stage = 38;
-		//A.schweine_cand = schweine_cand;
 		ari_pre_action();
 	} else if (schweine_cand.length == 1) {
-		//show_instruction('no additional schwein has been found - you gain 1 rumor')
 		setTimeout(() => turn_new_schwein_up(schweine_cand[0], fenbuilding, uibuilding), 3000);
 	} else if (isEmpty(fenbuilding.schweine)) {
-		//this building is completely correct! inspector does NOT get a rumor
-		//console.log('CORRECTES building!')
 		Z.stage = 29;
 		ari_history_list([`${uplayer} inspects a correct building`], 'inspect');
 		show_instruction('the building is CORRECT - You loose 1 rumor')
 		setTimeout(ari_pre_action, 2000); //ari_pre_action();
 	} else {
-		//console.log('kein neues schwein gefunden, aber schon existierendes schwein')
-		// no new schweine candidate available: do nothing
-		// but there are already schweine in this building
-		// uplayer gets a rumor but owner does not
 		let rumor = fen.deck_rumors[0]; fen.deck_rumors.shift();
 		fen.players[uplayer].rumors.push(rumor);
 		show_instruction('no additional schwein has been found - you gain 1 rumor')
@@ -18592,14 +16792,11 @@ function post_inspect() {
 }
 function ari_open_rumors(stage = 28) {
 	let [fen, deck] = [Z.fen, UI.deck_rumors];
-	//console.log('*** RUMOR TOP OPENS!!! ***')
 	DA.qanim = [];
 	fen.stage = Z.stage = stage;
 	let n = Math.min(2, fen.deck_rumors.length);
 	let cards = arrTake(fen.deck_rumors, n);
 	let uicards = cards.map(x => ari_get_card(x));
-	//console.log('deck', deck, 'n', n, 'cards', uicards);
-	//output_arr_short(fen.deck_rumors);
 	let dest = UI.rumor_top = ui_type_market([], deck.container.parentNode, { maleft: 12 }, `rumor_top`, 'rumor_top', ari_get_card);
 	mMagnifyOnHoverControlPopup(dest.cardcontainer);
 	for (let i = 0; i < n; i++) {
@@ -18614,7 +16811,6 @@ function ari_open_rumors(stage = 28) {
 function building_is_correct(b) {
 	let key = b.keycard.key;
 	let list = b.list;
-	//return true if all list elements have the same first letter as key
 	for (let i = 0; i < list.length; i++) { if (list[i][0] != key[0]) return false; }
 	return true;
 }
@@ -18628,13 +16824,8 @@ function post_rumor_both() {
 	let non_selected = A.items.filter(x => x.index != A.selected[0])[0];
 	let rumor = item.key;
 	let rumor_other = non_selected.key;
-	//console.log('post_buy_rumor', A.selected);
-	//console.log('deck top 3', jsCopy(arrTake(fen.deck_rumors, 3))); console.log('deck bottom 3', jsCopy(arrTakeLast(fen.deck_rumors, 3)));
-	//add non_selected to deck bottom
-	//add rumor to uplayer rumors
 	fen.players[uplayer].rumors.push(rumor);
 	fen.players[A.owner].rumors.push(rumor_other);
-	//console.log('deck top 3', jsCopy(arrTake(fen.deck_rumors, 3))); console.log('deck bottom 3', jsCopy(arrTakeLast(fen.deck_rumors, 3)));
 	ari_history_list([`${uplayer} got a rumor, ${A.owner} got one too`], 'rumor');
 	ari_next_action();
 }
@@ -18643,21 +16834,14 @@ function post_buy_rumor() {
 	let item = A.items[A.selected[0]];
 	let non_selected = A.items.filter(x => x.index != A.selected[0]);
 	let rumor = item.key;
-	//console.log('post_buy_rumor', A.selected);
-	//console.log('deck top 3', jsCopy(arrTake(fen.deck_rumors, 3))); console.log('deck bottom 3', jsCopy(arrTakeLast(fen.deck_rumors, 3)));
-	//add non_selected to deck bottom
 	for (const item of non_selected) { fen.deck_rumors.push(item.key); }
-	//add rumor to uplayer rumors
 	fen.players[uplayer].rumors.push(rumor);
-	//pay w/ coin
 	fen.players[uplayer].coins -= 1;
-	//console.log('deck top 3', jsCopy(arrTake(fen.deck_rumors, 3))); console.log('deck bottom 3', jsCopy(arrTakeLast(fen.deck_rumors, 3)));
 	ari_history_list([`${uplayer} bought a rumor`], 'rumor');
 	ari_next_action();
 }
 function process_rumor() {
 	let [fen, A, uplayer] = [Z.fen, Z.A, Z.uplayer];
-	//assert that exactly 2 items are selected one of which is a building and one a rumor card
 	let items = A.selected.map(x => A.items[x]);
 	let building = firstCond(items, x => x.path.includes('building'));
 	let rumor = firstCond(items, x => !x.path.includes('building'));
@@ -18666,8 +16850,6 @@ function process_rumor() {
 		return;
 	}
 	let fenbuilding = lookup(fen, building.path.split('.'));
-	//console.log('building', building, 'rumor', rumor, '\nfenbuilding', fenbuilding);
-	//the buildings gets rumor added
 	lookupAddToList(fenbuilding, ['rumors'], rumor.key);
 	removeInPlace(fen.players[uplayer].rumors, rumor.key);
 	ari_history_list([`${uplayer} added rumor to ${ari_get_building_type(fenbuilding)}`,], 'rumor');
@@ -18703,8 +16885,6 @@ function being_blackmailed() {
 	let item = A.items[A.selected[0]];
 	let cmd = item.key;
 	console.log('selected reaction to blackmail:', item.key);
-	//was kann der jetzt entscheiden?
-	// er kann das blackmail ablehnen: dann gehen alle seine stall cards zu dem blackmailer und 1 rumor is removed
 	if (cmd == 'accept') { Z.stage = 34; ari_pre_action(); }
 	else if (cmd == 'reject') { post_reject_blackmail(); }
 	else { post_defend_blackmail(); }
@@ -18718,13 +16898,9 @@ function post_accept_blackmail() {
 	let fenbuilding = path2fen(fen, building_path);
 	let building_owner = stringAfter(building_path, '.'); building_owner = stringBefore(building_owner, '.');
 	assertion(building_owner == blackmailed && blackmailed == uplayer, 'blackmailed and uplayer and building owner must be same');
-	//blackmailed gives card item.key from his stall to blackmailer's hand
 	elem_from_to(item.key, fen.players[blackmailed].stall, fen.players[blackmailer].hand);
 	ari_history_list([`${blackmailed} accepts: gives ${item.key} to ${blackmailer}`], 'blackmail');
-	//blackmailer pays payment: schon gemacht!!!
-	//blackmailed building isblackmailed is removed
 	delete fenbuilding.isblackmailed;
-	//turn goes back to blackmailer
 	[Z.stage, Z.turn] = [35, [blackmailer]];
 	take_turn_fen();
 }
@@ -18736,18 +16912,14 @@ function post_defend_blackmail() {
 	let fenbuilding = path2fen(fen, building_path);
 	let building_owner = stringAfter(building_path, '.'); building_owner = stringBefore(building_owner, '.');
 	assertion(building_owner == blackmailed && blackmailed == uplayer, 'blackmailed and uplayer and building owner must be same');
-	//assume building_owner has rumor card
 	let rumors = fen.players[building_owner].rumors;
 	let lead = fenbuilding.lead;
 	let brumors = fenbuilding.rumors;
-	//blackmailed pays lead rumor
 	let match = firstCond(rumors, x => x[0] == lead[0]);
 	removeInPlace(rumors, match);
-	//one rumor is removed from building
 	brumors.pop();
 	ari_history_list([`${blackmailed} defends: pays matching rumor to deflect blackmail, 1 rumor is removed from building`], 'blackmail');
 	delete fenbuilding.isblackmailed;
-	//turn goes back to blackmailer
 	[Z.stage, Z.turn] = [35, [blackmailer]];
 	take_turn_fen();
 }
@@ -18761,9 +16933,6 @@ function post_reject_blackmail() {
 	let building_owner = stringAfter(building_path, '.'); building_owner = stringBefore(building_owner, '.');
 	assertion(building_owner == blackmailed && blackmailed == uplayer, 'blackmailed and uplayer and building owner must be same');
 	ari_history_list([`${blackmailed} rejects!`], 'blackmail');
-	//was soll bei reject blackmail passieren?
-	//rumors from fenbuilding are revealed
-	//if rumors contain building lead, all stall cards from blackmailed are moved to blackmailer's hand
 	let rumors = fenbuilding.rumors;
 	let has_lead_rumor = firstCond(rumors, x => x[0] == fenbuilding.lead[0]);
 	if (has_lead_rumor) {
@@ -18774,10 +16943,8 @@ function post_reject_blackmail() {
 	} else {
 		ari_history_list([`${blackmailed} was lucky!!! rumors incorrect`], 'blackmail');
 	}
-	//rumors are removed from fenbuilding
 	delete fenbuilding.rumors;
 	delete fenbuilding.isblackmailed;
-	//turn goes back to blackmailer
 	[Z.stage, Z.turn] = [35, [blackmailer]];
 	take_turn_fen();
 }
@@ -18790,7 +16957,6 @@ function post_blackmail() {
 function get_schweine(fenbuilding) { return fenbuilding.schweine; }
 function get_schweine_ui(uibuilding) { return uibuilding.schweine; }
 function add_schwein(card, fenbuilding, uibuilding) {
-	//if card is NOT just a key,display this card face_up and scaled up
 	if (isdef(uibuilding)) add_ui_schwein(card, uibuilding.schweine);
 	let ckey = isString(card) ? card : card.key;
 	let index = isString(card) ? fenbuilding.list.indexOf(ckey) : card.index;
@@ -18799,7 +16965,6 @@ function add_schwein(card, fenbuilding, uibuilding) {
 }
 function add_ui_schwein(item, uischweine) {
 	uischweine.push(item);
-	//mStyle(iDiv(item), { transform: 'scale(1.05)', origin: 'bottom left' });
 	mStyle(iDiv(item), { position: 'relative' });
 	miPic('pig', iDiv(item), { position: 'absolute', top: 30, left: 0, fz: 30 });
 	face_up(item);
@@ -18807,8 +16972,6 @@ function add_ui_schwein(item, uischweine) {
 function has_schweine(fenbuilding) { return !isEmpty(fenbuilding.schweine); }
 function turn_new_schwein_up(schwein, fenbuilding, uibuilding) {
 	let [stage, A, fen, uplayer] = [Z.stage, Z.A, Z.fen, Z.uplayer];
-	//unique new schwein
-	//if this is the first schwein, both players get a rumor!
 	let is_first_schwein = isEmpty(fenbuilding.schweine);
 	add_schwein(schwein, fenbuilding, uibuilding);
 	ari_history_list([`${uplayer} reveals a schwein!`], 'inspect');
@@ -18831,8 +16994,6 @@ function turn_new_schwein_up(schwein, fenbuilding, uibuilding) {
 }
 function post_sell() {
 	let [stage, A, fen, uplayer] = [Z.stage, Z.A, Z.fen, Z.uplayer];
-	//there should exactly 2 selected cards
-	//console.log('YEAHHHHHHHHHHHHHHHHHHHHH', 'sell!', A.selected);
 	if (A.selected.length != 2) {
 		select_error('select exactly 2 cards to sell!');
 		return;
@@ -18861,11 +17022,8 @@ function post_tax() {
 	ari_reorg_discard();
 	ari_history_list([`${uplayer} pays tax: ${fen.pl_tax[uplayer]}`], 'tax');
 	fen.pl_tax[uplayer] = 0;
-	//market existiert in diesem stage nicht!!!
-	//daher kann kein ari_next_action machen!!!
 	let iturn = fen.plorder.indexOf(uplayer);
 	let plnext = ari_get_tax_payer(fen, fen.pl_tax, iturn + 1);
-	//console.log('====>get tax payer: plnext', plnext);
 	if (plnext == null) {
 		[Z.stage, Z.turn] = set_journey_or_stall_stage(fen, Z.options, 'king');
 		delete fen.pl_tax;
@@ -18883,24 +17041,18 @@ function get_tax_history(tax) {
 	return hlines;
 }
 function ari_get_tax_payer(fen, pl_tax, ifrom = 0) {
-	//console.log('pl_tax', pl_tax, 'ifrom', ifrom, getFunctionsNameThatCalledThisFunction());
 	let iturn = ifrom;
 	let uplayer = fen.plorder[iturn];
 	if (nundef(uplayer)) return null;
-	//console.log('uplayer',uplayer,'tax',pl_tax[uplayer]);
 	while (pl_tax[uplayer] <= 0) {
-		//fen.round.push(uplayer);
 		iturn++;
 		if (iturn >= fen.plorder.length) return null;
-		//console.assert(iturn<otree.plorder.length,'DOCH NIEMAND IN TAX>!>!>!>!>');
 		uplayer = fen.plorder[iturn];
-		//console.log('uplayer',uplayer,'tax',pl_tax[uplayer]);
 	}
 	return uplayer;
 }
 function ari_get_first_tax_payer(fen, pl_tax) { return ari_get_tax_payer(fen, pl_tax, 0); }
 function ari_tax_phase_needed(fen) {
-	//if any player has more cards in hand than he is allowed to, need to have a tax stage else stage 3
 	let pl_tax = {};
 	let need_tax_phase = false;
 	for (const uplayer of fen.plorder) {
@@ -18923,7 +17075,6 @@ function ari_tax_phase_needed(fen) {
 }
 function post_trade() {
 	let [stage, A, fen, uplayer] = [Z.stage, Z.A, Z.fen, Z.uplayer];
-	//console.log('post_trade!')
 	if (A.selected.length != 2) {
 		select_error('please, select exactly 2 cards!');
 		return;
@@ -18931,7 +17082,6 @@ function post_trade() {
 	let i0 = A.items[A.selected[0]];
 	let i1 = A.items[A.selected[1]];
 	let num_own_stall = [i0, i1].filter(x => x.path.includes(uplayer)).length;
-	//console.log('___trading!',i0,i1,'\nnum_own_stall',num_own_stall)
 	if (i0.path == i1.path) {
 		select_error('you cannot trade cards from the same group');
 		return;
@@ -18939,31 +17089,21 @@ function post_trade() {
 		select_error('you have to pick one card of your stall and one other card');
 		return;
 	} else {
-		//exchange_items_in_fen(fen, i0, i1); 
-		//get list0 from path of i0
 		let list0 = lookup(fen, i0.path.split('.'));
-		//get list1 from path of i1
 		let list1 = lookup(fen, i1.path.split('.'));
 		exchange_by_index(list0, i0.o.index, list1, i1.o.index);
-		//exchange_by_index()
 		ari_history_list(get_trade_history(uplayer, i0, i1), 'trade');
-		//animate: iDiv(i1.o) should translated towards i0.o and other way around
 		animate_card_exchange(i0, i1, ari_next_action);
 	}
 }
 function ai_pick_legal_trade() {
-	//mach einfach alle pairs von legal trades
 	let [A, fen, uplayer, items] = [Z.A, Z.fen, Z.uplayer, Z.A.items];
 	let stall = fen.players[uplayer].stall;
 	let firstPick = rChoose(items, 1, x => x.path.includes(uplayer)); //stall.includes(x.key));
 	let secondPick = rChoose(items, 1, x => !x.path.includes(uplayer));
-	//A.selected = [items.indexOf(firstPick), items.indexOf(secondPick)];
-	//console.log('uplayer',uplayer,'picked',firstPick,secondPick);
-	//console.log('first',firstPick.path,firstPick.path.includes(uplayer));
 	return [firstPick, secondPick];
 }
 function get_trade_history(uplayer, i0, i1) {
-	//console.log('i0', i0, 'i1', i1);
 	if (i1.path.includes(uplayer)) { let h = i0; i0 = i1; i1 = h; }
 	return [`${uplayer} trades ${i0.key} (from own stall) for ${i1.key} (from ${i1.path == 'market' ? 'market' : stringBetween(i1.path, '.', '.')})`];
 }
@@ -18983,11 +17123,8 @@ function process_visit() {
 		ari_pre_action();
 		return;
 	} else {
-		//this building is revealed
 		let cards = item.o.items;
 		let key = cards[0].rank;
-		//let schweine = false;
-		//let schweine = null;
 		for (const c of cards) {
 			if (c.rank != key) { schweine = true; schweine = c.key; face_up(c); break; }
 		}
@@ -19002,49 +17139,35 @@ function process_visit() {
 		ari_history_list([
 			`${uplayer} visited ${ari_get_building_type(obuilding)} of ${owner} resulting in ${schweine ? 'schweine' : 'ok'} ${ari_get_building_type(obuilding)}`,
 		], 'visit');
-		//_reveal_animation(cards, () => ari_next_action(fen, uplayer));
-		//ari_next_action(fen, uplayer);
 	}
 }
 function post_visit() {
-	//console.log('post visit!!!!!!!!!!!!!!!!!!!!!!!')
 	let [fen, A, uplayer, building, obuilding, owner] = [Z.fen, Z.A, Z.uplayer, Z.A.building, Z.A.obuilding, Z.A.buildingowner];
 	let buildingtype = Z.A.building.o.type;
-	//console.log('====>buildingtype',buildingtype);
-	//console.log('!!!!!!!!!!!!!building', obuilding, 'DESTROY!!!!!!!!!!!!!!!!', '\nlist', obuilding.list);
 	let res = A.selected[0] == 0; //confirm('destroy the building?'); //TODO das muss besser werden!!!!!!!
 	if (!res) {
 		if (fen.players[owner].coins > 0) {
-			//console.log('player', owner, 'pays to', uplayer, fen.players[owner].coins, fen.players[uplayer].coins);
 			fen.players[owner].coins -= 1;
 			fen.players[uplayer].coins += 1;
-			//console.log('after payment:', fen.players[owner].coins, fen.players[uplayer].coins)
 		}
 	} else {
 		let list = obuilding.list;
 		let correct_key = list[0];
 		let rank = correct_key[0];
-		//console.log('rank is', rank);
-		//console.log('building destruction: ', correct_key);
 		while (list.length > 0) {
 			let ckey = list[0];
-			//console.log('card rank is', ckey[0])
 			if (ckey[0] != rank) {
 				elem_from_to_top(ckey, list, fen.deck_discard);
-				//console.log('discard',otree.deck_discard);
 			} else {
 				elem_from_to(ckey, list, fen.players[owner].hand);
 			}
 		}
-		//console.log('building after removing cards', list, obuilding)
 		if (isdef(obuilding.h)) {
 			fen.deck_discard.unshift(obuilding.h);
 		}
 		ari_reorg_discard(fen);
 		let blist = lookup(fen, stringBeforeLast(building.path, '.').split('.')); //building.path.split('.')); //stringBeforeLast(ibuilding.path, '.').split('.'));, stringBeforeLast(building.path, '.').split('.'));
-		//console.log('===>remove',obuilding,'from',blist);
 		removeInPlace(blist, obuilding);
-		//console.log('player', owner, 'after building destruction', otree[owner])
 	}
 	ari_history_list([`${uplayer} visited ${buildingtype} of ${owner} resulting in ${res ? 'destruction' : 'payoff'}`,], 'visit');
 	ari_next_action(fen, uplayer);
@@ -19059,9 +17182,7 @@ function process_upgrade() {
 		select_error('please select hand or stall card(s) to upgrade!');
 		return;
 	}
-	//ok also die cards wurden correct selected
 	A.upgrade_cards = A.selected.map(x => A.items[x]);
-	//next ist selection of building to upgrade
 	Z.stage = fen.stage = 102;
 	ari_pre_action();
 }
@@ -19069,9 +17190,7 @@ function post_upgrade() {
 	let [fen, A, uplayer] = [Z.fen, Z.A, Z.uplayer];
 	A.building = A.items[A.selected[0]];
 	let gb = A.building;
-	//console.log('gb', gb)
 	let b = lookup(fen, gb.path.split('.'));
-	//console.log('real building:', b);
 	let n = A.upgrade_cards.length;
 	let type0 = gb.o.type;
 	let len = gb.o.list.length + n;
@@ -19079,50 +17198,38 @@ function post_upgrade() {
 	let target = lookup(fen, gb.path.split('.'));
 	for (const o of A.upgrade_cards) {
 		let source = lookup(fen, o.path.split('.'));
-		//console.log('target',target,'elem',o.key,'source',source);
 		elem_from_to(o.key, source, target.list);
-		//also need to move the entire building to either estate or chateau
-		//if this was a farm and 
 	}
-	//wie krieg ich das gesamte building?
 	let bres = target; //lookup(otree,target);
 	bres.h = null;
-	//console.log('target',target);
 	removeInPlace(fen.players[uplayer].buildings[type0], bres);
 	fen.players[uplayer].buildings[type1].push(bres);
 	ari_history_list([`${uplayer} upgrades a ${type0}`], 'upgrade');
-	//console.log('building after upgrade', bres);
 	console.log('hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh')
 	process_payment();
 	setTimeout(ari_next_action, 1000); //ari_next_action();
 }
+//#endregion aristo
+
+//#region bluff
 function get_robot_personality(name) { return { erratic: 20, bluff: 20, random: 20, risk: 20, passive: 20, clairvoyant: 20, aggressive: 20 }; }
 function botbest(list, max, mmax, exp, nreas, n2, have2, words, fen) {
-	//console.log('uplayer',Z.uplayer)
 	if (nundef(DA.ctrandom))DA.ctrandom = 1;console.log(`${DA.ctrandom++}: ${Z.uplayer} using strategy`,Z.strategy)
 	let bot = window[`bot_${Z.strategy}`];
 	let [b, f] = bot(list, max, mmax, exp, nreas, n2, have2, words, fen);
 	assertion(!b || b[2]!=0, 'bot returned bid with n2==0');
-	//console.log('bot', stringAfter(bot.name, '_'), 'picked', b);
-	//if (isdef(b) && isdef(fen.lastbid)) console.log('higher?',is_bid_higher_than(b, fen.lastbid));
 	return [b, f];
 }
 function bot_clairvoyant(list, maxvalue, mmax, exp, nreas, n2, have2, words, fen) {
 	let reduced_list = list.filter(x=>x.value == list[0].value || x.mine);
-	//assertion(list.length>=2, 'list.length is < 2!!!!!'); NEIN, es kann 1 el haben wenn mine cards gleicher rank!
 	let res=reduced_list.length>=2?rChoose(list,2):[reduced_list[0],{value:0,rank:'_'}];
 	let max=res[0].value>=res[1].value?res[0]:res[1];let min=res[0].value<res[1].value?res[0]:res[1];
 	let b=[max.value,max.rank,min.value,min.rank];
-	//list.map(x => console.log(x)); //
-	//console.log('chose b:', b);
 	if (isdef(fen.lastbid)) {
-		//need to make sure that bid is high enough. if not, geht hoch!
 		let [n1, r1, n2, r2] = bluff_convert2ranks(fen.lastbid);
-		//if (n1<)
 		if (!is_bid_higher_than(bluff_convert2words(b), fen.lastbid)) {
 			return [null, handle_gehtHoch];
 		}
-		//if (b[0])
 	} 
 	return [bluff_convert2words(b), handle_bid];
 }
@@ -19132,12 +17239,10 @@ function bot_perfect(list, max, mmax, exp, nreas, n2, have2, words, fen) {
 	list.map(x => console.log(x)); //
 	console.log('b:', b);
 	if (isdef(fen.lastbid)) {
-		//need to make sure that bid is high enough. if not, geht hoch!
 		let [n1, r1, n2, r2] = bluff_convert2ranks(fen.lastbid);
 		if (!is_bid_higher_than(bluff_convert2words(b), fen.lastbid)) {
 			return [null, handle_gehtHoch];
 		}
-		//if (b[0])
 	} 
 	return [bluff_convert2words(b), handle_bid];
 }
@@ -19155,27 +17260,21 @@ function bot_random(list, max, mmax, exp, nreas, n2, have2, words, fen) {
 		} else if ((n1 + n2) / 2 <= nreas + 1) b = n1 <= nreas + 1 ? [n1 + 1, r1, n2, r2] : [n1, r1, n2 + 1, r2];
 		else {
 			let [i1, i2] = [BLUFF.rankstr.indexOf(r1), BLUFF.rankstr.indexOf(r2)];
-			//try increase i1: 
 			let s = '3456789TJQKA';
-			//split s into 4 parts: <min(i1,i2), between(i1,i2), between(i2,max), >max(i1,i2)
 			let imin = Math.min(i1, i2); let imax = Math.max(i1, i2); let i = imax == i1 ? 1 : 2;
 			let [smin, between, smax] = [s.substring(0, imin), s.substring(imin + 1, imax), s.substring(imax + 1, s.length)];
-			//which one to be replaced?
 			if (!isEmpty(smax)) { if (i == 1) b = [n1, rChoose(smax), n2, r2]; else b = [n1, r1, n2, rChoose(smax)]; }
 			else if (!isEmpty(between)) { if (i == 2) b = [n1, rChoose(between), n2, r2]; else b = [n1, r1, n2, rChoose(between)]; }
 			else return [null, handle_gehtHoch];
 		}
 	}
-	//console.log('b', b);
 	return [bluff_convert2words(b), handle_bid];
 }
 function bluff_ai() {
-	//console.log('bluff_ai');
 	let [A, fen, uplayer, pl] = [Z.A, Z.fen, Z.uplayer, Z.pl];
 	const torank = { _: '_', three: '3', four: '4', five: '5', six: '6', seven: '7', eight: '8', nine: '9', ten: 'T', jack: 'J', queen: 'Q', king: 'K', ace: 'A' };
 	const toword = { _: '_', '3': 'three', '4': 'four', '5': 'five', '6': 'six', '7': 'seven', '8': 'eight', '9': 'nine', T: 'ten', J: 'jack', Q: 'queen', K: 'king', A: 'ace' };
 	let words = get_keys(torank).slice(1); // words sind three, four, ..., king, ace
-	//all about ranks of cards in play
 	let all_hand_cards = aggregate_elements(dict2list(fen.players, 'name'), 'hand'); // all cards in play
 	let no_twos = all_hand_cards.filter(x => x[0] != '2'); // alle Karten ohne 2er
 	let rankstr = '3456789TJQKA2';
@@ -19190,31 +17289,21 @@ function bluff_ai() {
 	sortByDescending(rank_list, 'i');
 	let maxcount = rank_list[0].value;
 	let mymaxcount = rank_list.filter(x => x.mine)[0].value;
-	//console.log('all_hand_cards:', all_hand_cards, '\nno_twos:', no_twos, '\nrankstr:', rankstr, '\nbyrank:', byrank, '\nrank_list:', rank_list, '\nunique_ranks:', unique_ranks, '\nmyranks:', myranks, '\nmy_unique:', my_unique);
-	//rank_list.map(x => console.log(x)); //console.log('rank_list:', rank_list);
-	//console.log('maxcount:', maxcount, 'mymaxcount:', mymaxcount);
 	let expected = all_hand_cards.length / 13; // auch 2er gibt es soviele!
 	let nreason = Math.max(1, Math.round(expected * 2));
 	let n_twos = all_hand_cards.filter(x => x[0] == '2').length;
 	let have2 = firstCond(rank_list,x=>x.rank=='2' && x.mine);
-	//console.log('expected:', expected, '\nnreason:', nreason, '\nn_twos:', n_twos, '\nhave 2:', have2);
 	return botbest(rank_list, maxcount, mymaxcount, expected, nreason, n_twos, have2, words, fen);
 }
 function bluff() {
 	const rankstr = '3456789TJQKA2';	
 	function setup(players, options) {
 		let fen = { players: {}, plorder: jsCopy(players), history: {}, stage: 'move', phase: '' };
-		//how many decks? 
-		//for each player there must be enough cards for maxsize: 
 		let num_cards_needed = players.length * options.max_handsize;
 		let num_decks_needed = fen.num_decks = Math.ceil(num_cards_needed / 52);
-		//console.log('need', num_decks_needed, 'decks for', players.length, 'players with max_handsize', options.max_handsize);
-		//let deckletters = 'brgopy'.substring(0, num_decks_needed);
 		let deck = fen.deck = create_fen_deck('n', num_decks_needed);
 		shuffle(deck);
-		//console.log('vor shuffle',jsCopy(fen.plorder));
 		shuffle(fen.plorder);
-		//console.log('nach shuffle',jsCopy(fen.plorder));
 		fen.turn = [fen.plorder[0]];
 		for (const plname of fen.plorder) {
 			let handsize = options.min_handsize;
@@ -19225,7 +17314,6 @@ function bluff() {
 				color: get_user_color(plname),
 			};
 		}
-		//console.log('fen', fen)
 		fen.stage = 0;
 		return fen;
 	}
@@ -19241,20 +17329,17 @@ function bluff_present(dParent) {
 	let [dOben, dOpenTable, dMiddle, dRechts] = tableLayoutMR(dParent, 1, 0); ///tableLayoutOMR(dParent, 5, 1);
 	let [fen, uplayer, ui, stage, dt] = [Z.fen, Z.uplayer, UI, Z.stage, dOpenTable];
 	clearElement(dt); mCenterFlex(dt);
-	//state update
 	if (stage == 1) { DA.no_shield = true; } else { DA.ack = {}; DA.no_shield = false; }
 	bluff_stats(dt);
 	mLinebreak(dt, 10);
 	bluff_show_cards(dt);
 	mLinebreak(dt, 4);
 	let item = ui.currentBidItem = bluff_show_current_bid(dt);
-	//console.log('button',item.button)
 	hide(item.button);
 	mLinebreak(dt, 10);
 	if (stage == 1) {
 		show_waiting_for_ack_message();
 		let loser = fen.loser;
-		//console.log('----loser', loser,);
 		let msg1 = fen.war_drin ? 'war drin!' : 'war NICHT drin!!!';
 		let msg2 = isdef(fen.players[loser]) ? `${capitalize(loser)} will get ${fen.players[loser].handsize} cards!` : `${capitalize(loser)} is out!`;
 		mText(`<span style="color:red">${msg1} ${msg2}</span>`, dt, { fz: 22 });
@@ -19282,7 +17367,6 @@ function bluff_stats(dParent) {
 		let sz = getSizeNeeded(elem);
 		let w = Math.max(szhand.w + 20, sz.w + 20, 80);
 		mStyle(d, { w: w }); //, bg: 'blue' });
-		//mDiv(d, { fg: 'white' }, null, `bid: ${valf(pl.lastbid, ['_']).join(' ')}`); 
 		mLinebreak(d);
 	}
 	return player_stat_items[Z.uplayer];
@@ -19290,7 +17374,6 @@ function bluff_stats(dParent) {
 function bluff_state(dParent) {
 	let user_html = get_user_pic_html(Z.uplayer, 30);
 	dParent.innerHTML = `Round ${Z.round}:&nbsp;player: ${user_html} `;
-	//dParent.innerHTML = `Round ${Z.round}`; 
 }
 function bluff_change_to_ack_round(fen, nextplayer) {
 	[Z.stage, Z.turn] = [1, [get_admin_player(fen.plorder)]];
@@ -19300,7 +17383,6 @@ function bluff_change_to_ack_round(fen, nextplayer) {
 function bluff_change_to_turn_round() {
 	let [fen, stage] = [Z.fen, Z.stage];
 	assertion(stage == 1, "ALREADY IN TURN ROUND!!!!!!!!!!!!!!!!!!!!!!");
-	//assertion(isdef(Z) && isdef(fen), "Z or fen is undefined!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 	Z.stage = 0;
 	Z.turn = fen.nextturn;
 	Z.round += 1;
@@ -19321,34 +17403,27 @@ function apply_skin2(item) {
 	mText(item.label + ':', d, { position: 'absolute', left: 0, top: top, h: h });
 	mText(`<span style="font-size:20px;margin:10px;color:red">${item.content}</span>`, d);
 	item.button = mButton(item.caption, item.handler, d, { position: 'absolute', right: 0, top: top, h: h, w: 80 }, ['selectbutton', 'enabled']);
-	//console.log('button', item.button)
 }
 function apply_skin3(item) {
 	let d = item.container; mCenterCenterFlex(d); mStyle(d, { position: 'relative', w: 400 }); //,bg:'pink'});
 	let h = 24;
 	let top = `calc( 50% - ${h / 2}px )`
 	mText(item.label + ':', d, { position: 'absolute', left: 0, top: top, h: h });
-	// let panel = UI.dAnzeige=item.panel=mDiv(d,{bg:'rgb(240, 165, 85)',padding:'6px 12px',w:200,align:'center',rounding:8});
 	let panel = UI.dAnzeige = item.panel = mDiv(d, { bg: '#ffffff80', padding: '4px 12px', w: 200, align: 'center', rounding: 8 });
 	let words = toWords(item.content)
 	let panelitems = UI.panelItems = item.panelitems = [];
 	for (let i = 0; i < 4; i++) {
 		let text = valf(words[i], '');
 		let dw = mDiv(panel, { hpadding: 4, display: 'inline', fz: 22, weight: 'bold', fg: 'red' }, `dbid_${i}`, text);
-		//dw.onclick = () => selectText(dw);
 		panelitems.push({ div: dw, index: i, initial: text, state: 'unselected' })
 	}
-	// item.buttonX = mButtonX(d,'tr',bluff_clear_panel,null,12);
 	let b = item.buttonX = mDiv(panel, { fz: 10, hpadding: 4, bg: 'white' }, null, 'CLR', 'enabled'); mPlace(b, 'tr', 2)
 	b.onclick = bluff_clear_panel;
-	//mText(`<span style="font-size:20px;margin:10px;color:red">${item.content}</span>`, d);
 	item.button = mButton(item.caption, item.handler, d, { position: 'absolute', right: 0, top: top, h: h, w: 80 }, ['selectbutton', 'enabled']);
-	//console.log('button', item.button)
 }
 function bid_to_string(bid) { return bid.join(' '); }
 function bluff_activate_stage0() {
 	let [z, A, fen, stage, uplayer, ui, dt] = [Z, Z.A, Z.fen, Z.stage, Z.uplayer, UI, UI.dOpenTable];
-	//console.log('lastbid',fen.lastbid)
 	if (isdef(fen.lastbid)) show(ui.currentBidItem.button);
 	bluff_show_new_bid(dt);
 	mLinebreak(dt, 10);
@@ -19358,10 +17433,6 @@ function bluff_activate_stage1() {
 	let [z, A, fen, stage, uplayer, ui, dt] = [Z, Z.A, Z.fen, Z.stage, Z.uplayer, UI, UI.dOpenTable];
 	if (isdef(DA.ack) && isdef(DA.ack[uplayer])) { console.log('DA.ack', DA.ack); mText('...waiting for ack', dt); return; }
 	if (isdef(ui.dHandsize)) mPulse(ui.dHandsize, 2000);
-	// mButton('WEITER', () => {
-	// 	bluff_ack_uplayer();
-	// 	if (isEmpty(Z.turn) || Z.mode == 'hotseat') { bluff_change_to_turn_round(); take_turn_fen(); }
-	// }, dt, { fz: 22 }, ['donebutton']);
 }
 function bluff_button_panel1(dt, bid, sz) {
 	let n = bid[0] == '_' ? 1 : Number(bid[0]);
@@ -19369,7 +17440,6 @@ function bluff_button_panel1(dt, bid, sz) {
 	let arr2 = toLetters('3456789TJQKA');
 	let arr3 = arrRange(0, 5);
 	let arr4 = toLetters('3456789TJQKA');
-	// bluff_rows(dt, sz, arr1, arr2, arr3, arr4);
 	let dPanel = mDiv(dt, { gap: 5 });
 	[d1, d2, d3, d4] = mColFlex(dPanel, [1, 2, 1, 2]);//,[YELLOW,ORANGE,RED,BLUE]);
 	UI.dn1 = create_bluff_input1(d1, arr1, 1, sz, 0); d1.onmouseenter = () => iHigh(UI.panelItems[0]); d1.onmouseleave = () => iUnhigh(UI.panelItems[0]);
@@ -19389,17 +17459,14 @@ function bluff_convert2words(b) { return [b[0], BLUFF.toword[b[1]], b[2]<1?'_':b
 function bluff_generate_random_bid() {
 	let [A, fen, uplayer] = [Z.A, Z.fen, Z.uplayer];
 	const di2 = { _: '_', three: 3, four: 4, five: 5, six: 6, seven: 7, eight: 8, nine: 9, ten: 'T', jack: 'J', queen: 'Q', king: 'K', ace: 'A' };
-	//const direverse = { three: 3, four: 4, five: 5, six: 6, seven: 7, eight: 8, nine: 9, ten: 'T', jack: 'J', queen: 'Q', king: 'K', ace: 'A' };
 	let words = get_keys(di2).slice(1);
 	let b = isdef(fen.lastbid) ? jsCopy(fen.lastbid) : null;
-	//console.log('last bid:', isdef(b) ? b : 'null');
 	if (isdef(b)) {
 		assertion(b[0] >= (b[2] == '_' ? 0 : b[2]), 'bluff_generate_random_bid: bid not formatted correctly!!!!!!!', b)
 		let nmax = calc_reasonable_max(fen);
 		let n = b[0] == '_' ? 1 : Number(b[0]);
 		let done = false;
 		if (n > nmax + 1) {
-			//try to modify word instead!
 			const di = { '3': 'three', '4': 'four', '5': 'five', '6': 'six', '7': 'seven', '8': 'eight', '9': 'nine', T: 'ten', J: 'jack', Q: 'queen', K: 'king', A: 'ace' };
 			let rankstr = '3456789TJQKA';
 			let w1 = di2[b[1]];
@@ -19410,26 +17477,21 @@ function bluff_generate_random_bid() {
 				done = true;
 			}
 		}
-		//if no done, manipulate number
 		if (!done) {
 			if (b[3] == '_') { b[2] = 1; b[3] = rChoose(words, 1, x => x != b[1]); }
 			else if (b[0] > b[2]) { b[2] += 1; } //console.log('new bid is now:', b); }
 			else { b[0] += coin(80) ? 1 : 2; if (coin()) b[2] = b[3] = '_'; }
 		}
 	} else {
-		//let words = get_keys(di2); //!!!!!!!!!!!!!!!!!!!!!!!!!!NOOOOOOOOOOOOOOOOOOO
-		//max bid soll abhaengig sein von wieviele cards im spiel sind oder ich mach clairvoyant bot!
 		let nmax = calc_reasonable_max(fen);
 		let nmin = Math.max(nmax - 1, 1);
 		let arr_nmax = arrRange(1, nmax);
 		let arr_nmin = arrRange(1, nmin);
 		b = [rChoose(arr_nmax), rChoose(words), rChoose(arr_nmin), rChoose(words)];
-		// b = [rChoose([1, 2, 3, 4]), rChoose(words), rChoose([1, 2]), rChoose(words)];
 		if (b[1] == b[3]) b[3] = rChoose(words, 1, x => x != b[1]);
 		if (coin()) b[2] = b[3] = '_';
 	}
 	fen.newbid = b;
-	//console.log('new bid:', b);
 	UI.dAnzeige.innerHTML = bid_to_string(b);
 }
 function bluff_reset_to_current_bid() { onclick_reload(); }
@@ -19438,18 +17500,15 @@ function bluff_show_cards(dt) {
 	let pl = fen.players[uplayer], upl = ui.players[uplayer] = {};
 	mText(stage == 1 ? "all players' cards: " : "player's hand: ", dt); mLinebreak(dt, 2);
 	let cards = stage == 1 ? fen.akku : pl.hand;
-	//pl.hand = ['QHn','QCn','2Hn','3Sn','AHn','5Cn','5Sn']
 	cards = sort_cards(cards, false, 'CDSH', true, '3456789TJQKA2'); // immer by rank!
 	let hand = upl.hand = ui_type_hand(cards, dt, { hmin: 160 }, null, '', ckey => ari_get_card(ckey, 150));
 	let uname_plays = isdef(fen.players[Z.uname]);;//Z.turn.includes(Z.uname);
 	let ishidden = stage == 0 && uname_plays && uplayer != Z.uname && Z.mode != 'hotseat';
 	if (ishidden) { hand.items.map(x => face_down(x)); }
-	//mStyle(hand.container, { h: 110 });
 }
 function bluff_show_current_bid(dt) {
 	let fen = Z.fen;
 	let bid = fen.oldbid = valf(fen.lastbid, ['_', '_', '_', '_']);
-	//bid = fen.oldbid = ['4', 'queen', '3', 'jack'];
 	let d = mDiv(dt);
 	let content = `${bid_to_string(bid)}`;
 	let item = { container: d, label: 'current bid', content: content, caption: 'geht hoch!', handler: handle_gehtHoch };
@@ -19476,10 +17535,8 @@ function calc_reasonable_max(fen) {
 	return nmax;
 }
 function calc_bid_minus_cards(fen, bid) {
-	//console.log('bid',bid)
 	let di2 = { _: '_', three: 3, four: 4, five: 5, six: 6, seven: 7, eight: 8, nine: 9, ten: 'T', jack: 'J', queen: 'Q', king: 'K', ace: 'A' };
 	let di_ranks = aggregate_player_hands_by_rank(fen);
-	//console.log('all hands:', di_ranks);
 	let [brauch1, r1, brauch2, r2] = bid;
 	[r1, r2] = [di2[r1], di2[r2]];
 	if (brauch1 == '_') brauch1 = 0;
@@ -19487,10 +17544,6 @@ function calc_bid_minus_cards(fen, bid) {
 	let hab1 = valf(di_ranks[r1], 0);
 	let hab2 = valf(di_ranks[r2], 0);
 	let wildcards = valf(di_ranks['2'], 0);
-	//console.log('cards contain:', c1, 'of', r1, ',', c2, 'of', r2, 'and', wildcards, '2er');
-	//console.log('bid', bid);
-	// if (hab1 < brauch1) { let diff1 = brauch1 - hab1; if (wildcards < diff1) return false; wildcards -= diff1; }
-	// if (hab2 < brauch2) { let diff2 = brauch2 - hab2; if (wildcards < diff2) return false; wildcards -= diff2; }
 	let diff1 = Math.max(0, brauch1 - hab1);
 	let diff2 = Math.max(0, brauch2 - hab2);
 	return diff1 + diff2 - wildcards;
@@ -19509,22 +17562,17 @@ function handle_gehtHoch() {
 	let diff = calc_bid_minus_cards(fen, bid); // hier wird schon der akku gemacht!!! ich kann also jetzt die cards renewen!!!
 	let aufheber = uplayer;
 	let loser = diff > 0 ? bidder : aufheber;
-	//console.log('diff', diff,'bidder', bidder, 'aufheber', aufheber, 'loser', loser);
 	let war_drin = fen.war_drin = diff <= 0;
 	let loser_handsize = inc_handsize(fen, loser);
 	new_deal(fen);
-	//determine next player
 	let nextplayer;
-	//console.log('max handsize',Z.options.max_handsize,loser_handsize);
 	if (loser_handsize > Z.options.max_handsize) {
 		nextplayer = get_next_player(Z, loser)
 		let plorder = fen.plorder = remove_player(fen, loser);
-		//if removed player is host, need to change host!!!!!!!!!
 	} else {
 		nextplayer = loser;
 	}
 	fen.loser = loser; fen.bidder = bidder; fen.aufheber = aufheber;
-	//console.log('set fen.loser to', fen.loser);
 	bluff_change_to_ack_round(fen, nextplayer);
 	take_turn_fen();
 }
@@ -19532,43 +17580,28 @@ function handle_bid() {
 	let [z, A, fen, uplayer, ui] = [Z, Z.A, Z.fen, Z.uplayer, UI];
 	let oldbid = jsCopy(fen.oldbid);
 	let bid = jsCopy(fen.newbid);
-	//console.log('oldbid', jsCopy(oldbid), '\nnewbid', jsCopy(bid));
-	//first sort new bid so that the higher number component is first
 	let ranks = '23456789TJQKA';
 	bid = normalize_bid(bid);
 	let higher = is_bid_higher_than(bid, oldbid);
 	if (bid[2] == 0) bid[2] = '_';
-	//set fen.lastbid
 	if (!higher) {
 		select_error('the bid you entered is not high enough!');
-		//console.log('oldbid', oldbid, '\nnewbid', bid)
 	} else {
-		//set lastbid
-		//convert 0 back to '_'		
 		fen.lastbid = fen.players[uplayer].lastbid = bid; //fen.newbid;
 		fen.lastbidder = uplayer;
 		delete fen.oldbid; delete fen.newbid;
 		Z.turn = [get_next_player(Z, uplayer)];
 		take_turn_fen();
-		//next person's turn
 	}
 }
 function iHigh(item) { let d = iDiv(item); mStyle(d, { bg: 'darkgray' }); }
 function iUnhigh(item) { let d = iDiv(item); mStyle(d, { bg: 'transparent' }); }
 function inc_handsize(fen, uname) {
 	let pl = fen.players[uname];
-	//console.log('pl', pl, uname);
-	//console.log('handsize',pl.handsize,typeof pl.handsize)
-	// deck_add(fen.deck,1,pl.hand);
 	pl.handsize = Number(pl.handsize) + 1;
-	// pl.handsize = pl.hand.length;
 	return pl.handsize;
-	// let sz = .handsize;
-	// fen.players[uname].handsize = sz + 1;
-	// return sz + 1;
 }
 function input_to_anzeige1(caption, index) {
-	//console.log('click!!!!!!!!!!!!!!!!!!!!!!!!!!!', caption, index)
 	let [A, fen, uplayer] = [Z.A, Z.fen, Z.uplayer];
 	const di = { '3': 'three', '4': 'four', '5': 'five', '6': 'six', '7': 'seven', '8': 'eight', '9': 'nine', T: 'ten', J: 'jack', Q: 'queen', K: 'king', A: 'ace' };
 	let bid = fen.newbid;
@@ -19603,34 +17636,25 @@ function input_to_anzeige1(caption, index) {
 		if (bid[2] == '_') bid[2] = 1;
 		if (bid[3] == bid[1]) { bid[0] = bid[0] + bid[2]; bid[1] = bid[3]; bid[2] = bid[3] = '_'; }
 	}
-	//console.log('newbid array is now', fen.newbid);
-	//UI.dAnzeige.innerHTML = bid_to_string(bid);
-	//iDiv(UI.panelItems[index]).innerHTML = bid[index];
 	for (let i = 0; i < 4; i++)	iDiv(UI.panelItems[i]).innerHTML = bid[i];
 }
 function is_higher_ranked_name(f1, f2) {
-	// let di2 = { _: 0, three: 3, four: 4, five: 5, six: 6, seven: 7, eight: 8, nine: 9, ten: 'T', jack: 'J', queen: 'Q', king: 'K', ace: 'A' };
 	let di2 = { _: 0, three: 3, four: 4, five: 5, six: 6, seven: 7, eight: 8, nine: 9, ten: 10, jack: 11, queen: 12, king: 13, ace: 14 };
 	return di2[f1] > di2[f2];
 }
 function is_bid_higher_than(bid, oldbid) {
-	//replace all _ by 0
 	bid = jsCopy(bid);
-	//console.log('bid:', bid, 'oldbid:', oldbid);	
 	if (bid[0] == '_') bid[0] = 0;
 	if (bid[2] == '_') bid[2] = 0;
 	if (oldbid[0] == '_') oldbid[0] = 0;
 	if (oldbid[2] == '_') oldbid[2] = 0;
-	//check if newbid is higher than old bid
 	let higher = bid[0] > oldbid[0]
 		|| bid[0] == oldbid[0] && is_higher_ranked_name(bid[1], oldbid[1])
 		|| bid[0] == oldbid[0] && bid[1] == oldbid[1] && bid[2] > oldbid[2]
 		|| bid[0] == oldbid[0] && bid[1] == oldbid[1] && bid[2] == oldbid[2] && is_higher_ranked_name(bid[3], oldbid[3]);
-	//console.log('YES, new bid is higher!!!');
 	return higher;
 }
 function new_deal(fen) {
-	//console.log('new deal!!!!!!!!!!!!!', Z.uplayer)
 	let deck = fen.deck = create_fen_deck('n', fen.num_decks);
 	shuffle(deck);
 	for (const plname in fen.players) {
@@ -19644,19 +17668,19 @@ function normalize_bid(bid) {
 		|| bid[2] != '_' && bid[2] > bid[0]
 		|| bid[2] == bid[0] && is_higher_ranked_name(bid[3], bid[1]);
 	if (need_to_sort) {
-		//console.log('need_to_sort', need_to_sort);
 		let [h0, h1] = [bid[0], bid[1]];
 		[bid[0], bid[1]] = [bid[2], bid[3]];
 		[bid[2], bid[3]] = [h0, h1];
-		//console.log('bid sorted:', bid);
 	}
 	return bid;
 }
+//#endregion bluff
+
+//#region fritz
 function fritz() {
 	const rankstr = 'A23456789TJQK*';
 	function setup(players, options) {
 		let fen = { players: {}, plorder: jsCopy(players), history: [], maxrounds: options.cycles * players.length };
-		//calc how many decks are needed (basically 1 suit per person, plus 1 for the deck)
 		let n = players.length;
 		fen.num_decks = 2 + (n >= 9 ? 2 : n >= 7 ? 1 : 0); //n == 2 ? 1 : 2 + (n > 5 ? Math.ceil((n - 5) / 2) : 0); //<=5?2:Math.max(2,Math.ceil(players.length/3));
 		fritz_new_table(fen, options);
@@ -19664,7 +17688,6 @@ function fritz() {
 		shuffle(fen.plorder);
 		let starter = fen.starter = fen.plorder[0];
 		fen.roundorder = jsCopy(fen.plorder);
-		//console.log('options', options);
 		let handsize = valf(Number(options.handsize), 11);
 		for (const plname of players) {
 			let pl = fen.players[plname] = {
@@ -19687,15 +17710,11 @@ function fritz() {
 	return { rankstr, setup, activate_ui, check_gameover, present, state_info, stats };
 }
 function fritz_present(dParent) {
-	//console.log('present')
 	DA.hovergroup = null;
 	let [fen, ui, uplayer, stage, pl] = [Z.fen, UI, Z.uplayer, Z.stage, Z.pl];
-	//fen.shield=true;
-	//console.log('role',Z.role)
 	let [dOben, dOpenTable, dMiddle, dRechts] = tableLayoutMR(dParent); mFlexWrap(dOpenTable)
 	Config.ui.card.h = 130;
 	Config.ui.container.h = Config.ui.card.h + 30;
-	//let deck = ui.deck = ui_type_deck(fen.deck, dOpenTable, { maleft: 12 }, 'deck', 'deck', fritz_get_card);
 	if (isEmpty(fen.deck_discard)) {
 		mText('discard pile is empty!', dOpenTable);
 		ui.deck_discard = { items: [] }
@@ -19706,49 +17725,36 @@ function fritz_present(dParent) {
 	}
 	mLinebreak(dOpenTable);
 	mDiv(dOpenTable, { box:true,w:'100%' }, null, '<hr>');
-	//mLinebreak(dOpenTable,2,`<hr style="width:100%">`);
 	let ddarea = UI.ddarea = mDiv(dOpenTable, { border: 'dashed 1px black', bg: '#eeeeee80', box: true, hmin: 162, wmin: 245, padding: '5px 50px 5px 5px', margin: 5 });
 	mDroppable(ddarea, drop_card_fritz, dragover_fritz); ddarea.id = 'dOpenTable'; Items[ddarea.id] = ddarea;
 	mFlexWrap(ddarea)
 	fritz_stats(dRechts);
 	show_history(fen, dRechts);
-	//loose cards and journeys
 	DA.TJ = [];
-	//journeys become groups
-	//fen.journeys = [['QHn', 'KHn', 'AHn'], ['QCn', 'QHn', 'QDn']];
 	for (const j of fen.journeys) {
 		let cards = j.map(x => fritz_get_card(x));
 		frnew(cards[0], { target: 'hallo' });
 		for (let i = 1; i < cards.length; i++) { fradd(cards[i], Items[cards[0].groupid]); }
 	}
-	//loose cards of fen and other players become groups. own loose cards will ALSO go to player area
 	let loosecards = ui.loosecards = jsCopy(fen.loosecards).map(c => fritz_get_card(c));
 	for (const plname of fen.plorder) {
 		let cards = fen.players[plname].loosecards.map(c => fritz_get_card(c));
 		cards.map(x => x.owner = plname);
-		// if (plname != uplayer) { loosecards = loosecards.concat(cards); }
 		loosecards = loosecards.concat(cards);
 	}
 	for (const looseui of loosecards) {
-		//console.log('looseui', looseui);
 		let card = looseui;
 		frnew(card, { target: 'hallo' });
 	}
-	//all cards in drop area are droppable
 	for (const group of DA.TJ) {
 		assertion(isdef(group.id), 'no group id', group);
 		let d = iDiv(group);
-		//console.log('d',d);
 		let ch = arrChildren(iDiv(group));
 		let cards = ch.map(x => Items[x.id]);
-		//console.log('cards', cards);
 		cards.map(x => mDroppable(x, drop_card_fritz, dragover_fritz));
 	}
-	//if ddarea is empty, write drag and drop hint
 	if (arrChildren(ddarea).length == 0) {
 		let d = mDiv(ddarea, { 'pointer-events': 'none', maleft: 45, align: 'center', hmin: 40, w: '100%', fz: 12, fg: 'dimgray' }, 'ddhint', 'drag and drop cards here');
-		//setRect(ddarea)
-		//mPlace(d,'cc')
 	}
 	ui.players = {};
 	let uname_plays = fen.plorder.includes(Z.uname);
@@ -19766,31 +17772,22 @@ function fritz_present_player(playername, dMiddle) {
 	let pl = fen.players[playername];
 	let playerstyles = { w: '100%', bg: '#ffffff80', fg: 'black', padding: 4, margin: 4, rounding: 10, border: `2px ${get_user_color(playername)} solid` };
 	let d = mDiv(dMiddle, playerstyles, null, get_user_pic_html(playername, 25)); mFlexWrap(d); mLinebreak(d, 10);
-	// if (isdef(pl.handsorting)) {
-	// 	let bysuit = pl.handsorting.by == 'suit';
-	// 	let [arr1, arr2] = arrSplitAtIndex(pl.hand, pl.handsorting.n - 1);
-	// 	pl.hand = sort_cards(arr1, bysuit, 'CDSH', true, 'A23456789TJQK*').concat(arr2);
-	// }
 	pl.hand = correct_handsorting(pl.hand,playername);
 	let upl = ui.players[playername] = { div: d };
 	upl.hand = ui_type_hand(pl.hand, d, {}, `players.${playername}.hand`, 'hand', fritz_get_card);
 	upl.hand.items.map(x => x.source = 'hand');
 	let ploose = pl.loosecards;
 	if (!isEmpty(ploose)) {
-		//console.log('ploosecards', ploose);
 		upl.loose = ui_type_market(ploose, d, {}, `players.${playername}.loose`, 'untouchables', fritz_get_hint_card);
 		upl.loose.items.map(x => x.source = 'loose');
 	} else {
-		//console.log('player has no loose cards',pl);
 	}
 }
 function fritz_activate_ui() {
-	//return;
 	let [plorder, stage, A, fen, uplayer, pl] = [Z.plorder, Z.stage, Z.A, Z.fen, Z.uplayer, Z.fen.players[Z.uplayer]];
 	A.autosubmit = false;
 	new_cards_animation(1);
 	round_change_animation(1);
-	//UI.players[uplayer].hand.items.map(x=>iDiv(x).onclick=()=>onclick_fritz_discard(x));
 	select_add_items(ui_get_hand_items(uplayer), end_of_turn_fritz, 'must drag drop cards to assemble groups, then discard 1 hand card', 0, 1);
 	A.items.map(x => iDiv(x).onclick = ev => {
 		let card = Items[x.id];
@@ -19798,23 +17795,18 @@ function fritz_activate_ui() {
 		clear_quick_buttons();
 		select_last(item, select_toggle, ev);
 		if (item.index == A.selected[0]) {
-			//mach so einen button dorthin wo die mouse ist!
 			let pos = get_mouse_pos(ev);
-			//console.log('mouse pos', pos);
 			let b = DA.bQuick = mButton('discard', ev => {
 				b.remove();
 				end_of_turn_fritz();
 			}, document.body, { position: 'absolute', left: pos.x - 40, top: pos.y - 10 }, 'selectbutton');
 		}
-		//console.log('clicked card', card, '\nitem', item);
-		//output mouse position on page
 	});
 	UI.timer = select_timer(fen.players[uplayer].time_left + Z.options.seconds_per_move * 1000, end_of_turn_fritz);
 }
 function fritz_stats(dParent) {
 	let player_stat_items = UI.player_stat_items = ui_player_info(dParent);
 	let fen = Z.fen;
-	//vorsicht wenn ein player ausfaellt! was ist da los????
 	console.log('players',get_keys(fen.players));
 	for (const plname in fen.players) {
 		let pl = fen.players[plname];
@@ -19833,7 +17825,6 @@ function fritz_state_info(dParent) {
 }
 function add_card_to_group(card, oldgroup, oldindex, targetcard, targetgroup) {
 	card.groupid = targetgroup.id;
-	//hier muss card von UI hand entfernen wenn source == 'hand'
 	if (card.source == 'hand') {
 		let hand = UI.players[Z.uplayer].hand;
 		removeInPlace(hand.items, card);
@@ -19844,27 +17835,13 @@ function add_card_to_group(card, oldgroup, oldindex, targetcard, targetgroup) {
 		targetgroup.ids.push(card.id);
 		mAppend(iDiv(targetgroup), iDiv(card));
 	} else {
-		//targetcard canNOT be null here!!!!!!
-		//oldgroup can be undefined
-		// aber die card wurde ja schon untied?!!!!!!!!
-		// if (oldgroup == group){
-		// 	//in this case have oldindex
-		// 	//if oldindex < index of targetcard, insert
-		// 	console.log('oldindex', oldindex, 'index of targetcard', group.ids.indexOf(targetcard.id));
-		// }
 		let index = targetgroup.ids.indexOf(targetcard.id) + 1;
-		//how do I get the old group?
-		//console.log('inserting card at index', index);
-		//console.log('ids', jsCopy(targetgroup.ids));
-		//console.log('targetcard index', index);
 		targetgroup.ids.splice(index, 0, card.id);
-		//console.log('ids', jsCopy(targetgroup.ids));
 		mClear(iDiv(targetgroup));
 		for (let i = 0; i < targetgroup.ids.length; i++) {
 			let c = Items[targetgroup.ids[i]];
 			mAppend(iDiv(targetgroup), iDiv(c));
 		}
-		//mInsert(iDiv(targetgroup), iDiv(card), index);
 	}
 	resplay_container(targetgroup);
 }
@@ -19882,7 +17859,6 @@ function clear_quick_buttons() {
 function cleanup_or_resplay(oldgroup) {
 	if (isdef(oldgroup) && isEmpty(oldgroup.ids)) {
 		let oldgroupid = oldgroup.id;
-		//console.log('delete group', oldgroupid);
 		mRemove(iDiv(oldgroup));
 		removeInPlace(DA.TJ, oldgroup);
 		delete Items[oldgroupid];
@@ -19896,14 +17872,12 @@ function deck_deal_safe_fritz(fen, plname, n = 1) {
 	let new_cards = deck_deal(fen.deck, n);
 	fen.players[plname].hand.push(...new_cards);
 	new_cards.map(x => lookupAddToList(fen.players[plname], ['newcards'], x));
-	// new_cards.map(x => lookupAddToList(Clientdata, ['newcards'], x));
 	return new_cards;
 }
 function drag(ev) { clear_quick_buttons(); ev.dataTransfer.setData("text", ev.target.id); }
 function dragover_fritz(ev){
 	ev.preventDefault();
 	ev.dataTransfer.dropEffect = "move"; //macht so ein kleines kastel, 'copy' (default) macht ein kastel mit einem +
-	//ich will eigentlich nur feststellen, wo die card landen wuerde!
 	let target_id = evToClosestId(ev);
 	let d=mBy(target_id);
 	mStyle(d,{bg:'red'});
@@ -19912,7 +17886,6 @@ function dragover_fritz(ev){
 		let targetcard = Items[target_id];
 		let targetgroup = Items[targetcard.groupid];
 	} else {
-		//console.log('ERROR IMPOSSIBLE!!!! dropped',data,card,'to',target_id);
 	}
 }
 function drop_card_fritz(ev) {
@@ -19920,14 +17893,10 @@ function drop_card_fritz(ev) {
 	evNoBubble(ev);
 	if (isdef(mBy('ddhint'))) mRemove(mBy('ddhint')); //removes the text saying 'drag and drop cards here'
 	var data = ev.dataTransfer.getData("text");
-	//console.log('data',data);
 	let card = Items[data];
-	//console.log('dropped',data,card,'to',ev.target);
 	let target_id = evToClosestId(ev);
 	if (card.source == 'discard') {
-		//console.log('drop', card.index + '-th', 'from', card.source, 'to', target_id);
 		let [discard, loose] = arrSplitAtIndex(UI.deck_discard.items, card.index);
-		//console.log('discard', discard.map(x => x.key), 'loose', loose.map(x => x.key));
 		c = loose[0];
 		loose = loose.slice(1);
 		assertion(c == card, 'NEEEEEEEE');
@@ -19937,22 +17906,15 @@ function drop_card_fritz(ev) {
 		}
 	}
 	if (target_id == 'dOpenTable') {
-		//mach eine neue journey
-		//console.log('table-dropped',data);
 		frnew(card, ev);
 	} else if (isdef(Items[target_id])) {
 		let targetcard = Items[target_id];
-		//console.log('dropped',data,'to card',target_id);
-		//console.log('targetcard',targetcard);
 		let targetgroup = Items[targetcard.groupid];
 		fradd(card, targetgroup, targetcard);
 	} else {
-		//console.log('ERROR IMPOSSIBLE!!!! dropped',data,card,'to',target_id);
 	}
-	//ev.target.appendChild(document.getElementById(data));
 }
 function end_of_round_fritz(plname) {
-	//console.log('fritz_round_over', plname);
 	let [A, fen, uplayer, plorder] = [Z.A, Z.fen, Z.uplayer, Z.plorder];
 	let pl = fen.players[uplayer];
 	calc_fritz_score();
@@ -19960,13 +17922,11 @@ function end_of_round_fritz(plname) {
 	fen.round_winner = plname;
 	plorder = fen.plorder = jsCopy(fen.roundorder); //restore fen.plorder to contain all players
 	if (Z.round >= fen.maxrounds) {
-		//game end!
 		fen.winners = find_players_with_min_score();
 		ari_history_list([`game over: ${fen.winners.join(', ')} win${fen.winners.length == 1 ? 's' : ''}`], 'game over');
 		Z.stage = 'game_over';
 		console.log('end of game: stage', Z.stage, '\nplorder', fen.plorder, '\nturn', Z.turn);
 	} else {
-		//next round
 		let starter = fen.starter = get_next_in_list(fen.starter, plorder);
 		console.log('starter', starter);
 		Z.turn = [starter];
@@ -19978,11 +17938,8 @@ function end_of_round_fritz(plname) {
 function end_of_turn_fritz() {
 	let [A, fen, uplayer, plorder] = [Z.A, Z.fen, Z.uplayer, Z.plorder];
 	let pl = fen.players[uplayer];
-	//console.log('__________________________');
 	clear_quick_buttons();
 	let ms = fen.players[uplayer].time_left = stop_timer();
-	//all TJ groups must be checked and loose cards placed in loosecards
-	//console.log('eot inspecting groups', DA.TJ.length)
 	let ploose = {};
 	fen.journeys = [];
 	fen.loosecards = [];
@@ -19990,57 +17947,37 @@ function end_of_turn_fritz() {
 	for (const group of DA.TJ) {
 		let ch = arrChildren(iDiv(group));
 		let cards = ch.map(x => Items[x.id]);
-		//find out if is a set
-		//console.log('cards', cards);
-		// let set = ferro_is_set(cards, Z.options.jokers_per_group, 3, false);
-		// let set = is_overlapping_set(cards, Z.options.jokers_per_group, 3, false);
 		let set = Z.options.overlapping == 'yes' ? is_overlapping_set(cards, Z.options.jokers_per_group, 3, false)
 			: ferro_is_set(cards, Z.options.jokers_per_group, 3, false);
-		//console.log('set', set);
 		if (!set) {
-			//dann kommen die Karten in die Loosecards
 			for (const card of cards) {
 				if (is_joker(card)) {
-					//console.log('pushing joker', card.key);
 					fen.loosecards.push(card.key);
 					continue;
 				}
 				let owner = valf(card.owner, uplayer);
 				lookupAddToList(ploose, [owner], card.key);
-				//console.log('add card', card.key, 'to', owner);
 			}
-			//console.log('NOT A SET', cards);
 		} else {
 			let j = set; //[];
-			//for (const card of cards) { delete card.owner; j.push(card.key); }
 			fen.journeys.push(j);
-			//console.log('YES!!!', 'adding journey', j);
 		}
 	}
 	for (const plname in ploose) {
 		fen.players[plname].loosecards = ploose[plname];
 	}
-	//console.log('_____\npublic loosecards', fen.loosecards);
-	//output_loose_and_journeys(fen);
-	//discard pile must be reduced by all cards that do not have source = 'discard'
 	let discard = UI.deck_discard.items.filter(x => x.source == 'discard');
 	fen.deck_discard = discard.map(x => x.key);
 	if (!isEmpty(A.selected)) {
-		//console.log('selected', A.selected);
 		let ui_discarded_card = A.selected.map(x => A.items[x].o)[0];
 		removeInPlace(UI.players[uplayer].hand.items, ui_discarded_card);
 		ckey = ui_discarded_card.key;
-		//console.log('discard', discard);
 		elem_from_to(ckey, fen.players[uplayer].hand, fen.deck_discard);
 		ari_history_list([`${uplayer} discards ${ckey}`], 'discard');
 	}
-	//all UI.hand cards that do NOT have source=hand must be removed from player hands
 	let uihand = UI.players[uplayer].hand.items; //.filter(x => x.source == 'hand');
 	let fenhand_vorher = fen.players[uplayer].hand;
 	let fenhand = fen.players[uplayer].hand = uihand.filter(x => x.source == 'hand').map(x => x.key);
-	//console.log('hand', uihand, 'fenhand vorher:', fenhand_vorher, 'fenhand', fenhand);
-	//console.log('________ plorder', fen.plorder, 'turn', Z.turn);
-	//check round end
 	if (isEmpty(fenhand) && isEmpty(fen.players[uplayer].loosecards)) {
 		end_of_round_fritz(uplayer);
 	} else if (ms <= 100) {
@@ -20049,12 +17986,10 @@ function end_of_turn_fritz() {
 		if (fen.plorder.length <= 1) { end_of_round_fritz(uplayer); }
 		else { Z.turn = [get_next_player(Z, uplayer)]; deck_deal_safe_fritz(fen, Z.turn[0]); removeInPlace(fen.plorder, uplayer); }
 	} else { Z.turn = [get_next_player(Z, uplayer)]; deck_deal_safe_fritz(fen, Z.turn[0]); }
-	//console.log('...plorder', fen.plorder, 'turn', Z.turn); output_scores();
 	take_turn_fen();
 }
 function frnew(card, ev) {
 	let [oldgroup, oldindex] = untie_card(card);
-	//making a new group in TJ
 	let id = getUID('g');
 	let d = mDiv(Items.dOpenTable, { display: 'grid', margin: 10 }, id); //, transition:'all * .5s' }, id);
 	let targetgroup = { div: d, id: id, ids: [], ov: .5222 };
@@ -20064,28 +17999,20 @@ function frnew(card, ev) {
 	assertion(isdef(targetgroup.id), 'NO ID IN frnew!!!!!!!', targetgroup);
 	add_card_to_group(card, oldgroup, oldindex, null, targetgroup);
 	if (targetgroup != oldgroup) cleanup_or_resplay(oldgroup);
-	// console.log('groups', DA.TJ);
 }
 function fradd(card, targetgroup, targetcard) {
 	let [oldgroup, oldindex] = untie_card(card);
 	assertion(isdef(targetgroup.id), 'NO ID IN fradd!!!!!!!', targetgroup);
 	add_card_to_group(card, oldgroup, oldindex, targetcard, targetgroup);
 	if (targetgroup != oldgroup) cleanup_or_resplay(oldgroup);
-	//console.log('groups', DA.TJ);
 }
 function fritz_card(ckey, h, w, ov, draggable) {
-	//joker is represented as '*Hn' where second letter is digit 0..9 (up to 9 jokers in play!)
-	// H suit damit er beim sortieren immer rechts aufscheint!
 	let type = ckey[2];
-	// let info = type == 'n' ? to_aristocard(ckey) : type == 'l' ? to_luxurycard(ckey) : to_commissioncard(ckey);
-	//den joker gibt es NICHT!!!!
-	//console.log('ckey',ckey)
 	let info = ckey[0] == '*' ? get_joker_info() : jsCopy(C52Cards[ckey.substring(0, 2)]);
 	info.key = ckey;
 	info.cardtype = ckey[2]; //n,l,c=mini...
 	let [r, s] = [info.rank, info.suit];
 	info.val = r == '*' ? 25 : r == 'A' ? 1 : 'TJQK'.includes(r) ? 10 : Number(r);
-	//console.log('r',r,'val',info.val)
 	info.color = RED;
 	info.sz = info.h = valf(h, Config.ui.card.h);
 	info.w = valf(w, info.sz * .7);
@@ -20095,7 +18022,6 @@ function fritz_card(ckey, h, w, ov, draggable) {
 	let card = cardFromInfo(info, h, w, ov);
 	card.id = iDiv(card).id = getUID('c');
 	Items[card.id] = card;
-	//make each card ui draggable
 	if (draggable && Z.role == 'active') mDraggable(card);
 	return card;
 }
@@ -20118,28 +18044,23 @@ function fritz_new_player_hands(fen, starter, options) {
 		pl.time_left = options.seconds_per_game * 1000; //seconds
 		pl.roundchange = true;
 		delete pl.handsorting;
-		// delete Clientdata.newcards;
 		delete pl.newcards;
 	}
 }
 function output_loose_and_journeys(fen) {
 	for (const j of fen.journeys) { console.log('journey', j.join(', ')); }
-	//console.log('journeys:', fen.journeys);
 	for (const plname in fen.players) { console.log('loosecards', plname, fen.players[plname].loosecards.join(', ')); }
 }
 function output_scores() {
 	let fen = Z.fen;
 	for (const plname in fen.players) {
 		let pl = fen.players[plname];
-		//console.log('score', plname, pl.score);
-		//let score = pl.score; let score_str = score.toString(); let score_elem = iDiv(`score_${plname}`); score_elem.innerHTML = score_str;
 	}
 }
 function resplay_container(targetgroup, ovpercent) {
 	let d = iDiv(targetgroup);
 	let card = Items[targetgroup.ids[0]];
 	let ov = valf(targetgroup.ov, .1222)
-	//console.log('resplay ov', ov);
 	mContainerSplay(d, 2, card.w, card.h, arrChildren(d).length, ov * card.w);
 	let items = arrChildren(d).map(x => Items[x.id]);
 	ui_add_cards_to_hand_container(d, items);
@@ -20154,6 +18075,9 @@ function untie_card(card) {
 	if (isdef(oldgroup)) removeInPlace(oldgroup.ids, card.id);
 	return [oldgroup, oldindex]; // {oldindex:oldindex,oldgroup:oldgroup};
 }
+//#endregion fritz
+
+//#region ferro
 function ferro() {
 	const rankstr = '23456789TJQKA*';
 	function setup(players, options) {
@@ -20161,21 +18085,15 @@ function ferro() {
 		options.jokers_per_group = 1;
 		fen.allGoals = ['7R', '55', '5', '44', '4', '33', '3'];
 		fen.availableGoals = options.maxrounds == 1 ? [rChoose(fen.allGoals)] : options.maxrounds < 7 ? rChoose(fen.allGoals, options.maxrounds) : fen.allGoals;
-		//available goals muessen nach schwierigkeit sortiert werden!!!!! 
 		fen.availableGoals.sort((a, b) => fen.allGoals.indexOf(a) - fen.allGoals.indexOf(b)); //sorted most difficult first
-		//test if availableGoals richtig sortiert!
 		fen.roundGoals = arrReverse(fen.availableGoals); //sorted easiest first!
-		//console.log('availableGoals', fen.availableGoals);
-		//calc how many decks are needed (basically 1 suit per person, plus 1 for the deck)
 		let n = players.length;
 		let num_decks = fen.num_decks = 2 + (n >= 9 ? 2 : n >= 7 ? 1 : 0); // 2 + (n > 5 ? Math.ceil((n - 5) / 2) : 0); //<=5?2:Math.max(2,Math.ceil(players.length/3));
-		//console.log('num_decks', num_decks);
 		let deck = fen.deck = create_fen_deck('n', num_decks, 4 * num_decks);
 		let deck_discard = fen.deck_discard = [];
 		shuffle(deck);
 		if (DA.TESTING != true) { shuffle(fen.plorder);shuffle(fen.plorder); } //shuffletest(fen.plorder);		}
 		let starter = fen.plorder[0];
-		//console.log('options', options);
 		let handsize = valf(Number(options.handsize), 11);
 		for (const plname of players) {
 			let pl = fen.players[plname] = {
@@ -20190,8 +18108,6 @@ function ferro() {
 			};
 			pl.goals = {};
 			for (const g of fen.availableGoals) { pl.goals[g] = 0; }//console.log('g',g);  { 3: 0, 33: 0, 4: 0, 44: 0, 5: 0, 55: 0, '7R': 0 };
-			//console.log('pl.goals',plname, pl.goals);
-			//if (DA.TEST0 == true && plname == starter) { pl.hand = ['AHn', 'AHn', 'AHn', 'AHn']; }
 		}
 		fen.phase = ''; //TODO: king !!!!!!!
 		[fen.stage, fen.turn] = ['card_selection', [starter]];
@@ -20202,8 +18118,6 @@ function ferro() {
 	function clear_ack() {
 		if (Z.stage == 'round_end') { start_new_round_ferro(); take_turn_fen(); }
 		else if (Z.stage != 'card_selection') {
-			//gib jedem spieler der nicht playerdata hat false
-			//console.log('clear_ack', Z.stage, jsCopy(Z.fen));
 			for (const plname of Z.fen.canbuy) {
 				let pldata = firstCond(Z.playerdata, x => x.name == plname);
 				if (isdef(pldata) && lookup(pldata, ['state', 'buy']) == true) {
@@ -20228,7 +18142,6 @@ function ferro_pre_action() {
 		case 'card_selection': select_add_items(ui_get_ferro_items(uplayer), fp_card_selection, 'must select one or more cards', 1, 100); break;
 		default: console.log('stage is', stage); break;
 	}
-	//ensure_buttons_visible_ferro();
 }
 function ferro_present(dParent) {
 	if (DA.simulate == true) show('bRestartMove'); else hide('bRestartMove'); //console.log('DA', DA);
@@ -20238,7 +18151,6 @@ function ferro_present(dParent) {
 	show_history(fen, dRechts);
 	let deck = ui.deck = ui_type_deck(fen.deck, dOpenTable, { maleft: 12 }, 'deck', 'deck', ferro_get_card);
 	let deck_discard = ui.deck_discard = ui_type_deck(fen.deck_discard, dOpenTable, { maleft: 12 }, 'deck_discard', '', ferro_get_card);
-	//console.log('deck_discard',deck_discard);
 	if (!isEmpty(deck_discard.items)) face_up(deck_discard.get_topcard());
 	order = get_present_order();
 	for (const plname of order) {
@@ -20250,29 +18162,22 @@ function ferro_present(dParent) {
 		let hidden = compute_hidden(plname);
 		ferro_present_player(plname, d, hidden);
 	}
-	//console.log('playerdata changed', Z.playerdata_changed_for);
 	Z.isWaiting = false;
 	if (Z.stage == 'round_end') {
 		show_waiting_for_ack_message();
 		if (Z.role=='active' || i_am_host()) {
 			show('bClearAck');
 		}
-		//*** auto resolve *** */
 	} else if (Z.stage == 'buy_or_pass' && uplayer == fen.trigger && ferro_check_resolve()) {
 		assertion(Z.stage == 'buy_or_pass', 'stage is not buy_or_pass when checking can_resolve!');
 		Z.stage = 'can_resolve';
 		[Z.turn, Z.stage] = [[get_multi_trigger()], 'can_resolve'];
 		take_turn_fen(); return;
 	} else if (Z.stage == 'buy_or_pass' && (Z.role != 'active' || is_playerdata_set(uplayer))) {
-		//console.log('HAAAAAAAAAAAAAAAAAAAAALLLLLLLLLLLLLLLLLOOOOOOOOOOOOOOOOOOOOOOOOOOO')
-		//get players in turn that have not yet set playerdata
 		assertion(isdef(Z.playerdata), 'playerdata is not defined in buy_or_pass (present ferro)');
 		let pl_not_done = Z.playerdata.filter(x => Z.turn.includes(x.name) && isEmpty(x.state)).map(x => x.name);
-		// show_waiting_message(`waiting for ${pl_not_done.join(', ')} to make buy decision`);
 		show_waiting_message(`waiting for possible buy decision...`);
 		Z.isWaiting = true;
-		//ich soll hier auch den statisTitle machen und sanduhr stoppen fuer diesen player!!! und alle players die bereits done sind!
-		//if (Z.role == 'active') { Z.role = 'waiting'; staticTitle('waiting for ' + pl_not_done.join(', ')); }
 	}
 	show_handsorting_buttons_for(Z.mode == 'hotseat' ? Z.uplayer : Z.uname, { bottom: -2 });
 	new_cards_animation();
@@ -20290,7 +18195,6 @@ function ferro_present_player(plname, d, ishidden = false) {
 	let i = 0;
 	for (const j of pl.journeys) {
 		let jui = ui_type_lead_hand(j, d, { maleft: 12, h: 130 }, `players.${plname}.journeys.${i}`, '', ferro_get_card);//list, dParent, path, title, get_card_func
-		//jui.path = `players.${uplayer}.journeys.${i}`;
 		i += 1;
 		ui.journeys.push(jui);
 	}
@@ -20298,7 +18202,6 @@ function ferro_present_player(plname, d, ishidden = false) {
 function ferro_activate_ui() { ferro_pre_action(); }
 function ferro_state(dParent) {
 	if (DA.TEST0 == true) {
-		//testing output
 		let html = `${Z.stage}`;
 		if (isdef(Z.playerdata)) {
 			let trigger = get_multi_trigger();
@@ -20307,11 +18210,8 @@ function ferro_state(dParent) {
 				if (data.name == trigger) continue;
 				let name = data.name;
 				let state = data.state;
-				//console.log('state', name, state, typeof(state));
 				let s_state = object2string(state);
 				html += ` ${name}:'${s_state}'`; // (${typeof state})`;
-				//let buys=!isEmpty(data.state)?data.state.buy:'_';
-				//html += ` ${name}:${buys}`;
 			}
 			dParent.innerHTML += ` ${Z.playerdata.map(x => x.name)}`;
 		}
@@ -20327,7 +18227,6 @@ function ferro_state(dParent) {
 		dParent.innerHTML = `Round ${Z.round}:&nbsp;&nbsp;minimum:&nbsp;${goal_html}`;
 	} else {
 		let user_html = get_user_pic_html(Z.stage == 'buy_or_pass' ? Z.fen.nextturn[0] : Z.turn[0], 30);
-		// dParent.innerHTML = `Round ${Z.round}:&nbsp;player: ${user_html} `;
 		dParent.innerHTML = `Round ${Z.round}:&nbsp;${Z.stage == 'buy_or_pass' ? 'next ' : ''}turn: ${user_html} `;
 	}
 }
@@ -20339,13 +18238,10 @@ function ferro_stats(dParent) {
 		let item = player_stat_items[plname];
 		let d = iDiv(item); mCenterFlex(d); mStyle(d, { wmin: 150 }); mLinebreak(d);
 		player_stat_count('coin', pl.coins, d);
-		// player_stat_count('hand with fingers splayed', pl.hand.length, d);
-		//console.log('pl.hand', pl.hand);
 		player_stat_count('pinching hand', pl.hand.length, d);
 		if (!compute_hidden(plname)) player_stat_count('hand with fingers splayed', calc_hand_value(pl.hand), d);
 		player_stat_count('star', pl.score, d);
 		mLinebreak(d, 4);
-		//console.log('is _fixed goal', _is_fixed_goal());
 		if (!is_fixed_goal()) {
 			let d2 = mDiv(d, { padding: 4, display: 'flex' }, `d_${plname}_goals`);
 			if (fen.availableGoals.length < 4) { mStyle(d2, { wmin: 120 }); mCenterFlex(d2); }
@@ -20361,21 +18257,15 @@ function ferro_stats(dParent) {
 }
 function ferro_change_to_buy_pass() {
 	let [plorder, stage, A, fen, uplayer] = [Z.plorder, Z.stage, Z.A, Z.fen, Z.uplayer];
-	//multi data: fen.canbuy, fen.trigger, fen.buyer, fen.nextturn (und playerdata natuerlich!)
 	let nextplayer = get_next_player(Z, uplayer); //player after buy_or_pass round
-	//newturn is list of players starting with nextplayer
 	let newturn = jsCopy(plorder); while (newturn[0] != nextplayer) { newturn = arrCycle(newturn, 1); } //console.log('newturn', newturn);
 	fen.canbuy = newturn.filter(x => x != uplayer && fen.players[x].coins > 0); //fen.canbuy list ist angeordnet nach reihenfolge der frage
 	fen.trigger = uplayer; //NEIN!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!get_admin_player(fen.plorder); // uplayer;
-	//der grund warum es nicht geht dass der trigger zugleich in canbuy ist, ist dass er ja kein ack ausloesen kann und deshalb
-	//fuer immer => ueberleg das!!!!
-	//console.log('trigger is', fen.trigger);
 	fen.buyer = null;
 	fen.nextturn = [nextplayer];
 	if (isEmpty(fen.canbuy)) { Z.stage = 'can_resolve'; ferro_change_to_card_selection(); return; }
 	else if (Z.mode == 'multi') { [Z.stage, Z.turn] = ['buy_or_pass', fen.canbuy]; fen.keeppolling = true; take_turn_fen_clear(); }
 	else {
-		//das ist nur in hotseat mode!!!
 		fen.canbuy.map(x => fen.players[x].buy = 'unset');
 		fen.lastplayer = arrLast(fen.canbuy);
 		[Z.stage, Z.turn] = ['buy_or_pass', [fen.canbuy[0]]];
@@ -20406,7 +18296,6 @@ function ferro_check_resolve() {
 		let data = firstCond(pldata, x => x.name == plname);
 		assertion(isdef(data), 'no pldata for', plname);
 		let state = data.state;
-		//console.log('state', plname, state);
 		if (isEmpty(state)) done = false;
 		else if (state.buy == true) fen.buyer = plname;
 		else continue;
@@ -20426,24 +18315,18 @@ function ferro_change_to_card_selection() {
 	assertion(stage != 'card_selection', "ALREADY IN TURN ROUND!!!!!!!!!!!!!!!!!!!!!!");
 	assertion(stage == 'can_resolve', "change to card_selection: NOT IN can_resolve stage!!!!!!!!!!!!!!!!!!!!!!");
 	assertion(Z.uplayer == 'mimi' || Z.uplayer == fen.trigger, "mixup uplayer in change_to_card_selection!!!!!!!!!!!!!!!!!!!!!!");
-	// if buyer, buys
 	if (isdef(fen.buyer)) {
 		let plname = fen.buyer;
 		let pl = fen.players[plname];
 		let card = fen.deck_discard.shift();
 		pl.hand.push(card);
-		//console.log('buyer', plname, 'should get', card);
 		lookupAddToList(pl, ['newcards'], card);
-		//lookupAddToList(Clientdata, ['newcards'], card);
 		deck_deal_safe_ferro(fen, plname, 1);
 		pl.coins -= 1; //pay
 		ari_history_list([`${plname} bought ${card}`], 'buy');
 	}
-	//nextplayer draws
 	let nextplayer = fen.nextturn[0];
 	deck_deal_safe_ferro(fen, nextplayer, 1);
-	//if (isdef(fen.buyer)) console.log('newcards', fen.buyer, fen.players[fen.buyer].newcards);
-	//console.log('newcards', nextplayer, fen.players[nextplayer].newcards);
 	Z.turn = fen.nextturn;
 	Z.stage = 'card_selection';
 	for (const k of ['buyer', 'canbuy', 'nextturn', 'trigger', 'lastplayer']) delete fen[k];//cleanup buy_or_pass multi-turn!!!!!!!!!!!!!
@@ -20468,7 +18351,6 @@ function length_of_each_array(arr) {
 		res.push(a.length);
 	}
 	return res.sort((a, b) => b - a);
-	//return arr.map(x => x.length).sort((a, b) => b-a);
 }
 function longest_array(arr) {
 	let max = 0;
@@ -20497,13 +18379,10 @@ function calc_ferro_highest_goal_achieved(pl) {
 			continue;
 		}
 		let achieved = di[k];
-		//console.log('player', pl.name, 'achieved', k, achieved);
 		if (achieved) {
-			//console.log('goal', k, 'available to', pl.name);
 			return k;
 		}
 	}
-	//console.log('no goal is available that matches the revealed sets! THIS SHOULD BE IMPOSSIBLE!!!!!!');
 	return null;
 }
 function deck_deal_safe_ferro(fen, plname, n) {
@@ -20514,21 +18393,15 @@ function deck_deal_safe_ferro(fen, plname, n) {
 	let new_cards = deck_deal(fen.deck, n);
 	fen.players[plname].hand.push(...new_cards);
 	new_cards.map(x => lookupAddToList(fen.players[plname], ['newcards'], x));
-	// new_cards.map(x => lookupAddToList(Clientdata, ['newcards'], x));
 	return new_cards;
 }
 function end_of_round_ferro() {
 	let [plorder, stage, A, fen, uplayer] = [Z.plorder, Z.stage, Z.A, Z.fen, Z.uplayer];
-	//score all players
 	calc_ferro_score(uplayer);
 	if (Z.options.phase_order == 'anti') {
 		for (const plname of plorder) {
 			let pl = fen.players[plname];
 			if (!pl.roundgoal) pl.goals[get_round_goal()] = true;
-			// let number_of_goals_achieved = 0;
-			// for (const g in pl.goals) { if (pl.goals[g] == true) { number_of_goals_achieved++; } } //console.log('g',g,pl.goals); }}
-			// //console.log(plname + ': ' + number_of_goals_achieved);
-			// if (number_of_goals_achieved < Z.round) pl.goals[get_round_goal()] = true;
 		}
 	}
 	ari_history_list([`${uplayer} wins the round`], 'round');
@@ -20537,40 +18410,30 @@ function end_of_round_ferro() {
 	take_turn_fen();
 }
 function ferro_is_set(cards, max_jollies_allowed = 1, seqlen = 7, group_same_suit_allowed = true) {
-	//let [plorder, stage, A, fen, uplayer] = [Z.plorder, Z.stage, Z.A, Z.fen, Z.uplayer];
 	if (cards.length < 3) return false;
 	let num_jollies_in_cards = cards.filter(x => is_joker(x)).length;
 	if (num_jollies_in_cards > max_jollies_allowed) return false;
 	cards = sortCardItemsByRank(cards.map(x => x), rankstr = '23456789TJQKA*');
 	let rank = cards[0].rank;
 	let isgroup = cards.every(x => x.rank == rank || is_joker(x));
-	//check if all cards have either different suit or are jolly
-	//check for duplicate suits in cards
 	let suits = cards.filter(x => !is_joker(x)).map(x => x.suit);
 	let num_duplicate_suits = suits.filter(x => suits.filter(y => y == x).length > 1).length;
 	if (isgroup && !group_same_suit_allowed && num_duplicate_suits > 0) return false;
 	else if (isgroup) return cards.map(x => x.key);
 	let suit = cards[0].suit;
 	if (!cards.every(x => is_jolly(x.key) || x.suit == suit)) return false;
-	//if duplicate keys in cards, then it's not a set
 	let keys = cards.map(x => x.key);
 	if (keys.length != new Set(keys).size) return false;
-	//console.log('checking for sequence!!!!!!!!!!!!!!!!!!!!!')
 	let at_most_jollies = Math.min(num_jollies_in_cards, max_jollies_allowed);
 	let num_jolly = sortCardItemsToSequence(cards, rankstr = '23456789TJQKA', at_most_jollies);
-	//console.log('num_jolly', num_jolly);
 	let cond1 = num_jolly <= at_most_jollies; //this sequence does not need more jollies than it should
 	let cond2 = cards.length >= seqlen; //console.log('cond2', cond2);
-	//console.log('cards', cards);
 	if (cond1 && cond2) return cards.map(x => x.key); else return false;
 }
 function ferro_process_discard() {
 	let [plorder, stage, A, fen, uplayer] = [Z.plorder, Z.stage, Z.A, Z.fen, Z.uplayer];
 	let pl = fen.players[uplayer];
-	//discard is imminent! check if _roundgoal has changed!
 	if (!isEmpty(pl.journeys) && !pl.roundgoal) {
-		//not fixed: calculate highest available goal and set it true
-		//_roundgoal has been reached!
 		let goal = is_fixed_goal() ? get_round_goal() : calc_ferro_highest_goal_achieved(pl);
 		pl.roundgoal = goal;
 		pl.goals[goal] = true;
@@ -20582,26 +18445,20 @@ function ferro_process_discard() {
 	if (fen.players[uplayer].hand.length == 0) { end_of_round_ferro(); } else ferro_change_to_buy_pass(); //ferro_change_to_ack_round();
 }
 function ferro_process_set(keys) {
-	//console.log('ferro_process_set', keys);
 	let [plorder, stage, A, fen, uplayer, pl] = [Z.plorder, Z.stage, Z.A, Z.fen, Z.uplayer, Z.fen.players[Z.uplayer]];
-	//console.log('group', jsCopy(keys)); //schon falsch!!!
 	if (is_group(keys)) {
-		//console.log('group', keys);
 		keys = sort_cards(keys, true, 'CDSH', true, '23456789TJQKA*');
 	}
 	let j = [];
 	keys.map(x => elem_from_to(x, fen.players[uplayer].hand, j));
 	fen.players[uplayer].journeys.push(j);
-	//console.log('journey is finally', j)
 	ari_history_list([`${uplayer} reveals ${j.join(', ')}`], 'auflegen');
 	Z.stage = 'card_selection';
 }
 function ferro_process_jolly(key, j) {
 	let [plorder, stage, A, fen, uplayer] = [Z.plorder, Z.stage, Z.A, Z.fen, Z.uplayer];
-	//console.log('jolly', jsCopy(j));
 	let a = key;
 	let b = j.find(x => x[0] == '*');
-	//console.log(`${a} replaced by ${b}`);
 	arrReplace1(fen.players[uplayer].hand, a, b);
 	replace_jolly(key, j);
 	ari_history_list([`${uplayer} replaces for jolly`], 'jolly');
@@ -20611,7 +18468,6 @@ function ferro_transaction_error() {
 	let d = mDiv(dError, { padding: 10, align: 'center' }, null, `Illegal turn sequence - transaction cannot be completed!!!<br>press reload and try again!<br>`);
 	mButton('RELOAD', onclick_reload, d, { margin: 10 });
 	clear_transaction();
-	//onclick_reload();
 }
 function find_players_with_max_score() {
 	let [plorder, stage, A, fen, uplayer] = [Z.plorder, Z.stage, Z.A, Z.fen, Z.uplayer];
@@ -20641,54 +18497,39 @@ function fp_card_selection() {
 	let cards = selitems.map(x => x.o);
 	let cmd = A.last_selected.key;
 	if (cmd == 'discard') {
-		//if only 1 card selected, discard it
-		//first deal with error cases!
 		if (selitems.length != 1) { select_error('select exactly 1 hand card to discard!'); return; }
 		let item = selitems[0];
 		if (!item.path.includes(`${uplayer}.hand`)) { select_error('select a hand card to discard!', () => { ari_make_unselected(item); A.selected = []; }); return; }
 		assertion(DA.transactionlist.length == 0 || DA.simulate, '!!!!!!!!!!!!!!!!transactionlist is not empty!');
 		if (DA.transactionlist.length > 0) {
 			console.log('VERIFYING TRANSACTION............')
-			//console.log('DA.transactionlist', jsCopy(DA.transactionlist));
 			let legal = verify_min_req();
 			clear_transaction();
 			if (legal) {
 				ferro_process_discard(); //discard selected card
-				//take_turn_single();
 			} else {
 				ferro_transaction_error();
 			}
 		} else {
-			//console.log('should process discard!!!')
-			//let legal = verify_min_req();
 			ferro_process_discard(); //discard selected card
-			//take_turn_single();
 		}
 	} else if (cmd == 'jolly') {
-		//first, error cases: have to select exactly 2 cards
 		if (selitems.length != 2) { select_error('select a hand card and the jolly you want!'); return; }
-		//one card has to be hand, the other jolly from a group
 		let handcard = selitems.find(x => !is_joker(x.o) && x.path.includes(`${uplayer}.hand`));
 		let jolly = selitems.find(x => is_joker(x.o) && !x.path.includes(`${uplayer}.hand`));
 		if (!isdef(handcard) || !isdef(jolly)) { select_error('select a hand card and the jolly you want!'); return; }
 		let key = handcard.key;
 		let j = path2fen(fen, jolly.path);
 		if (!jolly_matches(key, j)) { select_error('your card does not match jolly!'); return; }
-		//if player has not yet played a set, simulate transaction!!!!
 		if (pl.journeys.length == 0) { add_transaction(cmd); }
 		ferro_process_jolly(key, j);
 		take_turn_fen();
 	} else if (cmd == 'auflegen') {
 		if (selitems.length < 3) { select_error('select cards to form a group!'); return; }
 		else if (pl.hand.length == selitems.length) { select_error('you need to keep a card for discard!!', clear_selection); return; }
-		// console.log('HAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA', cards.map(x=>x.key))
 		let newset = ferro_is_set(cards, Z.options.jokers_per_group);
-		//console.log('nach is_set', newset);
-		//console.log('is_set', is_set);
 		if (!newset) { select_error('this is NOT a valid set!'); return; }
-		//special case fuer 7R: geht nur in 7R round wenn fixed order
 		let is_illegal = is_correct_group_illegal(cards);
-		//console.log('is_legal', is_legal);
 		if (is_illegal) { select_error(is_illegal); return; }
 		if (pl.journeys.length == 0) { add_transaction(cmd); }
 		let keys = newset; //cards.map(x => x.key);
@@ -20700,8 +18541,6 @@ function fp_card_selection() {
 		let handcards = selitems.filter(x => !is_joker(x.o) && x.path.includes(`${uplayer}.hand`));
 		let groupcard = selitems.find(x => !is_joker(x.o) && !x.path.includes(`${uplayer}.hand`));
 		if (isEmpty(handcards) || !isdef(groupcard)) { select_error('select 1 or more hand cards and the first card of a group!'); return; }
-		//test try_anlegen for all handcards
-		//if more than one handcard, test if all have the same rank
 		let hand_rank = handcards[0].key[0];
 		let handcards_same_rank = handcards.every(x => x.key[0] == hand_rank);
 		let j = path2fen(fen, groupcard.path);
@@ -20709,7 +18548,6 @@ function fp_card_selection() {
 			if (!handcards_same_rank) { select_error('all hand cards must have the same rank!'); return; }
 			let group_rank = groupcard.key[0];
 			if (group_rank == hand_rank) {
-				//console.log('anlegen is legal');
 				for (const h of handcards) {
 					elem_from_to(h.key, fen.players[uplayer].hand, j);
 				}
@@ -20721,12 +18559,9 @@ function fp_card_selection() {
 				return;
 			}
 		} else { //its a sequence!
-			//sort hand cards
-			//more than 1 hand_card!
 			let suit = get_sequence_suit(j);
 			let handkeys = handcards.map(x => x.key); //console.log('suit',suit,'keys', keys);
 			if (firstCond(handkeys, x => x[1] != suit)) { select_error('hand card suit does not match the group!'); return; }
-			//look if first key is a jolly
 			let ij = j.findIndex(x => is_jolly(x));
 			let j_has_jolly = ij > -1;
 			let rank_to_be_relaced_by_jolly = j_has_jolly ? find_jolly_rank(j) : null;
@@ -20734,23 +18569,17 @@ function fp_card_selection() {
 			if (r) {
 				j[ij] = r + suit + 'n';
 			}
-			//now should have a seequence without jolly!
 			keys = handkeys.concat(j);
 			let allcards = keys.map(x => ferro_get_card(x)); // handcards.concat(j.map(x=>ferro_get_card(x)));
 			let jneeded = sortCardItemsToSequence(allcards, undefined, 0);
-			//now replace back if r != null
-			//console.log('new sequence', allcards.map(x => x.key), 'jneeded', jneeded);
 			if (jneeded == 0) {
-				//if r != null need to replace r key by * in final sequence
 				let seq = allcards.map(x => x.key);
 				if (r) { arrReplace1(seq, r + suit + 'n', '*Hn'); }
-				//console.log('new sequence', seq);
 				j.length = 0;
 				j.push(...seq);
 				for (const k of handkeys) { removeInPlace(fen.players[uplayer].hand, k); }
 				if (pl.journeys.length == 0) { add_transaction(cmd); }
 				take_turn_fen();
-				//console.log('YES!');
 			} else {
 				if (r != null) { j[ij] = '*Hn'; }
 				select_error('hand cards cannot be added to sequence!');
@@ -20760,7 +18589,6 @@ function fp_card_selection() {
 	}
 }
 function get_available_goals(plname) {
-	//return ['3', '33', '4', '44', '5', '55', '7R'].filter(x => !Z.fen.players[plname].goals[x]);
 	return Z.fen.availableGoals.filter(x => !Z.fen.players[plname].goals[x]);
 }
 function get_round_goal() { return Z.fen.roundGoals[Z.round - 1]; } //get_keys(Z.fen.players[Z.uplayer].goals).sort()[Z.round - 1]; }
@@ -20773,14 +18601,10 @@ function is_group(j) {
 }
 function is_sequence(j) { return !is_group(j); }
 function is_correct_group_illegal(cards) {
-	//assumes that if this is a sequence, the sequence is correct!
-	//this just tests whether the player is allowed to put down a 7sequence at this time
-	//console.log('_is_correct_group_illegal', cards);
 	let keys = cards.map(x => x.key);
 	let isgroup = is_group(keys);
 	if (isgroup) return false;
 	if (is_fixed_goal() && get_round_goal() != '7R') {
-		//console.log('DESHALB!!!')
 		return `the goal for this round is ${get_round_goal()}!`;
 	}
 	let [fen, uplayer] = [Z.fen, Z.uplayer];
@@ -20811,7 +18635,6 @@ function start_new_round_ferro() {
 		delete pl.handsorting;
 	}
 	Z.round += 1;
-	//console.log('starter',starter,'turn',Z.turn,'round',Z.round);
 	if (Z.round > Z.options.maxrounds) {
 		ari_history_list([`game over`], 'game');
 		Z.stage = 'game_over';
@@ -20819,7 +18642,6 @@ function start_new_round_ferro() {
 	}
 }
 function ui_get_buy_or_pass_items() {
-	//console.log('uplayer',uplayer,_UI.players[uplayer])
 	let items = [], i = 0;
 	if (!isEmpty(UI.deck_discard.items)) items.push(ui_get_deck_item(UI.deck_discard));
 	items = items.concat(ui_get_string_items(['pass']));
@@ -20829,19 +18651,16 @@ function ui_get_buy_or_pass_items() {
 function ui_get_ferro_items() {
 	let [plorder, stage, A, fen, uplayer, pl] = [Z.plorder, Z.stage, Z.A, Z.fen, Z.uplayer, Z.fen.players[Z.uplayer]];
 	let items = ui_get_hand_items(uplayer);	//hand items
-	//dazu alle aufgelegten jollys
 	for (const plname of plorder) {
 		let jlist = UI.players[plname].journeys;
 		for (const jitem of jlist) {
 			for (const o of jitem.items) {
 				if (!is_joker(o)) { continue; }
-				//console.log('card', o, jitem);
 				let item = { o: o, a: o.key, key: o.key, friendly: o.short, path: jitem.path, index: 0 };
 				items.push(item);
 			}
 		}
 	}
-	//dazu alle lead cards von aufgelegten groups
 	for (const plname of plorder) {
 		let jlist = UI.players[plname].journeys;
 		for (const jitem of jlist) {
@@ -20850,7 +18669,6 @@ function ui_get_ferro_items() {
 			items.push(item);
 		}
 	}
-	//dazu die commands
 	let cmds = ui_get_submit_items(['discard', 'auflegen', 'jolly', 'anlegen']);
 	items = items.concat(cmds);
 	reindex_items(items);
@@ -20863,7 +18681,6 @@ function ui_get_submit_items(commands) {
 		i++;
 		items.push(item);
 	}
-	//console.log('available commands', items);
 	return items;
 }
 function verify_min_req() {
@@ -20883,13 +18700,14 @@ function verify_min_req() {
 		'7R': jsorted.length > 0 && is_sequence(jsorted[0]) && jsorted[0].length >= 7,
 	};
 	let goals = is_fixed_goal() ? [get_round_goal()] : get_available_goals(uplayer);
-	//console.log('open and available',goals);
 	for (const g of goals) {
 		if (di[g] == true) { return true; } //console.log('achieved',g);
 	}
-	//console.log('none achieved',goals);
 	return false;
 }
+//#endregion ferro
+
+//#region spotit
 function spotit() {
 	function setup(players, options) {
 		let fen = { players: {}, plorder: jsCopy(players), turn: [players[0]], stage: 'init', phase: '' };
@@ -20900,7 +18718,6 @@ function spotit() {
 		}
 		fen.items = spotit_item_fen(options);
 		if (nundef(options.mode)) options.mode = 'multi';
-		//console.log('fen', fen)
 		return fen;
 	}
 	function check_gameover() {
@@ -20917,8 +18734,6 @@ function spotit() {
 	return { setup, activate_ui, check_gameover, present, state_info, stats };
 }
 function spotit_activate() {
-	// nein das ist falsch!!!!!!
-	//wenn ich der host bin, und es gibt bots, waehle 1 bot und setze timeout
 	let [stage, uplayer, host, plorder, fen] = [Z.stage, Z.uplayer, Z.host, Z.plorder, Z.fen];
 	if (stage == 'move' && uplayer == host && get_player_score(host) >= 1) {
 		let bots = plorder.filter(x => fen.players[x].playmode == 'bot');
@@ -20930,12 +18745,10 @@ function spotit_activate() {
 function spotit_present(dParent) {
 	let [fen, ui, stage, uplayer] = [Z.fen, UI, Z.stage, Z.uplayer];
 	let [dOben, dOpenTable, dMiddle, dRechts] = tableLayoutMR(dParent, 1, 0); ///tableLayoutOMR(dParent, 5, 1);
-	//let pldata = Z.playerdata;
 	spotit_read_all_scores();
 	let dt = dOpenTable; clearElement(dt); mCenterFlex(dt);
 	spotit_stats(dt);
 	mLinebreak(dt, 10);
-	//console.log('fen.items', fen.items); //ex.: 'bird:0.5 shark:0.75 rat:0.75 dragon:0.5 bat:0.5 tomato:0.5 basket:1.2,crown:1.2 rocket:0.75 shark:1 tangerine:1 ladybug:1 owl:1.2 fly:1.2'
 	let ks_for_cards = fen.items.split(',');
 	let numCards = ks_for_cards.length;
 	let items = Z.items = [];
@@ -20957,22 +18770,12 @@ function spotit_present(dParent) {
 	let is_adaptive = Z.options.adaptive == 'yes';
 	let nsyms = is_adaptive ? cal_num_syms_adaptive() : Z.options.num_symbols;
 	for (const item of items) {
-		//an item is a card
-		//adaptive mode
 		if (is_adaptive) { modify_item_for_adaptive(item, items, nsyms); }
 		let card = spotit_card(item, dt, { margin: 20, padding: 10 }, spotit_interact);
 		Z.cards.push(card);
 		if (Z.stage == 'init') {
 			face_down(card, GREEN, 'food');
-			// let d=iDiv(card);
-			// //cover div d with a div with black background
-			// let dCover = card.live.dCover = mDiv(d,{background:GREEN,rounding:'50%',position:'absolute',width:'100%',height:'100%',left:0,top:0});
-			// dCover.style.backgroundImage = 'url(/./base/assets/images/textures/food.png)';
-			// //dCover.style.backgroundSize = '100% 100%';
-			// dCover.style.backgroundRepeat = 'repeat';
-			// //mStyle(iDiv(card),{opacity:.1,transition: 'opacity .5s' });
 		}
-		//console.log('card', card)
 	}
 	mLinebreak(dt, 10);
 }
@@ -20983,9 +18786,6 @@ function spotit_stats(d) {
 		let pl = players[plname];
 		let onturn = Z.turn.includes(plname);
 		let sz = 50; //onturn?100:50;
-		//let border = onturn ? plname == Z.uplayer ? 'solid 5px lime' : 'solid 5px red' : 'solid medium white';
-		// let border = plname == Z.uplayer ? 'solid 5px lime' : 0;
-		// let border = plname == Z.uplayer ?pl.playmode == 'bot'? 'double 5px lime':'solid 5px lime' : 0;
 		let bcolor = plname == Z.uplayer ? 'lime' : 'silver';
 		let border = pl.playmode == 'bot' ? `double 5px ${bcolor}` : `solid 5px ${bcolor}`;
 		let rounding = pl.playmode == 'bot' ? '0px' : '50%';
@@ -20999,11 +18799,8 @@ function spotit_state(dParent) {
 }
 function ensure_score(plname) {
 	let sc = 0;
-	//console.log('ensure_score',Z.playerdata)
 	if (isdef(Z.playerdata)) {
-		//console.log('Z.playerdata', Z.playerdata);		
 		let pldata = valf(firstCond(Z.playerdata, x => x.name == plname), { name: plname, state: { score: 0 } });
-		//console.log('state for player', pldata.name, pldata.state);
 		sc = isdef(pldata.state)?pldata.state.score:0;
 	} else Z.playerdata = Z.plorder.map(x=>[{name:x,state:{score:0}}]);
 	lookupSet(Z.fen, ['players', plname, 'score'], sc);
@@ -21011,7 +18808,6 @@ function ensure_score(plname) {
 function get_player_score(plname) { ensure_score(plname); return Z.fen.players[plname].score; }
 function inc_player_score(plname) { ensure_score(plname); return Z.fen.players[plname].score += 1; }
 function calc_syms(numSyms) {
-	//should return [rows,cols,colarr]
 	let n = numSyms, rows, realrows, colarr;
 	if (n == 3) { rows = 2; realrows = 1; colarr = [1, 2]; }
 	else if (n == 4) { rows = 2; realrows = 2; colarr = [2, 2]; }
@@ -21029,39 +18825,23 @@ function calc_syms(numSyms) {
 	else if (n == 16) { rows = 5.5; realrows = 5; colarr = [2, 3, 5, 4, 2]; }
 	else if (n == 17) { rows = 5.5; realrows = 5; colarr = [2, 4, 5, 4, 2]; } //17
 	else if (n == 18) { rows = 5.8; realrows = 5; colarr = [2, 4, 5, 4, 3]; } //18
-	// // console.log('...numSyms,rows,cols', numSyms, rows, cols);
-	// if (![9,11,13].includes(n)) colarr = _calc_hex_col_array(rows, realrows);
-	// //correction for certain perCard outcomes:
-	// if (rows == 3 && realrows == 1) { colarr = [1, 3, 1]; } //5
-	// else if (rows == 2 && realrows == 1) { colarr = [1, 2]; } //3
-	// else if (rows == 4 && realrows == 1) { rows = 3.3; colarr = [2, 3, 1]; } //6
-	// else if (rows == 5 && realrows == 1) { rows = 4; realrows = 1; colarr = [1, 3, 3, 1]; } //8
-	// else if (rows == 5 && realrows == 3) { rows = 5; realrows = 1; colarr = [1, 3, 4, 3, 1]; } //12
-	// else if (rows == 6 && realrows == 2) { rows = 5.5; colarr = [2, 4, 5, 4, 2]; } //17
-	// else if (rows == 6 && realrows == 3) { rows = 5.8; colarr = [2, 4, 5, 4, 3]; } //18
-	// console.log('colarr',jsCopy(colarr));
 	return [rows, realrows, colarr];
 }
 function cal_num_syms_adaptive() {
 	let [uplayer, fen] = [Z.uplayer, Z.fen];
 	let pl = fen.players[uplayer];
 	pl.score = get_player_score(pl.name);
-	//sort players by score
 	let by_score = dict2list(fen.players);
 	for (const pl of by_score) { pl.score = get_player_score(pl.name); }
-	//calculate average score in by_score array
 	let avg_score = 0;
 	for (const pl of by_score) { avg_score += pl.score; }
 	avg_score /= by_score.length;
 	let di = { nasi: -3, gul: -3, sheeba: -2, mimi: -1, annabel: 1 };
 	let baseline = valf(di[uplayer], 0);
 	let dn = baseline + Math.floor(pl.score - avg_score);
-	//console.log('uplayer',uplayer,'baseline', baseline, 'avg', avg_score, 'pl.score', pl.score, 'dn', dn);
 	let n = Z.options.num_symbols;
-	//n+dn should be at least 4 and at most 14
 	let nfinal = Math.max(4, Math.min(14, dn + n));
 	return nfinal;
-	//if (n + dn < 4) { dn = 4 - n; }
 }
 function find_shared_keys(keylist, keylists) {
 	let shared = [];
@@ -21077,7 +18857,6 @@ function find_shared_keys(keylist, keylists) {
 function modify_item_for_adaptive(item, items, n) {
 	item.numSyms = n;
 	[item.rows, item.cols, item.colarr] = calc_syms(item.numSyms);
-	//need to find shared symbol
 	let other_items = items.filter(x => x != item);
 	let shared_syms = find_shared_keys(item.keys, other_items.map(x => x.keys));
 	let other_symbols = item.keys.filter(x => !shared_syms.includes(x));
@@ -21091,54 +18870,40 @@ function spotit_card(info, dParent, cardStyles, onClickSym) {
 	Card.sz = 300;
 	copyKeys({ w: Card.sz, h: Card.sz }, cardStyles);
 	let card = cRound(dParent, cardStyles, info.id);
-
-	
 	addKeys(info, card);
 	card.faceUp = true;
-	//console.log('card', card);
-	//let d = iDiv(card);
 	let zipped = [];
 	for (let i = 0; i < card.keys.length; i++) {
 		zipped.push({ key: card.keys[i], scale: card.scales[i] });
 	}
 	card.pattern = fillColarr(card.colarr, zipped);
-
-	// symSize: abhaengig von rows
 	let symStyles = { sz: Card.sz / (card.rows + 1), fg: 'random', hmargin: 10, vmargin: 6, cursor: 'pointer' };
-
 	let syms = [];
 	mRowsX(iDiv(card), card.pattern, symStyles, { 'justify-content': 'center' }, { 'justify-content': 'center' }, syms);
 	for (let i = 0; i < info.keys.length; i++) {
 		let key = card.keys[i];
 		let sym = syms[i];
-		//console.log('key', key,'sym',sym);
 		card.live[key] = sym;
 		sym.setAttribute('key', key);
 		sym.onclick = ev => onClickSym(ev, key); //ev, sym, key, card);
 	}
-
 	return card;
 }
 function spotit_create_sample(numCards, numSyms, vocab, lang, min_scale, max_scale) {
 	lang = valf(lang, 'E');
 	let [rows, cols, colarr] = calc_syms(numSyms);
-	//from here on, rows ONLY determines symbol size! colarr is used for placing elements
 	let perCard = arrSum(colarr);
 	let nShared = (numCards * (numCards - 1)) / 2;
 	let nUnique = perCard - numCards + 1;
 	let numKeysNeeded = nShared + numCards * nUnique;
 	let nMin = numKeysNeeded + 3;
-	//lang = 'D';
 	let keypool = setKeys({ nMin: nMin, lang: valf(lang, 'E'), key: valf(vocab, 'animals'), keySets: KeySets, filterFunc: (_, x) => !x.includes(' ') });
-	//console.log('keys', keypool);
 	let keys = choose(keypool, numKeysNeeded);
 	let dupls = keys.slice(0, nShared); //these keys are shared: cards 1 and 2 share the first one, 1 and 3 the second one,...
 	let uniqs = keys.slice(nShared);
-	//console.log('numCards', numCards, '\nperCard', perCard, '\ntotal', keys.length, '\ndupls', dupls, '\nuniqs', uniqs);
 	let infos = [];
 	for (let i = 0; i < numCards; i++) {
 		let keylist = uniqs.slice(i * nUnique, (i + 1) * nUnique);
-		//console.log('card unique keys:',card.keys);
 		let info = { id: getUID(), shares: {}, keys: keylist, rows: rows, cols: cols, colarr: colarr, num_syms: perCard };
 		infos.push(info);
 	}
@@ -21152,19 +18917,12 @@ function spotit_create_sample(numCards, numSyms, vocab, lang, min_scale, max_sca
 			c1.shares[c2.id] = dupl;
 			c2.shares[c1.id] = dupl;
 			c2.keys.push(dupl);
-			//each gets a shared card
 		}
 	}
 	for (const info of infos) { shuffle(info.keys); }
-	//for each key make a scale factor
-	//console.log('min_scale',min_scale,'max_scale',max_scale);
 	for (const info of infos) {
-		// info.scales = info.keys.map(x => randomNumber(min_scale * 100, max_scale * 100) / 100);
 		info.scales = info.keys.map(x => chooseRandom([.5, .75, 1, 1.2]));
-		//chooseRandom([.5, .75, 1, 1.25]);
-		//info.scales = info.scales.map(x=>coin()?x:-x);
 	}
-	//console.log(card.scales);
 	for (const info of infos) {
 		let zipped = [];
 		for (let i = 0; i < info.keys.length; i++) {
@@ -21199,7 +18957,6 @@ function spotit_item_fen(options) {
 		item_fens.push(ifen);
 	}
 	let res = item_fens.join(',');
-	//console.log('res', res);
 	return res;
 }
 function spotit_interact(ev, key) {
@@ -21211,18 +18968,13 @@ function spotit_interact(ev, key) {
 		let item = Items[id];
 		let dsym = ev.target;
 		let card = Items[id];
-		//find if symbol is shared!
 		let [success, othercard] = spotit_find_shared(card, keyClicked);
 		spotit_move(Z.uplayer, success);
 	}
 }
 function spotit_move(uplayer, success) {
-	//console.log('g',g,'uname',uname,'success',success)
 	if (success) {
-		//console.log('success!',jsCopy(g.expected));
 		inc_player_score(uplayer);
-		//integrate all playerdata into fen!
-		//fen score von diesem player sollte jetzt 1 sein
 		assertion(get_player_score(uplayer) >= 1, 'player score should be >= 1');
 		Z.fen.items = spotit_item_fen(Z.options);
 		Z.state = { score: get_player_score(uplayer) };
@@ -21248,15 +19000,16 @@ function spotit_read_all_scores() {
 		let state = pldata.state;
 		let score = !isEmpty(state) ? state.score : 0;
 		let fenscore = lookupSet(Z.fen, ['players', plname, 'score'], score);
-		//console.log('fenscore',fenscore,'pldata',pldata);
 		Z.fen.players[plname].score = Math.max(fenscore, score);
 	}
 }
+//#endregion spotit
+
+//#region wise
 function wise() {
 	function state_info(dParent) { return; }//dParent.innerHTML = `stage: ${Z.stage}`; }
 	function setup(players, options) {
 		let fen = { players: {}, plorder: jsCopy(players), history: [], num: options.num };
-		//shuffle(fen.plorder);
 		let starter = fen.starter = fen.plorder[0];
 		Sayings = shuffle(Sayings);
 		fen.index = 0;
@@ -21292,19 +19045,15 @@ function wise_present(dParent) {
 }
 function wise_activate() {
 	let [pldata, stage, A, fen, phase, uplayer] = [Z.playerdata, Z.stage, Z.A, Z.fen, Z.phase, Z.uplayer];
-	//stages: write, select, round
 	let donelist = Z.playerdata.filter(x => isDict(x.state));
 	let complete = donelist.length == Z.plorder.length;
 	let resolvable = uplayer == fen.starter && complete;
-	//console.log('donelist',donelist.length
 	let waiting = !resolvable && isdef(donelist.find(x => x.name == uplayer));
 	console.log(uplayer, stage, 'done', donelist, 'complete', complete, 'waiting', waiting);
 	Z.isWaiting = false;
 	if (waiting) {
-		//either results are not all in or am NOT the starter (=admin)
 		mDiv(dTable, {}, null, 'WAITING FOR PLAYERS TO COMPLETE....');
 		if (complete) {
-			//turn is transferred to starter
 			Z.turn = [fen.starter];
 			if (Z.mode != 'multi') take_turn_waiting();
 		}
@@ -21343,13 +19092,11 @@ function wise_activate() {
 			let selecting = pldata.name;
 			let selected = pldata.state.plname;
 			let text = pldata.state.text;
-			//console.log('selected',selected, typeof selected);
 			if (isEmpty(selected)) { //} || selected === null || !selected || nundef(selected)){ // nundef(selected)) {
 				console.log('REINGEGANGEN!!!!!!!!!!!!!!')
 				fen.players[selecting].score += 1;
 				selected = 'correct';
 			} else if (selecting != selected) {
-				//console.log('selecting', selecting, 'selected', selected ?? 'null')
 				fen.players[selected].score += 1;
 			}
 			fen.result[selecting] = { plname: selected, text: text };
@@ -21394,14 +19141,12 @@ function wise_select_sentence(ev) {
 	if (!uiActivated) return;
 	let text = ev.target.innerHTML;
 	let plname = stringAfter(ev.target.id, 'dsent_')
-	//console.log('player', Z.uplayer, 'prefers', text, '(' + plname + ')');
 	Z.state = { plname: plname, text: text };
 	take_turn_multi();
 }
 function wise_submit_text(ev) { ev.preventDefault(); let text = mBy('i_end').value; Z.state = { text: text }; take_turn_multi(); }
 function wise_stats(d) {
 	let players = Z.fen.players;
-	//console.log('uplayer',Z.uplayer)
 	let d1 = mDiv(d, { display: 'flex', 'justify-content': 'center', 'align-items': 'space-evenly' });
 	for (const plname of get_present_order()) {
 		let pl = players[plname];
@@ -21413,359 +19158,5 @@ function wise_stats(d) {
 		let d2 = mDiv(d1, { margin: 4, align: 'center' }, null, `<img src='../base/assets/images/${plname}.jpg' style="border-radius:${rounding};display:block;border:${border};box-sizing:border-box" class='img_person' width=${sz} height=${sz}>${get_player_score(plname)}`);
 	}
 }
-function start() {
-	//console.log('.......................'); return;
-	DA.showTestButtons = true;
-	let uname = DA.secretuser = localStorage.getItem('uname');
-	if (isdef(uname)) U = { name: uname };
-	phpPost({ app: 'simple' }, 'assets');
-}
-function start_with_assets(reload = false) {
-	//console.log('.......................',Serverdata.users);
-	//console.log(`browser name: ${navigator.appName}, or ${navigator.userAgent}`);
-	DA.isFirefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1; if (DA.isFirefox) console.log('using Firefox!')
-	show_home_logo();
-	//U=null;
-	if (nundef(U)) { show_users(); return; }
-	//reload = DA.showTestButtons;
-	show_username(reload);
-	if (DA.TEST0 || DA.showTestButtons) show('dTestButtons');
-	//startgame('accuse',)
-	//startgame('ferro'); 
-	//test11_cardcoloring();
-	//testKartePositionSuit();
-	//test10_verrueckt();	
-	//setTimeout(() => onclick_table('battle of Kabul'), 1000);
-	//onclick_table('battle of Kabul');
-	//setTimeout(() => onclick_table('war of San Juan'), 1000);
-	//test4_direct_login_onclick_user(); 
-	//test2_onclick_user(); //test3_show_tables(); //test1_show_users(); //test0_aristo_setup();
-}
-function startgame(game, players, options = {}) {
-	//game ... name of game, players ... list of {name:x,playmode:y}, options ... {some or all poss options}
-	//ensure game
-	if (nundef(game)) game = 'a_game';
-	//ensure options
-	let default_options = {}; for (const k in Config.games[game].options) default_options[k] = arrLast(Config.games[game].options[k].split(','));
-	addKeys(default_options, options); //ensure options
-	//console.log('options', options);
-	//ensure players & playernames
-	if (nundef(players)) players = rChoose(Serverdata.users, 2).map(x => ({ name: x.name })); //, playmode: 'human', strategy:valf(options.strategy,'random') })); //ensure players
-	let playernames = players.map(x => x.name);
-	let fen = window[game]().setup(playernames, options);
-	//add fen defaults
-	if (nundef(fen.round)) fen.round = 1;
-	if (nundef(fen.phase)) fen.phase = '';
-	if (nundef(fen.stage)) fen.stage = 0;
-	if (nundef(fen.step)) fen.step = 0;
-	if (nundef(fen.turn)) fen.turn = [fen.plorder[0]]; else if (DA.TESTSTART1 && fen.turn.length == 1) fen.turn = [playernames[0]];
-	//ensure playmode and strategy for each player in fen.players (players abandoned here!!!)
-	players.map(x => { let pl = fen.players[x.name]; pl.playmode = valf(x.playmode, 'human'); pl.strategy = valf(x.strategy, valf(options.strategy, 'random')); });
-	//correct playmode settings for solo mode: host is human, all others are bots!
-	if (options.mode == 'solo') {
-		let me = isdef(U) && isdef(fen.players[U.name]) ? U.name : rChoose(playernames);
-		for (const plname of playernames) {
-			if (plname == me) continue;
-			fen.players[plname].playmode = 'bot';
-		}
-		options.mode = 'hotseat';
-	}
-	//transform number options
-	for (const k in options) { if (isNumber(options[k])) options[k] = parseInt(options[k]); }
-	let o = {
-		friendly: generate_table_name(players.length), game: game, host: playernames[0], players: playernames,
-		fen: fen, options: options
-	};
-	//console.log('sending startgame', o)
-	ensure_polling(); // macht einfach nur Pollmode = 'auto'
-	phpPost(o, 'startgame');
-}
-function start_game_with_players(n, game = 'accuse', opts = {}) {
-	let numplayers = n;
-	let list = jsCopy(Serverdata.users).map(x => x.name);
-	removeInPlace(list, 'mimi');
-	removeInPlace(list, 'felix');
-	//let list1 = arrWithout(list, ['mimi', 'felix']);
-	//console.log('list',list)
-	let playernames = rChoose(list, numplayers - 2);
-	//console.log('playernames',playernames);
-	playernames = ['mimi', 'felix'].concat(playernames);
-	//need to place actual host first!!!!
-	let uname = U.name;
-	//console.log(':::::uname',uname);
-	removeInPlace(playernames,uname);
-	playernames.unshift(uname);
-	let playmodes = playernames.map(x => 'human');
-	let players = [];
-	for (let i = 0; i < n; i++) players.push({ name: playernames[i], playmode: playmodes[i] });
-	addKeys({ mode: 'multi' }, opts);
-	startgame(game, players, opts);
-}
-function gamestep() {
-	//fentest7_cards(); return;
-	show_admin_ui();
-	DA.running = true; clear_screen(); dTable = mBy('dTable'); mClass('dTexture', 'wood');
-	//transition animation:
-	if (Z.game == 'aristo') { if (Z.role != Clientdata.role || Z.mode == 'multi' && Z.role != 'active') mFall(dTable); Clientdata.role = Z.role; }//else mTableTransition(dTable, 2000);
-	else mFall(dTable);
-	shield_off();
-	show_title();
-	show_role();
-	Z.func.present(dTable);	// *** Z.uname und Z.uplayer ist IMMER da! ***
-	//console.log('uplayer',Z.uplayer)
-	//console.log('_____uname:'+Z.uname,'role:'+Z.role,'player:'+Z.uplayer,'host:'+Z.host,'curplayer:'+Z.turn[0],'bot?',is_current_player_bot()?'YES':'no');
-	if (isdef(Z.scoring.winners)) { show_winners(); animatedTitle('GAMEOVER!'); }
-	else if (Z.func.check_gameover(Z)) {
-		let winners = show_winners();
-		Z.scoring = { winners: winners }
-		sendgameover(winners[0], Z.friendly, Z.fen, Z.scoring);
-	} else if (is_shield_mode()) {
-		staticTitle();
-		if (!DA.no_shield == true) { hide('bRestartMove'); shield_on(); } //mShield(dTable.firstChild.childNodes[1])} //if (isdef(Z.fen.shield)) mShield(dTable);  }
-		autopoll();
-	} else {
-		Z.A = { level: 0, di: {}, ll: [], items: [], selected: [], tree: null, breadcrumbs: [], sib: [], command: null, autosubmit: Config.autosubmit };
-		copyKeys(jsCopy(Z.fen), Z);
-		copyKeys(UI, Z);
-		activate_ui(Z);
-		Z.func.activate_ui();
-		//console.log('Z.waiting:', Z.isWaiting);
-		if (Z.isWaiting == true || Z.mode != 'multi') staticTitle(); else animatedTitle();
-		if (Z.options.zen_mode != 'yes' && Z.mode != 'hotseat' && Z.fen.keeppolling) {
-			autopoll();
-			console.log('gamestep autopoll');
-		}
-	}
-	if (TESTING == true) landing();	//DA.max=100;DA.runs=valf(DA.runs+1,0);if (DA.runs<DA.max) onclick_restart();
-}
-function aggregate_elements(list_of_object, propname) {
-	let result = [];
-	for (let i = 0; i < list_of_object.length; i++) {
-		let obj = list_of_object[i];
-		let arr = obj[propname];
-		for (let j = 0; j < arr.length; j++) {
-			result.push(arr[j]);
-		}
-	}
-	return result;
-}
-function complexCompare(obj1, obj2) {
-	const obj1Keys = Object.keys(obj1);
-	const obj2Keys = Object.keys(obj2);
-	if (obj1Keys.length !== obj2Keys.length) {
-		return false;
-	}
-	for (let objKey of obj1Keys) {
-		if (obj1[objKey] !== obj2[objKey]) {
-			if (typeof obj1[objKey] == "object" && typeof obj2[objKey] == "object") {
-				if (!isEqual(obj1[objKey], obj2[objKey])) {
-					return false;
-				}
-			}
-			else {
-				return false;
-			}
-		}
-	}
-	return true;
-}
-function exchange_by_index(arr1, i1, arr2, i2) {
-	//console.log('exchange_by_index', arr1, i1, arr2, i2);
-	let temp = arr1[i1];
-	arr1[i1] = arr2[i2];
-	arr2[i2] = temp;
-}
-function if_plural(n) { return n == 1 ? '' : 's'; }
-function if_stringified(obj) { return is_stringified(obj) ? JSON.parse(obj) : obj; }
-function is_stringified(obj) {
-	if (isString(obj)) {
-		//console.log('is a string',obj,obj[0],obj[1],'"\'{[('.includes(obj[0]));
-		return '"\'{[('.includes(obj[0]);
-	}
-	return false;
-	//return typeof obj == 'string' && ['"', '{', '['].includes(obj[0]); 
-}
-function intersection(arr1, arr2) {
-	//each el in result will be unique
-	let res = [];
-	for (const a of arr1) {
-		if (arr2.includes(a)) {
-			addIf(res, a);
-		}
-	}
-	return res;
-}
-function mFlip(card, ms, callback) {
-	let a = mAnimate(iDiv(card), 'transform', [`scale(1,1)`, `scale(0,1)`],
-		() => {
-			if (card.faceUp) face_down(card); else face_up(card);
-			mAnimate(iDiv(card), 'transform', [`scale(0,1)`, `scale(1,1)`], callback, ms / 2, 'ease-in', 0, 'both');
-		},
-		ms / 2, 'ease-out', 0, 'both');
-	//a.onfinish = callback;
-}
-function object2string(o, props = [], except_props = []) {
-	let s = '';
-	if (nundef(o)) return s;
-	if (isString(o)) return o;
-	let keys = Object.keys(o).sort();
-	//console.log('keys',keys);
-	for (const k of keys) {
-		if (!isEmpty(props) && props.includes(k) || !except_props.includes(k)) {
-			let val = isList(o[k]) ? o[k].join(',') : isDict(o[k]) ? object2string(o[k].props, except_props) : o[k];
-			let key_part = isEmpty(s) ? '' : `, ${k}:`;
-			s += val;
-		}
-	}
-	return s;
-}
-function simpleCompare(o1, o2) {
-	let s1 = object2string(o1);
-	let s2 = object2string(o2);
-	return s1 == s2;
-}
-function ai_move(ms = 100) {
-	//mFade(dTable,100); //mAnimateTo(dTable, 'opacity', .2, 100); //irgendwie muss ich table hiden!
-	//console.log('ai_move');
-	DA.ai_is_moving = true;
-	let [A, fen] = [valf(Z.A, {}), Z.fen];
-	let selitems;
-	if (Z.game == 'accuse' && Z.stage == 'hand') {
-		selitems = [];
-	} else if (Z.game == 'ferro') {
-		//console.log('ferro ai_move', A.items);
-		if (Z.stage == 'card_selection') {
-			let uplayer = Z.uplayer;
-			let i1 = firstCond(A.items, x => x.path.includes(`${uplayer}.hand`));
-			let i2 = firstCond(A.items, x => x.key == 'discard');
-			selitems = [i1, i2];
-		} else if (Z.stage == 'buy_or_pass') {
-			selitems = [A.items[1]]; //waehlt immer pass
-		} else selitems = [A.items[0]];
-		//console.log('A', A)
-	} else if (Z.game == 'bluff') {
-		let [newbid, handler] = bluff_ai();
-		//console.log('newbid',newbid,'handler',handler.name);
-		if (newbid) { fen.newbid = newbid; UI.dAnzeige.innerHTML = bid_to_string(newbid); }
-		else if (handler != handle_gehtHoch) { bluff_generate_random_bid(); }
-		A.callback = handler;
-		selitems = [];
-	} else if (A.command == 'trade') {
-		selitems = ai_pick_legal_trade();
-	} else if (A.command == 'exchange') {
-		selitems = ai_pick_legal_exchange();
-	} else if (A.command == 'upgrade') {
-		selitems = [rChoose(A.items)];
-	} else if (A.command == 'rumor') {
-		selitems = [];
-		let buildings = A.items.filter(x => x.path.includes('building'));
-		let rumors = A.items.filter(x => !x.path.includes('building'));
-		selitems = [rChoose(buildings), rChoose(rumors)];
-	} else if (ARI.stage[Z.stage] == 'rumors_weitergeben') {
-		let players = A.items.filter(x => Z.plorder.includes(x.key))
-		let rumors = A.items.filter(x => !Z.plorder.includes(x.key))
-		selitems = [rChoose(players), rChoose(rumors)];
-	} else if (ARI.stage[Z.stage] == 'journey') {
-		//console.log('bot should be picking a correct journey!!!! wie geht das?');
-		selitems = []; // always pass!
-	} else {
-		let items = A.items;
-		//console.log('items',items);
-		let nmin = A.minselected;
-		let nmax = Math.min(A.maxselected, items.length);
-		let nselect = rNumber(nmin, nmax);
-		selitems = rChoose(items, nselect); if (!isList(selitems)) selitems = [selitems];
-	}
-	for (const item of selitems) {
-		select_last(item, select_toggle);
-		//submit on enter item muss als letztes ausgewahehlt werden, und nach dem _select_toggle aus A.selected entfernt werden!!!
-		//da submit on enter sowieso A.callback aufruft => verify! JA
-		if (isdef(item.submit_on_click)) A.selected.pop();
-	}
-	clearTimeout(TO.ai);
-	loader_on();
-	TO.ai = setTimeout(() => { if (isdef(A.callback)) A.callback(); loader_off(); }, ms);
-}
-function ai_schummler() { }
-function clear_screen() { mShieldsOff(); clear_status(); clear_title(); for (const ch of arrChildren('dScreen')) mClear(ch); mClassRemove('dTexture', 'wood'); mStyle(document.body, { bg: 'white', fg: 'black' }); }
-function is_ai_player(plname) {
-	let [fen, name] = [Z.fen, valf(plname, Z.uplayer)];
-	return lookup(fen, ['players', name, 'playmode']) == 'bot';
-}
-function is_human_player(plname) {
-	let [fen, name] = [Z.fen, valf(plname, Z.uplayer)];
-	return lookup(fen, ['players', name, 'playmode']) == 'human';
-}
-function is_current_player_bot() {
-	let [fen, uplayer, turn] = [Z.fen, Z.uplayer, Z.turn];
-	let curplayer = Z.turn[0];
-	if (fen.players[curplayer].playmode == 'bot') return true; else return false;
-}
-function stopgame() {
-	if (!DA.running) return;
-	DA.running = false;
-	DA.noshow = 0;
-	//console.log('STOPGAME',getFunctionsNameThatCalledThisFunction());
-	clear_timeouts();
-	hide('bRestartMove');
-	hide('dHostButtons');
-	mStyle('dAdmin', { bg: 'white' });
-	mClear('dAdminMiddle')
-	for (const id of ['bSpotitStart', 'bClearAck', 'bRandomMove', 'bSkipPlayer']) hide(id);
-	pollStop();
-	//clear_table();
-	Z = null; delete Serverdata.table; delete Serverdata.playerdata; Clientdata = {};
-	staticTitle();
-}
-function sendgameover(plname, friendly, fen, scoring) {
-	let o = { winners: plname, friendly: friendly, fen: fen, scoring: scoring };
-	phpPost(o, 'gameover');
-}
-function take_turn_fen() { take_turn(); }
-function take_turn_spotit() { take_turn(true, true); }
-function take_turn_fen_clear() { take_turn(true, false, true); }
-function take_turn_fen_write() { take_turn(true, true); }
-function take_turn_multi() { if (isdef(Z.state)) take_turn(false, true); else take_turn(false, false); }
-function take_turn_state1() { if (isdef(Z.state1)) take_turn(false, true); else take_turn(false, false); }
-function take_turn_state2() { if (isdef(Z.state2)) take_turn(false, true); else take_turn(false, false); }
-function take_turn_write() { take_turn_multi(); }
-function take_turn_waiting() { take_turn(true, false, false, null); }
-function take_turn(write_fen = true, write_player = false, clear_players = false, player_status = null) {
-	prep_move();
-	let o = { uname: Z.uplayer, friendly: Z.friendly };
-	if (isdef(Z.fen)) o.fen = Z.fen;
-	if (write_fen) { assertion(isdef(Z.fen) && isdef(Z.fen.turn), 'write_fen without fen!!!!'); o.write_fen = true; }
-	if (write_player) {
-		o.write_player = true;
-		if (isdef(Z.state)) o.state = Z.state;
-		if (isdef(Z.state1)) o.state1 = Z.state1;
-		if (isdef(Z.state2)) o.state2 = Z.state2;
-		//console.log('writing playerstate for', Z.uplayer, Z.state, Z.state1, Z.state2); 
-	}
-	if (clear_players) {
-		//console.log('clear by',o.uname)
-		o.clear_players = true; delete Z.playerdata; delete o.fen.pldata;
-	}
-	o.player_status = player_status;
-	let cmd = 'table';
-	//console.log('sending',o)
-	send_or_sim(o, cmd);
-}
-function take_feedback_host(write_fen = true, write_player = false, clear_players = false, player_status = null) {
-	prep_move();
-	let o = { uname: Z.uplayer, friendly: Z.friendly };
-	if (isdef(Z.fen)) o.fen = Z.fen;
-	if (write_fen) { assertion(isdef(Z.fen) && isdef(Z.fen.turn), 'write_fen without fen!!!!'); o.write_fen = true; }
-	if (write_player) { o.write_player = true; o.state = Z.state; } //console.log('writing playerstate for', Z.uplayer, Z.state); }
-	if (clear_players) o.clear_players = true;
-	o.player_status = player_status;
-	o.auto = true;
-	let cmd = 'table';
-	send_or_sim(o, cmd);
-}
-function prep_move() {
-	let [fen, uplayer, pl] = [Z.fen, Z.uplayer, Z.pl];
-	for (const k of ['round', 'phase', 'stage', 'step', 'turn']) { fen[k] = Z[k]; }
-	deactivate_ui();
-	clear_timeouts();
-}
+//#endregion
+

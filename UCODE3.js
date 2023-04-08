@@ -1,4 +1,80 @@
 
+function getLineStart(line) {
+
+	if (isEmpty(line.trim())) { return ['', 'empty'] }
+
+	let type = 'in_process';
+	let w = stringBefore(line, ' ');
+	let ch = line[0];
+	if (ch == '\t') { w = 'TAB'; }
+	else if (ch == '}' || ch == '{') { w = 'BRACKET' }
+	else if (nundef(ch)) { w = 'UNDEFINED' }
+	else if (ch == ' ') { w = 'SPACE' }
+	else if (ch == '\r') { type = 'WTF' }
+
+	if (line.startsWith('//#region')) { w = 'REGION'; type = 'REGION' }
+	else if (line.startsWith('//#endregion')) { w = 'ENDREGION'; type = 'REGION' }
+	else if (line.startsWith('//')) { w = 'COMMENT'; type = 'empty' }
+	else {
+		let fw = firstWord(line, true);
+		// console.log('fw', fw)
+		if (isdef(fw) && fw.startsWith('//')) { w = 'COMMENT'; type = 'empty' }
+	}
+
+
+	if (['async', 'class', 'const', 'function', 'var'].includes(w)) type = 'block';
+	else if (isLetter(ch)) type = 'WTF';
+
+	return [w, type];
+}
+
+
+async function __parsefile(f, byKey, ckeys, idx) {
+	let chunk = '', error = '', state, kw = null, blocktype = null, region = null;
+	//let linestarts = [];
+	let txt = await route_path_text(f);
+	let fname = stringAfterLast(f, '/'); fname = stringBefore(fname, '.');
+	//text += `//#region ${fname}`;
+	let lines = txt.split('\n'); //console.log('lines[0]',lines[0]);
+
+	for (const line of lines) {
+		let [w, type] = getLineStart(line);	//console.log('linestart', w, type);
+		if (type == 'WTF') { console.log('linestart', w, type); continue; }
+		else if (type == 'empty') { continue; }
+		else if (type == 'in_process') {
+
+			if (line.includes('//#region') || line.includes('//#endregion')) continue;
+			if (kw) chunk += line + '\n'; else error += line + '\n';
+		}
+		else if (type == 'REGION') { if (w == type) region = stringAfter(line, '//#region ').trim(); }
+		else if (type == 'block') {
+			if (kw) {
+				//close previous block!
+				let prev = lookup(byKey, [kw]);
+				let oldfname = prev ? prev.fname : fname;
+				let o = { key: kw, code: chunk, fname: oldfname, region: region ?? oldfname, blocktype: blocktype, idx: idx++ };
+				if (prev) {
+					console.log('DUPLICATE', kw);
+					if (prev.blocktype != o.blocktype) {
+						console.log('... change from', prev.blocktype, 'to', o.blocktype);
+					}
+					//loesche den alten!
+					ckeys[prev.idx] = null;
+				}
+				//lookupSetOverride(di, [blocktype, region, kw], o);
+				lookupSetOverride(byKey, [kw], o);
+				ckeys.push(kw);
+
+			}
+			blocktype = w == 'async' ? 'function' : w;
+			chunk = line + '\n';
+			kw = w == 'async' ? stringAfter(line, 'function ') : stringAfter(line, ' '); kw = firstWord(kw, true);
+			//console.log('?',blocktype,kw,line);
+			//console.log('kw',kw);
+		} else { console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'); break; }
+	}
+	//text += `//#endregion ${fname}`;
+}
 
 async function onclickClosure() {
 	let [dir, files, seed] = await get_dir_files_seed();

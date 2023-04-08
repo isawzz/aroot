@@ -1,11 +1,11 @@
 
-function write_new_index_html(){
-	let text=DA.indexhtml;
+function write_new_index_html() {
+	let text = DA.indexhtml;
 
-	let scripts=`</body><script src="../coding/_closuregames.js"></script><script>onload = start;</script></html>`;
-	let newtext=stringBefore(text,`</body>`)+scripts;
+	let scripts = `</body><script src="../coding/_closuregames.js"></script><script>onload = start;</script></html>`;
+	let newtext = stringBefore(text, `</body>`) + scripts;
 
-	downloadAsText(newtext,'indextest.html')
+	//downloadAsText(newtext,'indextest.html')
 }
 
 function mClosureUI(dParent) {
@@ -22,16 +22,20 @@ function getLineStart(line) {
 	let type = 'in_process';
 	let w = stringBefore(line, ' ');
 	let ch = line[0];
-	if (ch == '\t') { w = 'TAB' }
-	else if (ch == '}' || ch == '{') { w = 'BRACKET' }
-	else if (nundef(ch)) { w = 'UNDEFINED' }
-	else if (ch == ' ') { w = 'SPACE' }
-	else if (ch == '\r') { type = 'WTF' }
-
+	let i=0;while(line[i]=='\t'){i++;}
+	let fw = line.slice(i);
+	//whilestringAfterLast(line, '\t');
+	if (isdef(fw) && fw.startsWith('//')) console.log('comm',line)
 	if (line.startsWith('//#region')) { w = 'REGION'; type = 'REGION' }
 	else if (line.startsWith('//#endregion')) { w = 'ENDREGION'; type = 'REGION' }
 	else if (line.startsWith('//')) { w = 'COMMENT'; type = 'empty' }
-
+	else if (isdef(fw) && fw.startsWith('//')) { w = 'COMMENT'; type = 'empty' }
+	else if (ch == '\t') { w = 'TAB'; }
+	else if (ch == '}' || ch == '{') { w = 'BRACKET' }
+	else if (nundef(ch)) { w = 'UNDEFINED'; type = 'WTF' }
+	else if (ch == ' ') { w = 'SPACE'; type = 'WTF' }
+	else if (ch == '\r') { type = 'WTF' }
+	else if (nundef(fw)) {w=fw;type='WTF'}
 
 	if (['async', 'class', 'const', 'function', 'var'].includes(w)) type = 'block';
 	else if (isLetter(ch)) type = 'WTF';
@@ -57,91 +61,117 @@ async function get_dir_files_seed() {
 	console.log('files', files)
 	return [dir, files, list];
 }
+async function __parsefile(f, byKey, ckeys, idx) {
+	let chunk = '', error = '', state, kw = null, blocktype = null, region = null;
+	//let linestarts = [];
+	let txt = await route_path_text(f);
+	let fname = stringAfterLast(f, '/'); fname = stringBefore(fname, '.');
+	let text = `//#region ${fname}\n`;
+	let lines = txt.split('\n'); //console.log('lines[0]',lines[0]);
+
+	for (const line of lines) {
+		let [w, type] = getLineStart(line);	//console.log('linestart', w, type);
+		if (type == 'WTF') { console.log('linestart', w, type); continue; }
+		else if (type == 'empty') { continue; }
+		else if (type == 'in_process') {
+
+			if (line.includes('//#region') || line.includes('//#endregion')) continue;
+			if (kw) { chunk += line + '\n'; } else error += line + '\n';
+		}
+		else if (type == 'REGION') { if (w == type) region = stringAfter(line, '//#region ').trim(); }
+		else if (type == 'block') {
+			if (kw) {
+				//close previous block!
+				let prev = lookup(byKey, [kw]);
+				let oldfname = prev ? prev.fname : fname;
+				let o = { key: kw, code: chunk, fname: oldfname, region: region ?? oldfname, blocktype: blocktype, idx: idx++ };
+				if (prev) {
+					//console.log('DUPLICATE', kw);
+					if (prev.blocktype != o.blocktype) {
+						console.log('... change from', prev.blocktype, 'to', o.blocktype);
+					}
+					//loesche den alten!
+					//ckeys[prev.idx] = null;
+				} else { ckeys.push(kw); }
+				//lookupSetOverride(di, [blocktype, region, kw], o);
+				lookupSetOverride(byKey, [kw], o);
+
+
+			}
+			blocktype = w == 'async' ? 'function' : w;
+			chunk = line + '\n';
+			kw = w == 'async' ? stringAfter(line, 'function ') : stringAfter(line, ' '); kw = firstWord(kw, true);
+			//console.log('?',blocktype,kw,line);
+			//console.log('kw',kw);
+		} else { console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'); break; }
+	}
+	if (kw) {
+		//close previous block!
+		let prev = lookup(byKey, [kw]);
+		let oldfname = prev ? prev.fname : fname;
+		let o = { key: kw, code: chunk, fname: oldfname, region: region ?? oldfname, blocktype: blocktype, idx: idx++ };
+		if (prev) {
+			//console.log('DUPLICATE', kw);
+			if (prev.blocktype != o.blocktype) {
+				console.log('... change from', prev.blocktype, 'to', o.blocktype);
+			}
+			//loesche den alten!
+			//ckeys[prev.idx] = null;
+		} else { ckeys.push(kw); }
+		//lookupSetOverride(di, [blocktype, region, kw], o);
+		lookupSetOverride(byKey, [kw], o);
+
+
+	}
+	text += `//#endregion ${fname}\n\n`;
+	return [text, idx];
+}
 async function onclickClosure() {
 	let [dir, files, seed] = await get_dir_files_seed();
-	let chunk = '', error = '', state, kw = null, blocktype = null, region = null;
 	let byKey = {}, ckeys = [], idx = 0; //, di = {}
-	let linestarts = [];
+	//console.log(files)
+	let text = '';
 	for (const f of files) {
-		let txt = await route_path_text(f);
-		let fname = stringAfterLast(f, '/'); fname = stringBefore(fname, '.');
-		//text += `//#region ${fname}`;
-		let lines = txt.split('\n'); //console.log('lines[0]',lines[0]);
-
-		for (const line of lines) {
-			let [w, type] = getLineStart(line);	//console.log('linestart', w, type);
-			if (type == 'WTF') { console.log('linestart', w, type); continue; }
-			else if (type == 'empty') { continue; }
-			else if (type == 'in_process') { 
-				if (line.includes('//#region') || line.includes('//#endregion')) continue;
-				if (kw) chunk += line + '\n'; else error += line + '\n'; 
-			}
-			else if (type == 'REGION') { if (w == type) region = stringAfter(line, '//#region ').trim(); }
-			else if (type == 'block') {
-				if (kw) {
-					//close previous block!
-					let o = { key: kw, code: chunk, fname: fname, region: region ?? fname, blocktype: blocktype, idx: idx++ };
-					let prev = lookup(byKey, [kw]);
-					if (prev) {
-						console.log('DUPLICATE', kw);
-						if (prev.blocktype != o.blocktype) {
-							console.log('... change from', prev.blocktype, 'to', o.blocktype);
-						}
-						//loesche den alten!
-						ckeys[prev.idx] = null;
-					}
-					//lookupSetOverride(di, [blocktype, region, kw], o);
-					lookupSetOverride(byKey, [kw], o);
-					ckeys.push(kw);
-
-				}
-				blocktype = w == 'async' ? 'function' : w;
-				chunk = line + '\n';
-				kw = w == 'async' ? stringAfter(line, 'function ') : stringAfter(line, ' '); kw = firstWord(kw, true);
-				//console.log('?',blocktype,kw,line);
-				//console.log('kw',kw);
-			} else { console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'); break; }
-		}
-		//text += `//#endregion ${fname}`;
+		let [filetext, idxnew] = await __parsefile(f, byKey, ckeys, idx);
+		idx = idxnew;
+		text += filetext;
 	}
 
-	console.log('byKey', get_values(byKey));
-	console.log('keys', ckeys);
-	//console.log('di', di);
-	//console.log('linestarts', linestarts)
+	//downloadAsText(text, 'bundle', 'js');
+	//AU.ta.value = text;
+
+	// console.log('byKey', get_values(byKey));
+	// console.log('keys', ckeys);
 
 	//assemble text!!!
 	assemble_complete_code(ckeys, byKey);
-	
+
 	write_new_index_html();
-
-
-
 }
 function assemble_complete_code(list, di) {
-	CODE.byKey=di;
-	CODE.keylist=list;
-	let text = '';
-	let region = null,fname=null;
+	CODE.byKey = di;
+	CODE.keylist = list;
+	let region = null, fname = di[list[0]].fname;
+	let text = `//#region ${fname}\n`;
+	console.log('first fname is', fname)
 	for (const k of list) {
 		if (!k) continue;
 		let o = di[k];
 
-		// if (fname != o.fname){region='';fname=o.fname}
+		if (o.key == 'verify_min_req') console.log('verify_min_req', o)
 
-		// let reg = o.fname + ' ' + o.region;
-		// if (reg != region) {
-		// 	if (region) text += `//#endregion\n`;
-		// 	region = reg;
-		// 	text += `//#region ${region}\n`;
-		// }
+		if (fname != o.fname) {
+			text += `//#endregion ${fname}\n\n//#region ${o.fname}\n`;
+			fname = o.fname;
+		}
 		text += o.code;
 
 	}
+
+	text += `//#endregion\n\n`;
+	downloadAsText(text, 'bundle', 'js');
+
 	AU.ta.value = text;
-
-	downloadAsText(text,'bundle.js');
-
 	//console.log('last keys',arrTakeLast(list,2))
 }
 

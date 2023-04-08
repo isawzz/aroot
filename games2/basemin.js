@@ -1747,7 +1747,7 @@ function aSvgg(dParent, originInCenter = true) {
 	return g1;
 
 }
-//endregion
+//#endregion
 
 //#region arr dict
 function addIf(arr, el) { if (!arr.includes(el)) arr.push(el); }
