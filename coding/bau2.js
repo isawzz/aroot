@@ -1,56 +1,4 @@
 
-function minimizeCode(di,klist,symlist=['start']){
-	CODE.all = di;
-	CODE.keylist = klist;
-	let done = {};
-	let tbd = symlist;
-	let MAX = 1000000, i = 0;
-	let visited = { grid: true, jQuery: true, config: true, Number: true, sat: true, hallo: true, autocomplete: true, PI: true };
-	while (!isEmpty(tbd)) {
-		if (++i > MAX) break; //else console.log('i',i)
-		let sym = tbd[0];
-		if (isdef(visited[sym])) { tbd.shift(); continue; }
-		visited[sym] = true;
-		let o = CODE.all[sym];
-		if (nundef(o)) o = getObjectFromWindow(sym);
-		if (nundef(o)) { tbd.shift(); continue; }
-		if (o.type == 'var' && !o.name.startsWith('d') && o.name == o.name.toLowerCase()) { tbd.shift(); continue; }
-		if (o.type == 'var' || o.type == 'const') { tbd.shift(); lookupSet(done, [o.type, sym], o); continue; }
-
-		assertion(['cla', 'func'].includes(o.type), 'TYPE ERRROR!!!!!!!!!!!!!!!!!!!!!!!!!')
-
-		//at this point *** sym is a func or class!!! ***
-		let olive = valf(window[sym], o.code);
-		//if (sym == 'write_code_text_file') console.log('still here')
-		if (nundef(olive)) { tbd.shift(); lookupSet(done, [o.type, sym], o); continue; }
-		//if (sym == 'write_code_text_file') console.log('still here')
-
-		let text = olive.toString(); //always using last function body!!!
-		let words = toWords(text, true);
-
-		if (words.includes('in' + 'it')) console.log('sym', sym)
-		//if (words.includes('gr'+'id')) console.log('sym',sym)
-		//words = words.filter(x => text.includes(' ' + x) || text.includes(x + '(')  || text.includes(x + ','));
-		//console.log('words',words)
-		//if (sym == 'compute_closure') console.log('', sym, words)
-
-		for (const w of words) { if (nundef(done[w]) || nundef(visited[w]) && w != sym && isCodeWord(w)) addIf(tbd, w); }
-		tbd.shift();
-
-		//if (sym == 'write_code_text_file') console.log('still here',o.code)
-		//done[sym] = o; //
-		lookupSet(done, [o.type, sym], o);
-	}
-
-	//console.log('done',done);
-	return done;
-	
-}
-function onclickClosure(){
-	let [di,klist]=[lookup(DA,['bundle','di']),lookup(DA,['bundle','klist'])];
-	console.log('di',di)
-}
-
 //#region bundle generation
 function mClosureUI(dParent) {
 	mDiv(dParent, {}, null, 'project')
@@ -67,10 +15,10 @@ function getLineStart(line) {
 	let type = 'in_process';
 	let w = stringBefore(line, ' ');
 	let ch = line[0];
-	let i=0;while(line[i]=='\t'){i++;}
+	let i = 0; while (line[i] == '\t') { i++; }
 	let fw = line.slice(i);
 	//whilestringAfterLast(line, '\t');
-	if (isdef(fw) && fw.startsWith('//')) console.log('comm',line)
+	//if (isdef(fw) && fw.startsWith('//')) console.log('comm',line)
 	if (line.startsWith('//#region')) { w = 'REGION'; type = 'REGION' }
 	else if (line.startsWith('//#endregion')) { w = 'ENDREGION'; type = 'REGION' }
 	else if (line.startsWith('//')) { w = 'COMMENT'; type = 'empty' }
@@ -80,7 +28,7 @@ function getLineStart(line) {
 	else if (nundef(ch)) { w = 'UNDEFINED'; type = 'WTF' }
 	else if (ch == ' ') { w = 'SPACE'; type = 'WTF' }
 	else if (ch == '\r') { type = 'WTF' }
-	else if (nundef(fw)) {w=fw;type='WTF'}
+	else if (nundef(fw)) { w = fw; type = 'WTF' }
 
 	if (['async', 'class', 'const', 'function', 'var'].includes(w)) type = 'block';
 	else if (isLetter(ch)) type = 'WTF';
@@ -93,7 +41,7 @@ async function get_dir_files_seed() {
 	let dir = '../' + mBy('inp_project').value;
 	let list = mBy('inp_seed').value.split(' ');
 
-	console.log('dir', dir, 'list', list)
+	//console.log('dir', dir, 'list', list)
 
 	//hol mir erstmal das index file
 	let textIndex = DA.indexhtml = await route_path_text(dir + '/index.html');
@@ -103,7 +51,7 @@ async function get_dir_files_seed() {
 
 
 	files = files.filter(x => !x.includes('alibs'));
-	console.log('files', files)
+	//console.log('files', files)
 	return [dir, files, list];
 }
 async function __parsefile(f, byKey, ckeys, idx) {
@@ -116,7 +64,7 @@ async function __parsefile(f, byKey, ckeys, idx) {
 
 	for (const line of lines) {
 		let [w, type] = getLineStart(line);	//console.log('linestart', w, type);
-		if (type == 'WTF') { console.log('linestart', w, type); continue; }
+		if (type == 'WTF') { continue; } //console.log('linestart', w, type); 
 		else if (type == 'empty') { continue; }
 		else if (type == 'in_process') {
 
@@ -129,11 +77,12 @@ async function __parsefile(f, byKey, ckeys, idx) {
 				//close previous block!
 				let prev = lookup(byKey, [kw]);
 				let oldfname = prev ? prev.fname : fname;
-				let o = { key: kw, code: chunk, fname: oldfname, region: region ?? oldfname, blocktype: blocktype, idx: idx++ };
+				let o = { key: kw, code: chunk, fname: oldfname, region: region ?? oldfname, type: blocktype, idx: idx++ };
+				// if (o.type == 'async') {o.type = 'function';console.log('async',kw)}
 				if (prev) {
-					//console.log('DUPLICATE', kw);
-					if (prev.blocktype != o.blocktype) {
-						console.log('... change from', prev.blocktype, 'to', o.blocktype);
+					if (prev.type != o.type) {
+						console.log('DUPLICATE', kw,prev);
+						console.log('... change from', prev.type, 'to', o.type);
 					}
 					//loesche den alten!
 					//ckeys[prev.idx] = null;
@@ -143,9 +92,10 @@ async function __parsefile(f, byKey, ckeys, idx) {
 
 
 			}
-			blocktype = w == 'async' ? 'function' : w;
-			chunk = line + '\n';
 			kw = w == 'async' ? stringAfter(line, 'function ') : stringAfter(line, ' '); kw = firstWord(kw, true);
+			let blocktypes = { function: 'func', class: 'cla', async: 'func', var: 'var', const: 'const' };
+			blocktype = blocktypes[w]; //w == 'async' ? 'function' : w; //hier async turns into function!!!
+			chunk = line + '\n';
 			//console.log('?',blocktype,kw,line);
 			//console.log('kw',kw);
 		} else { console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'); break; }
@@ -154,16 +104,15 @@ async function __parsefile(f, byKey, ckeys, idx) {
 		//close previous block!
 		let prev = lookup(byKey, [kw]);
 		let oldfname = prev ? prev.fname : fname;
-		let o = { key: kw, code: chunk, fname: oldfname, region: region ?? oldfname, blocktype: blocktype, idx: idx++ };
+		let o = { key: kw, code: chunk, fname: oldfname, region: region ?? oldfname, type: blocktype, idx: idx++ };
 		if (prev) {
 			//console.log('DUPLICATE', kw);
-			if (prev.blocktype != o.blocktype) {
-				console.log('... change from', prev.blocktype, 'to', o.blocktype);
+			if (prev.type != o.type) {
+				console.log('... change from', prev.type, 'to', o.type);
 			}
 			//loesche den alten!
 			//ckeys[prev.idx] = null;
 		} else { ckeys.push(kw); }
-		//lookupSetOverride(di, [blocktype, region, kw], o);
 		lookupSetOverride(byKey, [kw], o);
 
 
@@ -191,22 +140,24 @@ async function onclickBundle() {
 	//assemble text!!!
 	assemble_complete_code(ckeys, byKey);
 
-	lookupSetOverride(DA,['bundle','di'],byKey)
-	lookupSetOverride(DA,['bundle','klist'],ckeys)
+	lookupSetOverride(DA, ['bundle', 'di'], byKey)
+	lookupSetOverride(DA, ['bundle', 'klist'], ckeys)
 
 	write_new_index_html(dir);
+	DA.codedir = dir;
 }
 function assemble_complete_code(list, di) {
 	CODE.byKey = di;
 	CODE.keylist = list;
+	console.log('...',list[0],di[list[0]]);//var list problem!!!!!
 	let region = null, fname = di[list[0]].fname;
 	let text = `//#region ${fname}\n`;
-	console.log('first fname is', fname)
+	//console.log('first fname is', fname)
 	for (const k of list) {
-		if (!k) continue;
+		if (!k || nundef(di[k])) continue;
 		let o = di[k];
 
-		if (o.key == 'verify_min_req') console.log('verify_min_req', o)
+		//if (o.key == 'verify_min_req') console.log('verify_min_req', o)
 
 		if (fname != o.fname) {
 			text += `//#endregion ${fname}\n\n//#region ${o.fname}\n`;
@@ -217,20 +168,20 @@ function assemble_complete_code(list, di) {
 	}
 
 	text += `//#endregion\n\n`;
-	downloadAsText(text, 'bundle', 'js');
-	lookupSetOverride(DA,['bundle','text'],text)
+	//downloadAsText(text, 'bundle', 'js');
+	lookupSetOverride(DA, ['bundle', 'text'], text)
 
 	AU.ta.value = text;
 	//console.log('last keys',arrTakeLast(list,2))
 }
-function write_new_index_html(dir) {
+function write_new_index_html(dir,filename='bundle') {
 	//let project = stringAfterLast(dir,'/');	console.log('project',project)
 	let text = DA.indexhtml;
 
-	let scripts = `</body><script src="${dir}test/bundle.js"></script><script>onload = start;</script>\n</html>`;
+	let scripts = `</body><script src="${dir}test/${filename}.js"></script><script>onload = start;</script>\n</html>`;
 	let newtext = stringBefore(text, `</body>`) + scripts;
 
-	downloadAsText(newtext,`index`,'html')
+	//downloadAsText(newtext,`index`,'html')
 }
 //#endregion bundle generation
 
