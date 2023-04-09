@@ -45,7 +45,7 @@ function initLineTop() {
 function initLineTitle() {
 	dLineTitleOuter = mDiv(table); dLineTitleOuter.id = 'lineTitleOuter';
 	dLineTitle = mDiv(dLineTitleOuter); dLineTitle.id = 'lineTitle';
-	if (PROJECTNAME != 'belinda') mStyle(dLineTitle,{matop:5});
+	if (!PROJECTNAME.startsWith('bel')) mStyle(dLineTitle,{matop:5});
 	dLineTitleLeft = mDiv(dLineTitle); dLineTitleLeft.id = 'lineTitleLeft';
 	dLineTitleRight = mDiv(dLineTitle); dLineTitleRight.id = 'lineTitleRight';
 	dLineTitleMiddle = mDiv(dLineTitle); dLineTitleMiddle.id = 'lineTitleMiddle';

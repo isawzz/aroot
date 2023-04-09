@@ -70,7 +70,7 @@ class Recorder {
 		this.callback = null;
 
 		let genHandler = (ev, name) => {
-			console.log('genHandler',name)
+			//console.log('genHandler',name)
 			if (RecogOutput) console.log('recorder', name, 'isCancelled', this.isCancelled, 'isRunning', this.isRunning);
 		}
 		rec.onerror = ev => {
@@ -112,7 +112,7 @@ class Recorder {
 		this.result = res[0].transcript;
 		this.confidence = res[0].confidence;
 
-		if (this.isFinal) console.log('....result', this.result, 'FINAL?', this.isFinal)
+		//if (this.isFinal) console.log('....result', this.result, 'FINAL?', this.isFinal)
 
 		if (this.isFinal) {
 			this.stop();

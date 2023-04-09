@@ -6,7 +6,7 @@ function setGame(game, immediate = false) {
 	resetUIDs();
 	if (isdef(G) && G.id != game) Score.gameChange = true;
 
-	console.log('game',game)
+	//console.log('game',game)
 	G = new (classByName(capitalize(game)))(game, DB.games[game]);
 	Settings = new SettingsClass(G, dAux);
 	//console.log('G',G)
@@ -24,7 +24,7 @@ function setGame(game, immediate = false) {
 	save_user(); //das sollte nur gemacht werden wenn wirklich was sich geaendert hat!
 
 	switch (G.controllerType) {
-		case 'solitaire': GC = PROJECTNAME == 'belinda'?new ControllerSolitaire(G, U):new ControllerSolitaireMinimal(G, U); break;
+		case 'solitaire': GC = PROJECTNAME.startsWith('bel')?new ControllerSolitaire(G, U):new ControllerSolitaireMinimal(G, U); break;
 		case 'solo': GC = new ControllerTTT(G, U); break;
 		case 'chess': GC = new ControllerChess(G, U); break;
 		//case 'multi': GC = new ControllerMulti(G, U); break;

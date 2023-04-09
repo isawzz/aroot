@@ -425,7 +425,7 @@ class GColoku extends Game {
 		this.dComment = mDiv(dTable);
 		mLinebreak(dTable);
 
-		let qName = this.qName = this.level == 0 && coin() && PROJECTNAME == 'belinda' ? 'isThisSudokuCorrect' : 'solve';
+		let qName = this.qName = this.level == 0 && coin() && PROJECTNAME.startsWith('bel') ? 'isThisSudokuCorrect' : 'solve';
 		//let qName = this.qName = 'solve'; // solve | isThisSudokuCorrect
 		this[qName]();
 

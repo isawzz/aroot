@@ -15,6 +15,8 @@ function mClosureUI(dParent) {
 	let d4=mDiv(dParent,{gap:12}); mFlexWrap(d4);
 	mButton('bundle', onclickBundle, d4);
 	mButton('closure', onclickClosure, d4);
+	mButton('belinda bundle', belinda_bundle, d4);
+	mButton('belinda closure', belinda_closure, d4);
 }
 function getLineStart(line) {
 

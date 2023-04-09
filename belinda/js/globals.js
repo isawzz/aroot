@@ -14,19 +14,68 @@ var CURRENT_GAME = "";
 var CURRENT_FEN = "";
 var SEEN_STATUS = false;
 
-var Daat = {}, DA = {}, Items = {}, Session = {currentMenu:'contacts'};
+var Daat = {};
+var DA = {};
+var Items = {};
+var Session = { currentMenu: 'contacts' };
 
 var FenPositionList;
-var C52, Cinno, Syms, SymKeys, KeySets, Categories, ByGroupSubgroup, Dictionary, WordP; //, CatSets, SymbolDict, SInfo;
-var DB, U, Userdata, Username, Serverdata, Live, G;
-var Pictures, Goal, Selected, Score, TO, TOMain, TOTrial, TOList, IsAnswerCorrect, QContextCounter = 0;
-var uiActivated, aiActivated, auxOpen, GameTimer, STOPAUS = false;
-var Settings, SettingsList, SettingsChanged, SelectedMenuKey; //var G, T, P, U, User, ????? , G...Game, T...Table, U...Userdata
-var Players, PlayerOnTurn, GC, GameCounter;
+var C52;
+var Cinno;
+var Syms;
+var SymKeys;
+var KeySets;
+var Categories;
+var ByGroupSubgroup;
+var Dictionary;
+var WordP; //, CatSets, SymbolDict, SInfo;
+var DB;
+var U;
+var Userdata;
+var Username;
+var Serverdata;
+var Live;
+var G;
+var Pictures;
+var Goal
+var Selected;
+var Score;
+var TO;
+var TOMain;
+var TOTrial;
+var TOList;
+var IsAnswerCorrect;
+var QContextCounter = 0;
+var uiActivated;
+var aiActivated;
+var auxOpen;
+var GameTimer;
+var STOPAUS = false;
+var Settings;
+var SettingsList;
+var SettingsChanged;
+var SelectedMenuKey; //var G, T, P, U, User, ????? , G...Game, T...Table, U...Userdata
+var Players;
+var PlayerOnTurn;
+var GC;
+var GameCounter;
 
-var BestMinusScore = Infinity, BestMinusState, BestPlusScore = -Infinity, BestPlusState;
-var F_END, F_MOVES, F_APPLYMOVE, F_UNDOMOVE, F_EVAL, DMAX, MAXIMIZER, MINIMIZER, SelectedMove, CANCEL_AI;
-var DMM = {}, timit;
+var BestMinusScore = Infinity;
+var BestMinusState;
+var BestPlusScore = -Infinity;
+var BestPlusState;
+var F_END;
+var F_MOVES;
+var F_APPLYMOVE;
+var F_UNDOMOVE;
+var F_EVAL;
+var DMAX;
+var MAXIMIZER;
+var MINIMIZER;
+var SelectedMove;
+var CANCEL_AI;
+var DMM = {};
+var timit;
 
 //#region shapes
 var ShapeKeys = ['hex', 'hexF', 'tri', 'triDown', 'triLeft', 'triRight'];
@@ -158,7 +207,7 @@ const PlayerColors = {
 	sky: '#049DD9',
 	brown: '#A65F46',
 	white: '#FFFFFF',
-	lightblue: '#42d4f4',	
+	lightblue: '#42d4f4',
 	lightgreen: '#afff45',
 };
 //#endregion
@@ -209,7 +258,7 @@ const OPS = { //die muessen vals in settings.games[game] sein!
 	'xor': { cmd: 'true or false?', link: 'xor', wr: 'xor', sp: 'xor', f: (a, b) => (a && !b || !a && b) },
 }
 
-EnglishSentences = [
+const EnglishSentences = [
 	'I like unscambling words',
 	'it is a beautiful day',
 	'you need to work harder',

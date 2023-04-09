@@ -63,7 +63,7 @@ function loadUser(newUser, game) {
 	//der rest ab hier wird nur gemacht wenn Play! oder in Belinda: verwendet nur U
 
 	//show user name on screen
-	if (PROJECTNAME == 'belinda') showUsernameOnScreen(PROJECTNAME == 'belinda');
+	if (PROJECTNAME.startsWith('bel')) showUsernameOnScreen(true);
 
 	//determine game
 	if (nundef(game)) {

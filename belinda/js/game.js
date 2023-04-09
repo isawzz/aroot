@@ -2017,7 +2017,7 @@ function show_instruction(written, dParent, spoken, { fz, voice } = {}) {
 	dFeedback = dInstruction = d;
 
 	dInstruction.addEventListener('click', () => aniInstruction(spoken));
-	console.log('spoken', spoken);
+	//console.log('spoken', spoken);
 	if (isdef(spoken)) say(spoken, isdef(voice)?voice:G.lang == 'E'?'random':G.lang); //sayRandomVoice(spoken, spoken, voice);
 
 }

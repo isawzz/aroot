@@ -5253,7 +5253,7 @@ function isVisible(elem) { // Where el is the DOM element you'd like to test for
 	//console.log(elem)
 	if (isString(elem)) elem = document.getElementById(elem);
 	let x = elem.style.flex;
-	console.log('flex',x);
+	//console.log('flex',x);
 	return (elem.style.display != 'none' || elem.offsetParent !== null) && (nundef(elem.style.flex) || !endsWith(elem.style.flex,'0%'));
 	// console.log('style',elem.style.flex  == '0 1 0%')
 	// if (isdef(elem.style.flex)) return elem.style.flex != '0 1 0%';
@@ -5483,30 +5483,6 @@ function previewBrowsedFile(dParent, imgFile) {
 	reader.readAsDataURL(imgFile);
 }
 //#endregion
-
-//#region functions to be used in node.js:
-if (this && typeof module == "object" && module.exports && this === module.exports) {
-	module.exports = {
-		//perlenGame common code:
-		initServerPool, addToPool,//initServerBoard,
-
-		//helpers:
-		allNumbers, arrTake, arrNoDuplicates, arrMin, arrMax, arrMinus,
-		capitalize, choose, chooseRandom, copyKeys,
-		dict2list,
-		firstCond, firstCondDict, firstCondDictKey, formatDate,
-		getFilename, getPublicPath,
-		intersection, isdef, isEmpty, jsCopy, isLiteral, isList, isString,
-		nundef,
-		range, randomNumber, removeInPlace,
-		stringBefore, stringAfter, stringAfterLast,
-		valf,
-	};
-}
-
-
-//#endregion
-
 
 //#region TO BE SORTED
 function dictToKeyList(x) { return Object.keys(lst).join(' '); }

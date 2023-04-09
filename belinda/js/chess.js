@@ -340,7 +340,7 @@ function ParseFen(fen) {
 	if (fen[fenCnt] != '-') {
 		file = fen[fenCnt].charCodeAt() - 'a'.charCodeAt();
 		rank = fen[fenCnt + 1].charCodeAt() - '1'.charCodeAt();
-		console.log("fen[fenCnt]:" + fen[fenCnt] + " File:" + file + " Rank:" + rank);
+		//console.log("fen[fenCnt]:" + fen[fenCnt] + " File:" + file + " Rank:" + rank);
 		brd_enPas = FR2SQ(file, rank);
 	}
 
@@ -383,12 +383,12 @@ function ParseMove(from, to) {
 function PrintMoveList() {
 	var index;
 	var move;
-	console.log("MoveList:");
+	//console.log("MoveList:");
 
 	for (index = brd_moveListStart[brd_ply]; index < brd_moveListStart[brd_ply + 1]; ++index) {
 
 		move = brd_moveList[index];
-		console.log("Move:" + (index + 1) + " > " + PrMove(move));
+		//console.log("Move:" + (index + 1) + " > " + PrMove(move));
 
 	}
 }
@@ -441,7 +441,7 @@ function PrintBoard() {
 	return;
 	var sq, file, rank, piece;
 
-	console.log("\nGame Board:\n");
+	//console.log("\nGame Board:\n");
 
 	for (rank = RANKS.RANK_8; rank >= RANKS.RANK_1; rank--) {
 		var line = ((rank + 1) + "  ");
@@ -541,7 +541,7 @@ function BookMove() {
 
 	}
 
-	console.log("Total + " + bookMoves.length + " moves in array");
+	//console.log("Total + " + bookMoves.length + " moves in array");
 
 	if (bookMoves.length == 0) return NOMOVE;
 
@@ -585,7 +585,7 @@ function CheckBoard() {
 		for (t_pce_num = 0; t_pce_num < brd_pceNum[t_piece]; ++t_pce_num) {
 			sq120 = brd_pList[PCEINDEX(t_piece, t_pce_num)];
 			if (brd_pieces[sq120] != t_piece) {
-				console.log('Error Pce Lists');
+				//console.log('Error Pce Lists');
 				return BOOL.FALSE;
 			}
 		}
@@ -1347,7 +1347,7 @@ function Perft(depth) {
 function PerftTest(depth) {
 
 	PrintBoard();
-	console.log("Starting Test To Depth:" + depth);
+	//console.log("Starting Test To Depth:" + depth);
 	perft_leafNodes = 0;
 	GenerateMoves();
 	var index;
@@ -1364,10 +1364,10 @@ function PerftTest(depth) {
 		Perft(depth - 1);
 		TakeMove();
 		var oldnodes = perft_leafNodes - cumnodes;
-		console.log("move:" + moveNum + " " + PrMove(move) + " " + oldnodes);
+		//console.log("move:" + moveNum + " " + PrMove(move) + " " + oldnodes);
 	}
 
-	console.log("Test Complete : " + perft_leafNodes + " leaf nodes visited");
+	//console.log("Test Complete : " + perft_leafNodes + " leaf nodes visited");
 	$("#FenOutput").text("Test Complete : " + perft_leafNodes + " leaf nodes visited");
 
 	return;
@@ -2131,7 +2131,7 @@ function CheckResult() {
 
 	if (found != 0) return BOOL.FALSE;
 	var InCheck = SqAttacked(brd_pList[PCEINDEX(Kings[brd_side], 0)], brd_side ^ 1);
-	console.log('No Move Found, incheck:' + InCheck);
+	//console.log('No Move Found, incheck:' + InCheck);
 
 	if (InCheck == BOOL.TRUE) {
 		if (brd_side == COLOURS.WHITE) {
@@ -2146,7 +2146,7 @@ function CheckResult() {
 	} else {
 		$("#GameStatus").text("GAME DRAWN {stalemate}"); return BOOL.TRUE;
 	}
-	console.log('Returning False');
+	//console.log('Returning False');
 	return BOOL.FALSE;
 }
 function PreSearch() {
@@ -2185,7 +2185,7 @@ function StartSearch() {
 
 //#region GUI
 $(document).on('click', '.Piece', function (e) {
-	console.log("Piece Click");
+	//console.log("Piece Click");
 	if (srch_thinking == BOOL.FALSE && GameController.PlayerSide == brd_side) {
 		if (UserMove.from == SQUARES.NO_SQ)
 			UserMove.from = ClickedSquare(e.pageX, e.pageY);
@@ -2196,7 +2196,7 @@ $(document).on('click', '.Piece', function (e) {
 	}
 });
 $(document).on('click', '.Square', function (e) {
-	console.log("Square Click");
+	//console.log("Square Click");
 	if (srch_thinking == BOOL.FALSE && GameController.PlayerSide == brd_side && UserMove.from != SQUARES.NO_SQ) {
 		UserMove.to = ClickedSquare(e.pageX, e.pageY);
 		MakeUserMove();
@@ -2218,7 +2218,7 @@ function ActivateChessWidgets() {
 		NewGameAjax();
 	});
 	$("#UndoButton").click(function () {
-		console.log('Undo request... brd_hisPly:' + brd_hisPly);
+		//console.log('Undo request... brd_hisPly:' + brd_hisPly);
 		if (brd_hisPly > 0) {
 			TakeMove(); if (brd_hisPly > 0) TakeMove();
 			brd_ply = 0;
@@ -2240,13 +2240,13 @@ function ActivateChessWidgets() {
 
 	$("#FlipButton").click(function () {
 		GameController.BoardFlipped ^= 1;
-		console.log("Flipped:" + GameController.BoardFlipped);
+		//console.log("Flipped:" + GameController.BoardFlipped);
 		SetInitialBoardPieces();
 	});
 
 	$("#EndGameButton").click(function () {
 		let fen = chooseRandom(FenPositionList).FEN;
-		console.log('fen', fen)
+		//console.log('fen', fen)
 		NewGame(fen);
 		NewGameAjax();
 	});
@@ -2448,14 +2448,14 @@ function InitFilesRanksBrd() {
 }
 function MakeUserMove() {
 	if (UserMove.from != SQUARES.NO_SQ && UserMove.to != SQUARES.NO_SQ) {
-		console.log("User Move:" + PrSq(UserMove.from) + PrSq(UserMove.to));
+		//console.log("User Move:" + PrSq(UserMove.from) + PrSq(UserMove.to));
 
 		var parsed = ParseMove(UserMove.from, UserMove.to);
 
 		DeselectSq(UserMove.from);
 		DeselectSq(UserMove.to);
 
-		console.log("Parsed:" + parsed);
+		//console.log("Parsed:" + parsed);
 
 		if (parsed != NOMOVE) {
 			MakeMove(parsed);
@@ -2493,7 +2493,7 @@ function MoveGUIPiece(move) {
 		} else {
 			epRemove = flippedTo + epBlack;
 		}
-		console.log("en pas removing from " + PrSq(epRemove));
+		//console.log("en pas removing from " + PrSq(epRemove));
 		RemoveGUIPiece(epRemove);
 	} else if (CAPTURED(move)) {
 		RemoveGUIPiece(flippedTo);
@@ -2531,9 +2531,9 @@ function MoveGUIPiece(move) {
 		}
 	}
 	var prom = PROMOTED(move);
-	console.log("PromPce:" + prom);
+	//console.log("PromPce:" + prom);
 	if (prom != PIECES.EMPTY) {
-		console.log("prom removing from " + PrSq(flippedTo));
+		//console.log("prom removing from " + PrSq(flippedTo));
 		RemoveGUIPiece(flippedTo);
 		AddGUIPiece(flippedTo, prom);
 	}
@@ -2627,7 +2627,7 @@ function ShowChessMessage(s, ms) {
 	//showFleetingMessage(`<div style='margin-left:-178px;width:483px;text-align:center;'>${s}</div>`,0,{fg:'red',bg:'blue'},true);
 	//dTitle.innerHTML = `<div style='margin-left:78px;width:483px;text-align:center;'>Turn: ${pl}`;
 	//mBy('GameStatus').innerHTML = 'HALOOOOOO';
-	console.log('message:', s);
+	//console.log('message:', s);
 
 	$("#GameStatus").text(s);
 	if (isdef(ms)) setTimeout(() => $("#GameStatus").text(''), ms)

@@ -20,7 +20,7 @@ function ipadd(elem) {
 		elem.innerHTML = ev.dataTransfer.getData('text/plain');
 	}
 	function OnDragStart(ev) {
-		console.log('insane!!!');
+		//console.log('insane!!!');
 		//ev.preventDefault();
 		ev.stopPropagation(); // let child take the drag
 		ev.dataTransfer.dropEffect = 'move';
@@ -237,7 +237,7 @@ function createAccountContent1(userdata) {
 		inp.onkeydown = ev => {
 			if (ev.keyCode === 13) {
 				ev.preventDefault();
-				console.log('WTF!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
+				//console.log('WTF!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
 				collect_data(ev);
 			}
 		};
@@ -281,8 +281,7 @@ function uiGetContactStylesAndStart() {
 	 	}
 
 	</style>
-	<div style="text-align: center; animation: appear 1s ease">
-  `;
+	<div style="text-align: center; animation: appear 1s ease">`;
 	return mydata;
 }
 function uiGetContact(row, msgs={}) {

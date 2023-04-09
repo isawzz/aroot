@@ -58,9 +58,9 @@ class SettingsClass {
 		// console.log('lllllllllllllllll', a, a.value, a.keyList);
 		//let val = elem.type == 'number' ? Number(elem.value) : elem.value;
 		this.hasChanged = true;
-		console.log('setting\nkeyList', elem.keyList)
-		console.log('this.o', this.o)
-		console.log('val', val)
+		//console.log('setting\nkeyList', elem.keyList)
+		//console.log('this.o', this.o)
+		//console.log('val', val)
 		lookupSetOverride(this.o, elem.keyList, val);
 		//console.log('result', lookup(this.o, elem.keyList));
 	}
@@ -152,7 +152,7 @@ class SettingsClass {
 		if (scope == 'temp' || nundef(this.list)) return;
 		for (const k of this.list) {
 
-			console.log('updating', k, 'from', U.settings[k], 'to', this.o[k]);
+			//console.log('updating', k, 'from', U.settings[k], 'to', this.o[k]);
 
 			if (scope == 'user') lookupSetOverride(U, ['settings', k], this.o[k]);
 			else if (scope == 'game') lookupSetOverride(U, ['games', this.o.id, k], this.o[k]);
