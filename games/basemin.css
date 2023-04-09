@@ -290,6 +290,15 @@ fieldset .disabled {
 	display: flex;
 	justify-content: space-between;
 }
+.vcenter {
+	align-items: center;
+}
+.flexline{
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	width: 100%;
+}
 
 .move {
 	animation: move var(--ms) ease;

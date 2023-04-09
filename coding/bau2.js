@@ -1,12 +1,20 @@
 
 //#region bundle generation
 function mClosureUI(dParent) {
-	mDiv(dParent, {}, null, 'project')
-	mDiv(dParent, {}, null, '<input type="text" id="inp_project" value="games2"/>')
-	mDiv(dParent, {}, null, 'seed')
-	mDiv(dParent, {}, null, '<input type="text" id="inp_seed" value="accuse start startgame"/>')
-	mButton('bundle', onclickBundle, dParent);
-	mButton('closure', onclickClosure, dParent);
+	let d=mDiv(dParent,{gap:10});mFlexWrap(d);
+	let d1=mDiv(d);
+	mDiv(d1, {}, null, 'project')
+	mDiv(d1, {}, null, '<input type="text" id="inp_project" value="gamesfull"/>')
+	let d2=mDiv(d);
+	mDiv(d2, {}, null, 'seed')
+	mDiv(d2, {}, null, '<input type="text" id="inp_seed" value="start"/>')
+	let d3=mDiv(d);
+	mDiv(d3, {}, null, 'output')
+	mDiv(d3, {}, null, '<input type="text" id="inp_dirout" value="games"/>')
+
+	let d4=mDiv(dParent,{gap:12}); mFlexWrap(d4);
+	mButton('bundle', onclickBundle, d4);
+	mButton('closure', onclickClosure, d4);
 }
 function getLineStart(line) {
 
@@ -52,7 +60,8 @@ async function get_dir_files_seed() {
 
 	files = files.filter(x => !x.includes('alibs'));
 	//console.log('files', files)
-	return [dir, files, list];
+	let dirout = mBy('inp_dirout').value;
+	return [dir, files, list, dirout];
 }
 async function __parsefile(f, byKey, ckeys, idx) {
 	let chunk = '', error = '', state, kw = null, blocktype = null, region = null;
@@ -121,8 +130,8 @@ async function __parsefile(f, byKey, ckeys, idx) {
 	return [text, idx];
 }
 async function onclickBundle() {
-	let [dir, files, seed] = await get_dir_files_seed();
-	let byKey = {}, ckeys = [], idx = 0; //, di = {}
+	let [dir, files, seed, dirout] = await get_dir_files_seed();
+	let byKey = {}, ckeys = [], idx = 0; 
 	//console.log(files)
 	let text = '';
 	for (const f of files) {
@@ -130,29 +139,22 @@ async function onclickBundle() {
 		idx = idxnew;
 		text += filetext;
 	}
-
-	//downloadAsText(text, 'bundle', 'js');
-	//AU.ta.value = text;
-
-	// console.log('byKey', get_values(byKey));
-	// console.log('keys', ckeys);
-
 	//assemble text!!!
 	assemble_complete_code(ckeys, byKey);
 
 	lookupSetOverride(DA, ['bundle', 'di'], byKey)
 	lookupSetOverride(DA, ['bundle', 'klist'], ckeys)
 
-	write_new_index_html(dir);
+	write_new_index_html(dirout);
 	DA.codedir = dir;
+	DA.dirout = dirout;
 }
 function assemble_complete_code(list, di) {
 	CODE.byKey = di;
 	CODE.keylist = list;
-	console.log('...',list[0],di[list[0]]);//var list problem!!!!!
+	//console.log('...',list[0],di[list[0]]);//var list problem!!!!!
 	let region = null, fname = di[list[0]].fname;
 	let text = `//#region ${fname}\n`;
-	//console.log('first fname is', fname)
 	for (const k of list) {
 		if (!k || nundef(di[k])) continue;
 		let o = di[k];
@@ -168,20 +170,20 @@ function assemble_complete_code(list, di) {
 	}
 
 	text += `//#endregion\n\n`;
-	//downloadAsText(text, 'bundle', 'js');
+	downloadAsText(text, 'bundle', 'js');
 	lookupSetOverride(DA, ['bundle', 'text'], text)
 
 	AU.ta.value = text;
-	//console.log('last keys',arrTakeLast(list,2))
 }
 function write_new_index_html(dir,filename='bundle') {
 	//let project = stringAfterLast(dir,'/');	console.log('project',project)
 	let text = DA.indexhtml;
 
-	let scripts = `</body><script src="${dir}test/${filename}.js"></script><script>onload = start;</script>\n</html>`;
+	
+	let scripts = `</body><script src="../${dir}/${filename}.js"></script><script>onload = start;</script>\n</html>`;
 	let newtext = stringBefore(text, `</body>`) + scripts;
 
-	//downloadAsText(newtext,`index`,'html')
+	downloadAsText(newtext,`index`,'html')
 }
 //#endregion bundle generation
 
