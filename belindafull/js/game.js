@@ -1254,7 +1254,7 @@ function failSomePictures(withComment = false) {
 		let ui = iDiv(p);
 		let sz = getRect(ui).h;
 		if (p.isCorrect == false) {
-			console.log('fail',p)
+			//console.log('fail',p)
 			mpOver(markerFail(), ui, sz * (1 / 2), 'red', 'openMojiTextBlack');
 		}else mpOver(markerSuccess(), ui, sz * (4 / 5), 'limegreen', 'segoeBlack');
 	}

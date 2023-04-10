@@ -7873,11 +7873,8 @@ class GNamit extends Game {
 	dropHandler(source, target, isCopy = true) {
 		let dSource = iDiv(source);
 		let dTarget = iDiv(target);
-		console.log('dropped', source, 'onto', target);
 		let label = iLabel(target);
-		console.log('label', label);
 		let div = iDiv(target);
-		console.log('div', div);
 		addLabel(target, source.label, {});
 	}
 	trialPrompt() {
@@ -7887,15 +7884,12 @@ class GNamit extends Game {
 		return 1500;
 	}
 	eval() {
-		console.log('eval in Namit!!!!!')
 		this.piclist = Pictures;
 		Selected = { piclist: this.piclist, feedbackUI: this.piclist.map(x => iDiv(x)), sz: getRect(iDiv(this.piclist[0])).h };
 		let isCorrect = true;
 		for (const p of Pictures) {
 			let correctLabel = p.correctLabel;
-			console.log('correctLabel', correctLabel, p.label);
 			let dLabel = iLabel(p);
-			console.log('dLabel', dLabel);
 			if (nundef(dLabel) || p.label != correctLabel) p.isCorrect = isCorrect = false;
 			else p.isCorrect = true;
 		}
@@ -9817,7 +9811,6 @@ function failSomePictures(withComment = false) {
 		let ui = iDiv(p);
 		let sz = getRect(ui).h;
 		if (p.isCorrect == false) {
-			console.log('fail',p)
 			mpOver(markerFail(), ui, sz * (1 / 2), 'red', 'openMojiTextBlack');
 		}else mpOver(markerSuccess(), ui, sz * (4 / 5), 'limegreen', 'segoeBlack');
 	}
