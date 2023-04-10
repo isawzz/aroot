@@ -1,51 +1,4 @@
 //#region globals
-var PROJECTNAME = 'belinda';
-var START_IN_MENU = false;
-var DEFAULTUSERNAME = 'gul';
-var Daat = {};
-var DA = {};
-var Items = {};
-var FenPositionList;
-var Syms;
-var KeySets;
-var Categories;
-var ByGroupSubgroup;
-var Dictionary;
-var WordP; //, CatSets, SymbolDict, SInfo;
-var DB;
-var U;
-var Userdata;
-var Username;
-var G;
-var Pictures;
-var Goal
-var Selected;
-var Score;
-var TO;
-var TOMain;
-var TOTrial;
-var TOList;
-var IsAnswerCorrect;
-var QContextCounter = 0;
-var uiActivated;
-var aiActivated;
-var auxOpen;
-var GameTimer;
-var STOPAUS = false;
-var Settings;
-var SelectedMenuKey; //var G, T, P, U, User, ????? , G...Game, T...Table, U...Userdata
-var GC;
-var GameCounter;
-var F_END;
-var F_MOVES;
-var F_APPLYMOVE;
-var F_UNDOMOVE;
-var MAXIMIZER;
-var MINIMIZER;
-var SelectedMove;
-var DMM = {};
-var timit;
-var ColorNames; //see base.js colors
 const BLUE = '#4363d8';
 const BLUEGREEN = '#004054';
 const BROWN = '#96613d';
@@ -107,9 +60,6 @@ const ColorDict = {
 const levelColors = [LIGHTGREEN, LIGHTBLUE, YELLOW, 'orange', RED,
 	GREEN, BLUE, PURPLE, YELLOW2, 'deepskyblue', 'deeppink', //** MAXLEVEL 10 */
 	TEAL, ORANGE, 'seagreen', FIREBRICK, OLIVE, '#ffd8b1', '#000075', '#a9a9a9', '#ffffff', '#000000', 'gold', 'orangered', 'skyblue', 'pink', 'palegreen', '#e6194B'];
-var levelKeys = ['island', 'justice star', 'materials science', 'mayan pyramid', 'medieval gate',
-	'great pyramid', 'meeple', 'smart', 'stone tower', 'trophy cup', 'viking helmet',
-	'flower star', 'island', 'justice star', 'materials science', 'mayan pyramid',];
 const DD = {
 	yellow: 'gelb', green: 'grün', blue: 'blau', red: 'rot', pink: 'rosa', orange: 'orange', black: 'schwarz',
 	white: 'weiss', violet: 'violett', '1st': 'erste', '2nd': 'zweite', '3rd': 'dritte', '4th': 'vierte', '5th': 'fünfte',
@@ -266,440 +216,225 @@ const BoyNames = ['Aaron', 'Ariel', 'Billy', 'Cayley', 'Erik',
 	'Felix', 'Gunter', 'Gilbert', 'Henry', 'Jacob', 'Jaime', 'John', 'Leo',
 	'Marshall', 'Matthew', 'Nathan',
 	'Robert', 'Shad', 'Thomas', 'Tim', 'William'];
+var PROJECTNAME = 'belinda';
+var START_IN_MENU = false;
+var DEFAULTUSERNAME = 'gul';
+var Daat = {};
+var DA = {};
+var Items = {};
+var FenPositionList;
+var Syms;
+var KeySets;
+var Categories;
+var ByGroupSubgroup;
+var Dictionary;
+var WordP; //, CatSets, SymbolDict, SInfo;
+var DB;
+var U;
+var Userdata;
+var Username;
+var G;
+var Pictures;
+var Goal
+var Selected;
+var Score;
+var TO;
+var TOMain;
+var TOTrial;
+var TOList;
+var IsAnswerCorrect;
+var QContextCounter = 0;
+var uiActivated;
+var aiActivated;
+var auxOpen;
+var GameTimer;
+var STOPAUS = false;
+var Settings;
+var SelectedMenuKey; //var G, T, P, U, User, ????? , G...Game, T...Table, U...Userdata
+var GC;
+var GameCounter;
+var F_END;
+var F_MOVES;
+var F_APPLYMOVE;
+var F_UNDOMOVE;
+var MAXIMIZER;
+var MINIMIZER;
+var SelectedMove;
+var DMM = {};
+var timit;
+var ColorNames; //see base.js colors
+var levelKeys = ['island', 'justice star', 'materials science', 'mayan pyramid', 'medieval gate',
+	'great pyramid', 'meeple', 'smart', 'stone tower', 'trophy cup', 'viking helmet',
+	'flower star', 'island', 'justice star', 'materials science', 'mayan pyramid',];
 //#endregion globals
 
 //#region base
-function miAddLabel(item, styles) {
-	let d = iDiv(item);
-	if (getTypeOf(d.firstChild) == 'Text') {
-		let handler = d.onmousedown;
-		d.onmousedown = null;
-		let dPic = d;
-		let dParent = d.parentNode;
-		let outerStyles = jsCopy(styles);
-		addKeys({
-			display: 'inline-flex', 'flex-direction': 'column',
-			'justify-content': 'center', 'align-items': 'center', 'vertical-align': 'top',
-		}, outerStyles);
-		d = mDiv(dParent, outerStyles);
-		mAppend(d, dPic);
-		d.onmousedown = handler;
-		let dLabel = mText(item.label, d, { fz: valf(styles.fz, 20) });
-		iAdd(item, { div: d, dPic: dPic, dLabel: dLabel, options: outerStyles });
-	} else if (nundef(iLabel(item))) {
-		let dLabel = mText(item.label, d, { fz: valf(styles.fz, 20) });
-		iAdd(item, { dLabel: dLabel });
+const _overwriteMerge = (destinationArray, sourceArray, options) => sourceArray
+var DragElem = null; //is the clone of element from which drag started
+var DDInfo = null;
+var UIDCounter = 0;
+var FRUIDCounter = -1;
+class TimeIt {
+	constructor(msg, showOutput = true) {
+		this.showOutput = showOutput;
+		this.init(msg);
 	}
-	return d;
+	getTotalTimeElapsed() {
+		let tNew = new Date();
+		let tDiffStart = tNew.getTime() - this.namedTimestamps.start.getTime();
+		return tDiffStart;
+	}
+	tacit() { this.showOutput = false; }
+	timeStamp(name) {
+		let tNew = new Date(); //new Date().getTime() - this.t;
+		let tDiff = tNew.getTime() - this.namedTimestamps.start.getTime();// this.t.getTime();
+		if (this.showOutput) console.log('___', tDiff, 'msecs * to', name);
+		this.t = tNew;
+		this.namedTimestamps[name] = tNew;
+	}
+	reset() { this.init('timing start') }
+	init(msg) {
+		this.t = new Date();
+		if (this.showOutput) console.log('___', msg);
+		this.namedTimestamps = { start: this.t };
+	}
+	showSince(name, msg = 'now') {
+		let tNew = new Date(); //new Date().getTime() - this.t;
+		let tNamed = this.namedTimestamps[name];
+		if (this.showOutput) if (!tNamed) { console.log(name, 'is not a timestamp!'); return; } //new Date().getTime() - this.t;
+		let tDiff = tNew.getTime() - tNamed.getTime();
+		if (this.showOutput) console.log('___', tDiff, 'msecs', name, 'to', msg);
+		this.t = tNew;
+	}
+	format(t) { return '___' + t.getSeconds() + ':' + t.getMilliseconds(); }
+	show(msg) { this.showTime(msg); }
+	showTime(msg) {
+		let tNew = new Date(); //new Date().getTime() - this.t;
+		let tDiff = tNew.getTime() - this.t.getTime();
+		let tDiffStart = tNew.getTime() - this.namedTimestamps.start.getTime();
+		if (this.showOutput) console.log('___ ', tDiff, 'msecs to', msg, '(' + tDiffStart, 'total)');
+		this.t = tNew;
+	}
+	start_of_cycle(msg) {
+		this.init(msg);
+	}
+	end_of_cycle(msg) {
+		let tNew = new Date(); //new Date().getTime() - this.t;
+		let tDiff = tNew.getTime() - this.t.getTime();
+		let tDiffStart = tNew.getTime() - this.namedTimestamps.start.getTime();
+		if (this.showOutput) console.log('___ ' + tDiff + ' msecs', msg, 'to EOC (total: ' + tDiffStart + ')');
+	}
 }
-function translateToCssStyle(prop, val) { return mStyleTranslate(prop, val); }
-function translateStylesToCy(styles, group) {
-	let di = {};
-	for (const k in styles) {
-		let v = styles[k];
-		let [prop, val] = translateToCssStyle(k, v, true);
-		if (group == 'edge' && k == 'bg') di['line-color'] = val;
-		else if (prop == 'shape' && val == 'hex') {
-			di.shape = 'polygon';
-			di['shape-polygon-points'] = [0, -1, 1, -0.5, 1, 0.5, 0, 1, -1, 0.5, -1, -0.5];
+function _cloneIfNecessary(value, optionsArgument) {
+	var clone = optionsArgument && optionsArgument.clone === true
+	return (clone && _isMergeableObject(value)) ? deepmerge(_emptyTarget(value), value, optionsArgument) : value
+}
+function _deepMerge(target, source, optionsArgument) {
+	var array = Array.isArray(source);
+	var options = optionsArgument || { arrayMerge: _defaultArrayMerge }
+	var arrayMerge = options.arrayMerge || _defaultArrayMerge
+	if (array) {
+		return Array.isArray(target) ? arrayMerge(target, source, optionsArgument) : _cloneIfNecessary(source, optionsArgument)
+	} else {
+		return _mergeObject(target, source, optionsArgument)
+	}
+}
+function _defaultArrayMerge(target, source, optionsArgument) {
+	var destination = target.slice()
+	source.forEach(function (e, i) {
+		if (typeof destination[i] === 'undefined') { //el[i] nur in source
+			destination[i] = _cloneIfNecessary(e, optionsArgument)
+		} else if (_isMergeableObject(e)) { //el[i] in beidem
+			destination[i] = deepmerge(target[i], e, optionsArgument)
+		} else if (target.indexOf(e) === -1) { //el[i] nur in target
+			destination.push(_cloneIfNecessary(e, optionsArgument))
 		}
-		else di[prop] = val;
+	})
+	return destination
+}
+function _emptyTarget(val) {
+	return Array.isArray(val) ? [] : {}
+}
+function _isMergeableObject(val) {
+	var nonNullObject = val && typeof val === 'object'
+	return nonNullObject
+		&& Object.prototype.toString.call(val) !== '[object RegExp]'
+		&& Object.prototype.toString.call(val) !== '[object Date]'
+}
+function _mergeObject(target, source, optionsArgument) {
+	var destination = {}
+	if (_isMergeableObject(target)) {
+		Object.keys(target).forEach(function (key) {
+			destination[key] = _cloneIfNecessary(target[key], optionsArgument)
+		})
 	}
-	return di;
-}
-function getBorderPropertyForDirection(dir) { return { 0: 'border-top', 1: 'border-right', 2: 'border-bottom', 3: 'border-left' }[dir]; }
-function mAppend(d, child) { d.appendChild(child); return child; }
-function mButton(caption, handler, dParent, styles, classes, id) {
-	let x = mCreate('button');
-	x.innerHTML = caption;
-	if (isdef(handler)) x.onclick = handler;
-	if (isdef(dParent)) dParent.appendChild(x);
-	if (isdef(styles)) mStyle(x, styles);
-	if (isdef(classes)) mClass(x, classes);
-	if (isdef(id)) x.id = id;
-	return x;
-}
-function mBy(id) { return document.getElementById(id); }
-function mCellContent(dCell, styles, html) {
-	clearElement(dCell);
-	let d = mDiv(dCell, { w: '100%', h: '100%' });
-	mCenterCenterFlex(d);
-	let d1 = mDiv(d, styles, null, html);
-	mCenterCenterFlex(d1);
-	return d1;
-}
-function mCenterCenterFlex(d) { mCenterFlex(d, true, true, true); }
-function mCenterFlex(d, hCenter = true, vCenter = false, wrap = true) {
-	let styles = { display: 'flex' };
-	if (hCenter) styles['justify-content'] = 'center';
-	styles['align-content'] = vCenter ? 'center' : 'flex-start';
-	if (wrap) styles['flex-wrap'] = 'wrap';
-	mStyle(d, styles);
-}
-function mClass(d) {
-	if (arguments.length == 2 && isList(arguments[1])) for (let i = 0; i < arguments[1].length; i++) d.classList.add(arguments[1][i]);
-	else for (let i = 1; i < arguments.length; i++) d.classList.add(arguments[i]);
-}
-function mClassRemove(d) { for (let i = 1; i < arguments.length; i++) d.classList.remove(arguments[i]); }
-function mCreate(tag, styles, id) { let d = document.createElement(tag); if (isdef(id)) d.id = id; if (isdef(styles)) mStyle(d, styles); return d; }
-function mDestroy(elem) { if (isString(elem)) elem = mById(elem); purge(elem); } // elem.parentNode.removeChild(elem); }
-function mDiv(dParent, styles, id, inner, classes, sizing) {
-	let d = mCreate('div');
-	if (dParent) mAppend(dParent, d);
-	if (isdef(styles)) mStyle(d, styles);
-	if (isdef(classes)) mClass(d, classes);
-	if (isdef(id)) d.id = id;
-	if (isdef(inner)) d.innerHTML = inner;
-	if (isdef(sizing)) { setRect(d, sizing); }
-	return d;
-}
-function mDiv100(dParent, styles, id, sizing = true) { let d = mDiv(dParent, styles, id); mSize(d, 100, 100, '%', sizing); return d; }
-function mEditableInput(dParent, label, val, styles, classes, id) {
-	let labelElem = createElementFromHTML(`<span>${label}</span>	`)
-	let elem = createElementFromHTML(`<span contenteditable="true" spellcheck="false">${val}</span>	`)
-	elem.addEventListener('keydown', (ev) => {
-		if (ev.key === 'Enter') {
-			ev.preventDefault();
-			mBy('dummy').focus();
-		}
-	});
-	let dui = mDiv(dParent, { margin: 2 });
-	mAppend(dui, labelElem);
-	mAppend(dui, elem);
-	if (isdef(styles)) {
-		if (isdef(styles.wInput)) mStyle(elem, { wmin: styles.wInput });
-		mStyle(elem, styles);
-	}
-	if (isdef(classes)) mStyle(elem, classes);
-	if (isdef(id)) elem.id = id;
-	return elem;
-}
-function mFlex(d, or = 'h') {
-	d.style.display = 'flex';
-	d.style.flexFlow = (or == 'v' ? 'column' : 'row') + ' ' + (or == 'w' ? 'wrap' : 'nowrap');
-}
-function mGrid(rows, cols, dParent, styles = {}) {
-	let d = mDiv(dParent, styles);
-	d.style.gridTemplateColumns = 'repeat(' + cols + ',1fr)';
-	d.style.gridTemplateRows = 'repeat(' + rows + ',1fr)';
-	d.style.display = 'inline-grid';
-	d.style.padding = valf(styles.padding, styles.gap) + 'px';
-	return d;
-}
-function mHasClass(el, className) {
-	if (el.classList) return el.classList.contains(className);
-	else return !!el.className.match(new RegExp('(\\s|^)' + className + '(\\s|$)'));
-}
-function mItem(id, diDOM, di = {}, addSizing = true) {
-	let item = di;
-	id = isdef(id) ? id : isdef(diDOM) && isdef(diDOM.div) && !isEmpty(diDOM.div.id) ? diDOM.div.id : getUID();
-	item.id = iRegister(item, id);
-	if (isdef(diDOM) && isdef(diDOM.div)) { diDOM.div.id = id; iAdd(item, diDOM); }
-	if (addSizing) {
-		if (nundef(item.sizing)) item.sizing = 'sizeToContent';
-		if (nundef(item.positioning)) { item.positioning = 'absolute'; }
-		if (nundef(item.posType)) { item.posType = 'center'; }
-		if (isdef(diDOM) && item.sizing == 'sizeToContent') iMeasure(item, item.sizingOptions);
-	}
-	return item;
-}
-function mLinebreak(dParent, gap) {
-	if (isString(dParent)) dParent = mBy(dParent);
-	let d = mDiv(dParent);
-	if (dParent.style.display == 'flex' || mHasClass(dParent, 'flexWrap')) mClass(d, 'linebreak');
-	else d.innerHTML = '<br>';
-	if (isdef(gap)) { d.style.minHeight = gap + 'px'; d.innerHTML = ' &nbsp; '; d.style.opacity = .2; }//return mLinebreak(dParent);}
-	return d;
-}
-function mMoveBy(elem, dx, dy) { let rect = getRect(elem); mPos(elem, rect.x + dx, rect.y + dy); }
-function mParent(elem) { return elem.parentNode; }
-function miPic(item, dParent, styles, classes) {
-	let info = isString(item) ? Syms[item] : isdef(item.info) ? item.info : item;
-	let d = mDiv(dParent);
-	d.innerHTML = info.text;
-	if (nundef(styles)) styles = {};
-	addKeys({ family: info.family, fz: 50, display: 'inline-block' }, styles);
-	mStyle(d, styles);
-	if (isdef(classes)) mClass(d, classes);
-	mCenterCenterFlex(d);
-	return d;
-}
-function mPlace(elem, pos, mavert = 4, mahor) {
-	pos = pos.toLowerCase();
-	let dCard = elem.parentNode; if (dCard.style.position != 'absolute') dCard.style.position = 'relative';
-	let vert = mavert; // valf(margin, Math.max(wSym,hSym) / 10); //0;
-	let hor = isdef(mahor) ? mahor : mavert;
-	if (pos[0] == 'c' || pos[1] == 'c') {
-		let rCard = getRect(dCard);
-		let [wCard, hCard] = [rCard.w, rCard.h];
-		let rSym = getRect(elem);
-		let [wSym, hSym] = [rSym.w, rSym.h];
-		switch (pos) {
-			case 'cc': mStyle(elem, { position: 'absolute', left: (wCard - wSym) / 2, top: (hCard - hSym) / 2 }); break;
-			case 'tc': mStyle(elem, { position: 'absolute', left: (wCard - wSym) / 2, top: vert }); break;
-			case 'bc': mStyle(elem, { position: 'absolute', left: (wCard - wSym) / 2, bottom: vert }); break;
-			case 'cl': mStyle(elem, { position: 'absolute', left: hor, top: (hCard - hSym) / 2 }); break;
-			case 'cr': mStyle(elem, { position: 'absolute', right: hor, top: (hCard - hSym) / 2 }); break;
-		}
-		return;
-	}
-	let di = { t: 'top', b: 'bottom', r: 'right', l: 'left' };
-	elem.style.position = 'absolute';
-	elem.style[di[pos[0]]] = hor + 'px'; elem.style[di[pos[1]]] = vert + 'px';
-}
-function mPos(d, x, y, unit = 'px') { mStyle(d, { left: x, top: y, position: 'absolute' }, unit); }
-function mRemove(elem) { mDestroy(elem); }
-function mRemoveChildrenFromIndex(dParent, i) { while (dParent.children[i]) { mRemove(dParent.children[i]); } }
-function mRemoveClass(d) { for (let i = 1; i < arguments.length; i++) d.classList.remove(arguments[i]); }
-function mSize(d, w, h, unit = 'px', sizing) { if (nundef(h)) h = w; mStyle(d, { width: w, height: h }, unit); if (isdef(sizing)) setRect(d, sizing); }
-function mSym(key, dParent, styles = {}, pos, classes) {
-	let info = Syms[key];
-	styles.display = 'inline-block';
-	styles.family = info.family;
-	let sizes;
-	if (isdef(styles.sz)) { sizes = mSymSizeToBox(info, styles.sz, styles.sz); }
-	else if (isdef(styles.w) && isdef(styles.h)) { sizes = mSymSizeToBox(info, styles.w, styles.h); }
-	else if (isdef(styles.fz)) { sizes = mSymSizeToFz(info, styles.fz); }
-	else if (isdef(styles.h)) { sizes = mSymSizeToH(info, styles.h); }
-	else if (isdef(styles.w)) { sizes = mSymSizeToW(info, styles.w); }
-	else { sizes = mSymSizeToFz(info, CSZ / 8); }
-	styles.fz = sizes.fz;
-	styles.w = sizes.w;
-	styles.h = sizes.h;
-	styles.align = 'center';
-	if (isdef(styles.bg) && info.family != 'emoNoto') { styles.fg = styles.bg; delete styles.bg; }
-	let x = mDiv(dParent, styles, null, info.text);
-	if (isdef(classes)) mClass(x, classes);
-	if (isdef(pos)) { mPlace(x, pos); }
-	return x;
-}
-function mStyleTranslate(prop, val, convertNumbers = true) {
-	const paramDict = {
-		align: 'text-align',
-		bg: 'background-color',
-		fg: 'color',
-		hgap: 'column-gap',
-		vgap: 'row-gap',
-		matop: 'margin-top',
-		maleft: 'margin-left',
-		mabottom: 'margin-bottom',
-		maright: 'margin-right',
-		patop: 'padding-top',
-		paleft: 'padding-left',
-		pabottom: 'padding-bottom',
-		paright: 'padding-right',
-		rounding: 'border-radius',
-		w: 'width',
-		h: 'height',
-		wmin: 'min-width',
-		hmin: 'min-height',
-		wmax: 'max-width',
-		hmax: 'max-height',
-		fontSize: 'font-size',
-		fz: 'font-size',
-		family: 'font-family',
-		weight: 'font-weight',
-		z: 'z-index'
-	};
-	let valDict = {
-		random: randomColor(),
-	};
-	let propName = isdef(paramDict[prop]) ? paramDict[prop] : prop;
-	let newVal = isdef(valDict[val]) ? valdict[val] : val;
-	if (convertNumbers && isNumber(newVal)) newVal = '' + newVal + 'px';
-	return [propName, newVal];
-}
-function mStyle(elem, styles, unit = 'px') {
-	if (isdef(styles.vmargin)) { styles.mabottom = styles.matop = styles.vmargin; }
-	if (isdef(styles.hmargin)) { styles.maleft = styles.maright = styles.hmargin; }
-	const paramDict = {
-		align: 'text-align',
-		bg: 'background-color',
-		fg: 'color',
-		hgap: 'column-gap',
-		vgap: 'row-gap',
-		matop: 'margin-top',
-		maleft: 'margin-left',
-		mabottom: 'margin-bottom',
-		maright: 'margin-right',
-		patop: 'padding-top',
-		paleft: 'padding-left',
-		pabottom: 'padding-bottom',
-		paright: 'padding-right',
-		rounding: 'border-radius',
-		w: 'width',
-		h: 'height',
-		wmin: 'min-width',
-		hmin: 'min-height',
-		wmax: 'max-width',
-		hmax: 'max-height',
-		fontSize: 'font-size',
-		fz: 'font-size',
-		family: 'font-family',
-		weight: 'font-weight',
-		z: 'z-index'
-	};
-	let bg, fg;
-	if (isdef(styles.bg) || isdef(styles.fg)) {
-		[bg, fg] = getExtendedColors(styles.bg, styles.fg, styles.alpha);
-	}
-	if (isdef(styles.vpadding) || isdef(styles.hpadding)) {
-		styles.padding = valf(styles.vpadding, 0) + unit + ' ' + valf(styles.hpadding, 0) + unit;
-	}
-	if (isdef(styles.upperRounding)) {
-		let rtop = '' + valf(styles.upperRounding, 0) + unit;
-		let rbot = '0' + unit;
-		styles['border-radius'] = rtop + ' ' + rtop + ' ' + rbot + ' ' + rbot;
-	} else if (isdef(styles.lowerRounding)) {
-		let rbot = '' + valf(styles.lowerRounding, 0) + unit;
-		let rtop = '0' + unit;
-		styles['border-radius'] = rtop + ' ' + rtop + ' ' + rbot + ' ' + rbot;
-	}
-	if (isdef(styles.box)) styles['box-sizing'] = 'border-box';
-	for (const k in styles) {
-		let val = styles[k];
-		let key = k;
-		if (isdef(paramDict[k])) key = paramDict[k];
-		else if (k == 'font' && !isString(val)) {
-			let fz = f.size; if (isNumber(fz)) fz = '' + fz + 'px';
-			let ff = f.family;
-			let fv = f.variant;
-			let fw = isdef(f.bold) ? 'bold' : isdef(f.light) ? 'light' : f.weight;
-			let fs = isdef(f.italic) ? 'italic' : f.style;
-			if (nundef(fz) || nundef(ff)) return null;
-			let s = fz + ' ' + ff;
-			if (isdef(fw)) s = fw + ' ' + s;
-			if (isdef(fv)) s = fv + ' ' + s;
-			if (isdef(fs)) s = fs + ' ' + s;
-			elem.style.setProperty(k, s);
-			continue;
-		} else if (k == 'border') {
-			if (isNumber(val)) val = `solid ${val}px ${isdef(styles.fg) ? styles.fg : '#ffffff80'}`;
-			if (val.indexOf(' ') < 0) val = 'solid 1px ' + val;
-		} else if (k == 'layout') {
-			if (val[0] == 'f') {
-				val = val.slice(1);
-				elem.style.setProperty('display', 'flex');
-				elem.style.setProperty('flex-wrap', 'wrap');
-				let hor, vert;
-				if (val.length == 1) hor = vert = 'center';
-				else {
-					let di = { c: 'center', s: 'start', e: 'end' };
-					hor = di[val[1]];
-					vert = di[val[2]];
-				}
-				let justStyle = val[0] == 'v' ? vert : hor;
-				let alignStyle = val[0] == 'v' ? hor : vert;
-				elem.style.setProperty('justify-content', justStyle);
-				elem.style.setProperty('align-items', alignStyle);
-				switch (val[0]) {
-					case 'v': elem.style.setProperty('flex-direction', 'column'); break;
-					case 'h': elem.style.setProperty('flex-direction', 'row'); break;
-				}
-			} else if (val[0] == 'g') {
-				val = val.slice(1);
-				elem.style.setProperty('display', 'grid');
-				let n = allNumbers(val);
-				let cols = n[0];
-				let w = n.length > 1 ? '' + n[1] + 'px' : 'auto';
-				elem.style.setProperty('grid-template-columns', `repeat(${cols}, ${w})`);
-				elem.style.setProperty('place-content', 'center');
-			}
-		} else if (k == 'layflex') {
-			elem.style.setProperty('display', 'flex');
-			elem.style.setProperty('flex', '0 1 auto');
-			elem.style.setProperty('flex-wrap', 'wrap');
-			if (val == 'v') { elem.style.setProperty('writing-mode', 'vertical-lr'); }
-		} else if (k == 'laygrid') {
-			elem.style.setProperty('display', 'grid');
-			let n = allNumbers(val);
-			let cols = n[0];
-			let w = n.length > 1 ? '' + n[1] + 'px' : 'auto';
-			elem.style.setProperty('grid-template-columns', `repeat(${cols}, ${w})`);
-			elem.style.setProperty('place-content', 'center');
-		}
-		if (key == 'font-weight') { elem.style.setProperty(key, val); continue; }
-		else if (key == 'background-color') elem.style.background = bg;
-		else if (key == 'color') elem.style.color = fg;
-		else if (key == 'opacity') elem.style.opacity = val;
-		else if (key == 'wrap') elem.style.flexWrap = 'wrap';
-		else if (startsWith(key, 'dir')) {
-			isCol = val[0] == 'c';
-			elem.style.flexDirection = isCol ? 'column' : 'row';
-			if (isCol && nundef(styles.hmax)) {
-				let rect = getRect(elem.parentNode); //console.log('rect', rect);
-				elem.style.maxHeight = rect.h * .9;
-				elem.style.alignContent = 'start';
-			} else if (nundef(styles.wmax)) elem.style.maxWidth = '90%';
-		} else if (key == 'flex') {
-			if (isNumber(val)) val = '' + val + ' 1 0%';
-			elem.style.setProperty(key, makeUnitString(val, unit));
+	Object.keys(source).forEach(function (key) {
+		if (!_isMergeableObject(source[key]) || !target[key]) {
+			destination[key] = _cloneIfNecessary(source[key], optionsArgument)
 		} else {
-			elem.style.setProperty(key, makeUnitString(val, unit));
+			destination[key] = _deepMerge(target[key], source[key], optionsArgument)
 		}
+	})
+	return destination;
+}
+function addByKey(oNew, oOld, except) {
+	for (const k in oNew) {
+		let val = oNew[k];
+		if (isdef(except) && except.includes(k) || !isNumber(val)) continue;
+		oOld[k] = isdef(oOld[k]) ? oOld[k] + val : val;
 	}
 }
-function mText(text, dParent, styles, classes) {
-	if (!isString(text)) text = text.toString();
-	let d = mDiv(dParent);
-	if (!isEmpty(text)) { d.innerHTML = text; }
-	if (isdef(styles)) mStyle(d, styles);
-	if (isdef(classes)) mClass(d, classes);
-	return d;
+function addDDSource(source, isCopy = true, clearTarget = false) {
+	DDInfo.sources.push(source);
+	let d = iDiv(source);
+	d.onmousedown = (ev) => ddStart(ev, source, isCopy, clearTarget);
 }
-function mTitledDiv(title, dParent, outerStyles = {}, innerStyles = {}, id) {
-	let d = mDiv(dParent, outerStyles);
-	let dTitle = mDiv(d);
-	dTitle.innerHTML = title;
-	innerStyles.w = '100%';
-	innerStyles.h = outerStyles.h - getRect(dTitle).h;
-	let dContent = mDiv(d, innerStyles, id);
-	return dContent;
+function addIf(arr, el) {
+	if (!arr.includes(el)) arr.push(el);
 }
-function infoToItem(x) { let item = { info: x, key: x.key }; item.id = iRegister(item); return item; }
-function iAdd(item, props) {
-	let id, l;
-	if (isString(item)) { id = item; item = Items[id]; }
-	else if (nundef(item.id)) { id = item.id = iRegister(item); }
-	else { id = item.id; if (nundef(Items[id])) Items[id] = item; }
-	if (nundef(item.live)) item.live = {};
-	l = item.live;
-	for (const k in props) {
-		let val = props[k];
-		if (nundef(val)) {
-			continue;
+function addKeys(ofrom, oto) { for (const k in ofrom) if (nundef(oto[k])) oto[k] = ofrom[k]; return oto; }
+function addKeyup(k, f) {
+	if (nundef(DA.keyup)) DA.keyup = {};
+	DA.keyup[k] = f;
+}
+function addSimpleProps(ofrom, oto = {}) { for (const k in ofrom) { if (nundef(oto[k]) && isLiteral(k)) oto[k] = ofrom[k]; } return oto; }
+function allElementsFromPoint(x, y) {
+	var element, elements = [];
+	var old_visibility = [];
+	while (true) {
+		element = document.elementFromPoint(x, y);
+		if (!element || element === document.documentElement) {
+			break;
 		}
-		l[k] = val;
-		if (k == 'div') val.id = id;
-		if (isdef(val.id) && val.id != id) {
-			lookupAddIfToList(val, ['memberOf'], id);
-		}
+		elements.push(element);
+		old_visibility.push(element.style.visibility);
+		element.style.visibility = 'hidden'; // Temporarily hide the element (without changing the layout)
 	}
-}
-function iDiv(i) { return isdef(i.live) ? i.live.div : isdef(i.div) ? i.div : i; }
-function iGetl(item, key) { return item.live[key]; }
-function iGrid(rows, cols, dParent, styles) {
-	styles.display = 'inline-block';
-	let items = [];
-	let index = 0;
-	for (let i = 0; i < rows; i++) {
-		for (let j = 0; j < cols; j++) {
-			let d = mDiv(dParent, styles);
-			let item = { row: i, col: j, index: index };
-			index += 1;
-			iAdd(item, { div: d });
-			items.push(item);
-		}
-		mLinebreak(dParent);
+	for (var k = 0; k < elements.length; k++) {
+		elements[k].style.visibility = old_visibility[k];
 	}
-	return items;
+	elements.reverse();
+	return elements;
 }
-function iLabel(i) { return isdef(i.live) ? i.live.dLabel : isdef(i.dLabel) ? i.dLabel : null; }
-function iMeasure(item, sizingOptions) {
-	if (nundef(iDiv(item))) return;
-	setRect(iDiv(item), valf(sizingOptions, { hgrow: true, wgrow: true }));
+function allIntegers(s) {
+	return s.match(/\d+\.\d+|\d+\b|\d+(?=\w)/g).map(v => {
+		return +v;
+	});
 }
-function iRegister(item, id) { let uid = isdef(id) ? id : getUID(); Items[uid] = item; return uid; }
+function allNumbers(s) {
+	let m = s.match(/\-.\d+|\-\d+|\.\d+|\d+\.\d+|\d+\b|\d+(?=\w)/g);
+	if (m) return m.map(v => Number(v)); else return null;
+}
+function alphaToHex(zero1) {
+	zero1 = Math.round(zero1 * 100) / 100;
+	var alpha = Math.round(zero1 * 255);
+	var hex = (alpha + 0x10000)
+		.toString(16)
+		.substr(-2)
+		.toUpperCase();
+	var perc = Math.round(zero1 * 100);
+	return hex;
+} //ok
 function animateProperty(elem, prop, start, middle, end, msDuration) {
 	let kflist = [];
 	for (const v of [start, middle, end]) {
@@ -709,21 +444,7 @@ function animateProperty(elem, prop, start, middle, end, msDuration) {
 	}
 	elem.animate(kflist, { duration: msDuration });
 }
-function gSize(g, w, h, shape = null, iChild = 0) {
-	let el = (getTypeOf(g) != 'g') ? g : g.children[iChild];
-	let t = getTypeOf(el);
-	switch (t) {
-		case 'rect': el.setAttribute('width', w); el.setAttribute('height', h); el.setAttribute('x', -w / 2); el.setAttribute('y', -h / 2); break;
-		case 'ellipse': el.setAttribute('rx', w / 2); el.setAttribute('ry', h / 2); break;
-		default:
-			if (shape) {
-				switch (shape) {
-					case 'hex': let pts = size2hex(w, h); el.setAttribute('points', pts); break;
-				}
-			}
-	}
-	return el;
-}
+function any(arr, cond) { return !isEmpty(arr.filter(cond)); }
 function anyColorToStandardString(cAny, a, allowHsl = false) {
 	if (Array.isArray(cAny)) {
 		if (cAny.length < 3) {
@@ -804,16 +525,48 @@ function anyColorToStandardString(cAny, a, allowHsl = false) {
 		}
 	}
 } //ok
-function alphaToHex(zero1) {
-	zero1 = Math.round(zero1 * 100) / 100;
-	var alpha = Math.round(zero1 * 255);
-	var hex = (alpha + 0x10000)
-		.toString(16)
-		.substr(-2)
-		.toUpperCase();
-	var perc = Math.round(zero1 * 100);
-	return hex;
-} //ok
+function arrChildren(elem) { return [...elem.children]; }
+function arrCount(arr, func) { let filt = arr.filter(func); return filt.length; }
+function arrFlatten(arr) {
+	let res = [];
+	for (let i = 0; i < arr.length; i++) {
+		for (let j = 0; j < arr[i].length; j++) {
+			res.push(arr[i][j]);
+		}
+	}
+	return res;
+}
+function arrLast(arr) { return arr.length > 0 ? arr[arr.length - 1] : null; }
+function arrMax(arr) { return arr.reduce((m, n) => Math.max(m, n)); }
+function arrMinMax(arr, func) {
+	if (nundef(func)) func = x => x;
+	let min = func(arr[0]), max = func(arr[0]), imin = 0, imax = 0;
+	for (let i = 1, len = arr.length; i < len; i++) {
+		let v = func(arr[i]);
+		if (v < min) {
+			min = v; imin = i;
+		} else if (v > max) {
+			max = v; imax = i;
+		}
+	}
+	return { min: min, imin: imin, max: max, imax: imax };
+}
+function arrMinus(a, b) { let res = a.filter(x => !b.includes(x)); return res; }
+function arrPairs(a) {
+	let res = [];
+	for (let i = 0; i < a.length; i++) {
+		for (let j = i + 1; j < a.length; j++) {
+			res.push([a[i], a[j]]);
+		}
+	}
+	return res;
+}
+function arrPlus(a, b) { let res = a.concat(b); return res; }
+function arrReplaceAtInPlace(arr, index, val) { arr[index] = val; }
+function arrSum(arr, props) { if (!isList(props)) props = [props]; return arr.reduce((a, b) => a + (lookup(b, props) || 0), 0); }
+function arrSwap2d(arr, r1, c1, r2, c2) { let h = arr[r1][c1]; arr[r1][c1] = arr[r2][c2]; arr[r2][c2] = h; }
+function arrTake(arr, n) { return takeFromStart(arr, n); }
+function arrWithout(a, b) { return arrMinus(a, b); }
 function bestContrastingColor(color, colorlist) {
 	let contrast = 0;
 	let result = null;
@@ -827,41 +580,50 @@ function bestContrastingColor(color, colorlist) {
 	}
 	return result;
 }
-function helleFarbe(contrastTo, minDiff = 25, mod = 30, start = 0) {
-	let wheel = getHueWheel(contrastTo, minDiff, mod, start);
-	let hue = chooseRandom(wheel);
-	let hsl = colorHSLBuild(hue, 100, 50);
-	return hsl;
+function capitalize(s) {
+	if (typeof s !== 'string') return '';
+	return s.charAt(0).toUpperCase() + s.slice(1);
 }
-function getColorWheel(contrastTo, n) {
-	let hc = colorHue(contrastTo);
-	let wheel = [];
-	let start = hc;
-	let inc = Math.round(360 / (n + 1));
-	start += inc;
-	for (let i = 0; i < n; i++) {
-		wheel.push(start % 360);
-		start += inc;
+function choose(arr, n, exceptIndices) {
+	var result = [];
+	var len = arr.length;
+	if (n >= arr.length) return arr;
+	var taken = new Array(len);
+	if (isdef(exceptIndices) && exceptIndices.length < len - n) {
+		for (const i of exceptIndices) if (i >= 0 && i <= len) taken[i] = true;
 	}
-	return wheel.map(x => colorHSLBuild(x));
-}
-function getHueWheel(contrastTo, minDiff = 25, mod = 30, start = 0) {
-	let hc = colorHue(contrastTo);
-	let wheel = [];
-	while (start < 360) {
-		let d1 = Math.abs((start + 360) - hc);
-		let d2 = Math.abs((start) - hc);
-		let d3 = Math.abs((start - 360) - hc);
-		let min = Math.min(d1, d2, d3);
-		if (min > minDiff) wheel.push(start);
-		start += mod;
+	if (n > len) n = len;
+	while (result.length < n) {
+		var iRandom = Math.floor(Math.random() * len);
+		while (taken[iRandom]) { iRandom += 1; if (iRandom >= len) iRandom = 0; }
+		result.push(arr[iRandom]);
+		taken[iRandom] = true;
 	}
-	return wheel;
+	return result;
 }
-function colorHue(cAny) {
-	let hsl = colorHSL(cAny, true);
-	return hsl.h;
-} //ok
+function chooseRandom(arr, condFunc = null) {
+	let len = arr.length;
+	if (condFunc) {
+		let best = arr.filter(condFunc);
+		if (!isEmpty(best)) return chooseRandom(best);
+	}
+	let idx = Math.floor(Math.random() * len);
+	return arr[idx];
+}
+function classByName(name) { return eval(name); }
+function clearElement(elem) {
+	if (isString(elem)) elem = document.getElementById(elem);
+	if (window.jQuery == undefined) { elem.innerHTML = ''; return elem; }
+	while (elem.firstChild) {
+		$(elem.firstChild).remove();
+	}
+	return elem;
+}
+function coin(percent = 50) {
+	let r = Math.random();
+	r *= 100;
+	return r < percent;
+}
 function colorHSL(cAny, asObject = false) {
 	let res = anyColorToStandardString(cAny, undefined, true);
 	let shsl = res;
@@ -886,9 +648,10 @@ function colorHSL(cAny, asObject = false) {
 	}
 } //ok
 function colorHSLBuild(hue, sat = 100, lum = 50) { let result = "hsl(" + hue + ',' + sat + '%,' + lum + '%)'; return result; }
-function colorTrans(cAny, alpha = 0.5) {
-	return anyColorToStandardString(cAny, alpha);
-}
+function colorHue(cAny) {
+	let hsl = colorHSL(cAny, true);
+	return hsl.h;
+} //ok
 function colorIdealText(bg, grayPreferred = false) {
 	let rgb = colorRGB(bg, true);
 	const nThreshold = 105; //40; //105;
@@ -900,6 +663,7 @@ function colorIdealText(bg, grayPreferred = false) {
 	if (grayPreferred) foreColor = 255 - bgDelta < nThreshold ? 'dimgray' : 'snow';
 	return foreColor;
 }
+function colorNameToHex(cName) { let key = cName.toLowerCase(); ensureColorNames(); return key in ColorNames ? ColorNames[key] : randomHexColor(); } //ok
 function colorRGB(cAny, asObject = false) {
 	let res = anyColorToStandardString(cAny);
 	let srgb = res;
@@ -913,6 +677,98 @@ function colorRGB(cAny, asObject = false) {
 		return srgb;
 	}
 } //ok
+function colorTrans(cAny, alpha = 0.5) {
+	return anyColorToStandardString(cAny, alpha);
+}
+function computeColor(c) { return (c == 'random') ? randomColor() : c; }
+function computeColorX(c) {
+	let res = c;
+	if (isList(c)) return chooseRandom(c);
+	else if (isString(c) && startsWith(c, 'rand')) {
+		res = randomColor();
+		let spec = c.substring(4);
+		if (isdef(window['color' + spec])) {
+			res = window['color' + spec](res);
+		}
+	}
+	return res;
+}
+function contains(s, sSub) { return s.toLowerCase().includes(sSub.toLowerCase()); }
+function convertUmlaute(w) {
+	w = replaceAll(w, 'ue', 'ü');
+	w = replaceAll(w, 'ae', 'ä');
+	w = replaceAll(w, 'oe', 'ö');
+	w = replaceAll(w, 'UE', 'Ü');
+	w = replaceAll(w, 'AE', 'Ä');
+	w = replaceAll(w, 'OE', 'Ö');
+	w = replaceAll(w, 'ß', 'ss');
+	return w;
+}
+function copyKeys(ofrom, oto, except = {}, only) {
+	let keys = isdef(only) ? only : Object.keys(ofrom);
+	for (const k of keys) {
+		if (isdef(except[k])) continue;
+		oto[k] = ofrom[k];
+	}
+}
+function createElementFromHtml(s) { return createElementFromHTML(s); }
+function createElementFromHTML(htmlString) {
+	var div = document.createElement('div');
+	div.innerHTML = htmlString.trim();// '<div>halloooooooooooooo</div>';// htmlString.trim();
+	return div.firstChild;
+}
+function csv2list(allText, hasHeadings = true) {
+	var numHeadings = 11;  // or however many elements there are in each row
+	var allTextLines = allText.split(/\r\n|\n/);
+	var headings = allTextLines[0].split(',');
+	numHeadings = headings.length;
+	let entries = allTextLines.splice(1);
+	var records = [];
+	for (const e of entries) {
+		let o = {};
+		let values = e.split(',');
+		for (let i = 0; i < numHeadings; i++) {
+			let k = headings[i];
+			o[k] = values[i];
+		}
+		records.push(o);
+	}
+	return records;
+}
+function ddStart(ev, source, isCopy = true, clearTarget = false) {
+	if (!canAct() || isdef(DDInfo.dragStartHandler) && !DDInfo.dragStartHandler(source)) return;
+	ev.preventDefault();
+	ev.stopPropagation();
+	DDInfo.source = source;
+	let d = iDiv(source);
+	var clone = DragElem = DDInfo.clone = d.cloneNode(true);
+	clone.isCopy = isCopy;
+	clone.clearTarget = clearTarget;
+	mAppend(document.body, clone);//mClass(clone, 'letter')
+	mClass(clone, 'dragelem');//der clone muss class 'dragelem' sein
+	mStyle(clone, { left: ev.clientX - ev.offsetX, top: ev.clientY - ev.offsetY });//der clone wird richtig plaziert
+	DDInfo.dragOffset = clone.drag = { offsetX: ev.offsetX, offsetY: ev.offsetY };
+	document.body.onmousemove = onMovingCloneAround;
+	document.body.onmouseup = onReleaseClone;// ev=>console.log('mouse up')
+}
+function distance(x1, y1, x2, y2) { return Math.sqrt(dSquare({ x: x1, y: y1 }, { x: x2, y: y2 })); }
+function dSquare(pos1, pos2) {
+	let dx = pos1.x - pos2.x;
+	dx *= dx;
+	let dy = pos1.y - pos2.y;
+	dy *= dy;
+	return dx + dy;
+}
+function enableDD(sources, targets, dropHandler, isCopy, clearTarget, dragStartHandler) {
+	DDInfo = { sources: sources, targets: targets, dropHandler: dropHandler, dragStartHandler };
+	let sourceDivs = sources.map(x => iDiv(x));
+	for (let i = 0; i < sources.length; i++) {
+		let source = sources[i];
+		let d = sourceDivs[i];
+		d.onmousedown = (ev) => ddStart(ev, source, isCopy, clearTarget);
+	}
+}
+function endsWith(s, sSub) { let i = s.indexOf(sSub); return i >= 0 && i == s.length - sSub.length; }
 function ensureColorNames() {
 	if (isdef(ColorNames)) return;
 	ColorNames = {};
@@ -922,160 +778,97 @@ function ensureColorNames() {
 		ColorNames[names[i].toLowerCase()] = '#' + hexes[i];
 	}
 }
-function colorNameToHex(cName) { let key = cName.toLowerCase(); ensureColorNames(); return key in ColorNames ? ColorNames[key] : randomHexColor(); } //ok
+function errlog() { console.log('ERROR!', ...arguments); }
+function evToClosestId(ev) {
+	let elem = findParentWithId(ev.target);
+	return elem.id;
+}
+function evToId(ev) {
+	let elem = findParentWithId(ev.target);
+	return elem.id;
+}
+function evToProp(ev, prop) {
+	let x = ev.target;
+	while (isdef(x) && nundef(x.getAttribute(prop))) x = x.parentNode;
+	return isdef(x) ? x.getAttribute(prop) : null;
+}
+function extendRect(r4) { r4.l = r4.x; r4.t = r4.y; r4.r = r4.x + r4.w; r4.b = r4.t + r4.h; }
+function extendWidth(w) { return replaceEvery(w, 'w', 2); }
+function filterByLength(w, min, max, allowSpaces = false) { return w.length <= max && w.length >= min && (allowSpaces || !w.includes(' ')); }
+function filterDistinctLetters(s) {
+	let arr = [];
+	for (let i = 0; i < s.length; i++) {
+		let ch = s[i];
+		if (isLetter(ch) && !arr.includes(ch)) arr.push(ch);
+	}
+	return arr;
+}
+function findCommonPrefix(s1, s2) {
+	let i = 0;
+	let res = '';
+	while (i < s1.length && i < s2.length) {
+		if (s1[i] != s2[i]) break; else res += s1[i];
+		i += 1;
+	}
+	return res;
+}
+function findLongestWord(arr) { return arr[arrMinMax(arr, x => x.length).imax]; }
+function findParentWithId(elem) { while (elem && !elem.id) { elem = elem.parentNode; } return elem; }
+function firstCond(arr, func) {
+	if (nundef(arr)) return null;
+	for (const a of arr) {
+		if (func(a)) return a;
+	}
+	return null;
+}
+function firstCondDict(dict, func) {
+	for (const k in dict) { if (func(dict[k])) return k; }
+	return null;
+}
+function firstCondDictKey() { return firstCondDictKeys(...arguments); }
+function firstCondDictKeys(dict, func) {
+	for (const k in dict) { if (func(k)) return k; }
+	return null;
+}
+function firstNumber(s) {
+	if (s) {
+		let m = s.match(/-?\d+/);
+		if (m) {
+			let sh = m.shift();
+			if (sh) { return Number(sh); }
+		}
+	}
+	return null;
+}
+function fisherYates(array) {
+	var rnd, temp;
+	for (var i = array.length - 1; i; i--) {
+		rnd = Math.random() * i | 0;
+		temp = array[i];
+		array[i] = array[rnd];
+		array[rnd] = temp;
+	}
+	return array;
+}
+function format2Digits(i) { return (i < 10) ? "0" + i : i; }
+function fromUmlaut(w) {
+	if (isList(w)) {
+		let res = [];
+		for (const w1 of w) res.push(fromUmlaut(w1));
+		return res;
+	} else {
+		w = replaceAll(w, 'ü', 'ue');
+		w = replaceAll(w, 'ä', 'ae');
+		w = replaceAll(w, 'ö', 'oe');
+		w = replaceAll(w, 'Ü', 'UE');
+		w = replaceAll(w, 'Ä', 'AE');
+		w = replaceAll(w, 'Ö', 'OE');
+		return w;
+	}
+}
+function getBorderPropertyForDirection(dir) { return { 0: 'border-top', 1: 'border-right', 2: 'border-bottom', 3: 'border-left' }[dir]; }
+function getCenter(elem) { let r = isdef(elem.x) ? elem : getRect(elem); return { x: (r.w) / 2, y: (r.h) / 2 }; }
 function getColorDictColor(c) { return isdef(ColorDict[c]) ? ColorDict[c].c : c; }
-function getColorNames() {
-	return [
-		'AliceBlue',
-		'AntiqueWhite',
-		'Aqua',
-		'Aquamarine',
-		'Azure',
-		'Beige',
-		'Bisque',
-		'Black',
-		'BlanchedAlmond',
-		'Blue',
-		'BlueViolet',
-		'Brown',
-		'BurlyWood',
-		'CadetBlue',
-		'Chartreuse',
-		'Chocolate',
-		'Coral',
-		'CornflowerBlue',
-		'Cornsilk',
-		'Crimson',
-		'Cyan',
-		'DarkBlue',
-		'DarkCyan',
-		'DarkGoldenRod',
-		'DarkGray',
-		'DarkGrey',
-		'DarkGreen',
-		'DarkKhaki',
-		'DarkMagenta',
-		'DarkOliveGreen',
-		'DarkOrange',
-		'DarkOrchid',
-		'DarkRed',
-		'DarkSalmon',
-		'DarkSeaGreen',
-		'DarkSlateBlue',
-		'DarkSlateGray',
-		'DarkSlateGrey',
-		'DarkTurquoise',
-		'DarkViolet',
-		'DeepPink',
-		'DeepSkyBlue',
-		'DimGray',
-		'DimGrey',
-		'DodgerBlue',
-		'FireBrick',
-		'FloralWhite',
-		'ForestGreen',
-		'Fuchsia',
-		'Gainsboro',
-		'GhostWhite',
-		'Gold',
-		'GoldenRod',
-		'Gray',
-		'Grey',
-		'Green',
-		'GreenYellow',
-		'HoneyDew',
-		'HotPink',
-		'IndianRed',
-		'Indigo',
-		'Ivory',
-		'Khaki',
-		'Lavender',
-		'LavenderBlush',
-		'LawnGreen',
-		'LemonChiffon',
-		'LightBlue',
-		'LightCoral',
-		'LightCyan',
-		'LightGoldenRodYellow',
-		'LightGray',
-		'LightGrey',
-		'LightGreen',
-		'LightPink',
-		'LightSalmon',
-		'LightSeaGreen',
-		'LightSkyBlue',
-		'LightSlateGray',
-		'LightSlateGrey',
-		'LightSteelBlue',
-		'LightYellow',
-		'Lime',
-		'LimeGreen',
-		'Linen',
-		'Magenta',
-		'Maroon',
-		'MediumAquaMarine',
-		'MediumBlue',
-		'MediumOrchid',
-		'MediumPurple',
-		'MediumSeaGreen',
-		'MediumSlateBlue',
-		'MediumSpringGreen',
-		'MediumTurquoise',
-		'MediumVioletRed',
-		'MidnightBlue',
-		'MintCream',
-		'MistyRose',
-		'Moccasin',
-		'NavajoWhite',
-		'Navy',
-		'OldLace',
-		'Olive',
-		'OliveDrab',
-		'Orange',
-		'OrangeRed',
-		'Orchid',
-		'PaleGoldenRod',
-		'PaleGreen',
-		'PaleTurquoise',
-		'PaleVioletRed',
-		'PapayaWhip',
-		'PeachPuff',
-		'Peru',
-		'Pink',
-		'Plum',
-		'PowderBlue',
-		'Purple',
-		'RebeccaPurple',
-		'Red',
-		'RosyBrown',
-		'RoyalBlue',
-		'SaddleBrown',
-		'Salmon',
-		'SandyBrown',
-		'SeaGreen',
-		'SeaShell',
-		'Sienna',
-		'Silver',
-		'SkyBlue',
-		'SlateBlue',
-		'SlateGray',
-		'SlateGrey',
-		'Snow',
-		'SpringGreen',
-		'SteelBlue',
-		'Tan',
-		'Teal',
-		'Thistle',
-		'Tomato',
-		'Turquoise',
-		'Violet',
-		'Wheat',
-		'White',
-		'WhiteSmoke',
-		'Yellow',
-		'YellowGreen'
-	];
-} //ok
 function getColorHexes(x) {
 	return [
 		'f0f8ff',
@@ -1228,6 +1021,170 @@ function getColorHexes(x) {
 		'9acd32'
 	];
 } //ok
+function getColorNames() {
+	return [
+		'AliceBlue',
+		'AntiqueWhite',
+		'Aqua',
+		'Aquamarine',
+		'Azure',
+		'Beige',
+		'Bisque',
+		'Black',
+		'BlanchedAlmond',
+		'Blue',
+		'BlueViolet',
+		'Brown',
+		'BurlyWood',
+		'CadetBlue',
+		'Chartreuse',
+		'Chocolate',
+		'Coral',
+		'CornflowerBlue',
+		'Cornsilk',
+		'Crimson',
+		'Cyan',
+		'DarkBlue',
+		'DarkCyan',
+		'DarkGoldenRod',
+		'DarkGray',
+		'DarkGrey',
+		'DarkGreen',
+		'DarkKhaki',
+		'DarkMagenta',
+		'DarkOliveGreen',
+		'DarkOrange',
+		'DarkOrchid',
+		'DarkRed',
+		'DarkSalmon',
+		'DarkSeaGreen',
+		'DarkSlateBlue',
+		'DarkSlateGray',
+		'DarkSlateGrey',
+		'DarkTurquoise',
+		'DarkViolet',
+		'DeepPink',
+		'DeepSkyBlue',
+		'DimGray',
+		'DimGrey',
+		'DodgerBlue',
+		'FireBrick',
+		'FloralWhite',
+		'ForestGreen',
+		'Fuchsia',
+		'Gainsboro',
+		'GhostWhite',
+		'Gold',
+		'GoldenRod',
+		'Gray',
+		'Grey',
+		'Green',
+		'GreenYellow',
+		'HoneyDew',
+		'HotPink',
+		'IndianRed',
+		'Indigo',
+		'Ivory',
+		'Khaki',
+		'Lavender',
+		'LavenderBlush',
+		'LawnGreen',
+		'LemonChiffon',
+		'LightBlue',
+		'LightCoral',
+		'LightCyan',
+		'LightGoldenRodYellow',
+		'LightGray',
+		'LightGrey',
+		'LightGreen',
+		'LightPink',
+		'LightSalmon',
+		'LightSeaGreen',
+		'LightSkyBlue',
+		'LightSlateGray',
+		'LightSlateGrey',
+		'LightSteelBlue',
+		'LightYellow',
+		'Lime',
+		'LimeGreen',
+		'Linen',
+		'Magenta',
+		'Maroon',
+		'MediumAquaMarine',
+		'MediumBlue',
+		'MediumOrchid',
+		'MediumPurple',
+		'MediumSeaGreen',
+		'MediumSlateBlue',
+		'MediumSpringGreen',
+		'MediumTurquoise',
+		'MediumVioletRed',
+		'MidnightBlue',
+		'MintCream',
+		'MistyRose',
+		'Moccasin',
+		'NavajoWhite',
+		'Navy',
+		'OldLace',
+		'Olive',
+		'OliveDrab',
+		'Orange',
+		'OrangeRed',
+		'Orchid',
+		'PaleGoldenRod',
+		'PaleGreen',
+		'PaleTurquoise',
+		'PaleVioletRed',
+		'PapayaWhip',
+		'PeachPuff',
+		'Peru',
+		'Pink',
+		'Plum',
+		'PowderBlue',
+		'Purple',
+		'RebeccaPurple',
+		'Red',
+		'RosyBrown',
+		'RoyalBlue',
+		'SaddleBrown',
+		'Salmon',
+		'SandyBrown',
+		'SeaGreen',
+		'SeaShell',
+		'Sienna',
+		'Silver',
+		'SkyBlue',
+		'SlateBlue',
+		'SlateGray',
+		'SlateGrey',
+		'Snow',
+		'SpringGreen',
+		'SteelBlue',
+		'Tan',
+		'Teal',
+		'Thistle',
+		'Tomato',
+		'Turquoise',
+		'Violet',
+		'Wheat',
+		'White',
+		'WhiteSmoke',
+		'Yellow',
+		'YellowGreen'
+	];
+} //ok
+function getColorWheel(contrastTo, n) {
+	let hc = colorHue(contrastTo);
+	let wheel = [];
+	let start = hc;
+	let inc = Math.round(360 / (n + 1));
+	start += inc;
+	for (let i = 0; i < n; i++) {
+		wheel.push(start % 360);
+		start += inc;
+	}
+	return wheel.map(x => colorHSLBuild(x));
+}
 function getContrast(rgb1, rgb2) {
 	var lum1 = luminance(rgb1[0], rgb1[1], rgb1[2]);
 	var lum2 = luminance(rgb2[0], rgb2[1], rgb2[2]);
@@ -1236,27 +1193,41 @@ function getContrast(rgb1, rgb2) {
 	return (brightest + 0.05)
 		/ (darkest + 0.05);
 }
-function luminance(r, g, b) {
-	var a = [r, g, b].map(function (v) {
-		v /= 255;
-		return v <= 0.03928
-			? v / 12.92
-			: Math.pow((v + 0.055) / 1.055, 2.4);
-	});
-	return a[0] * 0.2126 + a[1] * 0.7152 + a[2] * 0.0722;
-}
-function computeColor(c) { return (c == 'random') ? randomColor() : c; }
-function computeColorX(c) {
-	let res = c;
-	if (isList(c)) return chooseRandom(c);
-	else if (isString(c) && startsWith(c, 'rand')) {
-		res = randomColor();
-		let spec = c.substring(4);
-		if (isdef(window['color' + spec])) {
-			res = window['color' + spec](res);
-		}
+function getCorrectPrefix(label, text) {
+	let req = label.toLowerCase();
+	let answer = text.toLowerCase();
+	let res1 = removeNonAlphanum(req);
+	let res2 = removeNonAlphanum(answer);
+	let req1 = res1.alphas;// removeNonAlphanum(req);
+	let answer1 = res2.alphas; //removeNonAlphanum(answer);
+	let whites = res1.whites;
+	let common = findCommonPrefix(req1, answer1);
+	let nletters = common.length;
+	let ireal = 0;
+	let icompact = 0;
+	let iwhites = 0;
+	let correctPrefix = '';
+	while (icompact < nletters) {
+		if (req[ireal] == common[icompact]) { correctPrefix += label[ireal]; icompact += 1; }
+		else if (whites[iwhites] == req[ireal]) { correctPrefix += label[ireal]; iwhites += 1; }
+		else break;
+		ireal += 1;
 	}
-	return res;
+	return correctPrefix;
+}
+function getEllipsePoints(radx, rady, n, disp = 0) {
+	let pts = [];
+	let i = 0;
+	let da = 360 / n;
+	let angle = disp;
+	while (i < n) {
+		let px = radx * Math.cos(toRadian(angle));
+		let py = rady * Math.sin(toRadian(angle));
+		pts.push({ X: px, Y: py });
+		angle += da;
+		i++;
+	}
+	return pts;
 }
 function getExtendedColors(bg, fg, alpha) {
 	/* handles values random, inherit, contrast	*/
@@ -1269,88 +1240,146 @@ function getExtendedColors(bg, fg, alpha) {
 	if (isdef(alpha)) bg = colorTrans(bg, alpha);
 	return [bg, fg];
 }
-function pSBC(p, c0, c1, l) {
-	let r,
-		g,
-		b,
-		P,
-		f,
-		t,
-		h,
-		i = parseInt,
-		m = Math.round,
-		a = typeof c1 == 'string';
-	if (typeof p != 'number' || p < -1 || p > 1 || typeof c0 != 'string' || (c0[0] != 'r' && c0[0] != '#') || (c1 && !a)) return null;
-	if (!this.pSBCr)
-		this.pSBCr = d => {
-			let n = d.length,
-				x = {};
-			if (n > 9) {
-				([r, g, b, a] = d = d.split(',')), (n = d.length);
-				if (n < 3 || n > 4) return null;
-				(x.r = i(r[3] == 'a' ? r.slice(5) : r.slice(4))), (x.g = i(g)), (x.b = i(b)), (x.a = a ? parseFloat(a) : -1);
-			} else {
-				if (n == 8 || n == 6 || n < 4) return null;
-				if (n < 6) d = '#' + d[1] + d[1] + d[2] + d[2] + d[3] + d[3] + (n > 4 ? d[4] + d[4] : '');
-				d = i(d.slice(1), 16);
-				if (n == 9 || n == 5) (x.r = (d >> 24) & 255), (x.g = (d >> 16) & 255), (x.b = (d >> 8) & 255), (x.a = m((d & 255) / 0.255) / 1000);
-				else (x.r = d >> 16), (x.g = (d >> 8) & 255), (x.b = d & 255), (x.a = -1);
-			}
-			return x;
-		};
-	(h = c0.length > 9),
-		(h = a ? (c1.length > 9 ? true : c1 == 'c' ? !h : false) : h),
-		(f = pSBCr(c0)),
-		(P = p < 0),
-		(t = c1 && c1 != 'c' ? pSBCr(c1) : P ? { r: 0, g: 0, b: 0, a: -1 } : { r: 255, g: 255, b: 255, a: -1 }),
-		(p = P ? p * -1 : p),
-		(P = 1 - p);
-	if (!f || !t) return null;
-	if (l) (r = m(P * f.r + p * t.r)), (g = m(P * f.g + p * t.g)), (b = m(P * f.b + p * t.b));
-	else (r = m((P * f.r ** 2 + p * t.r ** 2) ** 0.5)), (g = m((P * f.g ** 2 + p * t.g ** 2) ** 0.5)), (b = m((P * f.b ** 2 + p * t.b ** 2) ** 0.5));
-	(a = f.a), (t = t.a), (f = a >= 0 || t >= 0), (a = f ? (a < 0 ? t : t < 0 ? a : a * P + t * p) : 0);
-	if (h) return 'rgb' + (f ? 'a(' : '(') + r + ',' + g + ',' + b + (f ? ',' + m(a * 1000) / 1000 : '') + ')';
-	else return '#' + (4294967296 + r * 16777216 + g * 65536 + b * 256 + (f ? m(a * 255) : 0)).toString(16).slice(1, f ? undefined : -2);
-} //ok SUPER COOL!!!!
-function hexToHSL(H) {
-	let ex = /^#([\da-f]{3}){1,2}$/i;
-	if (ex.test(H)) {
-		let r = 0,
-			g = 0,
-			b = 0;
-		if (H.length == 4) {
-			r = '0x' + H[1] + H[1];
-			g = '0x' + H[2] + H[2];
-			b = '0x' + H[3] + H[3];
-		} else if (H.length == 7) {
-			r = '0x' + H[1] + H[2];
-			g = '0x' + H[3] + H[4];
-			b = '0x' + H[5] + H[6];
-		}
-		r /= 255;
-		g /= 255;
-		b /= 255;
-		let cmin = Math.min(r, g, b),
-			cmax = Math.max(r, g, b),
-			delta = cmax - cmin,
-			h = 0,
-			s = 0,
-			l = 0;
-		if (delta == 0) h = 0;
-		else if (cmax == r) h = ((g - b) / delta) % 6;
-		else if (cmax == g) h = (b - r) / delta + 2;
-		else h = (r - g) / delta + 4;
-		h = Math.round(h * 60);
-		if (h < 0) h += 360;
-		l = (cmax + cmin) / 2;
-		s = delta == 0 ? 0 : delta / (1 - Math.abs(2 * l - 1));
-		s = +(s * 100).toFixed(1);
-		l = +(l * 100).toFixed(1);
-		return 'hsl(' + h + ',' + s + '%,' + l + '%)';
-	} else {
-		return 'Invalid input color';
+function getFruid(pref = '') {
+	const alpha = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+	FRUIDCounter += 1;
+	if (FRUIDCounter < alpha.length) return pref + alpha[FRUIDCounter];
+	return pref + FRUIDCounter - alpha.length;
+}
+function getHueWheel(contrastTo, minDiff = 25, mod = 30, start = 0) {
+	let hc = colorHue(contrastTo);
+	let wheel = [];
+	while (start < 360) {
+		let d1 = Math.abs((start + 360) - hc);
+		let d2 = Math.abs((start) - hc);
+		let d3 = Math.abs((start - 360) - hc);
+		let min = Math.min(d1, d2, d3);
+		if (min > minDiff) wheel.push(start);
+		start += mod;
 	}
-} //ok
+	return wheel;
+}
+function getIndicesCondi(arr, func) {
+	let res = [];
+	for (let i = 0; i < arr.length; i++) {
+		if (func(arr[i], i)) res.push(i);
+	}
+	return res;
+}
+function getLetterSwapEncoding(s) {
+	let di = getRandomLetterMapping(s);
+	let result = '';
+	for (let i = 0; i < s.length; i++) {
+		result += s[i] in di ? di[s[i]] : s[i];
+	}
+	return result;
+}
+function getRandomLetterMapping(s) {
+	if (nundef(s)) s = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+	let alphabet = filterDistinctLetters(s);
+	let alphabet2 = shuffle(jsCopy(alphabet));
+	let di = {};
+	for (let i = 0; i < alphabet.length; i++) {
+		di[alphabet[i]] = alphabet2[i];
+	}
+	return di;
+}
+function getRect(elem, relto) {
+	if (isString(elem)) elem = document.getElementById(elem);
+	let res = elem.getBoundingClientRect();
+	if (isdef(relto)) {
+		let b2 = relto.getBoundingClientRect();
+		let b1 = res;
+		res = {
+			x: b1.x - b2.x,
+			y: b1.y - b2.y,
+			left: b1.left - b2.left,
+			top: b1.top - b2.top,
+			right: b1.right - b2.right,
+			bottom: b1.bottom - b2.bottom,
+			width: b1.width,
+			height: b1.height
+		};
+	}
+	let r4 = { x: res.left, y: res.top, w: res.width, h: res.height };
+	extendRect(r4); //r4.l = r4.x; r4.t = r4.y; r4.r = r4.x + r4.w; r4.b = r4.t + r4.h;
+	return r4;
+}
+function getRectInt(elem, relto) {
+	if (isString(elem)) elem = document.getElementById(elem);
+	let res = elem.getBoundingClientRect();
+	if (isdef(relto)) {
+		let b2 = relto.getBoundingClientRect();
+		let b1 = res;
+		res = {
+			x: b1.x - b2.x,
+			y: b1.y - b2.y,
+			left: b1.left - b2.left,
+			top: b1.top - b2.top,
+			right: b1.right - b2.right,
+			bottom: b1.bottom - b2.bottom,
+			width: b1.width,
+			height: b1.height
+		};
+	}
+	let r4 = { x: Math.round(res.left), y: Math.round(res.top), w: Math.round(res.width), h: Math.round(res.height) };
+	extendRect(r4); //r4.l = r4.x; r4.t = r4.y; r4.r = r4.x + r4.w; r4.b = r4.t + r4.h;
+	return r4;
+}
+function getSize(elem) { let r = getRectInt(elem); return { w: r.w, h: r.h, sz: Math.min(r.w, r.h) }; }
+function getSizeWithStyles(text, styles) {
+	var d = document.createElement("div");
+	document.body.appendChild(d);
+	let cStyles = jsCopy(styles);
+	cStyles.position = 'fixed';
+	cStyles.opacity = 0;
+	cStyles.top = '-9999px';
+	mStyle(d, cStyles);
+	d.innerHTML = text;
+	height = d.clientHeight;
+	width = d.clientWidth;
+	d.parentNode.removeChild(d);
+	return { w: Math.round(width), h: Math.round(height) };
+}
+function getTypeOf(param) {
+	let type = typeof param;
+	if (type == 'string') {
+		return 'string';
+	}
+	if (type == 'object') {
+		type = param.constructor.name;
+		if (startsWith(type, 'SVG')) type = stringBefore(stringAfter(type, 'SVG'), 'Element').toLowerCase();
+		else if (startsWith(type, 'HTML')) type = stringBefore(stringAfter(type, 'HTML'), 'Element').toLowerCase();
+	}
+	let lType = type.toLowerCase();
+	if (lType.includes('event')) type = 'event';
+	return type;
+}
+function getUID(pref = '') {
+	UIDCounter += 1;
+	return pref + '_' + UIDCounter;
+}
+function gSize(g, w, h, shape = null, iChild = 0) {
+	let el = (getTypeOf(g) != 'g') ? g : g.children[iChild];
+	let t = getTypeOf(el);
+	switch (t) {
+		case 'rect': el.setAttribute('width', w); el.setAttribute('height', h); el.setAttribute('x', -w / 2); el.setAttribute('y', -h / 2); break;
+		case 'ellipse': el.setAttribute('rx', w / 2); el.setAttribute('ry', h / 2); break;
+		default:
+			if (shape) {
+				switch (shape) {
+					case 'hex': let pts = size2hex(w, h); el.setAttribute('points', pts); break;
+				}
+			}
+	}
+	return el;
+}
+function helleFarbe(contrastTo, minDiff = 25, mod = 30, start = 0) {
+	let wheel = getHueWheel(contrastTo, minDiff, mod, start);
+	let hue = chooseRandom(wheel);
+	let hsl = colorHSLBuild(hue, 100, 50);
+	return hsl;
+}
 function hexAToHSLA(H) {
 	let ex = /^#([\da-f]{4}){1,2}$/i;
 	if (ex.test(H)) {
@@ -1394,66 +1423,54 @@ function hexAToHSLA(H) {
 		return 'Invalid input color';
 	}
 } //ok
-function HSLToRGB(hsl, isPct) {
-	let ex = /^hsl\(((((([12]?[1-9]?\d)|[12]0\d|(3[0-5]\d))(\.\d+)?)|(\.\d+))(deg)?|(0|0?\.\d+)turn|(([0-6](\.\d+)?)|(\.\d+))rad)((,\s?(([1-9]?\d(\.\d+)?)|100|(\.\d+))%){2}|(\s(([1-9]?\d(\.\d+)?)|100|(\.\d+))%){2})\)$/i;
-	if (ex.test(hsl)) {
-		let sep = hsl.indexOf(',') > -1 ? ',' : ' ';
-		hsl = hsl
-			.substr(4)
-			.split(')')[0]
-			.split(sep);
-		isPct = isPct === true;
-		let h = hsl[0],
-			s = hsl[1].substr(0, hsl[1].length - 1) / 100,
-			l = hsl[2].substr(0, hsl[2].length - 1) / 100;
-		if (h.indexOf('deg') > -1) h = h.substr(0, h.length - 3);
-		else if (h.indexOf('rad') > -1) h = Math.round((h.substr(0, h.length - 3) / (2 * Math.PI)) * 360);
-		else if (h.indexOf('turn') > -1) h = Math.round(h.substr(0, h.length - 4) * 360);
-		if (h >= 360) h %= 360;
-		let c = (1 - Math.abs(2 * l - 1)) * s,
-			x = c * (1 - Math.abs(((h / 60) % 2) - 1)),
-			m = l - c / 2,
-			r = 0,
+function hexToHSL(H) {
+	let ex = /^#([\da-f]{3}){1,2}$/i;
+	if (ex.test(H)) {
+		let r = 0,
 			g = 0,
 			b = 0;
-		if (0 <= h && h < 60) {
-			r = c;
-			g = x;
-			b = 0;
-		} else if (60 <= h && h < 120) {
-			r = x;
-			g = c;
-			b = 0;
-		} else if (120 <= h && h < 180) {
-			r = 0;
-			g = c;
-			b = x;
-		} else if (180 <= h && h < 240) {
-			r = 0;
-			g = x;
-			b = c;
-		} else if (240 <= h && h < 300) {
-			r = x;
-			g = 0;
-			b = c;
-		} else if (300 <= h && h < 360) {
-			r = c;
-			g = 0;
-			b = x;
+		if (H.length == 4) {
+			r = '0x' + H[1] + H[1];
+			g = '0x' + H[2] + H[2];
+			b = '0x' + H[3] + H[3];
+		} else if (H.length == 7) {
+			r = '0x' + H[1] + H[2];
+			g = '0x' + H[3] + H[4];
+			b = '0x' + H[5] + H[6];
 		}
-		r = Math.round((r + m) * 255);
-		g = Math.round((g + m) * 255);
-		b = Math.round((b + m) * 255);
-		if (isPct) {
-			r = +((r / 255) * 100).toFixed(1);
-			g = +((g / 255) * 100).toFixed(1);
-			b = +((b / 255) * 100).toFixed(1);
-		}
-		return 'rgb(' + (isPct ? r + '%,' + g + '%,' + b + '%' : +r + ',' + +g + ',' + +b) + ')';
+		r /= 255;
+		g /= 255;
+		b /= 255;
+		let cmin = Math.min(r, g, b),
+			cmax = Math.max(r, g, b),
+			delta = cmax - cmin,
+			h = 0,
+			s = 0,
+			l = 0;
+		if (delta == 0) h = 0;
+		else if (cmax == r) h = ((g - b) / delta) % 6;
+		else if (cmax == g) h = (b - r) / delta + 2;
+		else h = (r - g) / delta + 4;
+		h = Math.round(h * 60);
+		if (h < 0) h += 360;
+		l = (cmax + cmin) / 2;
+		s = delta == 0 ? 0 : delta / (1 - Math.abs(2 * l - 1));
+		s = +(s * 100).toFixed(1);
+		l = +(l * 100).toFixed(1);
+		return 'hsl(' + h + ',' + s + '%,' + l + '%)';
 	} else {
 		return 'Invalid input color';
 	}
 } //ok
+function hide(elem) {
+	if (isString(elem)) elem = document.getElementById(elem);
+	if (nundef(elem)) return;
+	if (isSvg(elem)) {
+		elem.setAttribute('style', 'visibility:hidden;display:none');
+	} else {
+		elem.style.display = 'none';
+	}
+}
 function HSLAToRGBA(hsla, isPct) {
 	let ex = /^hsla\(((((([12]?[1-9]?\d)|[12]0\d|(3[0-5]\d))(\.\d+)?)|(\.\d+))(deg)?|(0|0?\.\d+)turn|(([0-6](\.\d+)?)|(\.\d+))rad)(((,\s?(([1-9]?\d(\.\d+)?)|100|(\.\d+))%){2},\s?)|((\s(([1-9]?\d(\.\d+)?)|100|(\.\d+))%){2}\s\/\s))((0?\.\d+)|[01]|(([1-9]?\d(\.\d+)?)|100|(\.\d+))%)\)$/i;
 	if (ex.test(hsla)) {
@@ -1524,42 +1541,860 @@ function HSLAToRGBA(hsla, isPct) {
 		return 'Invalid input color';
 	}
 } //ok
-function RGBToHSL(rgb) {
-	let ex = /^rgb\((((((((1?[1-9]?\d)|10\d|(2[0-4]\d)|25[0-5]),\s?)){2}|((((1?[1-9]?\d)|10\d|(2[0-4]\d)|25[0-5])\s)){2})((1?[1-9]?\d)|10\d|(2[0-4]\d)|25[0-5]))|((((([1-9]?\d(\.\d+)?)|100|(\.\d+))%,\s?){2}|((([1-9]?\d(\.\d+)?)|100|(\.\d+))%\s){2})(([1-9]?\d(\.\d+)?)|100|(\.\d+))%))\)$/i;
-	if (ex.test(rgb)) {
-		let sep = rgb.indexOf(',') > -1 ? ',' : ' ';
-		rgb = rgb
+function HSLToRGB(hsl, isPct) {
+	let ex = /^hsl\(((((([12]?[1-9]?\d)|[12]0\d|(3[0-5]\d))(\.\d+)?)|(\.\d+))(deg)?|(0|0?\.\d+)turn|(([0-6](\.\d+)?)|(\.\d+))rad)((,\s?(([1-9]?\d(\.\d+)?)|100|(\.\d+))%){2}|(\s(([1-9]?\d(\.\d+)?)|100|(\.\d+))%){2})\)$/i;
+	if (ex.test(hsl)) {
+		let sep = hsl.indexOf(',') > -1 ? ',' : ' ';
+		hsl = hsl
 			.substr(4)
 			.split(')')[0]
 			.split(sep);
-		for (let R in rgb) {
-			let r = rgb[R];
-			if (r.indexOf('%') > -1) rgb[R] = Math.round((r.substr(0, r.length - 1) / 100) * 255);
+		isPct = isPct === true;
+		let h = hsl[0],
+			s = hsl[1].substr(0, hsl[1].length - 1) / 100,
+			l = hsl[2].substr(0, hsl[2].length - 1) / 100;
+		if (h.indexOf('deg') > -1) h = h.substr(0, h.length - 3);
+		else if (h.indexOf('rad') > -1) h = Math.round((h.substr(0, h.length - 3) / (2 * Math.PI)) * 360);
+		else if (h.indexOf('turn') > -1) h = Math.round(h.substr(0, h.length - 4) * 360);
+		if (h >= 360) h %= 360;
+		let c = (1 - Math.abs(2 * l - 1)) * s,
+			x = c * (1 - Math.abs(((h / 60) % 2) - 1)),
+			m = l - c / 2,
+			r = 0,
+			g = 0,
+			b = 0;
+		if (0 <= h && h < 60) {
+			r = c;
+			g = x;
+			b = 0;
+		} else if (60 <= h && h < 120) {
+			r = x;
+			g = c;
+			b = 0;
+		} else if (120 <= h && h < 180) {
+			r = 0;
+			g = c;
+			b = x;
+		} else if (180 <= h && h < 240) {
+			r = 0;
+			g = x;
+			b = c;
+		} else if (240 <= h && h < 300) {
+			r = x;
+			g = 0;
+			b = c;
+		} else if (300 <= h && h < 360) {
+			r = c;
+			g = 0;
+			b = x;
 		}
-		let r = rgb[0] / 255,
-			g = rgb[1] / 255,
-			b = rgb[2] / 255,
-			cmin = Math.min(r, g, b),
-			cmax = Math.max(r, g, b),
-			delta = cmax - cmin,
-			h = 0,
-			s = 0,
-			l = 0;
-		if (delta == 0) h = 0;
-		else if (cmax == r) h = ((g - b) / delta) % 6;
-		else if (cmax == g) h = (b - r) / delta + 2;
-		else h = (r - g) / delta + 4;
-		h = Math.round(h * 60);
-		if (h < 0) h += 360;
-		l = (cmax + cmin) / 2;
-		s = delta == 0 ? 0 : delta / (1 - Math.abs(2 * l - 1));
-		s = +(s * 100).toFixed(1);
-		l = +(l * 100).toFixed(1);
-		return 'hsl(' + h + ',' + s + '%,' + l + '%)';
+		r = Math.round((r + m) * 255);
+		g = Math.round((g + m) * 255);
+		b = Math.round((b + m) * 255);
+		if (isPct) {
+			r = +((r / 255) * 100).toFixed(1);
+			g = +((g / 255) * 100).toFixed(1);
+			b = +((b / 255) * 100).toFixed(1);
+		}
+		return 'rgb(' + (isPct ? r + '%,' + g + '%,' + b + '%' : +r + ',' + +g + ',' + +b) + ')';
 	} else {
 		return 'Invalid input color';
 	}
 } //ok
+function iAdd(item, props) {
+	let id, l;
+	if (isString(item)) { id = item; item = Items[id]; }
+	else if (nundef(item.id)) { id = item.id = iRegister(item); }
+	else { id = item.id; if (nundef(Items[id])) Items[id] = item; }
+	if (nundef(item.live)) item.live = {};
+	l = item.live;
+	for (const k in props) {
+		let val = props[k];
+		if (nundef(val)) {
+			continue;
+		}
+		l[k] = val;
+		if (k == 'div') val.id = id;
+		if (isdef(val.id) && val.id != id) {
+			lookupAddIfToList(val, ['memberOf'], id);
+		}
+	}
+}
+function idealFontDims(txt, wmax, hmax, fz = 22, fzmin = 6, weight) {
+	let tStyles = { fz: fz, family: 'arial' };
+	if (isdef(weight)) tStyles.weight = weight;
+	while (true) {
+		let tSize = getSizeWithStyles(txt, tStyles);
+		if (tSize.h <= hmax && tSize.w <= wmax || tStyles.fz <= fzmin) return { w: tSize.w, h: tSize.h, fz: tStyles.fz, family: 'arial' };
+		else tStyles.fz -= 1;
+	}
+}
+function idealFontSize(txt, wmax, hmax, fz = 22, fzmin = 6, weight) { return idealFontDims(...arguments).fz; }
+function iDiv(i) { return isdef(i.live) ? i.live.div : isdef(i.div) ? i.div : i; }
+function iGetl(item, key) { return item.live[key]; }
+function iGrid(rows, cols, dParent, styles) {
+	styles.display = 'inline-block';
+	let items = [];
+	let index = 0;
+	for (let i = 0; i < rows; i++) {
+		for (let j = 0; j < cols; j++) {
+			let d = mDiv(dParent, styles);
+			let item = { row: i, col: j, index: index };
+			index += 1;
+			iAdd(item, { div: d });
+			items.push(item);
+		}
+		mLinebreak(dParent);
+	}
+	return items;
+}
+function iLabel(i) { return isdef(i.live) ? i.live.dLabel : isdef(i.dLabel) ? i.dLabel : null; }
+function iMeasure(item, sizingOptions) {
+	if (nundef(iDiv(item))) return;
+	setRect(iDiv(item), valf(sizingOptions, { hgrow: true, wgrow: true }));
+}
+function infoToItem(x) { let item = { info: x, key: x.key }; item.id = iRegister(item); return item; }
+function init_keyhandlers() {
+	onkeyup = onkeyupHandler;
+}
+function iRegister(item, id) { let uid = isdef(id) ? id : getUID(); Items[uid] = item; return uid; }
+function isAlphaNum(s) {
+	return /^[a-z0-9_]+$/i.test(s); // only lower case: /^[0-9a-z_]+$/);
+}
+function isAlphaNumeric(str) {
+	var code, i, len;
+	for (i = 0, len = str.length; i < len; i++) {
+		code = str.charCodeAt(i);
+		if (!(code > 47 && code < 58) && // numeric (0-9)
+			!(code > 64 && code < 91) && // upper alpha (A-Z)
+			!(code > 96 && code < 123) && str[i] != '_') { // lower alpha (a-z)
+			return false;
+		}
+	}
+	return true;
+}
+function isCloseTo(n, m, acc = 10) { return Math.abs(n - m) <= acc + 1; }
+function isdef(x) { return x !== null && x !== undefined; }
+function isDict(d) { let res = (d !== null) && (typeof (d) == 'object') && !isList(d); return res; }
+function isEmpty(arr) {
+	return arr === undefined || !arr
+		|| (isString(arr) && (arr == 'undefined' || arr == ''))
+		|| (Array.isArray(arr) && arr.length == 0)
+		|| Object.entries(arr).length === 0;
+}
+function isEmptyOrWhiteSpace(s) { return isEmpty(s.trim()); }
+function isLetter(s) { return /^[a-zA-Z]$/i.test(s); }
+function isList(arr) { return Array.isArray(arr); }
+function isLiteral(x) { return isString(x) || isNumber(x); }
+function isNumber(x) { return x !== ' ' && x !== true && x !== false && isdef(x) && (x == 0 || !isNaN(+x)); }
+function isOverflown(element) {
+	return element.scrollHeight > element.clientHeight || element.scrollWidth > element.clientWidth;
+}
+function isString(param) { return typeof param == 'string'; }
+function isSvg(elem) { return startsWith(elem.constructor.name, 'SVG'); }
+function isVisible(elem) { // Where el is the DOM element you'd like to test for visibility
+	if (isString(elem)) elem = document.getElementById(elem);
+	let x = elem.style.flex;
+	return (elem.style.display != 'none' || elem.offsetParent !== null) && (nundef(elem.style.flex) || !endsWith(elem.style.flex, '0%'));
+}
+function isWhiteSpace2(ch) {
+	const alphanum = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_';
+	return !alphanum.includes(ch);
+}
+function isWhiteSpaceString(s) { return isEmptyOrWhiteSpace(s); }
+function jsCopy(o) {
+	return JSON.parse(JSON.stringify(o));
+}
+function lastCond(arr, func) {
+	for (let i = arr.length - 1; i >= 0; i--) {
+		if (func(arr[i])) return arr[i];
+	}
+	return null;
+}
+function lookup(dict, keys) {
+	let d = dict;
+	let ilast = keys.length - 1;
+	let i = 0;
+	for (const k of keys) {
+		if (k === undefined) break;
+		let e = d[k];
+		if (e === undefined || e === null) return null;
+		d = d[k];
+		if (i == ilast) return d;
+		i += 1;
+	}
+	return d;
+}
+function lookupAddIfToList(dict, keys, val) {
+	let lst = lookup(dict, keys);
+	if (isList(lst) && lst.includes(val)) return;
+	lookupAddToList(dict, keys, val);
+}
+function lookupAddToList(dict, keys, val) {
+	let d = dict;
+	let ilast = keys.length - 1;
+	let i = 0;
+	for (const k of keys) {
+		if (i == ilast) {
+			if (nundef(k)) {
+				alert('lookupAddToList: last key indefined!' + keys.join(' '));
+				return null;
+			} else if (isList(d[k])) {
+				d[k].push(val);
+			} else {
+				d[k] = [val];
+			}
+			return d[k];
+		}
+		if (nundef(k)) continue; //skip undef or null values
+		if (d[k] === undefined) d[k] = {};
+		d = d[k];
+		i += 1;
+	}
+	return d;
+}
+function lookupSet(dict, keys, val) {
+	let d = dict;
+	let ilast = keys.length - 1;
+	let i = 0;
+	for (const k of keys) {
+		if (nundef(k)) continue; //skip undef or null values
+		if (d[k] === undefined) d[k] = (i == ilast ? val : {});
+		if (nundef(d[k])) d[k] = (i == ilast ? val : {});
+		d = d[k];
+		if (i == ilast) return d;
+		i += 1;
+	}
+	return d;
+}
+function lookupSetOverride(dict, keys, val) {
+	let d = dict;
+	let ilast = keys.length - 1;
+	let i = 0;
+	for (const k of keys) {
+		if (i == ilast) {
+			if (nundef(k)) {
+				alert('lookupAddToList: last key indefined!' + keys.join(' '));
+				return null;
+			} else {
+				d[k] = val;
+			}
+			return d[k];
+		}
+		if (nundef(k)) continue; //skip undef or null values
+		if (nundef(d[k])) d[k] = {};
+		d = d[k];
+		i += 1;
+	}
+	return d;
+}
+function loop(n) { return range(1, n); }
+function luminance(r, g, b) {
+	var a = [r, g, b].map(function (v) {
+		v /= 255;
+		return v <= 0.03928
+			? v / 12.92
+			: Math.pow((v + 0.055) / 1.055, 2.4);
+	});
+	return a[0] * 0.2126 + a[1] * 0.7152 + a[2] * 0.0722;
+}
+function makeRect(x, y, w, h) { let r = { x: x, y: y, w: w, h: h }; extendRect(r); return r; }
+function makeUnitString(nOrString, unit = 'px', defaultVal = '100%') {
+	if (nundef(nOrString)) return defaultVal;
+	if (isNumber(nOrString)) nOrString = '' + nOrString + unit;
+	return nOrString;
+}
+function mAppend(d, child) { d.appendChild(child); return child; }
+function mButton(caption, handler, dParent, styles, classes, id) {
+	let x = mCreate('button');
+	x.innerHTML = caption;
+	if (isdef(handler)) x.onclick = handler;
+	if (isdef(dParent)) dParent.appendChild(x);
+	if (isdef(styles)) mStyle(x, styles);
+	if (isdef(classes)) mClass(x, classes);
+	if (isdef(id)) x.id = id;
+	return x;
+}
+function mBy(id) { return document.getElementById(id); }
+function mCellContent(dCell, styles, html) {
+	clearElement(dCell);
+	let d = mDiv(dCell, { w: '100%', h: '100%' });
+	mCenterCenterFlex(d);
+	let d1 = mDiv(d, styles, null, html);
+	mCenterCenterFlex(d1);
+	return d1;
+}
+function mCenterCenterFlex(d) { mCenterFlex(d, true, true, true); }
+function mCenterFlex(d, hCenter = true, vCenter = false, wrap = true) {
+	let styles = { display: 'flex' };
+	if (hCenter) styles['justify-content'] = 'center';
+	styles['align-content'] = vCenter ? 'center' : 'flex-start';
+	if (wrap) styles['flex-wrap'] = 'wrap';
+	mStyle(d, styles);
+}
+function mClass(d) {
+	if (arguments.length == 2 && isList(arguments[1])) for (let i = 0; i < arguments[1].length; i++) d.classList.add(arguments[1][i]);
+	else for (let i = 1; i < arguments.length; i++) d.classList.add(arguments[i]);
+}
+function mClassRemove(d) { for (let i = 1; i < arguments.length; i++) d.classList.remove(arguments[i]); }
+function mCreate(tag, styles, id) { let d = document.createElement(tag); if (isdef(id)) d.id = id; if (isdef(styles)) mStyle(d, styles); return d; }
+function mDestroy(elem) { if (isString(elem)) elem = mById(elem); purge(elem); } // elem.parentNode.removeChild(elem); }
+function mDiv(dParent, styles, id, inner, classes, sizing) {
+	let d = mCreate('div');
+	if (dParent) mAppend(dParent, d);
+	if (isdef(styles)) mStyle(d, styles);
+	if (isdef(classes)) mClass(d, classes);
+	if (isdef(id)) d.id = id;
+	if (isdef(inner)) d.innerHTML = inner;
+	if (isdef(sizing)) { setRect(d, sizing); }
+	return d;
+}
+function mDiv100(dParent, styles, id, sizing = true) { let d = mDiv(dParent, styles, id); mSize(d, 100, 100, '%', sizing); return d; }
+function mEditableInput(dParent, label, val, styles, classes, id) {
+	let labelElem = createElementFromHTML(`<span>${label}</span>	`)
+	let elem = createElementFromHTML(`<span contenteditable="true" spellcheck="false">${val}</span>	`)
+	elem.addEventListener('keydown', (ev) => {
+		if (ev.key === 'Enter') {
+			ev.preventDefault();
+			mBy('dummy').focus();
+		}
+	});
+	let dui = mDiv(dParent, { margin: 2 });
+	mAppend(dui, labelElem);
+	mAppend(dui, elem);
+	if (isdef(styles)) {
+		if (isdef(styles.wInput)) mStyle(elem, { wmin: styles.wInput });
+		mStyle(elem, styles);
+	}
+	if (isdef(classes)) mStyle(elem, classes);
+	if (isdef(id)) elem.id = id;
+	return elem;
+}
+function mergeOverride(base, drueber) { return _deepMerge(base, drueber, { arrayMerge: _overwriteMerge }); }
+function mFlex(d, or = 'h') {
+	d.style.display = 'flex';
+	d.style.flexFlow = (or == 'v' ? 'column' : 'row') + ' ' + (or == 'w' ? 'wrap' : 'nowrap');
+}
+function mGrid(rows, cols, dParent, styles = {}) {
+	let d = mDiv(dParent, styles);
+	d.style.gridTemplateColumns = 'repeat(' + cols + ',1fr)';
+	d.style.gridTemplateRows = 'repeat(' + rows + ',1fr)';
+	d.style.display = 'inline-grid';
+	d.style.padding = valf(styles.padding, styles.gap) + 'px';
+	return d;
+}
+function mHasClass(el, className) {
+	if (el.classList) return el.classList.contains(className);
+	else return !!el.className.match(new RegExp('(\\s|^)' + className + '(\\s|$)'));
+}
+function miAddLabel(item, styles) {
+	let d = iDiv(item);
+	if (getTypeOf(d.firstChild) == 'Text') {
+		let handler = d.onmousedown;
+		d.onmousedown = null;
+		let dPic = d;
+		let dParent = d.parentNode;
+		let outerStyles = jsCopy(styles);
+		addKeys({
+			display: 'inline-flex', 'flex-direction': 'column',
+			'justify-content': 'center', 'align-items': 'center', 'vertical-align': 'top',
+		}, outerStyles);
+		d = mDiv(dParent, outerStyles);
+		mAppend(d, dPic);
+		d.onmousedown = handler;
+		let dLabel = mText(item.label, d, { fz: valf(styles.fz, 20) });
+		iAdd(item, { div: d, dPic: dPic, dLabel: dLabel, options: outerStyles });
+	} else if (nundef(iLabel(item))) {
+		let dLabel = mText(item.label, d, { fz: valf(styles.fz, 20) });
+		iAdd(item, { dLabel: dLabel });
+	}
+	return d;
+}
+function miPic(item, dParent, styles, classes) {
+	let info = isString(item) ? Syms[item] : isdef(item.info) ? item.info : item;
+	let d = mDiv(dParent);
+	d.innerHTML = info.text;
+	if (nundef(styles)) styles = {};
+	addKeys({ family: info.family, fz: 50, display: 'inline-block' }, styles);
+	mStyle(d, styles);
+	if (isdef(classes)) mClass(d, classes);
+	mCenterCenterFlex(d);
+	return d;
+}
+function mItem(id, diDOM, di = {}, addSizing = true) {
+	let item = di;
+	id = isdef(id) ? id : isdef(diDOM) && isdef(diDOM.div) && !isEmpty(diDOM.div.id) ? diDOM.div.id : getUID();
+	item.id = iRegister(item, id);
+	if (isdef(diDOM) && isdef(diDOM.div)) { diDOM.div.id = id; iAdd(item, diDOM); }
+	if (addSizing) {
+		if (nundef(item.sizing)) item.sizing = 'sizeToContent';
+		if (nundef(item.positioning)) { item.positioning = 'absolute'; }
+		if (nundef(item.posType)) { item.posType = 'center'; }
+		if (isdef(diDOM) && item.sizing == 'sizeToContent') iMeasure(item, item.sizingOptions);
+	}
+	return item;
+}
+function mLinebreak(dParent, gap) {
+	if (isString(dParent)) dParent = mBy(dParent);
+	let d = mDiv(dParent);
+	if (dParent.style.display == 'flex' || mHasClass(dParent, 'flexWrap')) mClass(d, 'linebreak');
+	else d.innerHTML = '<br>';
+	if (isdef(gap)) { d.style.minHeight = gap + 'px'; d.innerHTML = ' &nbsp; '; d.style.opacity = .2; }//return mLinebreak(dParent);}
+	return d;
+}
+function mMoveBy(elem, dx, dy) { let rect = getRect(elem); mPos(elem, rect.x + dx, rect.y + dy); }
+function mParent(elem) { return elem.parentNode; }
+function mPlace(elem, pos, mavert = 4, mahor) {
+	pos = pos.toLowerCase();
+	let dCard = elem.parentNode; if (dCard.style.position != 'absolute') dCard.style.position = 'relative';
+	let vert = mavert; // valf(margin, Math.max(wSym,hSym) / 10); //0;
+	let hor = isdef(mahor) ? mahor : mavert;
+	if (pos[0] == 'c' || pos[1] == 'c') {
+		let rCard = getRect(dCard);
+		let [wCard, hCard] = [rCard.w, rCard.h];
+		let rSym = getRect(elem);
+		let [wSym, hSym] = [rSym.w, rSym.h];
+		switch (pos) {
+			case 'cc': mStyle(elem, { position: 'absolute', left: (wCard - wSym) / 2, top: (hCard - hSym) / 2 }); break;
+			case 'tc': mStyle(elem, { position: 'absolute', left: (wCard - wSym) / 2, top: vert }); break;
+			case 'bc': mStyle(elem, { position: 'absolute', left: (wCard - wSym) / 2, bottom: vert }); break;
+			case 'cl': mStyle(elem, { position: 'absolute', left: hor, top: (hCard - hSym) / 2 }); break;
+			case 'cr': mStyle(elem, { position: 'absolute', right: hor, top: (hCard - hSym) / 2 }); break;
+		}
+		return;
+	}
+	let di = { t: 'top', b: 'bottom', r: 'right', l: 'left' };
+	elem.style.position = 'absolute';
+	elem.style[di[pos[0]]] = hor + 'px'; elem.style[di[pos[1]]] = vert + 'px';
+}
+function mPos(d, x, y, unit = 'px') { mStyle(d, { left: x, top: y, position: 'absolute' }, unit); }
+function mRemove(elem) { mDestroy(elem); }
+function mRemoveChildrenFromIndex(dParent, i) { while (dParent.children[i]) { mRemove(dParent.children[i]); } }
+function mRemoveClass(d) { for (let i = 1; i < arguments.length; i++) d.classList.remove(arguments[i]); }
+function msElapsedSince(msStart) { return Date.now() - msStart; }
+function mSize(d, w, h, unit = 'px', sizing) { if (nundef(h)) h = w; mStyle(d, { width: w, height: h }, unit); if (isdef(sizing)) setRect(d, sizing); }
+function msNow() { return Date.now(); }
+function msToTime(ms) {
+	let secs = Math.floor(ms / 1000);
+	let mins = Math.floor(secs / 60);
+	secs = secs - mins * 60;
+	let hours = Math.floor(mins / 60);
+	mins = mins - hours * 60;
+	return { h: hours, m: mins, s: secs };
+}
+function mStyle(elem, styles, unit = 'px') {
+	if (isdef(styles.vmargin)) { styles.mabottom = styles.matop = styles.vmargin; }
+	if (isdef(styles.hmargin)) { styles.maleft = styles.maright = styles.hmargin; }
+	const paramDict = {
+		align: 'text-align',
+		bg: 'background-color',
+		fg: 'color',
+		hgap: 'column-gap',
+		vgap: 'row-gap',
+		matop: 'margin-top',
+		maleft: 'margin-left',
+		mabottom: 'margin-bottom',
+		maright: 'margin-right',
+		patop: 'padding-top',
+		paleft: 'padding-left',
+		pabottom: 'padding-bottom',
+		paright: 'padding-right',
+		rounding: 'border-radius',
+		w: 'width',
+		h: 'height',
+		wmin: 'min-width',
+		hmin: 'min-height',
+		wmax: 'max-width',
+		hmax: 'max-height',
+		fontSize: 'font-size',
+		fz: 'font-size',
+		family: 'font-family',
+		weight: 'font-weight',
+		z: 'z-index'
+	};
+	let bg, fg;
+	if (isdef(styles.bg) || isdef(styles.fg)) {
+		[bg, fg] = getExtendedColors(styles.bg, styles.fg, styles.alpha);
+	}
+	if (isdef(styles.vpadding) || isdef(styles.hpadding)) {
+		styles.padding = valf(styles.vpadding, 0) + unit + ' ' + valf(styles.hpadding, 0) + unit;
+	}
+	if (isdef(styles.upperRounding)) {
+		let rtop = '' + valf(styles.upperRounding, 0) + unit;
+		let rbot = '0' + unit;
+		styles['border-radius'] = rtop + ' ' + rtop + ' ' + rbot + ' ' + rbot;
+	} else if (isdef(styles.lowerRounding)) {
+		let rbot = '' + valf(styles.lowerRounding, 0) + unit;
+		let rtop = '0' + unit;
+		styles['border-radius'] = rtop + ' ' + rtop + ' ' + rbot + ' ' + rbot;
+	}
+	if (isdef(styles.box)) styles['box-sizing'] = 'border-box';
+	for (const k in styles) {
+		let val = styles[k];
+		let key = k;
+		if (isdef(paramDict[k])) key = paramDict[k];
+		else if (k == 'font' && !isString(val)) {
+			let fz = f.size; if (isNumber(fz)) fz = '' + fz + 'px';
+			let ff = f.family;
+			let fv = f.variant;
+			let fw = isdef(f.bold) ? 'bold' : isdef(f.light) ? 'light' : f.weight;
+			let fs = isdef(f.italic) ? 'italic' : f.style;
+			if (nundef(fz) || nundef(ff)) return null;
+			let s = fz + ' ' + ff;
+			if (isdef(fw)) s = fw + ' ' + s;
+			if (isdef(fv)) s = fv + ' ' + s;
+			if (isdef(fs)) s = fs + ' ' + s;
+			elem.style.setProperty(k, s);
+			continue;
+		} else if (k == 'border') {
+			if (isNumber(val)) val = `solid ${val}px ${isdef(styles.fg) ? styles.fg : '#ffffff80'}`;
+			if (val.indexOf(' ') < 0) val = 'solid 1px ' + val;
+		} else if (k == 'layout') {
+			if (val[0] == 'f') {
+				val = val.slice(1);
+				elem.style.setProperty('display', 'flex');
+				elem.style.setProperty('flex-wrap', 'wrap');
+				let hor, vert;
+				if (val.length == 1) hor = vert = 'center';
+				else {
+					let di = { c: 'center', s: 'start', e: 'end' };
+					hor = di[val[1]];
+					vert = di[val[2]];
+				}
+				let justStyle = val[0] == 'v' ? vert : hor;
+				let alignStyle = val[0] == 'v' ? hor : vert;
+				elem.style.setProperty('justify-content', justStyle);
+				elem.style.setProperty('align-items', alignStyle);
+				switch (val[0]) {
+					case 'v': elem.style.setProperty('flex-direction', 'column'); break;
+					case 'h': elem.style.setProperty('flex-direction', 'row'); break;
+				}
+			} else if (val[0] == 'g') {
+				val = val.slice(1);
+				elem.style.setProperty('display', 'grid');
+				let n = allNumbers(val);
+				let cols = n[0];
+				let w = n.length > 1 ? '' + n[1] + 'px' : 'auto';
+				elem.style.setProperty('grid-template-columns', `repeat(${cols}, ${w})`);
+				elem.style.setProperty('place-content', 'center');
+			}
+		} else if (k == 'layflex') {
+			elem.style.setProperty('display', 'flex');
+			elem.style.setProperty('flex', '0 1 auto');
+			elem.style.setProperty('flex-wrap', 'wrap');
+			if (val == 'v') { elem.style.setProperty('writing-mode', 'vertical-lr'); }
+		} else if (k == 'laygrid') {
+			elem.style.setProperty('display', 'grid');
+			let n = allNumbers(val);
+			let cols = n[0];
+			let w = n.length > 1 ? '' + n[1] + 'px' : 'auto';
+			elem.style.setProperty('grid-template-columns', `repeat(${cols}, ${w})`);
+			elem.style.setProperty('place-content', 'center');
+		}
+		if (key == 'font-weight') { elem.style.setProperty(key, val); continue; }
+		else if (key == 'background-color') elem.style.background = bg;
+		else if (key == 'color') elem.style.color = fg;
+		else if (key == 'opacity') elem.style.opacity = val;
+		else if (key == 'wrap') elem.style.flexWrap = 'wrap';
+		else if (startsWith(key, 'dir')) {
+			isCol = val[0] == 'c';
+			elem.style.flexDirection = isCol ? 'column' : 'row';
+			if (isCol && nundef(styles.hmax)) {
+				let rect = getRect(elem.parentNode); //console.log('rect', rect);
+				elem.style.maxHeight = rect.h * .9;
+				elem.style.alignContent = 'start';
+			} else if (nundef(styles.wmax)) elem.style.maxWidth = '90%';
+		} else if (key == 'flex') {
+			if (isNumber(val)) val = '' + val + ' 1 0%';
+			elem.style.setProperty(key, makeUnitString(val, unit));
+		} else {
+			elem.style.setProperty(key, makeUnitString(val, unit));
+		}
+	}
+}
+function mStyleTranslate(prop, val, convertNumbers = true) {
+	const paramDict = {
+		align: 'text-align',
+		bg: 'background-color',
+		fg: 'color',
+		hgap: 'column-gap',
+		vgap: 'row-gap',
+		matop: 'margin-top',
+		maleft: 'margin-left',
+		mabottom: 'margin-bottom',
+		maright: 'margin-right',
+		patop: 'padding-top',
+		paleft: 'padding-left',
+		pabottom: 'padding-bottom',
+		paright: 'padding-right',
+		rounding: 'border-radius',
+		w: 'width',
+		h: 'height',
+		wmin: 'min-width',
+		hmin: 'min-height',
+		wmax: 'max-width',
+		hmax: 'max-height',
+		fontSize: 'font-size',
+		fz: 'font-size',
+		family: 'font-family',
+		weight: 'font-weight',
+		z: 'z-index'
+	};
+	let valDict = {
+		random: randomColor(),
+	};
+	let propName = isdef(paramDict[prop]) ? paramDict[prop] : prop;
+	let newVal = isdef(valDict[val]) ? valdict[val] : val;
+	if (convertNumbers && isNumber(newVal)) newVal = '' + newVal + 'px';
+	return [propName, newVal];
+}
+function mSym(key, dParent, styles = {}, pos, classes) {
+	let info = Syms[key];
+	styles.display = 'inline-block';
+	styles.family = info.family;
+	let sizes;
+	if (isdef(styles.sz)) { sizes = mSymSizeToBox(info, styles.sz, styles.sz); }
+	else if (isdef(styles.w) && isdef(styles.h)) { sizes = mSymSizeToBox(info, styles.w, styles.h); }
+	else if (isdef(styles.fz)) { sizes = mSymSizeToFz(info, styles.fz); }
+	else if (isdef(styles.h)) { sizes = mSymSizeToH(info, styles.h); }
+	else if (isdef(styles.w)) { sizes = mSymSizeToW(info, styles.w); }
+	else { sizes = mSymSizeToFz(info, CSZ / 8); }
+	styles.fz = sizes.fz;
+	styles.w = sizes.w;
+	styles.h = sizes.h;
+	styles.align = 'center';
+	if (isdef(styles.bg) && info.family != 'emoNoto') { styles.fg = styles.bg; delete styles.bg; }
+	let x = mDiv(dParent, styles, null, info.text);
+	if (isdef(classes)) mClass(x, classes);
+	if (isdef(pos)) { mPlace(x, pos); }
+	return x;
+}
+function mText(text, dParent, styles, classes) {
+	if (!isString(text)) text = text.toString();
+	let d = mDiv(dParent);
+	if (!isEmpty(text)) { d.innerHTML = text; }
+	if (isdef(styles)) mStyle(d, styles);
+	if (isdef(classes)) mClass(d, classes);
+	return d;
+}
+function mTitledDiv(title, dParent, outerStyles = {}, innerStyles = {}, id) {
+	let d = mDiv(dParent, outerStyles);
+	let dTitle = mDiv(d);
+	dTitle.innerHTML = title;
+	innerStyles.w = '100%';
+	innerStyles.h = outerStyles.h - getRect(dTitle).h;
+	let dContent = mDiv(d, innerStyles, id);
+	return dContent;
+}
+function normalize(text, language) {
+	if (isEmpty(text)) return '';
+	text = text.toLowerCase().trim();
+	if (language == 'D') {
+		text = convertUmlaute(text);
+	}
+	return text;
+}
+function nundef(x) { return x === null || x === undefined; }
+function onkeyupHandler(ev) {
+	if (nundef(DA.keyup)) DA.keyup = {};
+	for (const k in DA.keyup) {
+		DA.keyup[k](ev);
+	}
+}
+function onMovingCloneAround(ev) {
+	if (DragElem === null) return;
+	let mx = ev.clientX;
+	let my = ev.clientY;
+	let dx = mx - DragElem.drag.offsetX;
+	let dy = my - DragElem.drag.offsetY;
+	mStyle(DragElem, { left: dx, top: dy });
+}
+function onReleaseClone(ev) {
+	let els = allElementsFromPoint(ev.clientX, ev.clientY);
+	let source = DDInfo.source;
+	let dSource = iDiv(source);
+	let dropHandler = DDInfo.dropHandler;
+	for (const target of DDInfo.targets) {
+		let dTarget = iDiv(target);
+		if (els.includes(dTarget)) {
+			if (isdef(dropHandler)) {
+				let cDrop = { x: ev.clientX, y: ev.clientY };
+				let rTarget = getRect(dTarget);
+				let cTarget = { x: rTarget.x + rTarget.w / 2, y: rTarget.y + rTarget.h / 2 };
+				let [dx, dy] = [cDrop.x - cTarget.x, cDrop.y - cTarget.y];
+				let [ddx, ddy] = [DragElem.drag.offsetX, DragElem.drag.offsetY];
+				dropHandler(source, target, DragElem.isCopy, DragElem.clearTarget, dx, dy, ev, DragElem);
+			}
+			break; //as soon as found a target, stop looking for more targets!
+		}
+	}
+	DragElem.remove();
+	DragElem = null;
+	document.body.onmousemove = document.body.onmouseup = null;
+}
+function ordinal_suffix_of(i) {
+	var j = i % 10,
+		k = i % 100;
+	if (j == 1 && k != 11) {
+		return i + "st";
+	}
+	if (j == 2 && k != 12) {
+		return i + "nd";
+	}
+	if (j == 3 && k != 13) {
+		return i + "rd";
+	}
+	return i + "th";
+}
+function percentOf(elem, percentW, percentH) {
+	if (nundef(percentH)) percentH = percentW;
+	if (nundef(percentW)) percentW = percentH = 100;
+	let r = getRect(elem);
+	return { w: r.w * percentW / 100, h: r.h * percentH / 100 };
+}
+function polyPointsFrom(w, h, x, y, pointArr) {
+	x -= w / 2;
+	y -= h / 2;
+	let pts = pointArr.map(p => [p.X * w + x, p.Y * h + y]);
+	let newpts = [];
+	for (const p of pts) {
+		newp = { X: p[0], Y: Math.round(p[1]) };
+		newpts.push(newp);
+	}
+	pts = newpts;
+	let sPoints = pts.map(p => '' + p.X + ',' + p.Y).join(' '); //'0,0 100,0 50,80',
+	return sPoints;
+}
+function pSBC(p, c0, c1, l) {
+	let r,
+		g,
+		b,
+		P,
+		f,
+		t,
+		h,
+		i = parseInt,
+		m = Math.round,
+		a = typeof c1 == 'string';
+	if (typeof p != 'number' || p < -1 || p > 1 || typeof c0 != 'string' || (c0[0] != 'r' && c0[0] != '#') || (c1 && !a)) return null;
+	if (!this.pSBCr)
+		this.pSBCr = d => {
+			let n = d.length,
+				x = {};
+			if (n > 9) {
+				([r, g, b, a] = d = d.split(',')), (n = d.length);
+				if (n < 3 || n > 4) return null;
+				(x.r = i(r[3] == 'a' ? r.slice(5) : r.slice(4))), (x.g = i(g)), (x.b = i(b)), (x.a = a ? parseFloat(a) : -1);
+			} else {
+				if (n == 8 || n == 6 || n < 4) return null;
+				if (n < 6) d = '#' + d[1] + d[1] + d[2] + d[2] + d[3] + d[3] + (n > 4 ? d[4] + d[4] : '');
+				d = i(d.slice(1), 16);
+				if (n == 9 || n == 5) (x.r = (d >> 24) & 255), (x.g = (d >> 16) & 255), (x.b = (d >> 8) & 255), (x.a = m((d & 255) / 0.255) / 1000);
+				else (x.r = d >> 16), (x.g = (d >> 8) & 255), (x.b = d & 255), (x.a = -1);
+			}
+			return x;
+		};
+	(h = c0.length > 9),
+		(h = a ? (c1.length > 9 ? true : c1 == 'c' ? !h : false) : h),
+		(f = pSBCr(c0)),
+		(P = p < 0),
+		(t = c1 && c1 != 'c' ? pSBCr(c1) : P ? { r: 0, g: 0, b: 0, a: -1 } : { r: 255, g: 255, b: 255, a: -1 }),
+		(p = P ? p * -1 : p),
+		(P = 1 - p);
+	if (!f || !t) return null;
+	if (l) (r = m(P * f.r + p * t.r)), (g = m(P * f.g + p * t.g)), (b = m(P * f.b + p * t.b));
+	else (r = m((P * f.r ** 2 + p * t.r ** 2) ** 0.5)), (g = m((P * f.g ** 2 + p * t.g ** 2) ** 0.5)), (b = m((P * f.b ** 2 + p * t.b ** 2) ** 0.5));
+	(a = f.a), (t = t.a), (f = a >= 0 || t >= 0), (a = f ? (a < 0 ? t : t < 0 ? a : a * P + t * p) : 0);
+	if (h) return 'rgb' + (f ? 'a(' : '(') + r + ',' + g + ',' + b + (f ? ',' + m(a * 1000) / 1000 : '') + ')';
+	else return '#' + (4294967296 + r * 16777216 + g * 65536 + b * 256 + (f ? m(a * 255) : 0)).toString(16).slice(1, f ? undefined : -2);
+} //ok SUPER COOL!!!!
+function purge(elem) {
+	var a = elem.attributes, i, l, n;
+	if (a) {
+		for (i = a.length - 1; i >= 0; i -= 1) {
+			n = a[i].name;
+			if (typeof elem[n] === 'function') {
+				elem[n] = null;
+			}
+		}
+	}
+	a = elem.childNodes;
+	if (a) {
+		l = a.length;
+		for (i = a.length - 1; i >= 0; i -= 1) {
+			purge(elem.childNodes[i]);
+		}
+	}
+	elem.remove(); //elem.parentNode.removeChild(elem);
+}
+function randomColor(s, l, a) { return isdef(s) ? randomHslaColor(s, l, a) : randomHexColor(); }
+function randomHexColor() {
+	let s = '#';
+	for (let i = 0; i < 6; i++) {
+		s += chooseRandom(['f', 'c', '9', '6', '3', '0']);
+	}
+	return s;
+}
+function randomHslaColor(s = 100, l = 70, a = 1) {
+	var hue = Math.round(Math.random() * 360);
+	return hslToHslaString(hue, s, l, a);
+}
+function randomName() { return chooseRandom(coin() ? GirlNames : BoyNames); }
+function randomNumber(min = 0, max = 100) {
+	return Math.floor(Math.random() * (max - min + 1)) + min; //min and max inclusive!
+}
+function range(f, t, st = 1) {
+	if (nundef(t)) {
+		t = f - 1;
+		f = 0;
+	}
+	let arr = [];
+	for (let i = f; i <= t; i += st) {
+		arr.push(i);
+	}
+	return arr;
+}
+function removeInPlace(arr, el) {
+	for (var i = 0; i < arr.length; i++) {
+		if (arr[i] === el) {
+			arr.splice(i, 1);
+			i--;
+			return;
+		}
+	}
+}
+function removeKeyHandler(k) {
+	let f = lookup(DA, ['keyup', k]);
+	if (lookup(DA, ['keyup', k])) {
+		delete DA.keyup[k];
+	}
+	if (lookup(DA, ['keydown', k])) {
+		delete DA.keydown[k];
+	}
+}
+function removeNonAlphanum(s) {
+	let res = '';
+	let nonalphas = '';
+	for (const l of s) {
+		if (isAlphaNumeric(l)) res += l; else nonalphas += l;
+	}
+	return { alphas: res, whites: nonalphas };
+}
+function replaceAll(str, sSub, sBy) {
+	let regex = new RegExp(sSub, 'g');
+	return str.replace(regex, sBy);
+}
+function replaceAtString(s, i, ssub) { return s.substring(0, i) + ssub + s.substring(i + 1); }
+function replaceEvery(w, letter, nth) {
+	let res = '';
+	for (let i = 1; i < w.length; i += 2) {
+		res += letter;
+		res += w[i];
+	}
+	if (w.length % 2) res += w[0];
+	return res;
+}
+function resetUIDs() { UIDCounter = 0; FRUIDCounter = -1; }
 function RGBAToHSLA(rgba) {
 	let ex = /^rgba\((((((((1?[1-9]?\d)|10\d|(2[0-4]\d)|25[0-5]),\s?)){3})|(((([1-9]?\d(\.\d+)?)|100|(\.\d+))%,\s?){3}))|(((((1?[1-9]?\d)|10\d|(2[0-4]\d)|25[0-5])\s){3})|(((([1-9]?\d(\.\d+)?)|100|(\.\d+))%\s){3}))\/\s)((0?\.\d+)|[01]|(([1-9]?\d(\.\d+)?)|100|(\.\d+))%)\)$/i;
 	if (ex.test(rgba)) {
@@ -1603,199 +2438,53 @@ function RGBAToHSLA(rgba) {
 		return 'Invalid input color';
 	}
 } //ok
-function onkeyupHandler(ev) {
-	if (nundef(DA.keyup)) DA.keyup = {};
-	for (const k in DA.keyup) {
-		DA.keyup[k](ev);
-	}
-}
-function addKeyup(k, f) {
-	if (nundef(DA.keyup)) DA.keyup = {};
-	DA.keyup[k] = f;
-}
-function removeKeyHandler(k) {
-	let f = lookup(DA, ['keyup', k]);
-	if (lookup(DA, ['keyup', k])) {
-		delete DA.keyup[k];
-	}
-	if (lookup(DA, ['keydown', k])) {
-		delete DA.keydown[k];
-	}
-}
-function init_keyhandlers() {
-	onkeyup = onkeyupHandler;
-}
-var DragElem = null; //is the clone of element from which drag started
-var DDInfo = null;
-function addDDSource(source, isCopy = true, clearTarget = false) {
-	DDInfo.sources.push(source);
-	let d = iDiv(source);
-	d.onmousedown = (ev) => ddStart(ev, source, isCopy, clearTarget);
-}
-function enableDD(sources, targets, dropHandler, isCopy, clearTarget, dragStartHandler) {
-	DDInfo = { sources: sources, targets: targets, dropHandler: dropHandler, dragStartHandler };
-	let sourceDivs = sources.map(x => iDiv(x));
-	for (let i = 0; i < sources.length; i++) {
-		let source = sources[i];
-		let d = sourceDivs[i];
-		d.onmousedown = (ev) => ddStart(ev, source, isCopy, clearTarget);
-	}
-}
-function ddStart(ev, source, isCopy = true, clearTarget = false) {
-	if (!canAct() || isdef(DDInfo.dragStartHandler) && !DDInfo.dragStartHandler(source)) return;
-	ev.preventDefault();
-	ev.stopPropagation();
-	DDInfo.source = source;
-	let d = iDiv(source);
-	var clone = DragElem = DDInfo.clone = d.cloneNode(true);
-	clone.isCopy = isCopy;
-	clone.clearTarget = clearTarget;
-	mAppend(document.body, clone);//mClass(clone, 'letter')
-	mClass(clone, 'dragelem');//der clone muss class 'dragelem' sein
-	mStyle(clone, { left: ev.clientX - ev.offsetX, top: ev.clientY - ev.offsetY });//der clone wird richtig plaziert
-	DDInfo.dragOffset = clone.drag = { offsetX: ev.offsetX, offsetY: ev.offsetY };
-	document.body.onmousemove = onMovingCloneAround;
-	document.body.onmouseup = onReleaseClone;// ev=>console.log('mouse up')
-}
-function onMovingCloneAround(ev) {
-	if (DragElem === null) return;
-	let mx = ev.clientX;
-	let my = ev.clientY;
-	let dx = mx - DragElem.drag.offsetX;
-	let dy = my - DragElem.drag.offsetY;
-	mStyle(DragElem, { left: dx, top: dy });
-}
-function onReleaseClone(ev) {
-	let els = allElementsFromPoint(ev.clientX, ev.clientY);
-	let source = DDInfo.source;
-	let dSource = iDiv(source);
-	let dropHandler = DDInfo.dropHandler;
-	for (const target of DDInfo.targets) {
-		let dTarget = iDiv(target);
-		if (els.includes(dTarget)) {
-			if (isdef(dropHandler)) {
-				let cDrop = { x: ev.clientX, y: ev.clientY };
-				let rTarget = getRect(dTarget);
-				let cTarget = { x: rTarget.x + rTarget.w / 2, y: rTarget.y + rTarget.h / 2 };
-				let [dx, dy] = [cDrop.x - cTarget.x, cDrop.y - cTarget.y];
-				let [ddx, ddy] = [DragElem.drag.offsetX, DragElem.drag.offsetY];
-				dropHandler(source, target, DragElem.isCopy, DragElem.clearTarget, dx, dy, ev, DragElem);
-			}
-			break; //as soon as found a target, stop looking for more targets!
+function RGBToHSL(rgb) {
+	let ex = /^rgb\((((((((1?[1-9]?\d)|10\d|(2[0-4]\d)|25[0-5]),\s?)){2}|((((1?[1-9]?\d)|10\d|(2[0-4]\d)|25[0-5])\s)){2})((1?[1-9]?\d)|10\d|(2[0-4]\d)|25[0-5]))|((((([1-9]?\d(\.\d+)?)|100|(\.\d+))%,\s?){2}|((([1-9]?\d(\.\d+)?)|100|(\.\d+))%\s){2})(([1-9]?\d(\.\d+)?)|100|(\.\d+))%))\)$/i;
+	if (ex.test(rgb)) {
+		let sep = rgb.indexOf(',') > -1 ? ',' : ' ';
+		rgb = rgb
+			.substr(4)
+			.split(')')[0]
+			.split(sep);
+		for (let R in rgb) {
+			let r = rgb[R];
+			if (r.indexOf('%') > -1) rgb[R] = Math.round((r.substr(0, r.length - 1) / 100) * 255);
 		}
+		let r = rgb[0] / 255,
+			g = rgb[1] / 255,
+			b = rgb[2] / 255,
+			cmin = Math.min(r, g, b),
+			cmax = Math.max(r, g, b),
+			delta = cmax - cmin,
+			h = 0,
+			s = 0,
+			l = 0;
+		if (delta == 0) h = 0;
+		else if (cmax == r) h = ((g - b) / delta) % 6;
+		else if (cmax == g) h = (b - r) / delta + 2;
+		else h = (r - g) / delta + 4;
+		h = Math.round(h * 60);
+		if (h < 0) h += 360;
+		l = (cmax + cmin) / 2;
+		s = delta == 0 ? 0 : delta / (1 - Math.abs(2 * l - 1));
+		s = +(s * 100).toFixed(1);
+		l = +(l * 100).toFixed(1);
+		return 'hsl(' + h + ',' + s + '%,' + l + '%)';
+	} else {
+		return 'Invalid input color';
 	}
-	DragElem.remove();
-	DragElem = null;
-	document.body.onmousemove = document.body.onmouseup = null;
-}
-function csv2list(allText, hasHeadings = true) {
-	var numHeadings = 11;  // or however many elements there are in each row
-	var allTextLines = allText.split(/\r\n|\n/);
-	var headings = allTextLines[0].split(',');
-	numHeadings = headings.length;
-	let entries = allTextLines.splice(1);
-	var records = [];
-	for (const e of entries) {
-		let o = {};
-		let values = e.split(',');
-		for (let i = 0; i < numHeadings; i++) {
-			let k = headings[i];
-			o[k] = values[i];
-		}
-		records.push(o);
+} //ok
+function sameList(l1, l2) {
+	if (l1.length != l2.length) return false;
+	for (const s of l1) {
+		if (!l2.includes(s)) return false;
 	}
-	return records;
+	return true;
 }
-function dSquare(pos1, pos2) {
-	let dx = pos1.x - pos2.x;
-	dx *= dx;
-	let dy = pos1.y - pos2.y;
-	dy *= dy;
-	return dx + dy;
+function setCSSVariable(varName, val) {
+	let root = document.documentElement;
+	root.style.setProperty(varName, val);
 }
-function distance(x1, y1, x2, y2) { return Math.sqrt(dSquare({ x: x1, y: y1 }, { x: x2, y: y2 })); }
-function isCloseTo(n, m, acc = 10) { return Math.abs(n - m) <= acc + 1; }
-function getEllipsePoints(radx, rady, n, disp = 0) {
-	let pts = [];
-	let i = 0;
-	let da = 360 / n;
-	let angle = disp;
-	while (i < n) {
-		let px = radx * Math.cos(toRadian(angle));
-		let py = rady * Math.sin(toRadian(angle));
-		pts.push({ X: px, Y: py });
-		angle += da;
-		i++;
-	}
-	return pts;
-}
-function polyPointsFrom(w, h, x, y, pointArr) {
-	x -= w / 2;
-	y -= h / 2;
-	let pts = pointArr.map(p => [p.X * w + x, p.Y * h + y]);
-	let newpts = [];
-	for (const p of pts) {
-		newp = { X: p[0], Y: Math.round(p[1]) };
-		newpts.push(newp);
-	}
-	pts = newpts;
-	let sPoints = pts.map(p => '' + p.X + ',' + p.Y).join(' '); //'0,0 100,0 50,80',
-	return sPoints;
-}
-function size2hex(w = 100, h = 0, x = 0, y = 0) {
-	let hexPoints = [{ X: 0.5, Y: 0 }, { X: 1, Y: 0.25 }, { X: 1, Y: 0.75 }, { X: 0.5, Y: 1 }, { X: 0, Y: 0.75 }, { X: 0, Y: 0.25 }];
-	if (h == 0) {
-		h = (2 * w) / 1.73;
-	}
-	return polyPointsFrom(w, h, x, y, hexPoints);
-}
-function toRadian(deg) { return deg * 2 * Math.PI / 360; }
-function getCenter(elem) { let r = isdef(elem.x) ? elem : getRect(elem); return { x: (r.w) / 2, y: (r.h) / 2 }; }
-function getRectInt(elem, relto) {
-	if (isString(elem)) elem = document.getElementById(elem);
-	let res = elem.getBoundingClientRect();
-	if (isdef(relto)) {
-		let b2 = relto.getBoundingClientRect();
-		let b1 = res;
-		res = {
-			x: b1.x - b2.x,
-			y: b1.y - b2.y,
-			left: b1.left - b2.left,
-			top: b1.top - b2.top,
-			right: b1.right - b2.right,
-			bottom: b1.bottom - b2.bottom,
-			width: b1.width,
-			height: b1.height
-		};
-	}
-	let r4 = { x: Math.round(res.left), y: Math.round(res.top), w: Math.round(res.width), h: Math.round(res.height) };
-	extendRect(r4); //r4.l = r4.x; r4.t = r4.y; r4.r = r4.x + r4.w; r4.b = r4.t + r4.h;
-	return r4;
-}
-function getRect(elem, relto) {
-	if (isString(elem)) elem = document.getElementById(elem);
-	let res = elem.getBoundingClientRect();
-	if (isdef(relto)) {
-		let b2 = relto.getBoundingClientRect();
-		let b1 = res;
-		res = {
-			x: b1.x - b2.x,
-			y: b1.y - b2.y,
-			left: b1.left - b2.left,
-			top: b1.top - b2.top,
-			right: b1.right - b2.right,
-			bottom: b1.bottom - b2.bottom,
-			width: b1.width,
-			height: b1.height
-		};
-	}
-	let r4 = { x: res.left, y: res.top, w: res.width, h: res.height };
-	extendRect(r4); //r4.l = r4.x; r4.t = r4.y; r4.r = r4.x + r4.w; r4.b = r4.t + r4.h;
-	return r4;
-}
-function getSize(elem) { let r = getRectInt(elem); return { w: r.w, h: r.h, sz: Math.min(r.w, r.h) }; }
-function extendRect(r4) { r4.l = r4.x; r4.t = r4.y; r4.r = r4.x + r4.w; r4.b = r4.t + r4.h; }
-function makeRect(x, y, w, h) { let r = { x: x, y: y, w: w, h: h }; extendRect(r); return r; }
 function setRect(elem, options) {
 	let r = getRect(elem);
 	elem.rect = r;
@@ -1824,315 +2513,14 @@ function setRectInt(elem, options) {
 	}
 	return r;
 }
-function getSizeWithStyles(text, styles) {
-	var d = document.createElement("div");
-	document.body.appendChild(d);
-	let cStyles = jsCopy(styles);
-	cStyles.position = 'fixed';
-	cStyles.opacity = 0;
-	cStyles.top = '-9999px';
-	mStyle(d, cStyles);
-	d.innerHTML = text;
-	height = d.clientHeight;
-	width = d.clientWidth;
-	d.parentNode.removeChild(d);
-	return { w: Math.round(width), h: Math.round(height) };
-}
-function idealFontSize(txt, wmax, hmax, fz = 22, fzmin = 6, weight) { return idealFontDims(...arguments).fz; }
-function idealFontDims(txt, wmax, hmax, fz = 22, fzmin = 6, weight) {
-	let tStyles = { fz: fz, family: 'arial' };
-	if (isdef(weight)) tStyles.weight = weight;
-	while (true) {
-		let tSize = getSizeWithStyles(txt, tStyles);
-		if (tSize.h <= hmax && tSize.w <= wmax || tStyles.fz <= fzmin) return { w: tSize.w, h: tSize.h, fz: tStyles.fz, family: 'arial' };
-		else tStyles.fz -= 1;
-	}
-}
-function percentOf(elem, percentW, percentH) {
-	if (nundef(percentH)) percentH = percentW;
-	if (nundef(percentW)) percentW = percentH = 100;
-	let r = getRect(elem);
-	return { w: r.w * percentW / 100, h: r.h * percentH / 100 };
-}
-const _overwriteMerge = (destinationArray, sourceArray, options) => sourceArray
-function _isMergeableObject(val) {
-	var nonNullObject = val && typeof val === 'object'
-	return nonNullObject
-		&& Object.prototype.toString.call(val) !== '[object RegExp]'
-		&& Object.prototype.toString.call(val) !== '[object Date]'
-}
-function _emptyTarget(val) {
-	return Array.isArray(val) ? [] : {}
-}
-function _cloneIfNecessary(value, optionsArgument) {
-	var clone = optionsArgument && optionsArgument.clone === true
-	return (clone && _isMergeableObject(value)) ? deepmerge(_emptyTarget(value), value, optionsArgument) : value
-}
-function _defaultArrayMerge(target, source, optionsArgument) {
-	var destination = target.slice()
-	source.forEach(function (e, i) {
-		if (typeof destination[i] === 'undefined') { //el[i] nur in source
-			destination[i] = _cloneIfNecessary(e, optionsArgument)
-		} else if (_isMergeableObject(e)) { //el[i] in beidem
-			destination[i] = deepmerge(target[i], e, optionsArgument)
-		} else if (target.indexOf(e) === -1) { //el[i] nur in target
-			destination.push(_cloneIfNecessary(e, optionsArgument))
-		}
-	})
-	return destination
-}
-function _mergeObject(target, source, optionsArgument) {
-	var destination = {}
-	if (_isMergeableObject(target)) {
-		Object.keys(target).forEach(function (key) {
-			destination[key] = _cloneIfNecessary(target[key], optionsArgument)
-		})
-	}
-	Object.keys(source).forEach(function (key) {
-		if (!_isMergeableObject(source[key]) || !target[key]) {
-			destination[key] = _cloneIfNecessary(source[key], optionsArgument)
-		} else {
-			destination[key] = _deepMerge(target[key], source[key], optionsArgument)
-		}
-	})
-	return destination;
-}
-function _deepMerge(target, source, optionsArgument) {
-	var array = Array.isArray(source);
-	var options = optionsArgument || { arrayMerge: _defaultArrayMerge }
-	var arrayMerge = options.arrayMerge || _defaultArrayMerge
-	if (array) {
-		return Array.isArray(target) ? arrayMerge(target, source, optionsArgument) : _cloneIfNecessary(source, optionsArgument)
+function show(elem, isInline = false) {
+	if (isString(elem)) elem = document.getElementById(elem);
+	if (isSvg(elem)) {
+		elem.setAttribute('style', 'visibility:visible');
 	} else {
-		return _mergeObject(target, source, optionsArgument)
+		elem.style.display = isInline ? 'inline-block' : null;
 	}
-}
-function mergeOverride(base, drueber) { return _deepMerge(base, drueber, { arrayMerge: _overwriteMerge }); }
-function addIf(arr, el) {
-	if (!arr.includes(el)) arr.push(el);
-}
-function addByKey(oNew, oOld, except) {
-	for (const k in oNew) {
-		let val = oNew[k];
-		if (isdef(except) && except.includes(k) || !isNumber(val)) continue;
-		oOld[k] = isdef(oOld[k]) ? oOld[k] + val : val;
-	}
-}
-function addKeys(ofrom, oto) { for (const k in ofrom) if (nundef(oto[k])) oto[k] = ofrom[k]; return oto; }
-function addSimpleProps(ofrom, oto = {}) { for (const k in ofrom) { if (nundef(oto[k]) && isLiteral(k)) oto[k] = ofrom[k]; } return oto; }
-function any(arr, cond) { return !isEmpty(arr.filter(cond)); }
-function arrCount(arr, func) { let filt = arr.filter(func); return filt.length; }
-function arrChildren(elem) { return [...elem.children]; }
-function arrFlatten(arr) {
-	let res = [];
-	for (let i = 0; i < arr.length; i++) {
-		for (let j = 0; j < arr[i].length; j++) {
-			res.push(arr[i][j]);
-		}
-	}
-	return res;
-}
-function arrLast(arr) { return arr.length > 0 ? arr[arr.length - 1] : null; }
-function arrMax(arr) { return arr.reduce((m, n) => Math.max(m, n)); }
-function arrMinMax(arr, func) {
-	if (nundef(func)) func = x => x;
-	let min = func(arr[0]), max = func(arr[0]), imin = 0, imax = 0;
-	for (let i = 1, len = arr.length; i < len; i++) {
-		let v = func(arr[i]);
-		if (v < min) {
-			min = v; imin = i;
-		} else if (v > max) {
-			max = v; imax = i;
-		}
-	}
-	return { min: min, imin: imin, max: max, imax: imax };
-}
-function arrMinus(a, b) { let res = a.filter(x => !b.includes(x)); return res; }
-function arrPlus(a, b) { let res = a.concat(b); return res; }
-function arrReplaceAtInPlace(arr, index, val) { arr[index] = val; }
-function arrSwap2d(arr, r1, c1, r2, c2) { let h = arr[r1][c1]; arr[r1][c1] = arr[r2][c2]; arr[r2][c2] = h; }
-function arrSum(arr, props) { if (!isList(props)) props = [props]; return arr.reduce((a, b) => a + (lookup(b, props) || 0), 0); }
-function arrTake(arr, n) { return takeFromStart(arr, n); }
-function arrWithout(a, b) { return arrMinus(a, b); }
-function arrPairs(a) {
-	let res = [];
-	for (let i = 0; i < a.length; i++) {
-		for (let j = i + 1; j < a.length; j++) {
-			res.push([a[i], a[j]]);
-		}
-	}
-	return res;
-}
-function classByName(name) { return eval(name); }
-function copyKeys(ofrom, oto, except = {}, only) {
-	let keys = isdef(only) ? only : Object.keys(ofrom);
-	for (const k of keys) {
-		if (isdef(except[k])) continue;
-		oto[k] = ofrom[k];
-	}
-}
-function fisherYates(array) {
-	var rnd, temp;
-	for (var i = array.length - 1; i; i--) {
-		rnd = Math.random() * i | 0;
-		temp = array[i];
-		array[i] = array[rnd];
-		array[rnd] = temp;
-	}
-	return array;
-}
-function findLongestWord(arr) { return arr[arrMinMax(arr, x => x.length).imax]; }
-function firstCond(arr, func) {
-	if (nundef(arr)) return null;
-	for (const a of arr) {
-		if (func(a)) return a;
-	}
-	return null;
-}
-function firstCondDict(dict, func) {
-	for (const k in dict) { if (func(dict[k])) return k; }
-	return null;
-}
-function firstCondDictKey() { return firstCondDictKeys(...arguments); }
-function firstCondDictKeys(dict, func) {
-	for (const k in dict) { if (func(k)) return k; }
-	return null;
-}
-function getIndicesCondi(arr, func) {
-	let res = [];
-	for (let i = 0; i < arr.length; i++) {
-		if (func(arr[i], i)) res.push(i);
-	}
-	return res;
-}
-function getRandomLetterMapping(s) {
-	if (nundef(s)) s = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-	let alphabet = filterDistinctLetters(s);
-	let alphabet2 = shuffle(jsCopy(alphabet));
-	let di = {};
-	for (let i = 0; i < alphabet.length; i++) {
-		di[alphabet[i]] = alphabet2[i];
-	}
-	return di;
-}
-function getLetterSwapEncoding(s) {
-	let di = getRandomLetterMapping(s);
-	let result = '';
-	for (let i = 0; i < s.length; i++) {
-		result += s[i] in di ? di[s[i]] : s[i];
-	}
-	return result;
-}
-function lastCond(arr, func) {
-	for (let i = arr.length - 1; i >= 0; i--) {
-		if (func(arr[i])) return arr[i];
-	}
-	return null;
-}
-function loop(n) { return range(1, n); }
-function lookup(dict, keys) {
-	let d = dict;
-	let ilast = keys.length - 1;
-	let i = 0;
-	for (const k of keys) {
-		if (k === undefined) break;
-		let e = d[k];
-		if (e === undefined || e === null) return null;
-		d = d[k];
-		if (i == ilast) return d;
-		i += 1;
-	}
-	return d;
-}
-function lookupSet(dict, keys, val) {
-	let d = dict;
-	let ilast = keys.length - 1;
-	let i = 0;
-	for (const k of keys) {
-		if (nundef(k)) continue; //skip undef or null values
-		if (d[k] === undefined) d[k] = (i == ilast ? val : {});
-		if (nundef(d[k])) d[k] = (i == ilast ? val : {});
-		d = d[k];
-		if (i == ilast) return d;
-		i += 1;
-	}
-	return d;
-}
-function lookupSetOverride(dict, keys, val) {
-	let d = dict;
-	let ilast = keys.length - 1;
-	let i = 0;
-	for (const k of keys) {
-		if (i == ilast) {
-			if (nundef(k)) {
-				alert('lookupAddToList: last key indefined!' + keys.join(' '));
-				return null;
-			} else {
-				d[k] = val;
-			}
-			return d[k];
-		}
-		if (nundef(k)) continue; //skip undef or null values
-		if (nundef(d[k])) d[k] = {};
-		d = d[k];
-		i += 1;
-	}
-	return d;
-}
-function lookupAddToList(dict, keys, val) {
-	let d = dict;
-	let ilast = keys.length - 1;
-	let i = 0;
-	for (const k of keys) {
-		if (i == ilast) {
-			if (nundef(k)) {
-				alert('lookupAddToList: last key indefined!' + keys.join(' '));
-				return null;
-			} else if (isList(d[k])) {
-				d[k].push(val);
-			} else {
-				d[k] = [val];
-			}
-			return d[k];
-		}
-		if (nundef(k)) continue; //skip undef or null values
-		if (d[k] === undefined) d[k] = {};
-		d = d[k];
-		i += 1;
-	}
-	return d;
-}
-function lookupAddIfToList(dict, keys, val) {
-	let lst = lookup(dict, keys);
-	if (isList(lst) && lst.includes(val)) return;
-	lookupAddToList(dict, keys, val);
-}
-function range(f, t, st = 1) {
-	if (nundef(t)) {
-		t = f - 1;
-		f = 0;
-	}
-	let arr = [];
-	for (let i = f; i <= t; i += st) {
-		arr.push(i);
-	}
-	return arr;
-}
-function removeInPlace(arr, el) {
-	for (var i = 0; i < arr.length; i++) {
-		if (arr[i] === el) {
-			arr.splice(i, 1);
-			i--;
-			return;
-		}
-	}
-}
-function sameList(l1, l2) {
-	if (l1.length != l2.length) return false;
-	for (const s of l1) {
-		if (!l2.includes(s)) return false;
-	}
-	return true;
+	return elem;
 }
 function shuffle(arr) { if (isEmpty(arr)) return []; else return fisherYates(arr); }
 function shuffleChildren(dParent) {
@@ -2141,189 +2529,17 @@ function shuffleChildren(dParent) {
 	shuffle(arr);
 	for (const elem of arr) { mAppend(dParent, elem) }
 }
+function size2hex(w = 100, h = 0, x = 0, y = 0) {
+	let hexPoints = [{ X: 0.5, Y: 0 }, { X: 1, Y: 0.25 }, { X: 1, Y: 0.75 }, { X: 0.5, Y: 1 }, { X: 0, Y: 0.75 }, { X: 0, Y: 0.25 }];
+	if (h == 0) {
+		h = (2 * w) / 1.73;
+	}
+	return polyPointsFrom(w, h, x, y, hexPoints);
+}
 function sortBy(arr, key) { arr.sort((a, b) => (a[key] < b[key] ? -1 : 1)); return arr; }
 function sortByDescending(arr, key) { arr.sort((a, b) => (a[key] > b[key] ? -1 : 1)); return arr; }
 function sortByFunc(arr, func) { arr.sort((a, b) => (func(a) < func(b) ? -1 : 1)); return arr; }
 function sortNumbers(ilist) { ilist.sort(function (a, b) { return a - b }); return ilist; }
-function takeFromStart(ad, n) {
-	if (isDict(ad)) {
-		let keys = Object.keys(ad);
-		return keys.slice(0, n).map(x => (ad[x]));
-	} else return ad.slice(0, n);
-}
-function takeFromTo(ad, from, to) {
-	if (isDict(ad)) {
-		let keys = Object.keys(ad);
-		return keys.slice(from, to).map(x => (ad[x]));
-	} else return ad.slice(from, to);
-}
-function union(lst1, lst2) {
-	return [...new Set([...lst1, ...lst2])];
-}
-function coin(percent = 50) {
-	let r = Math.random();
-	r *= 100;
-	return r < percent;
-}
-function choose(arr, n, exceptIndices) {
-	var result = [];
-	var len = arr.length;
-	if (n >= arr.length) return arr;
-	var taken = new Array(len);
-	if (isdef(exceptIndices) && exceptIndices.length < len - n) {
-		for (const i of exceptIndices) if (i >= 0 && i <= len) taken[i] = true;
-	}
-	if (n > len) n = len;
-	while (result.length < n) {
-		var iRandom = Math.floor(Math.random() * len);
-		while (taken[iRandom]) { iRandom += 1; if (iRandom >= len) iRandom = 0; }
-		result.push(arr[iRandom]);
-		taken[iRandom] = true;
-	}
-	return result;
-}
-function chooseRandom(arr, condFunc = null) {
-	let len = arr.length;
-	if (condFunc) {
-		let best = arr.filter(condFunc);
-		if (!isEmpty(best)) return chooseRandom(best);
-	}
-	let idx = Math.floor(Math.random() * len);
-	return arr[idx];
-}
-function randomColor(s, l, a) { return isdef(s) ? randomHslaColor(s, l, a) : randomHexColor(); }
-function randomHexColor() {
-	let s = '#';
-	for (let i = 0; i < 6; i++) {
-		s += chooseRandom(['f', 'c', '9', '6', '3', '0']);
-	}
-	return s;
-}
-function randomHslaColor(s = 100, l = 70, a = 1) {
-	var hue = Math.round(Math.random() * 360);
-	return hslToHslaString(hue, s, l, a);
-}
-function randomName() { return chooseRandom(coin() ? GirlNames : BoyNames); }
-function randomNumber(min = 0, max = 100) {
-	return Math.floor(Math.random() * (max - min + 1)) + min; //min and max inclusive!
-}
-function allIntegers(s) {
-	return s.match(/\d+\.\d+|\d+\b|\d+(?=\w)/g).map(v => {
-		return +v;
-	});
-}
-function allNumbers(s) {
-	let m = s.match(/\-.\d+|\-\d+|\.\d+|\d+\.\d+|\d+\b|\d+(?=\w)/g);
-	if (m) return m.map(v => Number(v)); else return null;
-}
-function capitalize(s) {
-	if (typeof s !== 'string') return '';
-	return s.charAt(0).toUpperCase() + s.slice(1);
-}
-function contains(s, sSub) { return s.toLowerCase().includes(sSub.toLowerCase()); }
-function endsWith(s, sSub) { let i = s.indexOf(sSub); return i >= 0 && i == s.length - sSub.length; }
-function extendWidth(w) { return replaceEvery(w, 'w', 2); }
-function filterByLength(w, min, max, allowSpaces = false) { return w.length <= max && w.length >= min && (allowSpaces || !w.includes(' ')); }
-function filterDistinctLetters(s) {
-	let arr = [];
-	for (let i = 0; i < s.length; i++) {
-		let ch = s[i];
-		if (isLetter(ch) && !arr.includes(ch)) arr.push(ch);
-	}
-	return arr;
-}
-function findCommonPrefix(s1, s2) {
-	let i = 0;
-	let res = '';
-	while (i < s1.length && i < s2.length) {
-		if (s1[i] != s2[i]) break; else res += s1[i];
-		i += 1;
-	}
-	return res;
-}
-function firstNumber(s) {
-	if (s) {
-		let m = s.match(/-?\d+/);
-		if (m) {
-			let sh = m.shift();
-			if (sh) { return Number(sh); }
-		}
-	}
-	return null;
-}
-function fromUmlaut(w) {
-	if (isList(w)) {
-		let res = [];
-		for (const w1 of w) res.push(fromUmlaut(w1));
-		return res;
-	} else {
-		w = replaceAll(w, 'ü', 'ue');
-		w = replaceAll(w, 'ä', 'ae');
-		w = replaceAll(w, 'ö', 'oe');
-		w = replaceAll(w, 'Ü', 'UE');
-		w = replaceAll(w, 'Ä', 'AE');
-		w = replaceAll(w, 'Ö', 'OE');
-		return w;
-	}
-}
-function getCorrectPrefix(label, text) {
-	let req = label.toLowerCase();
-	let answer = text.toLowerCase();
-	let res1 = removeNonAlphanum(req);
-	let res2 = removeNonAlphanum(answer);
-	let req1 = res1.alphas;// removeNonAlphanum(req);
-	let answer1 = res2.alphas; //removeNonAlphanum(answer);
-	let whites = res1.whites;
-	let common = findCommonPrefix(req1, answer1);
-	let nletters = common.length;
-	let ireal = 0;
-	let icompact = 0;
-	let iwhites = 0;
-	let correctPrefix = '';
-	while (icompact < nletters) {
-		if (req[ireal] == common[icompact]) { correctPrefix += label[ireal]; icompact += 1; }
-		else if (whites[iwhites] == req[ireal]) { correctPrefix += label[ireal]; iwhites += 1; }
-		else break;
-		ireal += 1;
-	}
-	return correctPrefix;
-}
-function ordinal_suffix_of(i) {
-	var j = i % 10,
-		k = i % 100;
-	if (j == 1 && k != 11) {
-		return i + "st";
-	}
-	if (j == 2 && k != 12) {
-		return i + "nd";
-	}
-	if (j == 3 && k != 13) {
-		return i + "rd";
-	}
-	return i + "th";
-}
-function replaceAll(str, sSub, sBy) {
-	let regex = new RegExp(sSub, 'g');
-	return str.replace(regex, sBy);
-}
-function replaceAtString(s, i, ssub) { return s.substring(0, i) + ssub + s.substring(i + 1); }
-function replaceEvery(w, letter, nth) {
-	let res = '';
-	for (let i = 1; i < w.length; i += 2) {
-		res += letter;
-		res += w[i];
-	}
-	if (w.length % 2) res += w[0];
-	return res;
-}
-function removeNonAlphanum(s) {
-	let res = '';
-	let nonalphas = '';
-	for (const l of s) {
-		if (isAlphaNumeric(l)) res += l; else nonalphas += l;
-	}
-	return { alphas: res, whites: nonalphas };
-}
 function startsWith(s, sSub) {
 	return s.substring(0, sSub.length) == sSub;
 }
@@ -2345,257 +2561,41 @@ function stringBeforeLast(sFull, sSub) {
 	let parts = sFull.split(sSub);
 	return sFull.substring(0, sFull.length - arrLast(parts).length - 1);
 }
+function takeFromStart(ad, n) {
+	if (isDict(ad)) {
+		let keys = Object.keys(ad);
+		return keys.slice(0, n).map(x => (ad[x]));
+	} else return ad.slice(0, n);
+}
+function takeFromTo(ad, from, to) {
+	if (isDict(ad)) {
+		let keys = Object.keys(ad);
+		return keys.slice(from, to).map(x => (ad[x]));
+	} else return ad.slice(from, to);
+}
 function toLetterArray(s) { return toLetterList(s); }
 function toLetterList(s) { return [...s]; }
 function toNoun(s) { return capitalize(s.toLowerCase()); }
-function format2Digits(i) { return (i < 10) ? "0" + i : i; }
-function msNow() { return Date.now(); }
-function msToTime(ms) {
-	let secs = Math.floor(ms / 1000);
-	let mins = Math.floor(secs / 60);
-	secs = secs - mins * 60;
-	let hours = Math.floor(mins / 60);
-	mins = mins - hours * 60;
-	return { h: hours, m: mins, s: secs };
-}
-function msElapsedSince(msStart) { return Date.now() - msStart; }
-class TimeIt {
-	constructor(msg, showOutput = true) {
-		this.showOutput = showOutput;
-		this.init(msg);
-	}
-	getTotalTimeElapsed() {
-		let tNew = new Date();
-		let tDiffStart = tNew.getTime() - this.namedTimestamps.start.getTime();
-		return tDiffStart;
-	}
-	tacit() { this.showOutput = false; }
-	timeStamp(name) {
-		let tNew = new Date(); //new Date().getTime() - this.t;
-		let tDiff = tNew.getTime() - this.namedTimestamps.start.getTime();// this.t.getTime();
-		if (this.showOutput) console.log('___', tDiff, 'msecs * to', name);
-		this.t = tNew;
-		this.namedTimestamps[name] = tNew;
-	}
-	reset() { this.init('timing start') }
-	init(msg) {
-		this.t = new Date();
-		if (this.showOutput) console.log('___', msg);
-		this.namedTimestamps = { start: this.t };
-	}
-	showSince(name, msg = 'now') {
-		let tNew = new Date(); //new Date().getTime() - this.t;
-		let tNamed = this.namedTimestamps[name];
-		if (this.showOutput) if (!tNamed) { console.log(name, 'is not a timestamp!'); return; } //new Date().getTime() - this.t;
-		let tDiff = tNew.getTime() - tNamed.getTime();
-		if (this.showOutput) console.log('___', tDiff, 'msecs', name, 'to', msg);
-		this.t = tNew;
-	}
-	format(t) { return '___' + t.getSeconds() + ':' + t.getMilliseconds(); }
-	show(msg) { this.showTime(msg); }
-	showTime(msg) {
-		let tNew = new Date(); //new Date().getTime() - this.t;
-		let tDiff = tNew.getTime() - this.t.getTime();
-		let tDiffStart = tNew.getTime() - this.namedTimestamps.start.getTime();
-		if (this.showOutput) console.log('___ ', tDiff, 'msecs to', msg, '(' + tDiffStart, 'total)');
-		this.t = tNew;
-	}
-	start_of_cycle(msg) {
-		this.init(msg);
-	}
-	end_of_cycle(msg) {
-		let tNew = new Date(); //new Date().getTime() - this.t;
-		let tDiff = tNew.getTime() - this.t.getTime();
-		let tDiffStart = tNew.getTime() - this.namedTimestamps.start.getTime();
-		if (this.showOutput) console.log('___ ' + tDiff + ' msecs', msg, 'to EOC (total: ' + tDiffStart + ')');
-	}
-}
-function allElementsFromPoint(x, y) {
-	var element, elements = [];
-	var old_visibility = [];
-	while (true) {
-		element = document.elementFromPoint(x, y);
-		if (!element || element === document.documentElement) {
-			break;
+function toRadian(deg) { return deg * 2 * Math.PI / 360; }
+function translateStylesToCy(styles, group) {
+	let di = {};
+	for (const k in styles) {
+		let v = styles[k];
+		let [prop, val] = translateToCssStyle(k, v, true);
+		if (group == 'edge' && k == 'bg') di['line-color'] = val;
+		else if (prop == 'shape' && val == 'hex') {
+			di.shape = 'polygon';
+			di['shape-polygon-points'] = [0, -1, 1, -0.5, 1, 0.5, 0, 1, -1, 0.5, -1, -0.5];
 		}
-		elements.push(element);
-		old_visibility.push(element.style.visibility);
-		element.style.visibility = 'hidden'; // Temporarily hide the element (without changing the layout)
+		else di[prop] = val;
 	}
-	for (var k = 0; k < elements.length; k++) {
-		elements[k].style.visibility = old_visibility[k];
-	}
-	elements.reverse();
-	return elements;
+	return di;
 }
-function clearElement(elem) {
-	if (isString(elem)) elem = document.getElementById(elem);
-	if (window.jQuery == undefined) { elem.innerHTML = ''; return elem; }
-	while (elem.firstChild) {
-		$(elem.firstChild).remove();
-	}
-	return elem;
-}
-function convertUmlaute(w) {
-	w = replaceAll(w, 'ue', 'ü');
-	w = replaceAll(w, 'ae', 'ä');
-	w = replaceAll(w, 'oe', 'ö');
-	w = replaceAll(w, 'UE', 'Ü');
-	w = replaceAll(w, 'AE', 'Ä');
-	w = replaceAll(w, 'OE', 'Ö');
-	w = replaceAll(w, 'ß', 'ss');
-	return w;
-}
-function createElementFromHtml(s) { return createElementFromHTML(s); }
-function createElementFromHTML(htmlString) {
-	var div = document.createElement('div');
-	div.innerHTML = htmlString.trim();// '<div>halloooooooooooooo</div>';// htmlString.trim();
-	return div.firstChild;
-}
-function errlog() { console.log('ERROR!', ...arguments); }
-function evToClosestId(ev) {
-	let elem = findParentWithId(ev.target);
-	return elem.id;
-}
-function evToId(ev) {
-	let elem = findParentWithId(ev.target);
-	return elem.id;
-}
-function evToProp(ev, prop) {
-	let x = ev.target;
-	while (isdef(x) && nundef(x.getAttribute(prop))) x = x.parentNode;
-	return isdef(x) ? x.getAttribute(prop) : null;
-}
-function findParentWithId(elem) { while (elem && !elem.id) { elem = elem.parentNode; } return elem; }
-function hide(elem) {
-	if (isString(elem)) elem = document.getElementById(elem);
-	if (nundef(elem)) return;
-	if (isSvg(elem)) {
-		elem.setAttribute('style', 'visibility:hidden;display:none');
-	} else {
-		elem.style.display = 'none';
-	}
-}
-function getTypeOf(param) {
-	let type = typeof param;
-	if (type == 'string') {
-		return 'string';
-	}
-	if (type == 'object') {
-		type = param.constructor.name;
-		if (startsWith(type, 'SVG')) type = stringBefore(stringAfter(type, 'SVG'), 'Element').toLowerCase();
-		else if (startsWith(type, 'HTML')) type = stringBefore(stringAfter(type, 'HTML'), 'Element').toLowerCase();
-	}
-	let lType = type.toLowerCase();
-	if (lType.includes('event')) type = 'event';
-	return type;
-}
-function isAlphaNum(s) {
-	return /^[a-z0-9_]+$/i.test(s); // only lower case: /^[0-9a-z_]+$/);
-}
-function isAlphaNumeric(str) {
-	var code, i, len;
-	for (i = 0, len = str.length; i < len; i++) {
-		code = str.charCodeAt(i);
-		if (!(code > 47 && code < 58) && // numeric (0-9)
-			!(code > 64 && code < 91) && // upper alpha (A-Z)
-			!(code > 96 && code < 123) && str[i] != '_') { // lower alpha (a-z)
-			return false;
-		}
-	}
-	return true;
-}
-function isdef(x) { return x !== null && x !== undefined; }
-function isDict(d) { let res = (d !== null) && (typeof (d) == 'object') && !isList(d); return res; }
-function isEmpty(arr) {
-	return arr === undefined || !arr
-		|| (isString(arr) && (arr == 'undefined' || arr == ''))
-		|| (Array.isArray(arr) && arr.length == 0)
-		|| Object.entries(arr).length === 0;
-}
-function isEmptyOrWhiteSpace(s) { return isEmpty(s.trim()); }
-function isLetter(s) { return /^[a-zA-Z]$/i.test(s); }
-function isList(arr) { return Array.isArray(arr); }
-function isLiteral(x) { return isString(x) || isNumber(x); }
-function isNumber(x) { return x !== ' ' && x !== true && x !== false && isdef(x) && (x == 0 || !isNaN(+x)); }
-function isString(param) { return typeof param == 'string'; }
-function isSvg(elem) { return startsWith(elem.constructor.name, 'SVG'); }
-function isVisible(elem) { // Where el is the DOM element you'd like to test for visibility
-	if (isString(elem)) elem = document.getElementById(elem);
-	let x = elem.style.flex;
-	return (elem.style.display != 'none' || elem.offsetParent !== null) && (nundef(elem.style.flex) || !endsWith(elem.style.flex,'0%'));
-}
-function isWhiteSpace2(ch) {
-	const alphanum = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_';
-	return !alphanum.includes(ch);
-}
-function isWhiteSpaceString(s) { return isEmptyOrWhiteSpace(s); }
-function isOverflown(element) {
-	return element.scrollHeight > element.clientHeight || element.scrollWidth > element.clientWidth;
-}
-function jsCopy(o) {
-	return JSON.parse(JSON.stringify(o));
-}
-function makeUnitString(nOrString, unit = 'px', defaultVal = '100%') {
-	if (nundef(nOrString)) return defaultVal;
-	if (isNumber(nOrString)) nOrString = '' + nOrString + unit;
-	return nOrString;
-}
-function normalize(text, language) {
-	if (isEmpty(text)) return '';
-	text = text.toLowerCase().trim();
-	if (language == 'D') {
-		text = convertUmlaute(text);
-	}
-	return text;
-}
-function nundef(x) { return x === null || x === undefined; }
-function purge(elem) {
-	var a = elem.attributes, i, l, n;
-	if (a) {
-		for (i = a.length - 1; i >= 0; i -= 1) {
-			n = a[i].name;
-			if (typeof elem[n] === 'function') {
-				elem[n] = null;
-			}
-		}
-	}
-	a = elem.childNodes;
-	if (a) {
-		l = a.length;
-		for (i = a.length - 1; i >= 0; i -= 1) {
-			purge(elem.childNodes[i]);
-		}
-	}
-	elem.remove(); //elem.parentNode.removeChild(elem);
-}
-function setCSSVariable(varName, val) {
-	let root = document.documentElement;
-	root.style.setProperty(varName, val);
-}
-function show(elem, isInline = false) {
-	if (isString(elem)) elem = document.getElementById(elem);
-	if (isSvg(elem)) {
-		elem.setAttribute('style', 'visibility:visible');
-	} else {
-		elem.style.display = isInline ? 'inline-block' : null;
-	}
-	return elem;
+function translateToCssStyle(prop, val) { return mStyleTranslate(prop, val); }
+function union(lst1, lst2) {
+	return [...new Set([...lst1, ...lst2])];
 }
 function valf(val, def) { return isdef(val) ? val : def; }
-var UIDCounter = 0;
-function getUID(pref = '') {
-	UIDCounter += 1;
-	return pref + '_' + UIDCounter;
-}
-var FRUIDCounter = -1;
-function getFruid(pref = '') {
-	const alpha = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-	FRUIDCounter += 1;
-	if (FRUIDCounter < alpha.length) return pref + alpha[FRUIDCounter];
-	return pref + FRUIDCounter - alpha.length;
-}
-function resetUIDs() { UIDCounter = 0; FRUIDCounter = -1; }
 //#endregion base
 
 //#region audio
@@ -2610,11 +2610,15 @@ var _audioSources = {
 	mozart: "../base/assets/music/mozart_s39_4.mp3",
 };
 var TOSound, _sndPlayer, _loaded = false, _qSound, _idleSound = true, _sndCounter = 0;
-function playSound(key, wait = true) {
-	if (!wait) _qSound = [];
-	_enqSound(key);
-	if (_idleSound) { _idleSound = false; _deqSound(); }
+function _deqSound() {
+	let key = _qSound.shift();
+	let url = _audioSources[key];
+	_sndPlayer = new Audio(url);
+	_sndPlayer.onended = whenSoundPaused;
+	_sndPlayer.onloadeddata = () => { _loaded = true; _sndPlayer.play(); };
+	_sndPlayer.load();
 }
+function _enqSound(key) { if (nundef(_qSound)) _qSound = []; _qSound.push(key); }
 function pauseSound() {
 	_qSound = [];
 	if (_loaded && isdef(_sndPlayer)) {
@@ -2624,35 +2628,21 @@ function pauseSound() {
 		_sndPlayer.pause();
 	}
 }
+function playSound(key, wait = true) {
+	if (!wait) _qSound = [];
+	_enqSound(key);
+	if (_idleSound) { _idleSound = false; _deqSound(); }
+}
 function whenSoundPaused() {
 	_sndPlayer = null;
 	_sndPlayerIdle = true;
 	_loaded = false;
 	if (!isEmpty(_qSound)) { _deqSound(); } else { _idleSound = true; }
 }
-function _enqSound(key) { if (nundef(_qSound)) _qSound = []; _qSound.push(key); }
-function _deqSound() {
-	let key = _qSound.shift();
-	let url = _audioSources[key];
-	_sndPlayer = new Audio(url);
-	_sndPlayer.onended = whenSoundPaused;
-	_sndPlayer.onloadeddata = () => { _loaded = true; _sndPlayer.play(); };
-	_sndPlayer.load();
-}
 //#endregion audio
 
 //#region badges
 var badges = [];
-function clearBadges(){
-	removeBadges(null,0);
-	badges = [];
-}
-function removeBadges(dParent, level) {
-	while (badges.length > level) {
-		let badge = badges.pop();
-		mRemove(iDiv(badge));
-	}
-}
 function addBadge(dParent, level, clickHandler, animateRubberband = false) {
 	let fg = '#00000080';
 	let textColor = 'white';
@@ -2672,19 +2662,9 @@ function addBadge(dParent, level, clickHandler, animateRubberband = false) {
 	badges.push(item);
 	return arrLast(badges);
 }
-function showBadgesX(dParent, level, clickHandler, maxLevel) {
-	clearElement(dParent);
+function clearBadges() {
+	removeBadges(null, 0);
 	badges = [];
-	for (let i = 1; i <= maxLevel + 1; i++) {
-		if (i > level) {
-			let b = addBadge(dParent, i, clickHandler, false);
-			b.live.div.style.opacity = .25;
-			b.achieved = false;
-		} else {
-			let b = addBadge(dParent, i, clickHandler, true);
-			b.achieved = true;
-		}
-	}
 }
 function onClickBadgeX(ev) {
 	interrupt(); //enterInterruptState();
@@ -2693,6 +2673,12 @@ function onClickBadgeX(ev) {
 	userUpdate(['games', G.id, 'startLevel'], item.index);
 	auxOpen = false;
 	TOMain = setTimeout(G.controller.startGame.bind(G.controller), 100);
+}
+function removeBadges(dParent, level) {
+	while (badges.length > level) {
+		let badge = badges.pop();
+		mRemove(iDiv(badge));
+	}
 }
 function setBadgeLevel(i) {
 	G.level = i;
@@ -2718,321 +2704,24 @@ function setBadgeLevel(i) {
 		d1.children[0].style.color = 'black';
 	}
 }
+function showBadgesX(dParent, level, clickHandler, maxLevel) {
+	clearElement(dParent);
+	badges = [];
+	for (let i = 1; i <= maxLevel + 1; i++) {
+		if (i > level) {
+			let b = addBadge(dParent, i, clickHandler, false);
+			b.live.div.style.opacity = .25;
+			b.achieved = false;
+		} else {
+			let b = addBadge(dParent, i, clickHandler, true);
+			b.achieved = true;
+		}
+	}
+}
 //#endregion badges
 
 //#region board
-function arrToMatrix(arr, rows, cols) {
-	let i = 0, res = [];
-	for (let r = 0; r < rows; r++) {
-		let rarr = [];
-		for (let c = 0; c < cols; c++) {
-			let a = arr[i]; i++;
-			rarr.push(a);
-		}
-		res.push(rarr);
-	}
-	return res;
-}
-function sudokuSampleToIndexMatrix(s, rows, cols) {
-	if (isNumber(s)) s = String(s);
-	let letters = toLetterArray(s);
-	let nums = letters.map(x => Number(x));
-	let res = [];
-	for (const n of nums) {
-		if (n === 0) res.push(' ');
-		else res.push(n - 1);
-	}
-	let matrix = arrToMatrix(res, rows, cols);
-	return matrix;
-}
-function getSudokuPatternFromDB(r, c, index) {
-	let key = '' + r + 'x' + c;
-	let numSamples = Object.keys(DB.games.gColoku.samples[key]).length;
-	if (nundef(index)) index = randomNumber(0, numSamples - 1); else if (index >= numSamples) index = 1;
-	let sample = DB.games.gColoku.samples[key][index];
-	let pattern = sudokuSampleToIndexMatrix(sample.sol, r, c);
-	let puzzle = sudokuSampleToIndexMatrix(sample.min, r, c);
-	return { pattern: pattern, puzzle: puzzle };
-}
-function destroySudokuRule(pattern, rows, cols) {
-	let sz = Math.min(rows, cols);
-	let [r1, r2] = choose(range(0, sz - 1), 2);
-	let c = chooseRandom(range(0, sz - 1));
-	if (coin(50)) { arrSwap2d(pattern, r1, c, r2, c); }
-	else if (coin(50)) { arrSwap2d(pattern, c, r1, c, r2); }
-}
-function hasDuplicate(arr, efunc) {
-	let di = {};
-	if (nundef(efunc)) efunc = x => { return x === ' ' };
-	let i = -1;
-	for (const a of arr) {
-		i += 1;
-		if (efunc(a)) continue; //!isNumber(a) && a==' ') {console.log('H!',a);continue;}
-		if (a in di) return { i: i, val: a };
-		di[a] = true;
-	}
-	return false;
-}
-function checkSudokuRule(matrix) {
-	let i = 0;
-	for (const arr of matrix) {
-		let dd = hasDuplicate(arr);
-		if (dd) {
-			let err = { type: 'row', row: i, col: dd.i, val: dd.val, info: dd, i: i };
-			return err;
-		}
-		i += 1;
-	}
-	i = 0;
-	for (const arr of bGetCols(matrix)) {
-		let dd = hasDuplicate(arr);
-		if (dd) {
-			let err = { type: 'column', col: i, row: dd.i, val: dd.val, i: i, info: dd };
-			return err;
-		}
-		i += 1;
-	}
-	let [rows, cols] = [matrix.length, matrix[0].length];
-	let rowsEach = rows == 9 ? 3 : 2;
-	let colsEach = cols == 4 ? 2 : 3;
-	let chunks = bGetChunksWithIndices(matrix, rowsEach, colsEach);
-	i = 0;
-	for (const arr of chunks) {
-		let dd = hasDuplicate(arr);
-		if (dd) {
-			let val = dd.val;
-			let err = { type: 'quadrant', row: val.row, col: val.col, val: val.val, i: i, info: dd };
-		}
-		i += 1;
-	}
-	return null;
-}
-function bGetSubMatrixWithIndices(arr2d, rFrom, rows, cFrom, cols) {
-	let res = []; for (let i = 0; i < rows; i++) res.push([]);
-	let [rTotal, cTotal] = [arr2d.length, arr2d[0].length];
-	let rIndex = 0;
-	for (let r = rFrom; r < rFrom + rows; r++) {
-		for (let c = cFrom; c < cFrom + cols; c++) {
-			res[rIndex].push({ row: r, col: c, val: arr2d[r][c] });
-		}
-		rIndex += 1;
-	}
-	return res;
-}
-function bGetChunksWithIndices(arr2d, rowsEach, colsEach) {
-	let res = [];
-	let [rTotal, cTotal] = [arr2d.length, arr2d[0].length];
-	for (let r = 0; r < rTotal; r += rowsEach) {
-		let m1 = [];
-		for (let c = 0; c < cTotal; c += colsEach) {
-			m1 = bGetSubMatrixWithIndices(arr2d, r, rowsEach, c, colsEach);
-			res.push(arrFlatten(m1));
-		}
-	}
-	return res;
-}
-function bGetCols(arr2d) {
-	let rows = arr2d.length;
-	let cols = arr2d[0].length;
-	let res = [];
-	for (let c = 0; c < cols; c++) { res.push([]); }
-	for (let r = 0; r < rows; r++) {
-		for (let c = 0; c < cols; c++) {
-			res[c].push(arr2d[r][c]);
-		}
-	}
-	return res;
-}
 var EmptyFunc = x => nundef(x) || x == ' ';
-function bNei(arr, idx, rows, cols, includeDiagonals = true) {
-	let nei = [];
-	let [r, c] = iToRowCol(idx, rows, cols);
-	if (r > 0) nei.push(idx - cols); else nei.push(null);
-	if (r > 0 && c < cols - 1 && includeDiagonals) nei.push(idx - cols + 1); else nei.push(null);
-	if (c < cols - 1) nei.push(idx + 1); else nei.push(null);
-	if (r < rows - 1 && c < cols - 1 && includeDiagonals) nei.push(idx + cols + 1); else nei.push(null);
-	if (r < rows - 1) nei.push(idx + cols); else nei.push(null);
-	if (r < rows - 1 && c > 0 && includeDiagonals) nei.push(idx + cols - 1); else nei.push(null);
-	if (c > 0) nei.push(idx - 1); else nei.push(null);
-	if (r > 0 && c > 0 && includeDiagonals) nei.push(idx - cols - 1); else nei.push(null);
-	return nei;
-}
-function iToRowCol(idx, rows, cols) { let c = idx % cols; let r = (idx - c) / rows; return [r, c]; }
-function bNeiDir(arr, idx, dir, rows, cols, includeDiagonals = true) {
-	let [r, c] = iToRowCol(idx, rows, cols);
-	switch (dir) {
-		case 0: if (r > 0) return (idx - cols); else return (null);
-		case 1: if (r > 0 && c < cols - 1 && includeDiagonals) return (idx - cols + 1); else return (null);
-		case 2: if (c < cols - 1) return (idx + 1); else return (null);
-		case 3: if (r < rows - 1 && c < cols - 1 && includeDiagonals) return (idx + cols + 1); else return (null);
-		case 4: if (r < rows - 1) return (idx + cols); else return (null);
-		case 5: if (r < rows - 1 && c > 0 && includeDiagonals) return (idx + cols - 1); else return (null);
-		case 6: if (c > 0) return (idx - 1); else return (null);
-		case 7: if (r > 0 && c > 0 && includeDiagonals) return (idx - cols - 1); else return (null);
-	}
-	return null;
-}
-function isOppPiece(sym, plSym) { return sym && sym != plSym; }
-function bCapturedPieces(plSym, arr, idx, rows, cols, includeDiagonals = true) {
-	let res = [];
-	let nei = bNei(arr, idx, rows, cols, includeDiagonals);
-	for (let dir = 0; dir < 8; dir++) {
-		let i = nei[dir];
-		if (nundef(i)) continue;
-		let el = arr[i];
-		if (EmptyFunc(el) || el == plSym) continue;
-		let inew = [];
-		let MAX = 100, cmax = 0;
-		while (isOppPiece(el, plSym)) {
-			if (cmax > MAX) break; cmax += 1;
-			inew.push(i);
-			i = bNeiDir(arr, i, dir, rows, cols);
-			if (nundef(i)) break;
-			el = arr[i];
-		}
-		if (el == plSym) {
-			res = res.concat(inew);
-		}
-	}
-	return res;
-}
-function bFullRow(arr, irow, rows, cols) {
-	let iStart = irow * cols;
-	let x = arr[iStart]; if (EmptyFunc(x)) return null;
-	for (let i = iStart + 1; i < iStart + cols; i++) if (arr[i] != x) return null;
-	return x;
-}
-function bStrideRow(arr, irow, rows, cols, stride) {
-	for (let i = 0; i <= cols - stride; i++) {
-		let ch = bStrideRowFrom(arr, irow, i, rows, cols, stride);
-		if (ch) return ch;
-	}
-	return null;
-}
-function bStrideRowFrom(arr, irow, icol, rows, cols, stride) {
-	if (cols - icol < stride) return null;
-	let iStart = irow * cols + icol;
-	let x = arr[iStart];
-	if (EmptyFunc(x)) return null;
-	for (let i = iStart + 1; i < iStart + stride; i++) if (arr[i] != x) return null;
-	return x;
-}
-function bStrideCol(arr, icol, rows, cols, stride) {
-	for (let i = 0; i <= rows - stride; i++) {
-		let ch = bStrideColFrom(arr, i, icol, rows, cols, stride);
-		if (ch) return ch;
-	}
-	return null;
-}
-function bStrideColFrom(arr, irow, icol, rows, cols, stride) {
-	if (rows - irow < stride) return null;
-	let iStart = irow * cols + icol;
-	let x = arr[iStart];
-	if (EmptyFunc(x)) return null;
-	for (let i = iStart + cols; i < iStart + cols * stride; i += cols) if (arr[i] != x) return null;
-	return x;
-}
-function bStrideDiagFrom(arr, irow, icol, rows, cols, stride) {
-	if (rows - irow < stride || cols - icol < stride) return null;
-	let iStart = irow * cols + icol;
-	let x = arr[iStart];
-	if (EmptyFunc(x)) return null;
-	for (let i = iStart + cols + 1; i < iStart + (cols + 1) * stride; i += cols + 1) if (arr[i] != x) return null;
-	return x;
-}
-function bStrideDiag2From(arr, irow, icol, rows, cols, stride) {
-	if (rows - irow < stride || icol - stride + 1 < 0) return null;
-	let iStart = irow * cols + icol;
-	let x = arr[iStart];
-	if (EmptyFunc(x)) return null;
-	for (let i = iStart + cols - 1; i < iStart + (cols - 1) * stride; i += cols - 1) if (arr[i] != x) return null;
-	return x;
-}
-function bFullCol(arr, icol, rows, cols) {
-	let iStart = icol;
-	let x = arr[iStart]; if (EmptyFunc(x)) return null;
-	for (let i = iStart + cols; i < iStart + (cols * rows); i += cols) if (arr[i] != x) return null;
-	return x;
-}
-function bFullDiag(arr, rows, cols) {
-	let iStart = 0;
-	let x = arr[iStart]; if (EmptyFunc(x)) return null;
-	for (let i = iStart + cols + 1; i < arr.length; i += cols + 1) { if (arr[i] != x) return null; }//console.log(i,arr[i]); }
-	return x;
-}
-function bFullDiag2(arr, rows, cols) {
-	let iStart = cols - 1;
-	let x = arr[iStart]; if (EmptyFunc(x)) return null;
-	for (let i = iStart + cols - 1; i < arr.length - 1; i += cols - 1) { if (arr[i] != x) return null; }//console.log(i,arr[i]); }
-	return x;
-}
-function bPartialRow(arr, irow, rows, cols) {
-	let iStart = irow * cols;
-	let x = null;
-	for (let i = iStart; i < iStart + cols; i++) {
-		if (EmptyFunc(arr[i])) continue;
-		else if (EmptyFunc(x)) x = arr[i];
-		else if (arr[i] != x) return null;
-	}
-	return x;
-}
-function bPartialCol(arr, icol, rows, cols) {
-	let iStart = icol;
-	let x = null;
-	for (let i = iStart; i < iStart + (cols * rows); i += cols) { if (EmptyFunc(arr[i])) continue; else if (EmptyFunc(x)) x = arr[i]; else if (arr[i] != x) return null; }
-	return x;
-}
-function bPartialDiag(arr, rows, cols) {
-	let iStart = 0;
-	let x = null;
-	for (let i = iStart; i < arr.length; i += cols + 1) { if (EmptyFunc(arr[i])) continue; else if (EmptyFunc(x)) x = arr[i]; else if (arr[i] != x) return null; }
-	return x;
-}
-function bPartialDiag2(arr, rows, cols) {
-	let iStart = cols - 1;
-	let x = null;
-	for (let i = iStart; i < arr.length - 1; i += cols - 1) {
-		if (EmptyFunc(arr[i])) continue; else if (EmptyFunc(x)) x = arr[i]; else if (arr[i] != x) return null;
-	}
-	return x;
-}
-function boardToNode(state) {
-	let res = new Array();
-	for (let i = 0; i < state.length; i++) {
-		if (state[i] == null) res[i] = ' ';
-		else res[i] = state[i];
-	}
-	return res;
-}
-function bCreateEmpty(rows, cols) { return new Array(rows * cols).fill(null); }
-function checkWinnerPossible(arr, rows, cols) {
-	for (i = 0; i < rows; i++) { let ch = bPartialRow(arr, i, rows, cols); if (ch) return ch; }
-	for (i = 0; i < cols; i++) { let ch = bPartialCol(arr, i, rows, cols); if (ch) return ch; }
-	let ch = bPartialDiag(arr, rows, cols); if (ch) return ch;
-	ch = bPartialDiag2(arr, rows, cols); if (ch) return ch;
-	return null;
-}
-function checkWinner(arr, rows, cols) {
-	for (i = 0; i < rows; i++) { let ch = bFullRow(arr, i, rows, cols); if (ch) return ch; }
-	for (i = 0; i < cols; i++) { let ch = bFullCol(arr, i, rows, cols); if (ch) return ch; }
-	let ch = bFullDiag(arr, rows, cols); if (ch) return ch;
-	ch = bFullDiag2(arr, rows, cols); if (ch) return ch;
-	return null;
-}
-function checkBoardFull(arr) { for (const x of arr) if (EmptyFunc(x)) return false; return true; }
-function checkPotentialTTT(arr) { return checkWinnerPossible(arr, G.rows, G.cols); }
-function checkWinnerTTT(arr) { return checkWinner(arr, G.rows, G.cols); }
-function checkWinnerC4(arr, rows = 6, cols = 7, stride = 4) {
-	for (i = 0; i < rows; i++) { let ch = bStrideRow(arr, i, rows, cols, stride); if (ch) return ch; }
-	for (i = 0; i < cols; i++) { let ch = bStrideCol(arr, i, rows, cols, stride); if (ch) return ch; }
-	for (i = 0; i < rows; i++) {
-		for (j = 0; j < cols; j++) {
-			let ch = bStrideDiagFrom(arr, i, j, rows, cols, stride); if (ch) return ch;
-			ch = bStrideDiag2From(arr, i, j, rows, cols, stride); if (ch) return ch;
-		}
-	}
-	return null;
-}
 class Board {
 	constructor(rows, cols, handler, cellStyle) {
 		let styles = isdef(cellStyle) ? cellStyle : { margin: 4, w: 150, h: 150, bg: 'white', fg: 'black' };
@@ -3074,28 +2763,287 @@ class Board {
 		}
 	}
 }
-function getCentersFromRowsCols(layout, rows, cols, wCell, hCell) {
-	let info;
-	if (layout == 'quad') { info = quadCenters(rows, cols, wCell, hCell); }
-	else if (layout == 'hex') { info = hexCenters(rows, cols, wCell, hCell); }
-	else if (layout == 'hex1') { info = hex1Centers(rows, cols, wCell, hCell); }
-	else if (layout == 'circle') { info = circleCenters(rows, cols, wCell, hCell); }
-	return info;
-}
-function quadCenters(rows, cols, wCell, hCell) {
-	let offX = wCell / 2, offY = hCell / 2;
-	let centers = [];
-	let x = 0; y = 0;
+function _calc_hex_col_array(rows, cols) {
+	let colarr = []; //how many cols in each row
+	let even = rows % 2 == 0;
 	for (let i = 0; i < rows; i++) {
-		for (let j = 0; j < cols; j++) {
-			let center = { x: x + offX, y: y + offY };
-			centers.push(center);
-			x += wCell;
-		}
-		y += hCell; x = 0;
+		colarr[i] = cols;
+		if (even && i < (rows / 2) - 1) cols += 1;
+		else if (even && i > rows / 2) cols -= 1;
+		else if (!even && i < (rows - 1) / 2) cols += 1;
+		else if (!even || i >= (rows - 1) / 2) cols -= 1;
 	}
-	return [centers, wCell * cols, hCell * rows];
+	return colarr;
 }
+function arrToMatrix(arr, rows, cols) {
+	let i = 0, res = [];
+	for (let r = 0; r < rows; r++) {
+		let rarr = [];
+		for (let c = 0; c < cols; c++) {
+			let a = arr[i]; i++;
+			rarr.push(a);
+		}
+		res.push(rarr);
+	}
+	return res;
+}
+function bCapturedPieces(plSym, arr, idx, rows, cols, includeDiagonals = true) {
+	let res = [];
+	let nei = bNei(arr, idx, rows, cols, includeDiagonals);
+	for (let dir = 0; dir < 8; dir++) {
+		let i = nei[dir];
+		if (nundef(i)) continue;
+		let el = arr[i];
+		if (EmptyFunc(el) || el == plSym) continue;
+		let inew = [];
+		let MAX = 100, cmax = 0;
+		while (isOppPiece(el, plSym)) {
+			if (cmax > MAX) break; cmax += 1;
+			inew.push(i);
+			i = bNeiDir(arr, i, dir, rows, cols);
+			if (nundef(i)) break;
+			el = arr[i];
+		}
+		if (el == plSym) {
+			res = res.concat(inew);
+		}
+	}
+	return res;
+}
+function bCreateEmpty(rows, cols) { return new Array(rows * cols).fill(null); }
+function bFullCol(arr, icol, rows, cols) {
+	let iStart = icol;
+	let x = arr[iStart]; if (EmptyFunc(x)) return null;
+	for (let i = iStart + cols; i < iStart + (cols * rows); i += cols) if (arr[i] != x) return null;
+	return x;
+}
+function bFullDiag(arr, rows, cols) {
+	let iStart = 0;
+	let x = arr[iStart]; if (EmptyFunc(x)) return null;
+	for (let i = iStart + cols + 1; i < arr.length; i += cols + 1) { if (arr[i] != x) return null; }//console.log(i,arr[i]); }
+	return x;
+}
+function bFullDiag2(arr, rows, cols) {
+	let iStart = cols - 1;
+	let x = arr[iStart]; if (EmptyFunc(x)) return null;
+	for (let i = iStart + cols - 1; i < arr.length - 1; i += cols - 1) { if (arr[i] != x) return null; }//console.log(i,arr[i]); }
+	return x;
+}
+function bFullRow(arr, irow, rows, cols) {
+	let iStart = irow * cols;
+	let x = arr[iStart]; if (EmptyFunc(x)) return null;
+	for (let i = iStart + 1; i < iStart + cols; i++) if (arr[i] != x) return null;
+	return x;
+}
+function bGetChunksWithIndices(arr2d, rowsEach, colsEach) {
+	let res = [];
+	let [rTotal, cTotal] = [arr2d.length, arr2d[0].length];
+	for (let r = 0; r < rTotal; r += rowsEach) {
+		let m1 = [];
+		for (let c = 0; c < cTotal; c += colsEach) {
+			m1 = bGetSubMatrixWithIndices(arr2d, r, rowsEach, c, colsEach);
+			res.push(arrFlatten(m1));
+		}
+	}
+	return res;
+}
+function bGetCols(arr2d) {
+	let rows = arr2d.length;
+	let cols = arr2d[0].length;
+	let res = [];
+	for (let c = 0; c < cols; c++) { res.push([]); }
+	for (let r = 0; r < rows; r++) {
+		for (let c = 0; c < cols; c++) {
+			res[c].push(arr2d[r][c]);
+		}
+	}
+	return res;
+}
+function bGetSubMatrixWithIndices(arr2d, rFrom, rows, cFrom, cols) {
+	let res = []; for (let i = 0; i < rows; i++) res.push([]);
+	let [rTotal, cTotal] = [arr2d.length, arr2d[0].length];
+	let rIndex = 0;
+	for (let r = rFrom; r < rFrom + rows; r++) {
+		for (let c = cFrom; c < cFrom + cols; c++) {
+			res[rIndex].push({ row: r, col: c, val: arr2d[r][c] });
+		}
+		rIndex += 1;
+	}
+	return res;
+}
+function bNei(arr, idx, rows, cols, includeDiagonals = true) {
+	let nei = [];
+	let [r, c] = iToRowCol(idx, rows, cols);
+	if (r > 0) nei.push(idx - cols); else nei.push(null);
+	if (r > 0 && c < cols - 1 && includeDiagonals) nei.push(idx - cols + 1); else nei.push(null);
+	if (c < cols - 1) nei.push(idx + 1); else nei.push(null);
+	if (r < rows - 1 && c < cols - 1 && includeDiagonals) nei.push(idx + cols + 1); else nei.push(null);
+	if (r < rows - 1) nei.push(idx + cols); else nei.push(null);
+	if (r < rows - 1 && c > 0 && includeDiagonals) nei.push(idx + cols - 1); else nei.push(null);
+	if (c > 0) nei.push(idx - 1); else nei.push(null);
+	if (r > 0 && c > 0 && includeDiagonals) nei.push(idx - cols - 1); else nei.push(null);
+	return nei;
+}
+function bNeiDir(arr, idx, dir, rows, cols, includeDiagonals = true) {
+	let [r, c] = iToRowCol(idx, rows, cols);
+	switch (dir) {
+		case 0: if (r > 0) return (idx - cols); else return (null);
+		case 1: if (r > 0 && c < cols - 1 && includeDiagonals) return (idx - cols + 1); else return (null);
+		case 2: if (c < cols - 1) return (idx + 1); else return (null);
+		case 3: if (r < rows - 1 && c < cols - 1 && includeDiagonals) return (idx + cols + 1); else return (null);
+		case 4: if (r < rows - 1) return (idx + cols); else return (null);
+		case 5: if (r < rows - 1 && c > 0 && includeDiagonals) return (idx + cols - 1); else return (null);
+		case 6: if (c > 0) return (idx - 1); else return (null);
+		case 7: if (r > 0 && c > 0 && includeDiagonals) return (idx - cols - 1); else return (null);
+	}
+	return null;
+}
+function boardToNode(state) {
+	let res = new Array();
+	for (let i = 0; i < state.length; i++) {
+		if (state[i] == null) res[i] = ' ';
+		else res[i] = state[i];
+	}
+	return res;
+}
+function bPartialCol(arr, icol, rows, cols) {
+	let iStart = icol;
+	let x = null;
+	for (let i = iStart; i < iStart + (cols * rows); i += cols) { if (EmptyFunc(arr[i])) continue; else if (EmptyFunc(x)) x = arr[i]; else if (arr[i] != x) return null; }
+	return x;
+}
+function bPartialDiag(arr, rows, cols) {
+	let iStart = 0;
+	let x = null;
+	for (let i = iStart; i < arr.length; i += cols + 1) { if (EmptyFunc(arr[i])) continue; else if (EmptyFunc(x)) x = arr[i]; else if (arr[i] != x) return null; }
+	return x;
+}
+function bPartialDiag2(arr, rows, cols) {
+	let iStart = cols - 1;
+	let x = null;
+	for (let i = iStart; i < arr.length - 1; i += cols - 1) {
+		if (EmptyFunc(arr[i])) continue; else if (EmptyFunc(x)) x = arr[i]; else if (arr[i] != x) return null;
+	}
+	return x;
+}
+function bPartialRow(arr, irow, rows, cols) {
+	let iStart = irow * cols;
+	let x = null;
+	for (let i = iStart; i < iStart + cols; i++) {
+		if (EmptyFunc(arr[i])) continue;
+		else if (EmptyFunc(x)) x = arr[i];
+		else if (arr[i] != x) return null;
+	}
+	return x;
+}
+function bStrideCol(arr, icol, rows, cols, stride) {
+	for (let i = 0; i <= rows - stride; i++) {
+		let ch = bStrideColFrom(arr, i, icol, rows, cols, stride);
+		if (ch) return ch;
+	}
+	return null;
+}
+function bStrideColFrom(arr, irow, icol, rows, cols, stride) {
+	if (rows - irow < stride) return null;
+	let iStart = irow * cols + icol;
+	let x = arr[iStart];
+	if (EmptyFunc(x)) return null;
+	for (let i = iStart + cols; i < iStart + cols * stride; i += cols) if (arr[i] != x) return null;
+	return x;
+}
+function bStrideDiag2From(arr, irow, icol, rows, cols, stride) {
+	if (rows - irow < stride || icol - stride + 1 < 0) return null;
+	let iStart = irow * cols + icol;
+	let x = arr[iStart];
+	if (EmptyFunc(x)) return null;
+	for (let i = iStart + cols - 1; i < iStart + (cols - 1) * stride; i += cols - 1) if (arr[i] != x) return null;
+	return x;
+}
+function bStrideDiagFrom(arr, irow, icol, rows, cols, stride) {
+	if (rows - irow < stride || cols - icol < stride) return null;
+	let iStart = irow * cols + icol;
+	let x = arr[iStart];
+	if (EmptyFunc(x)) return null;
+	for (let i = iStart + cols + 1; i < iStart + (cols + 1) * stride; i += cols + 1) if (arr[i] != x) return null;
+	return x;
+}
+function bStrideRow(arr, irow, rows, cols, stride) {
+	for (let i = 0; i <= cols - stride; i++) {
+		let ch = bStrideRowFrom(arr, irow, i, rows, cols, stride);
+		if (ch) return ch;
+	}
+	return null;
+}
+function bStrideRowFrom(arr, irow, icol, rows, cols, stride) {
+	if (cols - icol < stride) return null;
+	let iStart = irow * cols + icol;
+	let x = arr[iStart];
+	if (EmptyFunc(x)) return null;
+	for (let i = iStart + 1; i < iStart + stride; i++) if (arr[i] != x) return null;
+	return x;
+}
+function checkBoardFull(arr) { for (const x of arr) if (EmptyFunc(x)) return false; return true; }
+function checkPotentialTTT(arr) { return checkWinnerPossible(arr, G.rows, G.cols); }
+function checkSudokuRule(matrix) {
+	let i = 0;
+	for (const arr of matrix) {
+		let dd = hasDuplicate(arr);
+		if (dd) {
+			let err = { type: 'row', row: i, col: dd.i, val: dd.val, info: dd, i: i };
+			return err;
+		}
+		i += 1;
+	}
+	i = 0;
+	for (const arr of bGetCols(matrix)) {
+		let dd = hasDuplicate(arr);
+		if (dd) {
+			let err = { type: 'column', col: i, row: dd.i, val: dd.val, i: i, info: dd };
+			return err;
+		}
+		i += 1;
+	}
+	let [rows, cols] = [matrix.length, matrix[0].length];
+	let rowsEach = rows == 9 ? 3 : 2;
+	let colsEach = cols == 4 ? 2 : 3;
+	let chunks = bGetChunksWithIndices(matrix, rowsEach, colsEach);
+	i = 0;
+	for (const arr of chunks) {
+		let dd = hasDuplicate(arr);
+		if (dd) {
+			let val = dd.val;
+			let err = { type: 'quadrant', row: val.row, col: val.col, val: val.val, i: i, info: dd };
+		}
+		i += 1;
+	}
+	return null;
+}
+function checkWinner(arr, rows, cols) {
+	for (i = 0; i < rows; i++) { let ch = bFullRow(arr, i, rows, cols); if (ch) return ch; }
+	for (i = 0; i < cols; i++) { let ch = bFullCol(arr, i, rows, cols); if (ch) return ch; }
+	let ch = bFullDiag(arr, rows, cols); if (ch) return ch;
+	ch = bFullDiag2(arr, rows, cols); if (ch) return ch;
+	return null;
+}
+function checkWinnerC4(arr, rows = 6, cols = 7, stride = 4) {
+	for (i = 0; i < rows; i++) { let ch = bStrideRow(arr, i, rows, cols, stride); if (ch) return ch; }
+	for (i = 0; i < cols; i++) { let ch = bStrideCol(arr, i, rows, cols, stride); if (ch) return ch; }
+	for (i = 0; i < rows; i++) {
+		for (j = 0; j < cols; j++) {
+			let ch = bStrideDiagFrom(arr, i, j, rows, cols, stride); if (ch) return ch;
+			ch = bStrideDiag2From(arr, i, j, rows, cols, stride); if (ch) return ch;
+		}
+	}
+	return null;
+}
+function checkWinnerPossible(arr, rows, cols) {
+	for (i = 0; i < rows; i++) { let ch = bPartialRow(arr, i, rows, cols); if (ch) return ch; }
+	for (i = 0; i < cols; i++) { let ch = bPartialCol(arr, i, rows, cols); if (ch) return ch; }
+	let ch = bPartialDiag(arr, rows, cols); if (ch) return ch;
+	ch = bPartialDiag2(arr, rows, cols); if (ch) return ch;
+	return null;
+}
+function checkWinnerTTT(arr) { return checkWinner(arr, G.rows, G.cols); }
 function circleCenters(rows, cols, wCell, hCell) {
 	let [w, h] = [cols * wCell, rows * hCell];
 	let cx = w / 2;
@@ -3112,51 +3060,12 @@ function circleCenters(rows, cols, wCell, hCell) {
 	}
 	return [centers, wCell * cols, hCell * rows];
 }
-function oneCircleCenters(rows, cols, wCell, hCell) {
-	let [w, h] = [cols * wCell, rows * hCell];
-	let cx = w / 2;
-	let cy = h / 2;
-	let centers = [{ x: cx, y: cy }];
-	let n = 8;
-	let radx = cx - wCell / 2;
-	let rady = cy - hCell / 2;
-	let peri = Math.min(radx, rady) * 2 * Math.PI;
-	n = Math.floor(peri / Math.min(wCell, hCell));
-	while (n > 4 && n % 4 != 0 && n % 6 != 0) n -= 1;
-	centers = getEllipsePoints(radx, rady, n)
-	centers = centers.map(pt => ({ x: pt.X + cx, y: pt.Y + cy }));
-	return [centers, wCell * cols, hCell * rows];
-}
-function hexCenters(rows, cols, wCell = 100, hCell) {
-	if (nundef(hCell)) hCell = (hCell / .866);
-	let hline = hCell * .75;
-	let offX = wCell / 2, offY = hCell / 2;
-	let centers = [];
-	let startSmaller = Math.floor(rows / 2) % 2 == 1;
-	let x = 0; y = 0;
-	for (let r = 0; r < rows; r++) {
-		let isSmaller = startSmaller && r % 2 == 0 || !startSmaller && r % 2 == 1;
-		let curCols = isSmaller ? cols - 1 : cols;
-		let dx = isSmaller ? wCell / 2 : 0;
-		dx += offX;
-		for (let c = 0; c < curCols; c++) {
-			let center = { x: dx + c * wCell, y: offY + r * hline };
-			centers.push(center);
-		}
-	}
-	return [centers, wCell * cols, hCell / 4 + rows * hline];
-}
-function _calc_hex_col_array(rows, cols) {
-	let colarr = []; //how many cols in each row
-	let even = rows % 2 == 0;
-	for (let i = 0; i < rows; i++) {
-		colarr[i] = cols;
-		if (even && i < (rows/2)-1) cols += 1;
-		else if (even && i >rows/2) cols -= 1;
-		else if (!even && i < (rows-1)/2) cols += 1;
-		else if (!even || i >= (rows-1)/2) cols -= 1;
-	}
-	return colarr;
+function destroySudokuRule(pattern, rows, cols) {
+	let sz = Math.min(rows, cols);
+	let [r1, r2] = choose(range(0, sz - 1), 2);
+	let c = chooseRandom(range(0, sz - 1));
+	if (coin(50)) { arrSwap2d(pattern, r1, c, r2, c); }
+	else if (coin(50)) { arrSwap2d(pattern, c, r1, c, r2); }
 }
 function fillColarr(colarr, items) {
 	let i = 0;
@@ -3169,6 +3078,35 @@ function fillColarr(colarr, items) {
 		result.push(arr);
 	}
 	return result;
+}
+function getCentersFromRowsCols(layout, rows, cols, wCell, hCell) {
+	let info;
+	if (layout == 'quad') { info = quadCenters(rows, cols, wCell, hCell); }
+	else if (layout == 'hex') { info = hexCenters(rows, cols, wCell, hCell); }
+	else if (layout == 'hex1') { info = hex1Centers(rows, cols, wCell, hCell); }
+	else if (layout == 'circle') { info = circleCenters(rows, cols, wCell, hCell); }
+	return info;
+}
+function getSudokuPatternFromDB(r, c, index) {
+	let key = '' + r + 'x' + c;
+	let numSamples = Object.keys(DB.games.gColoku.samples[key]).length;
+	if (nundef(index)) index = randomNumber(0, numSamples - 1); else if (index >= numSamples) index = 1;
+	let sample = DB.games.gColoku.samples[key][index];
+	let pattern = sudokuSampleToIndexMatrix(sample.sol, r, c);
+	let puzzle = sudokuSampleToIndexMatrix(sample.min, r, c);
+	return { pattern: pattern, puzzle: puzzle };
+}
+function hasDuplicate(arr, efunc) {
+	let di = {};
+	if (nundef(efunc)) efunc = x => { return x === ' ' };
+	let i = -1;
+	for (const a of arr) {
+		i += 1;
+		if (efunc(a)) continue; //!isNumber(a) && a==' ') {console.log('H!',a);continue;}
+		if (a in di) return { i: i, val: a };
+		di[a] = true;
+	}
+	return false;
 }
 function hex1Centers(rows, cols, wCell = 100, hCell = null) {
 	let colarr = _calc_hex_col_array(rows, cols);
@@ -3189,10 +3127,140 @@ function hex1Centers(rows, cols, wCell = 100, hCell = null) {
 	}
 	return [centers, wCell * maxcols, hCell / 4 + rows * hline];
 }
+function hexCenters(rows, cols, wCell = 100, hCell) {
+	if (nundef(hCell)) hCell = (hCell / .866);
+	let hline = hCell * .75;
+	let offX = wCell / 2, offY = hCell / 2;
+	let centers = [];
+	let startSmaller = Math.floor(rows / 2) % 2 == 1;
+	let x = 0; y = 0;
+	for (let r = 0; r < rows; r++) {
+		let isSmaller = startSmaller && r % 2 == 0 || !startSmaller && r % 2 == 1;
+		let curCols = isSmaller ? cols - 1 : cols;
+		let dx = isSmaller ? wCell / 2 : 0;
+		dx += offX;
+		for (let c = 0; c < curCols; c++) {
+			let center = { x: dx + c * wCell, y: offY + r * hline };
+			centers.push(center);
+		}
+	}
+	return [centers, wCell * cols, hCell / 4 + rows * hline];
+}
+function isOppPiece(sym, plSym) { return sym && sym != plSym; }
+function iToRowCol(idx, rows, cols) { let c = idx % cols; let r = (idx - c) / rows; return [r, c]; }
+function oneCircleCenters(rows, cols, wCell, hCell) {
+	let [w, h] = [cols * wCell, rows * hCell];
+	let cx = w / 2;
+	let cy = h / 2;
+	let centers = [{ x: cx, y: cy }];
+	let n = 8;
+	let radx = cx - wCell / 2;
+	let rady = cy - hCell / 2;
+	let peri = Math.min(radx, rady) * 2 * Math.PI;
+	n = Math.floor(peri / Math.min(wCell, hCell));
+	while (n > 4 && n % 4 != 0 && n % 6 != 0) n -= 1;
+	centers = getEllipsePoints(radx, rady, n)
+	centers = centers.map(pt => ({ x: pt.X + cx, y: pt.Y + cy }));
+	return [centers, wCell * cols, hCell * rows];
+}
+function quadCenters(rows, cols, wCell, hCell) {
+	let offX = wCell / 2, offY = hCell / 2;
+	let centers = [];
+	let x = 0; y = 0;
+	for (let i = 0; i < rows; i++) {
+		for (let j = 0; j < cols; j++) {
+			let center = { x: x + offX, y: y + offY };
+			centers.push(center);
+			x += wCell;
+		}
+		y += hCell; x = 0;
+	}
+	return [centers, wCell * cols, hCell * rows];
+}
+function sudokuSampleToIndexMatrix(s, rows, cols) {
+	if (isNumber(s)) s = String(s);
+	let letters = toLetterArray(s);
+	let nums = letters.map(x => Number(x));
+	let res = [];
+	for (const n of nums) {
+		if (n === 0) res.push(' ');
+		else res.push(n - 1);
+	}
+	let matrix = arrToMatrix(res, rows, cols);
+	return matrix;
+}
 //#endregion board
 
 //#region cards
 var CSZ = 300;
+function cBlank(dParent, styles = {}, id) {
+	if (nundef(styles.h)) styles.h = CSZ;
+	if (nundef(styles.w)) styles.w = styles.h * .7;
+	if (nundef(styles.bg)) styles.bg = 'white';
+	styles.position = 'relative';
+	let [w, h, sz] = [styles.w, styles.h, Math.min(styles.w, styles.h)];
+	if (nundef(styles.rounding)) styles.rounding = sz * .05;
+	let d = mDiv(dParent, styles, id, null, 'card');
+	let item = mItem(null, { div: d }, { type: 'card', sz: sz, rounding: styles.rounding }, false);
+	copyKeys(styles, item);
+	return item;
+}
+function cRound(dParent, styles = {}, id) {
+	styles.w = valf(styles.w, CSZ);
+	styles.h = valf(styles.h, CSZ);
+	styles.rounding = '50%';
+	return cBlank(dParent, styles, id);
+}
+function mCols(dParent, arr, itemStyles = { bg: 'random' }, rowStyles, colStyles, akku) {
+	let d0 = mDiv100(dParent, { display: 'flex', 'justify-content': 'space-between' }); //,'align-items':'center'});
+	if (isdef(colStyles)) mStyle(d0, colStyles);
+	for (let i = 0; i < arr.length; i++) {
+		let content = arr[i];
+		if (isList(content)) {
+			d1 = mDiv(d0); //,null,randomName());
+			mRows(d1, content, itemStyles, rowStyles, colStyles, akku);
+		} else {
+			d1 = mContent(content, d0, itemStyles); //mDiv(d0, styles, null, content);
+			akku.push(d1);
+		}
+	}
+}
+function mContent(content, dParent, styles) {
+	let d1 = isdef(Syms[content]) ? mSymInDivShrink(content, dParent, styles) : mDiv(dParent, styles, null, content);
+	return d1;
+}
+function mRows(dParent, arr, itemStyles = { bg: 'random' }, rowStyles, colStyles, akku) {
+	let d0 = mDiv100(dParent, { display: 'flex', dir: 'column', 'justify-content': 'space-between' });//,'align-items':'center'});
+	if (isdef(rowStyles)) mStyle(d0, rowStyles);
+	d0.style.maxHeight = `${CSZ}px`; //HACK!!!!!!!!!!!!!!!
+	for (let i = 0; i < arr.length; i++) {
+		let content = arr[i];
+		if (isList(content)) {
+			let d1 = mDiv(d0); //,null,randomName());
+			mCols(d1, content, itemStyles, rowStyles, colStyles, akku);
+		} else {
+			d1 = mContent(content, d0, itemStyles); //mDiv(d0, styles, null, content);
+			akku.push(d1);
+		}
+	}
+}
+function mSymInDivShrink(sym, dParent, styles = { sz: CSZ / 5, fg: 'random' }) {
+	dResult = mDiv(dParent);
+	let ds = mSym(sym, dResult, styles);
+	let scale = chooseRandom([.4, .7, 1, 1.25]);
+	let [scaleX, scaleY] = [coin() ? scale : -scale, scale];
+	if (coin()) ds.style.transform = `scale(${scaleX},${scaleY})`;
+	return dResult;
+}
+function mSymSizeToBox(info, w, h) {
+	let fw = w / info.w;
+	let fh = h / info.h;
+	let f = Math.min(fw, fh);
+	return { fz: 100 * f, w: info.w * f, h: info.h * f };
+}
+function mSymSizeToFz(info, fz) { let f = fz / 100; return { fz: fz, w: info.w * f, h: info.h * f }; }
+function mSymSizeToH(info, h) { let f = h / info.h; return { fz: 100 * f, w: info.w * f, h: h }; }
+function mSymSizeToW(info, w) { let f = w / info.w; return { fz: 100 * f, w: w, h: info.h * f }; }
 function spotitCard(info, dParent, cardStyles, onClickSym) {
 	let styles = copyKeys({ w: CSZ, h: CSZ }, cardStyles);
 	let card = cRound(dParent, cardStyles, info.id);
@@ -3217,75 +3285,7 @@ function spotitFindCardSharingSymbol(card, key) {
 }
 function spotitFindSymbol(card, key) {
 	let k = firstCondDictKey(card.live, x => x == key);
-	return iGetl(card,k);
-}
-function mRows(dParent, arr, itemStyles = { bg: 'random' }, rowStyles, colStyles, akku) {
-	let d0 = mDiv100(dParent, { display: 'flex', dir: 'column', 'justify-content': 'space-between' });//,'align-items':'center'});
-	if (isdef(rowStyles)) mStyle(d0, rowStyles);
-	d0.style.maxHeight = `${CSZ}px`; //HACK!!!!!!!!!!!!!!!
-	for (let i = 0; i < arr.length; i++) {
-		let content = arr[i];
-		if (isList(content)) {
-			let d1 = mDiv(d0); //,null,randomName());
-			mCols(d1, content, itemStyles, rowStyles, colStyles, akku);
-		} else {
-			d1 = mContent(content, d0, itemStyles); //mDiv(d0, styles, null, content);
-			akku.push(d1);
-		}
-	}
-}
-function mCols(dParent, arr, itemStyles = { bg: 'random' }, rowStyles, colStyles, akku) {
-	let d0 = mDiv100(dParent, { display: 'flex', 'justify-content': 'space-between' }); //,'align-items':'center'});
-	if (isdef(colStyles)) mStyle(d0, colStyles);
-	for (let i = 0; i < arr.length; i++) {
-		let content = arr[i];
-		if (isList(content)) {
-			d1 = mDiv(d0); //,null,randomName());
-			mRows(d1, content, itemStyles, rowStyles, colStyles, akku);
-		} else {
-			d1 = mContent(content, d0, itemStyles); //mDiv(d0, styles, null, content);
-			akku.push(d1);
-		}
-	}
-}
-function mContent(content, dParent, styles) {
-	let d1 = isdef(Syms[content]) ? mSymInDivShrink(content, dParent, styles) : mDiv(dParent, styles, null, content);
-	return d1;
-}
-function mSymInDivShrink(sym, dParent, styles = { sz: CSZ / 5, fg: 'random' }) {
-	dResult = mDiv(dParent);
-	let ds = mSym(sym, dResult, styles);
-	let scale = chooseRandom([.4, .7, 1, 1.25]);
-	let [scaleX, scaleY] = [coin() ? scale : -scale, scale];
-	if (coin()) ds.style.transform = `scale(${scaleX},${scaleY})`;
-	return dResult;
-}
-function cRound(dParent,styles={}, id){
-	styles.w=valf(styles.w,CSZ);
-	styles.h=valf(styles.h,CSZ);
-	styles.rounding = '50%';
-	return cBlank(dParent, styles, id);
-}
-function cBlank(dParent, styles={}, id) {
-	if (nundef(styles.h)) styles.h = CSZ;
-	if (nundef(styles.w)) styles.w = styles.h * .7;
-	if (nundef(styles.bg)) styles.bg = 'white';
-	styles.position = 'relative';
-	let [w, h, sz] = [styles.w, styles.h, Math.min(styles.w, styles.h)];
-	if (nundef(styles.rounding)) styles.rounding = sz * .05;
-	let d = mDiv(dParent, styles, id, null, 'card');
-	let item = mItem(null, { div: d }, { type: 'card', sz: sz, rounding: styles.rounding }, false);
-	copyKeys(styles, item);
-	return item;
-}
-function mSymSizeToH(info, h) { let f = h / info.h; return { fz: 100 * f, w: info.w * f, h: h }; }
-function mSymSizeToW(info, w) { let f = w / info.w; return { fz: 100 * f, w: w, h: info.h * f }; }
-function mSymSizeToFz(info, fz) { let f = fz / 100; return { fz: fz, w: info.w * f, h: info.h * f }; }
-function mSymSizeToBox(info, w, h) {
-	let fw = w / info.w;
-	let fh = h / info.h;
-	let f = Math.min(fw, fh);
-	return { fz: 100 * f, w: info.w * f, h: info.h * f };
+	return iGetl(card, k);
 }
 //#endregion cards
 
@@ -3388,35 +3388,299 @@ var brd_searchHistory = new Array(14 * BRD_SQ_NUM);
 var brd_searchKillers = new Array(3 * MAXDEPTH);
 var VictimScore = [0, 100, 200, 300, 400, 500, 600, 100, 200, 300, 400, 500, 600];
 var MvvLvaScores = new Array(14 * 14);
-function FROMSQ(m) { return (m & 0x7F); }
-function TOSQ(m) { return (((m) >> 7) & 0x7F); }
-function CAPTURED(m) { return (((m) >> 14) & 0xF); }
-function PROMOTED(m) { return (((m) >> 20) & 0xF); }
-function PCEINDEX(pce, pceNum) { return (pce * 10 + pceNum); }
-function FR2SQ(f, r) { return ((21 + (f)) + ((r) * 10)); }
-function SQ64(sq120) { return Sq120ToSq64[(sq120)]; }
-function SQ120(sq64) { return Sq64ToSq120[(sq64)]; }
-function MIRROR64(sq) { return Mirror64[sq]; }
-function RAND_32() { return (Math.floor((Math.random() * 255) + 1) << 23) | (Math.floor((Math.random() * 255) + 1) << 16) | (Math.floor((Math.random() * 255) + 1) << 8) | Math.floor((Math.random() * 255) + 1); }
-function SQOFFBOARD(sq) { if (FilesBrd[sq] == SQUARES.OFFBOARD) return BOOL.TRUE; return BOOL.FALSE; }
-function HASH_PCE(pce, sq) { brd_posKey ^= PieceKeys[pce * 120 + sq]; }
-function HASH_CA() { brd_posKey ^= CastleKeys[brd_castlePerm]; }
-function HASH_SIDE() { brd_posKey ^= SideKey; }
-function HASH_EP() { brd_posKey ^= PieceKeys[brd_enPas]; }
-function SqFromAlg(moveAlg) {
-	if (moveAlg.length != 2) return SQUARES.NO_SQ;
-	if (moveAlg[0] > 'h' || moveAlg[0] < 'a') return SQUARES.NO_SQ;
-	if (moveAlg[1] > '8' || moveAlg[1] < '1') return SQUARES.NO_SQ;
-	file = moveAlg[0].charCodeAt() - 'a'.charCodeAt();
-	rank = moveAlg[1].charCodeAt() - '1'.charCodeAt();
-	return FR2SQ(file, rank);
+var RookOpenFile = 10;
+var RookSemiOpenFile = 5;
+var QueenOpenFile = 5;
+var QueenSemiOpenFile = 3;
+var BishopPair = 30;
+var PawnRanksWhite = new Array(10);
+var PawnRanksBlack = new Array(10);
+var PawnIsolated = -10;
+var PawnPassed = [0, 5, 10, 20, 35, 60, 100, 200];
+var PawnTable = [
+	0, 0, 0, 0, 0, 0, 0, 0,
+	10, 10, 0, -10, -10, 0, 10, 10,
+	5, 0, 0, 5, 5, 0, 0, 5,
+	0, 0, 10, 20, 20, 10, 0, 0,
+	5, 5, 5, 10, 10, 5, 5, 5,
+	10, 10, 10, 20, 20, 10, 10, 10,
+	20, 20, 20, 30, 30, 20, 20, 20,
+	0, 0, 0, 0, 0, 0, 0, 0
+];
+var KnightTable = [
+	0, -10, 0, 0, 0, 0, -10, 0,
+	0, 0, 0, 5, 5, 0, 0, 0,
+	0, 0, 10, 10, 10, 10, 0, 0,
+	0, 0, 10, 20, 20, 10, 5, 0,
+	5, 10, 15, 20, 20, 15, 10, 5,
+	5, 10, 10, 20, 20, 10, 10, 5,
+	0, 0, 5, 10, 10, 5, 0, 0,
+	0, 0, 0, 0, 0, 0, 0, 0
+];
+var BishopTable = [
+	0, 0, -10, 0, 0, -10, 0, 0,
+	0, 0, 0, 10, 10, 0, 0, 0,
+	0, 0, 10, 15, 15, 10, 0, 0,
+	0, 10, 15, 20, 20, 15, 10, 0,
+	0, 10, 15, 20, 20, 15, 10, 0,
+	0, 0, 10, 15, 15, 10, 0, 0,
+	0, 0, 0, 10, 10, 0, 0, 0,
+	0, 0, 0, 0, 0, 0, 0, 0
+];
+var RookTable = [
+	0, 0, 5, 10, 10, 5, 0, 0,
+	0, 0, 5, 10, 10, 5, 0, 0,
+	0, 0, 5, 10, 10, 5, 0, 0,
+	0, 0, 5, 10, 10, 5, 0, 0,
+	0, 0, 5, 10, 10, 5, 0, 0,
+	0, 0, 5, 10, 10, 5, 0, 0,
+	25, 25, 25, 25, 25, 25, 25, 25,
+	0, 0, 5, 10, 10, 5, 0, 0
+];
+var KingE = [
+	-50, -10, 0, 0, 0, 0, -10, -50,
+	-10, 0, 10, 10, 10, 10, 0, -10,
+	0, 10, 20, 20, 20, 20, 10, 0,
+	0, 10, 20, 40, 40, 20, 10, 0,
+	0, 10, 20, 40, 40, 20, 10, 0,
+	0, 10, 20, 20, 20, 20, 10, 0,
+	-10, 0, 10, 10, 10, 10, 0, -10,
+	-50, -10, 0, 0, 0, 0, -10, -50
+];
+var KingO = [
+	0, 5, 5, -10, -10, 0, 10, 5,
+	-30, -30, -30, -30, -30, -30, -30, -30,
+	-50, -50, -50, -50, -50, -50, -50, -50,
+	-70, -70, -70, -70, -70, -70, -70, -70,
+	-70, -70, -70, -70, -70, -70, -70, -70,
+	-70, -70, -70, -70, -70, -70, -70, -70,
+	-70, -70, -70, -70, -70, -70, -70, -70,
+	-70, -70, -70, -70, -70, -70, -70, -70
+];
+var ENDGAME_MAT = 1 * PieceVal[PIECES.wR] + 2 * PieceVal[PIECES.wN] + 2 * PieceVal[PIECES.wP] + PieceVal[PIECES.wK];
+var srch_nodes;
+var srch_fh;
+var srch_fhf;
+var srch_depth;
+var srch_time;
+var srch_start;
+var srch_stop;
+var srch_best;
+var srch_thinking;
+var domUpdate_depth;
+var domUpdate_move;
+var domUpdate_score;
+var domUpdate_nodes;
+var domUpdate_ordering;
+var UserMove = {};
+var MirrorFiles = [FILES.FILE_H, FILES.FILE_G, FILES.FILE_F, FILES.FILE_E, FILES.FILE_D, FILES.FILE_C, FILES.FILE_B, FILES.FILE_A];
+var MirrorRanks = [RANKS.RANK_8, RANKS.RANK_7, RANKS.RANK_6, RANKS.RANK_5, RANKS.RANK_4, RANKS.RANK_3, RANKS.RANK_2, RANKS.RANK_1];
+function ActivateChessWidgets() {
+	StopThinking();
+	$("#SetFen").click(function () {
+		var fenStr = $("#fenIn").val();
+		ParseFen(fenStr);
+		PrintBoard();
+		SetInitialBoardPieces();
+		GameController.PlayerSide = brd_side;
+		CheckAndSet();
+		EvalPosition();
+		NewGameAjax();
+	});
+	$("#UndoButton").click(function () {
+		if (brd_hisPly > 0) {
+			TakeMove(); if (brd_hisPly > 0) TakeMove();
+			brd_ply = 0;
+			SetInitialBoardPieces();
+			$("#currentFenSpan").text(BoardToFen());
+		}
+	});
+	$("#HintButton").click(function () {
+		FLAG_HINT_ONLY = true;
+		let move = PreSearch();
+	});
+	$("#SearchButton").click(function () {
+		GameController.PlayerSide = brd_side ^ 1;
+		PreSearch();
+	});
+	$("#FlipButton").click(function () {
+		GameController.BoardFlipped ^= 1;
+		SetInitialBoardPieces();
+	});
+	$("#EndGameButton").click(function () {
+		let fen = chooseRandom(FenPositionList).FEN;
+		NewGame(fen);
+		NewGameAjax();
+	});
+	$("#NewGameButton").click(function () {
+		NewGame();
+		NewGameAjax();
+	});
 }
-function Move2FromTo(move) {
-	var ff = FilesBrd[FROMSQ(move)];
-	var rf = RanksBrd[FROMSQ(move)];
-	var ft = FilesBrd[TOSQ(move)];
-	var rt = RanksBrd[TOSQ(move)];
-	return { from: { sq: FROMSQ(move), file: ff, rank: rf }, to: { sq: TOSQ(move), file: ft, rank: rt } };
+function AddBlackPawnCaptureMove(from, to, cap) {
+	if (RanksBrd[from] == RANKS.RANK_2) {
+		AddCaptureMove(MOVE(from, to, cap, PIECES.bQ, 0));
+		AddCaptureMove(MOVE(from, to, cap, PIECES.bR, 0));
+		AddCaptureMove(MOVE(from, to, cap, PIECES.bB, 0));
+		AddCaptureMove(MOVE(from, to, cap, PIECES.bN, 0));
+	} else {
+		AddCaptureMove(MOVE(from, to, cap, PIECES.EMPTY, 0));
+	}
+}
+function AddBlackPawnQuietMove(from, to) {
+	if (RanksBrd[from] == RANKS.RANK_2) {
+		AddQuietMove(MOVE(from, to, PIECES.EMPTY, PIECES.bQ, 0));
+		AddQuietMove(MOVE(from, to, PIECES.EMPTY, PIECES.bR, 0));
+		AddQuietMove(MOVE(from, to, PIECES.EMPTY, PIECES.bB, 0));
+		AddQuietMove(MOVE(from, to, PIECES.EMPTY, PIECES.bN, 0));
+	} else {
+		AddQuietMove(MOVE(from, to, PIECES.EMPTY, PIECES.EMPTY, 0));
+	}
+}
+function AddCaptureMove(move) {
+	brd_moveList[brd_moveListStart[brd_ply + 1]] = move;
+	brd_moveScores[brd_moveListStart[brd_ply + 1]++] = MvvLvaScores[CAPTURED(move) * 14 + brd_pieces[FROMSQ(move)]] + 1000000;
+}
+function AddEnPassantMove(move) {
+	brd_moveList[brd_moveListStart[brd_ply + 1]] = move;
+	brd_moveScores[brd_moveListStart[brd_ply + 1]++] = 105 + 1000000;
+}
+function AddGUIPiece(sq, pce) {
+	var rank = RanksBrd[sq];
+	var file = FilesBrd[sq];
+	var rankName = "rank" + (rank + 1);
+	var fileName = "file" + (file + 1);
+	pieceFileName = "../base/assets/images/chess/" + SideChar[PieceCol[pce]] + PceChar[pce].toUpperCase() + ".png";
+	imageString = "<image src=\"" + pieceFileName + "\" class=\"Piece clickElement " + rankName + " " + fileName + "\"/>";
+	$("#ChessBoard").append(imageString);
+}
+function AddPiece(sq, pce) {
+	var col = PieceCol[pce];
+	HASH_PCE(pce, sq);
+	brd_pieces[sq] = pce;
+	brd_material[col] += PieceVal[pce];
+	brd_pList[PCEINDEX(pce, brd_pceNum[pce])] = sq;
+	brd_pceNum[pce]++;
+}
+function AddQuietMove(move) {
+	brd_moveList[brd_moveListStart[brd_ply + 1]] = move;
+	if (brd_searchKillers[brd_ply] == move) {
+		brd_moveScores[brd_moveListStart[brd_ply + 1]] = 900000;
+	} else if (brd_searchKillers[MAXDEPTH + brd_ply] == move) {
+		brd_moveScores[brd_moveListStart[brd_ply + 1]] = 800000;
+	} else {
+		brd_moveScores[brd_moveListStart[brd_ply + 1]] = brd_searchHistory[brd_pieces[FROMSQ(move)] * BRD_SQ_NUM + TOSQ(move)];
+	}
+	brd_moveListStart[brd_ply + 1]++;
+}
+function AddWhitePawnCaptureMove(from, to, cap) {
+	if (RanksBrd[from] == RANKS.RANK_7) {
+		AddCaptureMove(MOVE(from, to, cap, PIECES.wQ, 0));
+		AddCaptureMove(MOVE(from, to, cap, PIECES.wR, 0));
+		AddCaptureMove(MOVE(from, to, cap, PIECES.wB, 0));
+		AddCaptureMove(MOVE(from, to, cap, PIECES.wN, 0));
+	} else {
+		AddCaptureMove(MOVE(from, to, cap, PIECES.EMPTY, 0));
+	}
+}
+function AddWhitePawnQuietMove(from, to) {
+	if (RanksBrd[from] == RANKS.RANK_7) {
+		AddQuietMove(MOVE(from, to, PIECES.EMPTY, PIECES.wQ, 0));
+		AddQuietMove(MOVE(from, to, PIECES.EMPTY, PIECES.wR, 0));
+		AddQuietMove(MOVE(from, to, PIECES.EMPTY, PIECES.wB, 0));
+		AddQuietMove(MOVE(from, to, PIECES.EMPTY, PIECES.wN, 0));
+	} else {
+		AddQuietMove(MOVE(from, to, PIECES.EMPTY, PIECES.EMPTY, 0));
+	}
+}
+function AlphaBeta(alpha, beta, depth, DoNull) {
+	if (depth <= 0) {
+		return Quiescence(alpha, beta);
+	}
+	if ((srch_nodes & 2047) == 0) CheckUp();
+	srch_nodes++;
+	if ((IsRepetition() || brd_fiftyMove >= 100) && brd_ply != 0) {
+		return 0;
+	}
+	if (brd_ply > MAXDEPTH - 1) {
+		return EvalPosition(pos);
+	}
+	var InCheck = SqAttacked(brd_pList[PCEINDEX(Kings[brd_side], 0)], brd_side ^ 1);
+	if (InCheck == BOOL.TRUE) {
+		depth++;
+	}
+	var Score = -INFINITE;
+	if (DoNull == BOOL.TRUE && BOOL.FALSE == InCheck &&
+		brd_ply != 0 && (brd_material[brd_side] > 50200) && depth >= 4) {
+		var ePStore = brd_enPas;
+		if (brd_enPas != SQUARES.NO_SQ) HASH_EP();
+		brd_side ^= 1;
+		HASH_SIDE();
+		brd_enPas = SQUARES.NO_SQ;
+		Score = -AlphaBeta(-beta, -beta + 1, depth - 4, BOOL.FALSE);
+		brd_side ^= 1;
+		HASH_SIDE();
+		brd_enPas = ePStore;
+		if (brd_enPas != SQUARES.NO_SQ) HASH_EP();
+		if (srch_stop == BOOL.TRUE) return 0;
+		if (Score >= beta) {
+			return beta;
+		}
+	}
+	GenerateMoves();
+	var MoveNum = 0;
+	var Legal = 0;
+	var OldAlpha = alpha;
+	var BestMove = NOMOVE;
+	Score = -INFINITE;
+	var PvMove = ProbePvTable();
+	if (PvMove != NOMOVE) {
+		for (MoveNum = brd_moveListStart[brd_ply]; MoveNum < brd_moveListStart[brd_ply + 1]; ++MoveNum) {
+			if (brd_moveList[MoveNum] == PvMove) {
+				brd_moveScores[MoveNum].score = 2000000;
+				break;
+			}
+		}
+	}
+	for (MoveNum = brd_moveListStart[brd_ply]; MoveNum < brd_moveListStart[brd_ply + 1]; ++MoveNum) {
+		PickNextMove(MoveNum);
+		if (MakeMove(brd_moveList[MoveNum]) == BOOL.FALSE) {
+			continue;
+		}
+		Legal++;
+		Score = -AlphaBeta(-beta, -alpha, depth - 1, BOOL.TRUE);
+		TakeMove();
+		if (srch_stop == BOOL.TRUE) return 0;
+		if (Score > alpha) {
+			if (Score >= beta) {
+				if (Legal == 1) {
+					srch_fhf++;
+				}
+				srch_fh++;
+				if ((brd_moveList[MoveNum] & MFLAGCAP) == 0) {
+					brd_searchKillers[MAXDEPTH + brd_ply] = brd_searchKillers[brd_ply];
+					brd_searchKillers[brd_ply] = brd_moveList[MoveNum];
+				}
+				return beta;
+			}
+			alpha = Score;
+			BestMove = brd_moveList[MoveNum];
+			if ((BestMove & MFLAGCAP) == 0) {
+				brd_searchHistory[brd_pieces[FROMSQ(BestMove)] * BRD_SQ_NUM + TOSQ(BestMove)] += depth;
+			}
+		}
+	}
+	if (Legal == 0) {
+		if (InCheck) {
+			return -MATE + brd_ply;
+		} else {
+			return 0;
+		}
+	}
+	if (alpha != OldAlpha) {
+		StorePvMove(BestMove);
+	}
+	return alpha;
 }
 function BoardToFen() {
 	var fenStr = '';
@@ -3470,186 +3734,6 @@ function BoardToFen() {
 	fenStr += tempHalfMove / 2;
 	return fenStr;
 }
-function ParseFen(fen) {
-	var rank = RANKS.RANK_8;
-	var file = FILES.FILE_A;
-	var piece = 0;
-	var count = 0;
-	var i = 0;
-	var sq64 = 0;
-	var sq120 = 0;
-	var fenCnt = 0;
-	ResetBoard();
-	while ((rank >= RANKS.RANK_1) && fenCnt < fen.length) {
-		count = 1;
-		switch (fen[fenCnt]) {
-			case 'p': piece = PIECES.bP; break;
-			case 'r': piece = PIECES.bR; break;
-			case 'n': piece = PIECES.bN; break;
-			case 'b': piece = PIECES.bB; break;
-			case 'k': piece = PIECES.bK; break;
-			case 'q': piece = PIECES.bQ; break;
-			case 'P': piece = PIECES.wP; break;
-			case 'R': piece = PIECES.wR; break;
-			case 'N': piece = PIECES.wN; break;
-			case 'B': piece = PIECES.wB; break;
-			case 'K': piece = PIECES.wK; break;
-			case 'Q': piece = PIECES.wQ; break;
-			case '1':
-			case '2':
-			case '3':
-			case '4':
-			case '5':
-			case '6':
-			case '7':
-			case '8':
-				piece = PIECES.EMPTY;
-				count = fen[fenCnt].charCodeAt() - '0'.charCodeAt();
-				break;
-			case '/':
-			case ' ':
-				rank--;
-				file = FILES.FILE_A;
-				fenCnt++;
-				continue;
-			default:
-				printf("FEN error \n");
-				return;
-		}
-		for (i = 0; i < count; i++) {
-			sq64 = rank * 8 + file;
-			sq120 = SQ120(sq64);
-			if (piece != PIECES.EMPTY) {
-				brd_pieces[sq120] = piece;
-			}
-			file++;
-		}
-		fenCnt++;
-	}
-	brd_side = (fen[fenCnt] == 'w') ? COLOURS.WHITE : COLOURS.BLACK;
-	fenCnt += 2;
-	for (i = 0; i < 4; i++) {
-		if (fen[fenCnt] == ' ') {
-			break;
-		}
-		switch (fen[fenCnt]) {
-			case 'K': brd_castlePerm |= CASTLEBIT.WKCA; break;
-			case 'Q': brd_castlePerm |= CASTLEBIT.WQCA; break;
-			case 'k': brd_castlePerm |= CASTLEBIT.BKCA; break;
-			case 'q': brd_castlePerm |= CASTLEBIT.BQCA; break;
-			default: break;
-		}
-		fenCnt++;
-	}
-	fenCnt++;
-	if (fen[fenCnt] != '-') {
-		file = fen[fenCnt].charCodeAt() - 'a'.charCodeAt();
-		rank = fen[fenCnt + 1].charCodeAt() - '1'.charCodeAt();
-		brd_enPas = FR2SQ(file, rank);
-	}
-	brd_posKey = GeneratePosKey();
-	UpdateListsMaterial();
-}
-function ParseMove(from, to) {
-	GenerateMoves();
-	var Move = NOMOVE;
-	var PromPce = PIECES.EMPTY;
-	var found = BOOL.FALSE;
-	for (index = brd_moveListStart[brd_ply]; index < brd_moveListStart[brd_ply + 1]; ++index) {
-		Move = brd_moveList[index];
-		if (FROMSQ(Move) == from && TOSQ(Move) == to) {
-			PromPce = PROMOTED(Move);
-			if (PromPce != PIECES.EMPTY) {
-				if ((PromPce == PIECES.wQ && brd_side == COLOURS.WHITE) || (PromPce == PIECES.bQ && brd_side == COLOURS.BLACK)) {
-					found = BOOL.TRUE;
-					break;
-				}
-				continue;
-			}
-			found = BOOL.TRUE;
-			break;
-		}
-	}
-	if (found != BOOL.FALSE) {
-		if (MakeMove(Move) == BOOL.FALSE) {
-			return NOMOVE;
-		}
-		TakeMove();
-		return Move;
-	}
-	return NOMOVE;
-}
-function PrSq(sq) {
-	var file = FilesBrd[sq];
-	var rank = RanksBrd[sq];
-	var sqStr = String.fromCharCode('a'.charCodeAt() + file) + String.fromCharCode('1'.charCodeAt() + rank);
-	return sqStr;
-}
-function PrMove(move) {
-	var MvStr;
-	var ff = FilesBrd[FROMSQ(move)];
-	var rf = RanksBrd[FROMSQ(move)];
-	var ft = FilesBrd[TOSQ(move)];
-	var rt = RanksBrd[TOSQ(move)];
-	MvStr = String.fromCharCode('a'.charCodeAt() + ff) + String.fromCharCode('1'.charCodeAt() + rf) +
-		String.fromCharCode('a'.charCodeAt() + ft) + String.fromCharCode('1'.charCodeAt() + rt)
-	var promoted = PROMOTED(move);
-	if (promoted != PIECES.EMPTY) {
-		var pchar = 'q';
-		if (PieceKnight[promoted] == BOOL.TRUE) {
-			pchar = 'n';
-		} else if (PieceRookQueen[promoted] == BOOL.TRUE && PieceBishopQueen[promoted] == BOOL.FALSE) {
-			pchar = 'r';
-		} else if (PieceRookQueen[promoted] == BOOL.FALSE && PieceBishopQueen[promoted] == BOOL.TRUE) {
-			pchar = 'b';
-		}
-		MvStr += pchar;
-	}
-	return MvStr;
-}
-function printGameLine() {
-	var moveNum = 0;
-	var gameLine = "";
-	for (moveNum = 0; moveNum < brd_hisPly; ++moveNum) {
-		gameLine += PrMove(brd_history[moveNum].move) + " ";
-	}
-	return $.trim(gameLine);
-}
-function PrintBoard() {
-	return;
-	var sq, file, rank, piece;
-	for (rank = RANKS.RANK_8; rank >= RANKS.RANK_1; rank--) {
-		var line = ((rank + 1) + "  ");
-		for (file = FILES.FILE_A; file <= FILES.FILE_H; file++) {
-			sq = FR2SQ(file, rank);
-			piece = brd_pieces[sq];
-			line += (" " + PceChar[piece] + " ");
-		}
-		console.log(line);
-	}
-	console.log("");
-	var line = "   ";
-	for (file = FILES.FILE_A; file <= FILES.FILE_H; file++) {
-		line += (' ' + String.fromCharCode('a'.charCodeAt() + file) + ' ');
-	}
-	console.log(line);
-	console.log("side:" + SideChar[brd_side]);
-	console.log("enPas:" + brd_enPas);
-	line = "";
-	if (brd_castlePerm & CASTLEBIT.WKCA) line += 'K';
-	if (brd_castlePerm & CASTLEBIT.WQCA) line += 'Q';
-	if (brd_castlePerm & CASTLEBIT.BKCA) line += 'k';
-	if (brd_castlePerm & CASTLEBIT.BQCA) line += 'q';
-	console.log("castle:" + line);
-	console.log("key:" + brd_posKey.toString(16));
-}
-function LineMatch(BookLine, gameline) {
-	for (var len = 0; len < gameline.length; ++len) {
-		if (len >= BookLine.length) { return BOOL.FALSE; }
-		if (gameline[len] != BookLine[len]) { return BOOL.FALSE; }
-	}
-	return BOOL.TRUE;
-}
 function BookMove() {
 	var gameLine = printGameLine();
 	var bookMoves = [];
@@ -3670,204 +3754,376 @@ function BookMove() {
 	var num = Math.floor(Math.random() * bookMoves.length);
 	return bookMoves[num];
 }
-function UpdateListsMaterial() {
-	var piece, sq, index, colour;
-	for (index = 0; index < BRD_SQ_NUM; ++index) {
-		sq = index;
-		piece = brd_pieces[index];
-		if (piece != PIECES.OFFBOARD && piece != PIECES.EMPTY) {
-			colour = PieceCol[piece];
-			brd_material[colour] += PieceVal[piece];
-			brd_pList[PCEINDEX(piece, brd_pceNum[piece])] = sq;
-			brd_pceNum[piece]++;
-		}
-	}
-}
-function GeneratePosKey() {
-	var sq = 0;
-	var finalKey = 0;
-	var piece = PIECES.EMPTY;
-	for (sq = 0; sq < BRD_SQ_NUM; ++sq) {
-		piece = brd_pieces[sq];
-		if (piece != PIECES.EMPTY && piece != SQUARES.OFFBOARD) {
-			finalKey ^= PieceKeys[(piece * 120) + sq];
-		}
-	}
-	if (brd_side == COLOURS.WHITE) {
-		finalKey ^= SideKey;
-	}
-	if (brd_enPas != SQUARES.NO_SQ) {
-		finalKey ^= PieceKeys[brd_enPas];
-	}
-	finalKey ^= CastleKeys[brd_castlePerm];
-	return finalKey;
-}
-function ResetBoard() {
-	var index = 0;
-	for (index = 0; index < BRD_SQ_NUM; ++index) {
-		brd_pieces[index] = SQUARES.OFFBOARD;
-	}
-	for (index = 0; index < 64; ++index) {
-		brd_pieces[SQ120(index)] = PIECES.EMPTY;
-	}
-	for (index = 0; index < 14 * 120; ++index) {
-		brd_pList[index] = PIECES.EMPTY;
-	}
-	for (index = 0; index < 2; ++index) {
-		brd_material[index] = 0;
-	}
-	for (index = 0; index < 13; ++index) {
-		brd_pceNum[index] = 0;
-	}
-	brd_side = COLOURS.BOTH;
-	brd_enPas = SQUARES.NO_SQ;
-	brd_fiftyMove = 0;
-	brd_ply = 0;
-	brd_hisPly = 0;
-	brd_castlePerm = 0;
-	brd_posKey = 0;
-	brd_moveListStart[brd_ply] = 0;
-}
-function SqAttacked(sq, side) {
-	var pce;
-	var t_sq;
-	var index;
-	if (side == COLOURS.WHITE) {
-		if (brd_pieces[sq - 11] == PIECES.wP || brd_pieces[sq - 9] == PIECES.wP) {
-			return BOOL.TRUE;
-		}
+function CAPTURED(m) { return (((m) >> 14) & 0xF); }
+function CheckAndSet() {
+	if (CheckResult() != BOOL.TRUE) {
+		GameController.GameOver = BOOL.FALSE;
+		$("#GameStatus").text('');
 	} else {
-		if (brd_pieces[sq + 11] == PIECES.bP || brd_pieces[sq + 9] == PIECES.bP) {
-			return BOOL.TRUE;
-		}
+		GameController.GameOver = BOOL.TRUE;
+		GameController.GameSaved = BOOL.TRUE; // save the game here
+		let win = GameController.winner;
+		lookupAddToList(GameController, ['games'], isdef(win) ? win : 0);
 	}
-	for (index = 0; index < 8; ++index) {
-		pce = brd_pieces[sq + KnDir[index]];
-		if (pce != SQUARES.OFFBOARD && PieceKnight[pce] == BOOL.TRUE && PieceCol[pce] == side) {
-			return BOOL.TRUE;
-		}
-	}
-	for (index = 0; index < 4; ++index) {
-		dir = RkDir[index];
-		t_sq = sq + dir;
-		pce = brd_pieces[t_sq];
-		while (pce != SQUARES.OFFBOARD) {
-			if (pce != PIECES.EMPTY) {
-				if (PieceRookQueen[pce] == BOOL.TRUE && PieceCol[pce] == side) {
-					return BOOL.TRUE;
-				}
-				break;
-			}
-			t_sq += dir;
-			pce = brd_pieces[t_sq];
-		}
-	}
-	for (index = 0; index < 4; ++index) {
-		dir = BiDir[index];
-		t_sq = sq + dir;
-		pce = brd_pieces[t_sq];
-		while (pce != SQUARES.OFFBOARD) {
-			if (pce != PIECES.EMPTY) {
-				if (PieceBishopQueen[pce] == BOOL.TRUE && PieceCol[pce] == side) {
-					return BOOL.TRUE;
-				}
-				break;
-			}
-			t_sq += dir;
-			pce = brd_pieces[t_sq];
-		}
-	}
-	for (index = 0; index < 8; ++index) {
-		pce = brd_pieces[sq + KiDir[index]];
-		if (pce != SQUARES.OFFBOARD && PieceKing[pce] == BOOL.TRUE && PieceCol[pce] == side) {
-			return BOOL.TRUE;
-		}
-	}
-	return BOOL.FALSE;
+	ShowFenPosition();
 }
-function InitMvvLva() {
-	var Attacker;
-	var Victim;
-	for (Attacker = PIECES.wP; Attacker <= PIECES.bK; ++Attacker) {
-		for (Victim = PIECES.wP; Victim <= PIECES.bK; ++Victim) {
-			MvvLvaScores[Victim * 14 + Attacker] = VictimScore[Victim] + 6 - (VictimScore[Attacker] / 100);
-		}
+function CheckResult() {
+	if (brd_fiftyMove > 100) {
+		$("#GameStatus").text("GAME DRAWN {fifty move rule}");
+		return BOOL.TRUE;
 	}
-}
-function MOVE(from, to, captured, promoted, flag) { return (from | (to << 7) | (captured << 14) | (promoted << 20) | flag); }
-function MoveExists(move) {
+	if (ThreeFoldRep() >= 2) {
+		$("#GameStatus").text("GAME DRAWN {3-fold repetition}");
+		return BOOL.TRUE;
+	}
+	if (DrawMaterial() == BOOL.TRUE) {
+		$("#GameStatus").text("GAME DRAWN {insufficient material to mate}");
+		return BOOL.TRUE;
+	}
 	GenerateMoves();
-	var index;
-	var moveFound = NOMOVE;
-	for (index = brd_moveListStart[brd_ply]; index < brd_moveListStart[brd_ply + 1]; ++index) {
-		moveFound = brd_moveList[index];
-		if (MakeMove(moveFound) == BOOL.FALSE) {
+	var MoveNum = 0;
+	var found = 0;
+	for (MoveNum = brd_moveListStart[brd_ply]; MoveNum < brd_moveListStart[brd_ply + 1]; ++MoveNum) {
+		if (MakeMove(brd_moveList[MoveNum]) == BOOL.FALSE) {
 			continue;
 		}
+		found++;
 		TakeMove();
-		if (move == moveFound) {
+		break;
+	}
+	$("#currentFenSpan").text(BoardToFen());
+	if (found != 0) return BOOL.FALSE;
+	var InCheck = SqAttacked(brd_pList[PCEINDEX(Kings[brd_side], 0)], brd_side ^ 1);
+	if (InCheck == BOOL.TRUE) {
+		if (brd_side == COLOURS.WHITE) {
+			$("#GameStatus").text("GAME OVER {black mates}");
+			GameController.winner = 'black';
+			return BOOL.TRUE;
+		} else {
+			$("#GameStatus").text("GAME OVER {white mates}");
+			GameController.winner = 'white';
 			return BOOL.TRUE;
 		}
+	} else {
+		$("#GameStatus").text("GAME DRAWN {stalemate}"); return BOOL.TRUE;
 	}
 	return BOOL.FALSE;
 }
-function AddCaptureMove(move) {
-	brd_moveList[brd_moveListStart[brd_ply + 1]] = move;
-	brd_moveScores[brd_moveListStart[brd_ply + 1]++] = MvvLvaScores[CAPTURED(move) * 14 + brd_pieces[FROMSQ(move)]] + 1000000;
+function CheckUp() {
+	if (($.now() - srch_start) > srch_time) srch_stop = BOOL.TRUE;
 }
-function AddQuietMove(move) {
-	brd_moveList[brd_moveListStart[brd_ply + 1]] = move;
-	if (brd_searchKillers[brd_ply] == move) {
-		brd_moveScores[brd_moveListStart[brd_ply + 1]] = 900000;
-	} else if (brd_searchKillers[MAXDEPTH + brd_ply] == move) {
-		brd_moveScores[brd_moveListStart[brd_ply + 1]] = 800000;
-	} else {
-		brd_moveScores[brd_moveListStart[brd_ply + 1]] = brd_searchHistory[brd_pieces[FROMSQ(move)] * BRD_SQ_NUM + TOSQ(move)];
+function ClearAllPieces() {
+	$(".Piece").remove();
+}
+function ClearForSearch() {
+	var index = 0;
+	var index2 = 0;
+	for (index = 0; index < 14 * BRD_SQ_NUM; ++index) {
+		brd_searchHistory[index] = 0;
 	}
-	brd_moveListStart[brd_ply + 1]++;
-}
-function AddEnPassantMove(move) {
-	brd_moveList[brd_moveListStart[brd_ply + 1]] = move;
-	brd_moveScores[brd_moveListStart[brd_ply + 1]++] = 105 + 1000000;
-}
-function AddWhitePawnCaptureMove(from, to, cap) {
-	if (RanksBrd[from] == RANKS.RANK_7) {
-		AddCaptureMove(MOVE(from, to, cap, PIECES.wQ, 0));
-		AddCaptureMove(MOVE(from, to, cap, PIECES.wR, 0));
-		AddCaptureMove(MOVE(from, to, cap, PIECES.wB, 0));
-		AddCaptureMove(MOVE(from, to, cap, PIECES.wN, 0));
-	} else {
-		AddCaptureMove(MOVE(from, to, cap, PIECES.EMPTY, 0));
+	for (index = 0; index < 3 * MAXDEPTH; ++index) {
+		brd_searchKillers[index] = 0;
 	}
+	ClearPvTable();
+	brd_ply = 0;
+	srch_nodes = 0;
+	srch_fh = 0;
+	srch_fhf = 0;
+	srch_start = $.now();
+	srch_stop = BOOL.FALSE;
 }
-function AddWhitePawnQuietMove(from, to) {
-	if (RanksBrd[from] == RANKS.RANK_7) {
-		AddQuietMove(MOVE(from, to, PIECES.EMPTY, PIECES.wQ, 0));
-		AddQuietMove(MOVE(from, to, PIECES.EMPTY, PIECES.wR, 0));
-		AddQuietMove(MOVE(from, to, PIECES.EMPTY, PIECES.wB, 0));
-		AddQuietMove(MOVE(from, to, PIECES.EMPTY, PIECES.wN, 0));
-	} else {
-		AddQuietMove(MOVE(from, to, PIECES.EMPTY, PIECES.EMPTY, 0));
+function ClearPiece(sq) {
+	var pce = brd_pieces[sq];
+	var col = PieceCol[pce];
+	var index = 0;
+	var t_pceNum = -1;
+	HASH_PCE(pce, sq);
+	brd_pieces[sq] = PIECES.EMPTY;
+	brd_material[col] -= PieceVal[pce];
+	for (index = 0; index < brd_pceNum[pce]; ++index) {
+		if (brd_pList[PCEINDEX(pce, index)] == sq) {
+			t_pceNum = index;
+			break;
+		}
 	}
+	brd_pceNum[pce]--;
+	brd_pList[PCEINDEX(pce, t_pceNum)] = brd_pList[PCEINDEX(pce, brd_pceNum[pce])];
 }
-function AddBlackPawnCaptureMove(from, to, cap) {
-	if (RanksBrd[from] == RANKS.RANK_2) {
-		AddCaptureMove(MOVE(from, to, cap, PIECES.bQ, 0));
-		AddCaptureMove(MOVE(from, to, cap, PIECES.bR, 0));
-		AddCaptureMove(MOVE(from, to, cap, PIECES.bB, 0));
-		AddCaptureMove(MOVE(from, to, cap, PIECES.bN, 0));
-	} else {
-		AddCaptureMove(MOVE(from, to, cap, PIECES.EMPTY, 0));
+function ClearPvTable() {
+	for (index = 0; index < PVENTRIES; index++) {
+		brd_PvTable[index].move = NOMOVE;
+		brd_PvTable[index].posKey = 0;
 	}
 }
-function AddBlackPawnQuietMove(from, to) {
-	if (RanksBrd[from] == RANKS.RANK_2) {
-		AddQuietMove(MOVE(from, to, PIECES.EMPTY, PIECES.bQ, 0));
-		AddQuietMove(MOVE(from, to, PIECES.EMPTY, PIECES.bR, 0));
-		AddQuietMove(MOVE(from, to, PIECES.EMPTY, PIECES.bB, 0));
-		AddQuietMove(MOVE(from, to, PIECES.EMPTY, PIECES.bN, 0));
+function ClickedSquare(pageX, pageY) {
+	var position = $("#ChessBoard").position();
+	let dBoard = mBy('ChessBoard');
+	let rBoard = setRectInt(dBoard);
+	let dParent = mBy('ChessBoard').parentNode;
+	let r = setRectInt(dParent);
+	var workedX = Math.floor(position.left);
+	var workedY = Math.floor(position.top);
+	var pageX = Math.floor(pageX);
+	var pageY = Math.floor(pageY);
+	var file = Math.floor((pageX - workedX - r.l) / 60);
+	var rank = 7 - Math.floor((pageY - workedY - r.t) / 60);
+	var sq = FR2SQ(file, rank); //file=col, rank=row (both 0-based)
+	if (GameController.BoardFlipped == BOOL.TRUE) {
+		sq = MIRROR120(sq);
+	}
+	SetSqSelected(sq); // must go here before mirror
+	return sq;
+}
+function DeselectSq(sq) {
+	if (GameController.BoardFlipped == BOOL.TRUE) {
+		sq = MIRROR120(sq);
+	}
+	$(".Square").each(function (index) {
+		if ((RanksBrd[sq] == 7 - Math.round($(this).position().top / 60)) && (FilesBrd[sq] == Math.round($(this).position().left / 60))) {
+			$(this).removeClass('SqSelected');
+		}
+	});
+}
+function DrawMaterial() {
+	if (brd_pceNum[PIECES.wP] != 0 || brd_pceNum[PIECES.bP] != 0) return BOOL.FALSE;
+	if (brd_pceNum[PIECES.wQ] != 0 || brd_pceNum[PIECES.bQ] != 0 || brd_pceNum[PIECES.wR] != 0 || brd_pceNum[PIECES.bR] != 0) return BOOL.FALSE;
+	if (brd_pceNum[PIECES.wB] > 1 || brd_pceNum[PIECES.bB] > 1) { return BOOL.FALSE; }
+	if (brd_pceNum[PIECES.wN] > 1 || brd_pceNum[PIECES.bN] > 1) { return BOOL.FALSE; }
+	if (brd_pceNum[PIECES.wN] != 0 && brd_pceNum[PIECES.wB] != 0) { return BOOL.FALSE; }
+	if (brd_pceNum[PIECES.bN] != 0 && brd_pceNum[PIECES.bB] != 0) { return BOOL.FALSE; }
+	return BOOL.TRUE;
+}
+function EvalInit() {
+	var index = 0;
+	for (index = 0; index < 10; ++index) {
+		PawnRanksWhite[index] = 0;
+		PawnRanksBlack[index] = 0;
+	}
+}
+function EvalPosition() {
+	var pce;
+	var pceNum;
+	var sq;
+	var score = brd_material[COLOURS.WHITE] - brd_material[COLOURS.BLACK];
+	var file;
+	var rank;
+	if (0 == brd_pceNum[PIECES.wP] && 0 == brd_pceNum[PIECES.bP] && MaterialDraw() == BOOL.TRUE) {
+		return 0;
+	}
+	PawnsInit();
+	pce = PIECES.wP;
+	for (pceNum = 0; pceNum < brd_pceNum[pce]; ++pceNum) {
+		sq = brd_pList[PCEINDEX(pce, pceNum)];
+		score += PawnTable[SQ64(sq)];
+		file = FilesBrd[sq] + 1;
+		rank = RanksBrd[sq];
+		if (PawnRanksWhite[file - 1] == RANKS.RANK_8 && PawnRanksWhite[file + 1] == RANKS.RANK_8) {
+			score += PawnIsolated;
+		}
+		if (PawnRanksBlack[file - 1] <= rank && PawnRanksBlack[file] <= rank && PawnRanksBlack[file + 1] <= rank) {
+			score += PawnPassed[rank];
+		}
+	}
+	pce = PIECES.bP;
+	for (pceNum = 0; pceNum < brd_pceNum[pce]; ++pceNum) {
+		sq = brd_pList[PCEINDEX(pce, pceNum)];
+		score -= PawnTable[MIRROR64(SQ64(sq))];
+		file = FilesBrd[sq] + 1;
+		rank = RanksBrd[sq];
+		if (PawnRanksBlack[file - 1] == RANKS.RANK_1 && PawnRanksBlack[file + 1] == RANKS.RANK_1) {
+			score -= PawnIsolated;
+		}
+		if (PawnRanksWhite[file - 1] >= rank && PawnRanksWhite[file] >= rank && PawnRanksWhite[file + 1] >= rank) {
+			score -= PawnPassed[7 - rank];
+		}
+	}
+	pce = PIECES.wN;
+	for (pceNum = 0; pceNum < brd_pceNum[pce]; ++pceNum) {
+		sq = brd_pList[PCEINDEX(pce, pceNum)];
+		score += KnightTable[SQ64(sq)];
+	}
+	pce = PIECES.bN;
+	for (pceNum = 0; pceNum < brd_pceNum[pce]; ++pceNum) {
+		sq = brd_pList[PCEINDEX(pce, pceNum)];
+		score -= KnightTable[MIRROR64(SQ64(sq))];
+	}
+	pce = PIECES.wB;
+	for (pceNum = 0; pceNum < brd_pceNum[pce]; ++pceNum) {
+		sq = brd_pList[PCEINDEX(pce, pceNum)];
+		score += BishopTable[SQ64(sq)];
+	}
+	pce = PIECES.bB;
+	for (pceNum = 0; pceNum < brd_pceNum[pce]; ++pceNum) {
+		sq = brd_pList[PCEINDEX(pce, pceNum)];
+		score -= BishopTable[MIRROR64(SQ64(sq))];
+	}
+	pce = PIECES.wR;
+	for (pceNum = 0; pceNum < brd_pceNum[pce]; ++pceNum) {
+		sq = brd_pList[PCEINDEX(pce, pceNum)];
+		score += RookTable[SQ64(sq)];
+		file = FilesBrd[sq] + 1;
+		if (PawnRanksWhite[file] == RANKS.RANK_8) {
+			if (PawnRanksBlack[file] == RANKS.RANK_1) {
+				score += RookOpenFile;
+			} else {
+				score += RookSemiOpenFile;
+			}
+		}
+	}
+	pce = PIECES.bR;
+	for (pceNum = 0; pceNum < brd_pceNum[pce]; ++pceNum) {
+		sq = brd_pList[PCEINDEX(pce, pceNum)];
+		score -= RookTable[MIRROR64(SQ64(sq))];
+		file = FilesBrd[sq] + 1;
+		if (PawnRanksBlack[file] == RANKS.RANK_1) {
+			if (PawnRanksWhite[file] == RANKS.RANK_8) {
+				score -= RookOpenFile;
+			} else {
+				score -= RookSemiOpenFile;
+			}
+		}
+	}
+	pce = PIECES.wQ;
+	for (pceNum = 0; pceNum < brd_pceNum[pce]; ++pceNum) {
+		sq = brd_pList[PCEINDEX(pce, pceNum)];
+		score += RookTable[SQ64(sq)];
+		file = FilesBrd[sq] + 1;
+		if (PawnRanksWhite[file] == RANKS.RANK_8) {
+			if (PawnRanksBlack[file] == RANKS.RANK_1) {
+				score += QueenOpenFile;
+			} else {
+				score += QueenSemiOpenFile;
+			}
+		}
+	}
+	pce = PIECES.bQ;
+	for (pceNum = 0; pceNum < brd_pceNum[pce]; ++pceNum) {
+		sq = brd_pList[PCEINDEX(pce, pceNum)];
+		score -= RookTable[MIRROR64(SQ64(sq))];
+		file = FilesBrd[sq] + 1;
+		if (PawnRanksBlack[file] == RANKS.RANK_1) {
+			if (PawnRanksWhite[file] == RANKS.RANK_8) {
+				score -= QueenOpenFile;
+			} else {
+				score -= QueenSemiOpenFile;
+			}
+		}
+	}
+	pce = PIECES.wK;
+	sq = brd_pList[PCEINDEX(pce, 0)];
+	if ((brd_material[COLOURS.BLACK] <= ENDGAME_MAT)) {
+		score += KingE[SQ64(sq)];
 	} else {
-		AddQuietMove(MOVE(from, to, PIECES.EMPTY, PIECES.EMPTY, 0));
+		score += KingO[SQ64(sq)];
+	}
+	pce = PIECES.bK;
+	sq = brd_pList[PCEINDEX(pce, 0)];
+	if ((brd_material[COLOURS.WHITE] <= ENDGAME_MAT)) {
+		score -= KingE[MIRROR64(SQ64(sq))];
+	} else {
+		score -= KingO[MIRROR64(SQ64(sq))];
+	}
+	if (brd_pceNum[PIECES.wB] >= 2) score += BishopPair;
+	if (brd_pceNum[PIECES.bB] >= 2) score -= BishopPair;
+	if (brd_side == COLOURS.WHITE) {
+		return score;
+	} else {
+		return -score;
+	}
+}
+function FR2SQ(f, r) { return ((21 + (f)) + ((r) * 10)); }
+function FROMSQ(m) { return (m & 0x7F); }
+function GenerateCaptures() {
+	brd_moveListStart[brd_ply + 1] = brd_moveListStart[brd_ply];
+	var pceType;
+	var pceNum;
+	var pceIndex;
+	var pce;
+	var sq;
+	var tsq;
+	var index;
+	if (brd_side == COLOURS.WHITE) {
+		pceType = PIECES.wP;
+		for (pceNum = 0; pceNum < brd_pceNum[pceType]; ++pceNum) {
+			sq = brd_pList[PCEINDEX(pceType, pceNum)];
+			if (SQOFFBOARD(sq + 9) == BOOL.FALSE && PieceCol[brd_pieces[sq + 9]] == COLOURS.BLACK) {
+				AddWhitePawnCaptureMove(sq, sq + 9, brd_pieces[sq + 9]);
+			}
+			if (SQOFFBOARD(sq + 11) == BOOL.FALSE && PieceCol[brd_pieces[sq + 11]] == COLOURS.BLACK) {
+				AddWhitePawnCaptureMove(sq, sq + 11, brd_pieces[sq + 11]);
+			}
+			if (brd_enPas != SQUARES.NO_SQ) {
+				if (sq + 9 == brd_enPas) {
+					AddEnPassantMove(MOVE(sq, sq + 9, PIECES.EMPTY, PIECES.EMPTY, MFLAGEP));
+				}
+				if (sq + 11 == brd_enPas) {
+					AddEnPassantMove(MOVE(sq, sq + 11, PIECES.EMPTY, PIECES.EMPTY, MFLAGEP));
+				}
+			}
+		}
+		pceType = PIECES.wN; // HACK to set for loop other pieces
+	} else {
+		pceType = PIECES.bP;
+		for (pceNum = 0; pceNum < brd_pceNum[pceType]; ++pceNum) {
+			sq = brd_pList[PCEINDEX(pceType, pceNum)];
+			if (SQOFFBOARD(sq - 9) == BOOL.FALSE && PieceCol[brd_pieces[sq - 9]] == COLOURS.WHITE) {
+				AddBlackPawnCaptureMove(sq, sq - 9, brd_pieces[sq - 9]);
+			}
+			if (SQOFFBOARD(sq - 11) == BOOL.FALSE && PieceCol[brd_pieces[sq - 11]] == COLOURS.WHITE) {
+				AddBlackPawnCaptureMove(sq, sq - 11, brd_pieces[sq - 11]);
+			}
+			if (brd_enPas != SQUARES.NO_SQ) {
+				if (sq - 9 == brd_enPas) {
+					AddEnPassantMove(MOVE(sq, sq - 9, PIECES.EMPTY, PIECES.EMPTY, MFLAGEP));
+				}
+				if (sq - 11 == brd_enPas) {
+					AddEnPassantMove(MOVE(sq, sq - 11, PIECES.EMPTY, PIECES.EMPTY, MFLAGEP));
+				}
+			}
+		}
+		pceType = PIECES.bN; // HACK to set for loop other pieces
+	}
+	pceIndex = LoopSlideIndex[brd_side];
+	pce = LoopSlidePce[pceIndex++];
+	while (pce != 0) {
+		for (pceNum = 0; pceNum < brd_pceNum[pce]; ++pceNum) {
+			sq = brd_pList[PCEINDEX(pce, pceNum)];
+			for (index = 0; index < DirNum[pce]; ++index) {
+				dir = PceDir[pce][index];
+				t_sq = sq + dir;
+				while (SQOFFBOARD(t_sq) == BOOL.FALSE) {
+					if (brd_pieces[t_sq] != PIECES.EMPTY) {
+						if (PieceCol[brd_pieces[t_sq]] == brd_side ^ 1) {
+							AddCaptureMove(MOVE(sq, t_sq, brd_pieces[t_sq], PIECES.EMPTY, 0));
+						}
+						break;
+					}
+					t_sq += dir;
+				}
+			}
+		}
+		pce = LoopSlidePce[pceIndex++];
+	}
+	pceIndex = LoopNonSlideIndex[brd_side];
+	pce = LoopNonSlidePce[pceIndex++];
+	while (pce != 0) {
+		for (pceNum = 0; pceNum < brd_pceNum[pce]; ++pceNum) {
+			sq = brd_pList[PCEINDEX(pce, pceNum)];
+			for (index = 0; index < DirNum[pce]; ++index) {
+				dir = PceDir[pce][index];
+				t_sq = sq + dir;
+				if (SQOFFBOARD(t_sq) == BOOL.TRUE) {
+					continue;
+				}
+				if (brd_pieces[t_sq] != PIECES.EMPTY) {
+					if (PieceCol[brd_pieces[t_sq]] == brd_side ^ 1) {
+						AddCaptureMove(MOVE(sq, t_sq, brd_pieces[t_sq], PIECES.EMPTY, 0));
+					}
+					continue;
+				}
+			}
+		}
+		pce = LoopNonSlidePce[pceIndex++];
 	}
 }
 function GenerateMoves() {
@@ -4005,138 +4261,167 @@ function GenerateMoves() {
 		pce = LoopNonSlidePce[pceIndex++];
 	}
 }
-function GenerateCaptures() {
-	brd_moveListStart[brd_ply + 1] = brd_moveListStart[brd_ply];
-	var pceType;
-	var pceNum;
-	var pceIndex;
-	var pce;
-	var sq;
-	var tsq;
-	var index;
+function GeneratePosKey() {
+	var sq = 0;
+	var finalKey = 0;
+	var piece = PIECES.EMPTY;
+	for (sq = 0; sq < BRD_SQ_NUM; ++sq) {
+		piece = brd_pieces[sq];
+		if (piece != PIECES.EMPTY && piece != SQUARES.OFFBOARD) {
+			finalKey ^= PieceKeys[(piece * 120) + sq];
+		}
+	}
 	if (brd_side == COLOURS.WHITE) {
-		pceType = PIECES.wP;
-		for (pceNum = 0; pceNum < brd_pceNum[pceType]; ++pceNum) {
-			sq = brd_pList[PCEINDEX(pceType, pceNum)];
-			if (SQOFFBOARD(sq + 9) == BOOL.FALSE && PieceCol[brd_pieces[sq + 9]] == COLOURS.BLACK) {
-				AddWhitePawnCaptureMove(sq, sq + 9, brd_pieces[sq + 9]);
-			}
-			if (SQOFFBOARD(sq + 11) == BOOL.FALSE && PieceCol[brd_pieces[sq + 11]] == COLOURS.BLACK) {
-				AddWhitePawnCaptureMove(sq, sq + 11, brd_pieces[sq + 11]);
-			}
-			if (brd_enPas != SQUARES.NO_SQ) {
-				if (sq + 9 == brd_enPas) {
-					AddEnPassantMove(MOVE(sq, sq + 9, PIECES.EMPTY, PIECES.EMPTY, MFLAGEP));
-				}
-				if (sq + 11 == brd_enPas) {
-					AddEnPassantMove(MOVE(sq, sq + 11, PIECES.EMPTY, PIECES.EMPTY, MFLAGEP));
-				}
-			}
-		}
-		pceType = PIECES.wN; // HACK to set for loop other pieces
-	} else {
-		pceType = PIECES.bP;
-		for (pceNum = 0; pceNum < brd_pceNum[pceType]; ++pceNum) {
-			sq = brd_pList[PCEINDEX(pceType, pceNum)];
-			if (SQOFFBOARD(sq - 9) == BOOL.FALSE && PieceCol[brd_pieces[sq - 9]] == COLOURS.WHITE) {
-				AddBlackPawnCaptureMove(sq, sq - 9, brd_pieces[sq - 9]);
-			}
-			if (SQOFFBOARD(sq - 11) == BOOL.FALSE && PieceCol[brd_pieces[sq - 11]] == COLOURS.WHITE) {
-				AddBlackPawnCaptureMove(sq, sq - 11, brd_pieces[sq - 11]);
-			}
-			if (brd_enPas != SQUARES.NO_SQ) {
-				if (sq - 9 == brd_enPas) {
-					AddEnPassantMove(MOVE(sq, sq - 9, PIECES.EMPTY, PIECES.EMPTY, MFLAGEP));
-				}
-				if (sq - 11 == brd_enPas) {
-					AddEnPassantMove(MOVE(sq, sq - 11, PIECES.EMPTY, PIECES.EMPTY, MFLAGEP));
-				}
-			}
-		}
-		pceType = PIECES.bN; // HACK to set for loop other pieces
+		finalKey ^= SideKey;
 	}
-	pceIndex = LoopSlideIndex[brd_side];
-	pce = LoopSlidePce[pceIndex++];
-	while (pce != 0) {
-		for (pceNum = 0; pceNum < brd_pceNum[pce]; ++pceNum) {
-			sq = brd_pList[PCEINDEX(pce, pceNum)];
-			for (index = 0; index < DirNum[pce]; ++index) {
-				dir = PceDir[pce][index];
-				t_sq = sq + dir;
-				while (SQOFFBOARD(t_sq) == BOOL.FALSE) {
-					if (brd_pieces[t_sq] != PIECES.EMPTY) {
-						if (PieceCol[brd_pieces[t_sq]] == brd_side ^ 1) {
-							AddCaptureMove(MOVE(sq, t_sq, brd_pieces[t_sq], PIECES.EMPTY, 0));
-						}
-						break;
-					}
-					t_sq += dir;
-				}
-			}
-		}
-		pce = LoopSlidePce[pceIndex++];
+	if (brd_enPas != SQUARES.NO_SQ) {
+		finalKey ^= PieceKeys[brd_enPas];
 	}
-	pceIndex = LoopNonSlideIndex[brd_side];
-	pce = LoopNonSlidePce[pceIndex++];
-	while (pce != 0) {
-		for (pceNum = 0; pceNum < brd_pceNum[pce]; ++pceNum) {
-			sq = brd_pList[PCEINDEX(pce, pceNum)];
-			for (index = 0; index < DirNum[pce]; ++index) {
-				dir = PceDir[pce][index];
-				t_sq = sq + dir;
-				if (SQOFFBOARD(t_sq) == BOOL.TRUE) {
-					continue;
-				}
-				if (brd_pieces[t_sq] != PIECES.EMPTY) {
-					if (PieceCol[brd_pieces[t_sq]] == brd_side ^ 1) {
-						AddCaptureMove(MOVE(sq, t_sq, brd_pieces[t_sq], PIECES.EMPTY, 0));
-					}
-					continue;
-				}
-			}
-		}
-		pce = LoopNonSlidePce[pceIndex++];
-	}
+	finalKey ^= CastleKeys[brd_castlePerm];
+	return finalKey;
 }
-function ClearPiece(sq) {
-	var pce = brd_pieces[sq];
-	var col = PieceCol[pce];
-	var index = 0;
-	var t_pceNum = -1;
-	HASH_PCE(pce, sq);
-	brd_pieces[sq] = PIECES.EMPTY;
-	brd_material[col] -= PieceVal[pce];
-	for (index = 0; index < brd_pceNum[pce]; ++index) {
-		if (brd_pList[PCEINDEX(pce, index)] == sq) {
-			t_pceNum = index;
+function GetPvLine(depth) {
+	;
+	var move = ProbePvTable();
+	var count = 0;
+	while (move != NOMOVE && count < depth) {
+		if (MoveExists(move)) {
+			MakeMove(move);
+			brd_PvArray[count++] = move;
+		} else {
 			break;
 		}
+		move = ProbePvTable();
 	}
-	brd_pceNum[pce]--;
-	brd_pList[PCEINDEX(pce, t_pceNum)] = brd_pList[PCEINDEX(pce, brd_pceNum[pce])];
+	while (brd_ply > 0) {
+		TakeMove();
+	}
+	return count;
 }
-function AddPiece(sq, pce) {
-	var col = PieceCol[pce];
-	HASH_PCE(pce, sq);
-	brd_pieces[sq] = pce;
-	brd_material[col] += PieceVal[pce];
-	brd_pList[PCEINDEX(pce, brd_pceNum[pce])] = sq;
-	brd_pceNum[pce]++;
+function HASH_CA() { brd_posKey ^= CastleKeys[brd_castlePerm]; }
+function HASH_EP() { brd_posKey ^= PieceKeys[brd_enPas]; }
+function HASH_PCE(pce, sq) { brd_posKey ^= PieceKeys[pce * 120 + sq]; }
+function HASH_SIDE() { brd_posKey ^= SideKey; }
+function HintAnimation(sq, ms = 2000) {
+	if (GameController.BoardFlipped == BOOL.TRUE) { sq = MIRROR120(sq); }
+	$(".Square").each(function (index) {
+		if ((RanksBrd[sq] == 7 - Math.round($(this).position().top / 60)) && (FilesBrd[sq] == Math.round($(this).position().left / 60))) {
+			animateProperty(this, 'opacity', '1', '0', '1', ms);
+		}
+	});
 }
-function MovePiece(from, to) {
-	var index = 0;
-	var pce = brd_pieces[from];
-	var col = PieceCol[pce];
-	HASH_PCE(pce, from);
-	brd_pieces[from] = PIECES.EMPTY;
-	HASH_PCE(pce, to);
-	brd_pieces[to] = pce;
-	for (index = 0; index < brd_pceNum[pce]; ++index) {
-		if (brd_pList[PCEINDEX(pce, index)] == from) {
-			brd_pList[PCEINDEX(pce, index)] = to;
-			break;
+function InitBoardSquares() {
+	var light = 0;
+	var rankName;
+	var fileName;
+	var divString;
+	var lightString;
+	var lastLight = 0;
+	for (rankIter = RANKS.RANK_8; rankIter >= RANKS.RANK_1; rankIter--) {
+		light = lastLight ^ 1;
+		lastLight ^= 1;
+		rankName = "rank" + (rankIter + 1);
+		for (fileIter = FILES.FILE_A; fileIter <= FILES.FILE_H; fileIter++) {
+			fileName = "file" + (fileIter + 1);
+			if (light == 0) lightString = "Light";
+			else lightString = "Dark";
+			divString = "<div class=\"Square clickElement " + rankName + " " + fileName + " " + lightString + "\"/>";
+			light ^= 1;
+			$("#ChessBoard").append(divString);
 		}
 	}
+}
+function InitBoardVars() {
+	var index = 0;
+	for (index = 0; index < MAXGAMEMOVES; index++) {
+		brd_history.push({
+			move: NOMOVE,
+			castlePerm: 0,
+			enPas: 0,
+			fiftyMove: 0,
+			posKey: 0
+		});
+	}
+	for (index = 0; index < PVENTRIES; index++) {
+		brd_PvTable.push({
+			move: NOMOVE,
+			posKey: 0
+		});
+	}
+}
+function InitFilesRanksBrd() {
+	var index = 0;
+	var file = FILES.FILE_A;
+	var rank = RANKS.RANK_1;
+	var sq = SQUARES.A1;
+	var sq64 = 0;
+	for (index = 0; index < BRD_SQ_NUM; ++index) {
+		FilesBrd[index] = SQUARES.OFFBOARD;
+		RanksBrd[index] = SQUARES.OFFBOARD;
+	}
+	for (rank = RANKS.RANK_1; rank <= RANKS.RANK_8; ++rank) {
+		for (file = FILES.FILE_A; file <= FILES.FILE_H; ++file) {
+			sq = FR2SQ(file, rank);
+			FilesBrd[sq] = file;
+			RanksBrd[sq] = rank;
+		}
+	}
+}
+function InitHashKeys() {
+	var index = 0;
+	for (index = 0; index < 13 * 120; ++index) {
+		PieceKeys[index] = RAND_32();
+	}
+	SideKey = RAND_32();
+	for (index = 0; index < 16; ++index) {
+		CastleKeys[index] = RAND_32();
+	}
+}
+function InitMvvLva() {
+	var Attacker;
+	var Victim;
+	for (Attacker = PIECES.wP; Attacker <= PIECES.bK; ++Attacker) {
+		for (Victim = PIECES.wP; Victim <= PIECES.bK; ++Victim) {
+			MvvLvaScores[Victim * 14 + Attacker] = VictimScore[Victim] + 6 - (VictimScore[Attacker] / 100);
+		}
+	}
+}
+function InitSq120To64() {
+	var index = 0;
+	var file = FILES.FILE_A;
+	var rank = RANKS.RANK_1;
+	var sq = SQUARES.A1;
+	var sq64 = 0;
+	for (index = 0; index < BRD_SQ_NUM; ++index) {
+		Sq120ToSq64[index] = 65;
+	}
+	for (index = 0; index < 64; ++index) {
+		Sq64ToSq120[index] = 120;
+	}
+	for (rank = RANKS.RANK_1; rank <= RANKS.RANK_8; ++rank) {
+		for (file = FILES.FILE_A; file <= FILES.FILE_H; ++file) {
+			sq = FR2SQ(file, rank);
+			Sq64ToSq120[sq64] = sq;
+			Sq120ToSq64[sq] = sq64;
+			sq64++;
+		}
+	}
+}
+function IsRepetition() {
+	var index = 0;
+	for (index = brd_hisPly - brd_fiftyMove; index < brd_hisPly - 1; ++index) {
+		if (brd_posKey == brd_history[index].posKey) {
+			return BOOL.TRUE;
+		}
+	}
+	return BOOL.FALSE;
+}
+function LineMatch(BookLine, gameline) {
+	for (var len = 0; len < gameline.length; ++len) {
+		if (len >= BookLine.length) { return BOOL.FALSE; }
+		if (gameline[len] != BookLine[len]) { return BOOL.FALSE; }
+	}
+	return BOOL.TRUE;
 }
 function MakeMove(move) {
 	var from = FROMSQ(move);
@@ -4209,115 +4494,23 @@ function MakeMove(move) {
 	}
 	return BOOL.TRUE;
 }
-function TakeMove() {
-	brd_hisPly--;
-	brd_ply--;
-	var move = brd_history[brd_hisPly].move;
-	var from = FROMSQ(move);
-	var to = TOSQ(move);
-	if (brd_enPas != SQUARES.NO_SQ) HASH_EP();
-	HASH_CA();
-	brd_castlePerm = brd_history[brd_hisPly].castlePerm;
-	brd_fiftyMove = brd_history[brd_hisPly].fiftyMove;
-	brd_enPas = brd_history[brd_hisPly].enPas;
-	if (brd_enPas != SQUARES.NO_SQ) HASH_EP();
-	HASH_CA();
-	brd_side ^= 1;
-	HASH_SIDE();
-	if ((MFLAGEP & move) != 0) {
-		if (brd_side == COLOURS.WHITE) {
-			AddPiece(to - 10, PIECES.bP);
+function MakeUserMove() {
+	if (UserMove.from != SQUARES.NO_SQ && UserMove.to != SQUARES.NO_SQ) {
+		var parsed = ParseMove(UserMove.from, UserMove.to);
+		DeselectSq(UserMove.from);
+		DeselectSq(UserMove.to);
+		if (parsed != NOMOVE) {
+			MakeMove(parsed);
+			MoveGUIPiece(parsed);
+			CheckAndSet();
+			PreSearch();
 		} else {
-			AddPiece(to + 10, PIECES.wP);
+			ShowChessMessage('illegal move!', 1000);
 		}
-	} else if ((MFLAGCA & move) != 0) {
-		switch (to) {
-			case SQUARES.C1: MovePiece(SQUARES.D1, SQUARES.A1); break;
-			case SQUARES.C8: MovePiece(SQUARES.D8, SQUARES.A8); break;
-			case SQUARES.G1: MovePiece(SQUARES.F1, SQUARES.H1); break;
-			case SQUARES.G8: MovePiece(SQUARES.F8, SQUARES.H8); break;
-			default: break;
-		}
-	}
-	MovePiece(to, from);
-	var captured = CAPTURED(move);
-	if (captured != PIECES.EMPTY) {
-		AddPiece(to, captured);
-	}
-	if (PROMOTED(move) != PIECES.EMPTY) {
-		ClearPiece(from);
-		AddPiece(from, (PieceCol[PROMOTED(move)] == COLOURS.WHITE ? PIECES.wP : PIECES.bP));
+		UserMove.from = SQUARES.NO_SQ;
+		UserMove.to = SQUARES.NO_SQ;
 	}
 }
-var RookOpenFile = 10;
-var RookSemiOpenFile = 5;
-var QueenOpenFile = 5;
-var QueenSemiOpenFile = 3;
-var BishopPair = 30;
-var PawnRanksWhite = new Array(10);
-var PawnRanksBlack = new Array(10);
-var PawnIsolated = -10;
-var PawnPassed = [0, 5, 10, 20, 35, 60, 100, 200];
-var PawnTable = [
-	0, 0, 0, 0, 0, 0, 0, 0,
-	10, 10, 0, -10, -10, 0, 10, 10,
-	5, 0, 0, 5, 5, 0, 0, 5,
-	0, 0, 10, 20, 20, 10, 0, 0,
-	5, 5, 5, 10, 10, 5, 5, 5,
-	10, 10, 10, 20, 20, 10, 10, 10,
-	20, 20, 20, 30, 30, 20, 20, 20,
-	0, 0, 0, 0, 0, 0, 0, 0
-];
-var KnightTable = [
-	0, -10, 0, 0, 0, 0, -10, 0,
-	0, 0, 0, 5, 5, 0, 0, 0,
-	0, 0, 10, 10, 10, 10, 0, 0,
-	0, 0, 10, 20, 20, 10, 5, 0,
-	5, 10, 15, 20, 20, 15, 10, 5,
-	5, 10, 10, 20, 20, 10, 10, 5,
-	0, 0, 5, 10, 10, 5, 0, 0,
-	0, 0, 0, 0, 0, 0, 0, 0
-];
-var BishopTable = [
-	0, 0, -10, 0, 0, -10, 0, 0,
-	0, 0, 0, 10, 10, 0, 0, 0,
-	0, 0, 10, 15, 15, 10, 0, 0,
-	0, 10, 15, 20, 20, 15, 10, 0,
-	0, 10, 15, 20, 20, 15, 10, 0,
-	0, 0, 10, 15, 15, 10, 0, 0,
-	0, 0, 0, 10, 10, 0, 0, 0,
-	0, 0, 0, 0, 0, 0, 0, 0
-];
-var RookTable = [
-	0, 0, 5, 10, 10, 5, 0, 0,
-	0, 0, 5, 10, 10, 5, 0, 0,
-	0, 0, 5, 10, 10, 5, 0, 0,
-	0, 0, 5, 10, 10, 5, 0, 0,
-	0, 0, 5, 10, 10, 5, 0, 0,
-	0, 0, 5, 10, 10, 5, 0, 0,
-	25, 25, 25, 25, 25, 25, 25, 25,
-	0, 0, 5, 10, 10, 5, 0, 0
-];
-var KingE = [
-	-50, -10, 0, 0, 0, 0, -10, -50,
-	-10, 0, 10, 10, 10, 10, 0, -10,
-	0, 10, 20, 20, 20, 20, 10, 0,
-	0, 10, 20, 40, 40, 20, 10, 0,
-	0, 10, 20, 40, 40, 20, 10, 0,
-	0, 10, 20, 20, 20, 20, 10, 0,
-	-10, 0, 10, 10, 10, 10, 0, -10,
-	-50, -10, 0, 0, 0, 0, -10, -50
-];
-var KingO = [
-	0, 5, 5, -10, -10, 0, 10, 5,
-	-30, -30, -30, -30, -30, -30, -30, -30,
-	-50, -50, -50, -50, -50, -50, -50, -50,
-	-70, -70, -70, -70, -70, -70, -70, -70,
-	-70, -70, -70, -70, -70, -70, -70, -70,
-	-70, -70, -70, -70, -70, -70, -70, -70,
-	-70, -70, -70, -70, -70, -70, -70, -70,
-	-70, -70, -70, -70, -70, -70, -70, -70
-];
 function MaterialDraw() {
 	if (0 == brd_pceNum[PIECES.wR] && 0 == brd_pceNum[PIECES.bR] && 0 == brd_pceNum[PIECES.wQ] && 0 == brd_pceNum[PIECES.bQ]) {
 		if (0 == brd_pceNum[PIECES.bB] && 0 == brd_pceNum[PIECES.wB]) {
@@ -4338,777 +4531,35 @@ function MaterialDraw() {
 	}
 	return BOOL.FALSE;
 }
-var ENDGAME_MAT = 1 * PieceVal[PIECES.wR] + 2 * PieceVal[PIECES.wN] + 2 * PieceVal[PIECES.wP] + PieceVal[PIECES.wK];
-function PawnsInit() {
-	var index = 0;
-	for (index = 0; index < 10; ++index) {
-		PawnRanksWhite[index] = RANKS.RANK_8;
-		PawnRanksBlack[index] = RANKS.RANK_1;
-	}
-	pce = PIECES.wP;
-	for (pceNum = 0; pceNum < brd_pceNum[pce]; ++pceNum) {
-		sq = brd_pList[PCEINDEX(pce, pceNum)];
-		if (RanksBrd[sq] < PawnRanksWhite[FilesBrd[sq] + 1]) {
-			PawnRanksWhite[FilesBrd[sq] + 1] = RanksBrd[sq];
-		}
-	}
-	pce = PIECES.bP;
-	for (pceNum = 0; pceNum < brd_pceNum[pce]; ++pceNum) {
-		sq = brd_pList[PCEINDEX(pce, pceNum)];
-		if (RanksBrd[sq] > PawnRanksBlack[FilesBrd[sq] + 1]) {
-			PawnRanksBlack[FilesBrd[sq] + 1] = RanksBrd[sq];
-		}
-	}
-}
-function EvalPosition() {
-	var pce;
-	var pceNum;
-	var sq;
-	var score = brd_material[COLOURS.WHITE] - brd_material[COLOURS.BLACK];
-	var file;
-	var rank;
-	if (0 == brd_pceNum[PIECES.wP] && 0 == brd_pceNum[PIECES.bP] && MaterialDraw() == BOOL.TRUE) {
-		return 0;
-	}
-	PawnsInit();
-	pce = PIECES.wP;
-	for (pceNum = 0; pceNum < brd_pceNum[pce]; ++pceNum) {
-		sq = brd_pList[PCEINDEX(pce, pceNum)];
-		score += PawnTable[SQ64(sq)];
-		file = FilesBrd[sq] + 1;
-		rank = RanksBrd[sq];
-		if (PawnRanksWhite[file - 1] == RANKS.RANK_8 && PawnRanksWhite[file + 1] == RANKS.RANK_8) {
-			score += PawnIsolated;
-		}
-		if (PawnRanksBlack[file - 1] <= rank && PawnRanksBlack[file] <= rank && PawnRanksBlack[file + 1] <= rank) {
-			score += PawnPassed[rank];
-		}
-	}
-	pce = PIECES.bP;
-	for (pceNum = 0; pceNum < brd_pceNum[pce]; ++pceNum) {
-		sq = brd_pList[PCEINDEX(pce, pceNum)];
-		score -= PawnTable[MIRROR64(SQ64(sq))];
-		file = FilesBrd[sq] + 1;
-		rank = RanksBrd[sq];
-		if (PawnRanksBlack[file - 1] == RANKS.RANK_1 && PawnRanksBlack[file + 1] == RANKS.RANK_1) {
-			score -= PawnIsolated;
-		}
-		if (PawnRanksWhite[file - 1] >= rank && PawnRanksWhite[file] >= rank && PawnRanksWhite[file + 1] >= rank) {
-			score -= PawnPassed[7 - rank];
-		}
-	}
-	pce = PIECES.wN;
-	for (pceNum = 0; pceNum < brd_pceNum[pce]; ++pceNum) {
-		sq = brd_pList[PCEINDEX(pce, pceNum)];
-		score += KnightTable[SQ64(sq)];
-	}
-	pce = PIECES.bN;
-	for (pceNum = 0; pceNum < brd_pceNum[pce]; ++pceNum) {
-		sq = brd_pList[PCEINDEX(pce, pceNum)];
-		score -= KnightTable[MIRROR64(SQ64(sq))];
-	}
-	pce = PIECES.wB;
-	for (pceNum = 0; pceNum < brd_pceNum[pce]; ++pceNum) {
-		sq = brd_pList[PCEINDEX(pce, pceNum)];
-		score += BishopTable[SQ64(sq)];
-	}
-	pce = PIECES.bB;
-	for (pceNum = 0; pceNum < brd_pceNum[pce]; ++pceNum) {
-		sq = brd_pList[PCEINDEX(pce, pceNum)];
-		score -= BishopTable[MIRROR64(SQ64(sq))];
-	}
-	pce = PIECES.wR;
-	for (pceNum = 0; pceNum < brd_pceNum[pce]; ++pceNum) {
-		sq = brd_pList[PCEINDEX(pce, pceNum)];
-		score += RookTable[SQ64(sq)];
-		file = FilesBrd[sq] + 1;
-		if (PawnRanksWhite[file] == RANKS.RANK_8) {
-			if (PawnRanksBlack[file] == RANKS.RANK_1) {
-				score += RookOpenFile;
-			} else {
-				score += RookSemiOpenFile;
-			}
-		}
-	}
-	pce = PIECES.bR;
-	for (pceNum = 0; pceNum < brd_pceNum[pce]; ++pceNum) {
-		sq = brd_pList[PCEINDEX(pce, pceNum)];
-		score -= RookTable[MIRROR64(SQ64(sq))];
-		file = FilesBrd[sq] + 1;
-		if (PawnRanksBlack[file] == RANKS.RANK_1) {
-			if (PawnRanksWhite[file] == RANKS.RANK_8) {
-				score -= RookOpenFile;
-			} else {
-				score -= RookSemiOpenFile;
-			}
-		}
-	}
-	pce = PIECES.wQ;
-	for (pceNum = 0; pceNum < brd_pceNum[pce]; ++pceNum) {
-		sq = brd_pList[PCEINDEX(pce, pceNum)];
-		score += RookTable[SQ64(sq)];
-		file = FilesBrd[sq] + 1;
-		if (PawnRanksWhite[file] == RANKS.RANK_8) {
-			if (PawnRanksBlack[file] == RANKS.RANK_1) {
-				score += QueenOpenFile;
-			} else {
-				score += QueenSemiOpenFile;
-			}
-		}
-	}
-	pce = PIECES.bQ;
-	for (pceNum = 0; pceNum < brd_pceNum[pce]; ++pceNum) {
-		sq = brd_pList[PCEINDEX(pce, pceNum)];
-		score -= RookTable[MIRROR64(SQ64(sq))];
-		file = FilesBrd[sq] + 1;
-		if (PawnRanksBlack[file] == RANKS.RANK_1) {
-			if (PawnRanksWhite[file] == RANKS.RANK_8) {
-				score -= QueenOpenFile;
-			} else {
-				score -= QueenSemiOpenFile;
-			}
-		}
-	}
-	pce = PIECES.wK;
-	sq = brd_pList[PCEINDEX(pce, 0)];
-	if ((brd_material[COLOURS.BLACK] <= ENDGAME_MAT)) {
-		score += KingE[SQ64(sq)];
-	} else {
-		score += KingO[SQ64(sq)];
-	}
-	pce = PIECES.bK;
-	sq = brd_pList[PCEINDEX(pce, 0)];
-	if ((brd_material[COLOURS.WHITE] <= ENDGAME_MAT)) {
-		score -= KingE[MIRROR64(SQ64(sq))];
-	} else {
-		score -= KingO[MIRROR64(SQ64(sq))];
-	}
-	if (brd_pceNum[PIECES.wB] >= 2) score += BishopPair;
-	if (brd_pceNum[PIECES.bB] >= 2) score -= BishopPair;
-	if (brd_side == COLOURS.WHITE) {
-		return score;
-	} else {
-		return -score;
-	}
-}
-function GetPvLine(depth) {
-	;
-	var move = ProbePvTable();
-	var count = 0;
-	while (move != NOMOVE && count < depth) {
-		if (MoveExists(move)) {
-			MakeMove(move);
-			brd_PvArray[count++] = move;
-		} else {
-			break;
-		}
-		move = ProbePvTable();
-	}
-	while (brd_ply > 0) {
-		TakeMove();
-	}
-	return count;
-}
-function StorePvMove(move) {
-	var index = brd_posKey % PVENTRIES;
-	brd_PvTable[index].move = move;
-	brd_PvTable[index].posKey = brd_posKey;
-}
-function ProbePvTable() {
-	var index = brd_posKey % PVENTRIES;
-	if (brd_PvTable[index].posKey == brd_posKey) {
-		return brd_PvTable[index].move;
-	}
-	return NOMOVE;
-}
-var srch_nodes;
-var srch_fh;
-var srch_fhf;
-var srch_depth;
-var srch_time;
-var srch_start;
-var srch_stop;
-var srch_best;
-var srch_thinking;
-function CheckUp() {
-	if (($.now() - srch_start) > srch_time) srch_stop = BOOL.TRUE;
-}
-function PickNextMove(moveNum) {
-	var index = 0;
-	var bestScore = 0;
-	var bestNum = moveNum;
-	for (index = moveNum; index < brd_moveListStart[brd_ply + 1]; ++index) {
-		if (brd_moveScores[index] > bestScore) {
-			bestScore = brd_moveScores[index];
-			bestNum = index;
-		}
-	}
-	temp = brd_moveList[moveNum];
-	brd_moveList[moveNum] = brd_moveList[bestNum];
-	brd_moveList[bestNum] = temp;
-	temp = brd_moveScores[moveNum];
-	brd_moveScores[moveNum] = brd_moveScores[bestNum];
-	brd_moveScores[bestNum] = temp;
-}
-function IsRepetition() {
-	var index = 0;
-	for (index = brd_hisPly - brd_fiftyMove; index < brd_hisPly - 1; ++index) {
-		if (brd_posKey == brd_history[index].posKey) {
-			return BOOL.TRUE;
-		}
-	}
-	return BOOL.FALSE;
-}
-function ClearPvTable() {
-	for (index = 0; index < PVENTRIES; index++) {
-		brd_PvTable[index].move = NOMOVE;
-		brd_PvTable[index].posKey = 0;
-	}
-}
-function ClearForSearch() {
-	var index = 0;
-	var index2 = 0;
-	for (index = 0; index < 14 * BRD_SQ_NUM; ++index) {
-		brd_searchHistory[index] = 0;
-	}
-	for (index = 0; index < 3 * MAXDEPTH; ++index) {
-		brd_searchKillers[index] = 0;
-	}
-	ClearPvTable();
-	brd_ply = 0;
-	srch_nodes = 0;
-	srch_fh = 0;
-	srch_fhf = 0;
-	srch_start = $.now();
-	srch_stop = BOOL.FALSE;
-}
-function Quiescence(alpha, beta) {
-	if ((srch_nodes & 2047) == 0) CheckUp();
-	srch_nodes++;
-	if (IsRepetition() || brd_fiftyMove >= 100) {
-		return 0;
-	}
-	if (brd_ply > MAXDEPTH - 1) {
-		return EvalPosition();
-	}
-	var Score = EvalPosition();
-	if (Score >= beta) {
-		return beta;
-	}
-	if (Score > alpha) {
-		alpha = Score;
-	}
-	GenerateCaptures();
-	var MoveNum = 0;
-	var Legal = 0;
-	var OldAlpha = alpha;
-	var BestMove = NOMOVE;
-	Score = -INFINITE;
-	var PvMove = ProbePvTable();
-	if (PvMove != NOMOVE) {
-		for (MoveNum = brd_moveListStart[brd_ply]; MoveNum < brd_moveListStart[brd_ply + 1]; ++MoveNum) {
-			if (brd_moveList[MoveNum] == PvMove) {
-				brd_moveScores[MoveNum].score = 2000000;
-				break;
-			}
-		}
-	}
-	for (MoveNum = brd_moveListStart[brd_ply]; MoveNum < brd_moveListStart[brd_ply + 1]; ++MoveNum) {
-		PickNextMove(MoveNum);
-		if (MakeMove(brd_moveList[MoveNum]) == BOOL.FALSE) {
-			continue;
-		}
-		Legal++;
-		Score = -Quiescence(-beta, -alpha);
-		TakeMove();
-		if (srch_stop == BOOL.TRUE) return 0;
-		if (Score > alpha) {
-			if (Score >= beta) {
-				if (Legal == 1) {
-					srch_fhf++;
-				}
-				srch_fh++;
-				return beta;
-			}
-			alpha = Score;
-			BestMove = brd_moveList[MoveNum];
-		}
-	}
-	if (alpha != OldAlpha) {
-		StorePvMove(BestMove);
-	}
-	return alpha;
-}
-function AlphaBeta(alpha, beta, depth, DoNull) {
-	if (depth <= 0) {
-		return Quiescence(alpha, beta);
-	}
-	if ((srch_nodes & 2047) == 0) CheckUp();
-	srch_nodes++;
-	if ((IsRepetition() || brd_fiftyMove >= 100) && brd_ply != 0) {
-		return 0;
-	}
-	if (brd_ply > MAXDEPTH - 1) {
-		return EvalPosition(pos);
-	}
-	var InCheck = SqAttacked(brd_pList[PCEINDEX(Kings[brd_side], 0)], brd_side ^ 1);
-	if (InCheck == BOOL.TRUE) {
-		depth++;
-	}
-	var Score = -INFINITE;
-	if (DoNull == BOOL.TRUE && BOOL.FALSE == InCheck &&
-		brd_ply != 0 && (brd_material[brd_side] > 50200) && depth >= 4) {
-		var ePStore = brd_enPas;
-		if (brd_enPas != SQUARES.NO_SQ) HASH_EP();
-		brd_side ^= 1;
-		HASH_SIDE();
-		brd_enPas = SQUARES.NO_SQ;
-		Score = -AlphaBeta(-beta, -beta + 1, depth - 4, BOOL.FALSE);
-		brd_side ^= 1;
-		HASH_SIDE();
-		brd_enPas = ePStore;
-		if (brd_enPas != SQUARES.NO_SQ) HASH_EP();
-		if (srch_stop == BOOL.TRUE) return 0;
-		if (Score >= beta) {
-			return beta;
-		}
-	}
-	GenerateMoves();
-	var MoveNum = 0;
-	var Legal = 0;
-	var OldAlpha = alpha;
-	var BestMove = NOMOVE;
-	Score = -INFINITE;
-	var PvMove = ProbePvTable();
-	if (PvMove != NOMOVE) {
-		for (MoveNum = brd_moveListStart[brd_ply]; MoveNum < brd_moveListStart[brd_ply + 1]; ++MoveNum) {
-			if (brd_moveList[MoveNum] == PvMove) {
-				brd_moveScores[MoveNum].score = 2000000;
-				break;
-			}
-		}
-	}
-	for (MoveNum = brd_moveListStart[brd_ply]; MoveNum < brd_moveListStart[brd_ply + 1]; ++MoveNum) {
-		PickNextMove(MoveNum);
-		if (MakeMove(brd_moveList[MoveNum]) == BOOL.FALSE) {
-			continue;
-		}
-		Legal++;
-		Score = -AlphaBeta(-beta, -alpha, depth - 1, BOOL.TRUE);
-		TakeMove();
-		if (srch_stop == BOOL.TRUE) return 0;
-		if (Score > alpha) {
-			if (Score >= beta) {
-				if (Legal == 1) {
-					srch_fhf++;
-				}
-				srch_fh++;
-				if ((brd_moveList[MoveNum] & MFLAGCAP) == 0) {
-					brd_searchKillers[MAXDEPTH + brd_ply] = brd_searchKillers[brd_ply];
-					brd_searchKillers[brd_ply] = brd_moveList[MoveNum];
-				}
-				return beta;
-			}
-			alpha = Score;
-			BestMove = brd_moveList[MoveNum];
-			if ((BestMove & MFLAGCAP) == 0) {
-				brd_searchHistory[brd_pieces[FROMSQ(BestMove)] * BRD_SQ_NUM + TOSQ(BestMove)] += depth;
-			}
-		}
-	}
-	if (Legal == 0) {
-		if (InCheck) {
-			return -MATE + brd_ply;
-		} else {
-			return 0;
-		}
-	}
-	if (alpha != OldAlpha) {
-		StorePvMove(BestMove);
-	}
-	return alpha;
-}
-var domUpdate_depth;
-var domUpdate_move;
-var domUpdate_score;
-var domUpdate_nodes;
-var domUpdate_ordering;
-function UpdateDOMStats() {
-	var scoreText = "Score: " + (domUpdate_score / 100).toFixed(2);
-	if (Math.abs(domUpdate_score) > MATE - MAXDEPTH) {
-		scoreText = "Score: " + "Mate In " + (MATE - Math.abs(domUpdate_score)) + " moves";
-	}
-	$("#OrderingOut").text("Ordering: " + domUpdate_ordering + "%");
-	$("#DepthOut").text("Depth: " + domUpdate_depth);
-	$("#ScoreOut").text(scoreText);
-	$("#NodesOut").text("Nodes: " + domUpdate_nodes);
-	$("#TimeOut").text("Time: " + (($.now() - srch_start) / 1000).toFixed(1) + "s");
-}
-function SearchPosition() {
-	var bestMove = NOMOVE;
-	var bestScore = -INFINITE;
-	var currentDepth = 0;
-	var pvNum = 0;
-	var line;
-	ClearForSearch();
-	if (GameController.BookLoaded == BOOL.TRUE) {
-		bestMove = BookMove();
-		if (bestMove != NOMOVE) {
-			$("#OrderingOut").text("Ordering:");
-			$("#DepthOut").text("Depth: ");
-			$("#ScoreOut").text("Score:");
-			$("#NodesOut").text("Nodes:");
-			$("#TimeOut").text("Time: 0s");
-			$("#BestOut").text("BestMove: " + PrMove(bestMove) + '(Book)');
-			srch_best = bestMove;
-			srch_thinking = BOOL.FALSE;
-			return;
-		}
-	}
-	for (currentDepth = 1; currentDepth <= srch_depth; ++currentDepth) {
-		bestScore = AlphaBeta(-INFINITE, INFINITE, currentDepth, BOOL.TRUE);
-		if (srch_stop == BOOL.TRUE) break;
-		pvNum = GetPvLine(currentDepth);
-		bestMove = brd_PvArray[0];
-		line = ("Depth:" + currentDepth + " best:" + PrMove(bestMove) + " Score:" + bestScore + " nodes:" + srch_nodes);
-		if (currentDepth != 1) {
-			line += (" Ordering:" + ((srch_fhf / srch_fh) * 100).toFixed(2) + "%");
-		}
-		domUpdate_depth = currentDepth;
-		domUpdate_move = bestMove;
-		domUpdate_score = bestScore;
-		domUpdate_nodes = srch_nodes;
-		domUpdate_ordering = ((srch_fhf / srch_fh) * 100).toFixed(2);
-	}
-	$("#BestOut").text("BestMove: " + PrMove(bestMove));
-	UpdateDOMStats();
-	srch_best = bestMove;
-	srch_thinking = BOOL.FALSE;
-}
-function ThreeFoldRep() {
-	var i = 0, r = 0;
-	for (i = 0; i < brd_hisPly; ++i) {
-		if (brd_history[i].posKey == brd_posKey) {
-			r++;
-		}
-	}
-	return r;
-}
-function DrawMaterial() {
-	if (brd_pceNum[PIECES.wP] != 0 || brd_pceNum[PIECES.bP] != 0) return BOOL.FALSE;
-	if (brd_pceNum[PIECES.wQ] != 0 || brd_pceNum[PIECES.bQ] != 0 || brd_pceNum[PIECES.wR] != 0 || brd_pceNum[PIECES.bR] != 0) return BOOL.FALSE;
-	if (brd_pceNum[PIECES.wB] > 1 || brd_pceNum[PIECES.bB] > 1) { return BOOL.FALSE; }
-	if (brd_pceNum[PIECES.wN] > 1 || brd_pceNum[PIECES.bN] > 1) { return BOOL.FALSE; }
-	if (brd_pceNum[PIECES.wN] != 0 && brd_pceNum[PIECES.wB] != 0) { return BOOL.FALSE; }
-	if (brd_pceNum[PIECES.bN] != 0 && brd_pceNum[PIECES.bB] != 0) { return BOOL.FALSE; }
-	return BOOL.TRUE;
-}
-var UserMove = {};
-var MirrorFiles = [FILES.FILE_H, FILES.FILE_G, FILES.FILE_F, FILES.FILE_E, FILES.FILE_D, FILES.FILE_C, FILES.FILE_B, FILES.FILE_A];
-var MirrorRanks = [RANKS.RANK_8, RANKS.RANK_7, RANKS.RANK_6, RANKS.RANK_5, RANKS.RANK_4, RANKS.RANK_3, RANKS.RANK_2, RANKS.RANK_1];
 function MIRROR120(sq) {
 	var file = MirrorFiles[FilesBrd[sq]];
 	var rank = MirrorRanks[RanksBrd[sq]];
 	return FR2SQ(file, rank);
 }
-function CheckAndSet() {
-	if (CheckResult() != BOOL.TRUE) {
-		GameController.GameOver = BOOL.FALSE;
-		$("#GameStatus").text('');
-	} else {
-		GameController.GameOver = BOOL.TRUE;
-		GameController.GameSaved = BOOL.TRUE; // save the game here
-		let win = GameController.winner;
-		lookupAddToList(GameController, ['games'], isdef(win) ? win : 0);
-	}
-	ShowFenPosition();
+function MIRROR64(sq) { return Mirror64[sq]; }
+function MOVE(from, to, captured, promoted, flag) { return (from | (to << 7) | (captured << 14) | (promoted << 20) | flag); }
+function Move2FromTo(move) {
+	var ff = FilesBrd[FROMSQ(move)];
+	var rf = RanksBrd[FROMSQ(move)];
+	var ft = FilesBrd[TOSQ(move)];
+	var rt = RanksBrd[TOSQ(move)];
+	return { from: { sq: FROMSQ(move), file: ff, rank: rf }, to: { sq: TOSQ(move), file: ft, rank: rt } };
 }
-function CheckResult() {
-	if (brd_fiftyMove > 100) {
-		$("#GameStatus").text("GAME DRAWN {fifty move rule}");
-		return BOOL.TRUE;
-	}
-	if (ThreeFoldRep() >= 2) {
-		$("#GameStatus").text("GAME DRAWN {3-fold repetition}");
-		return BOOL.TRUE;
-	}
-	if (DrawMaterial() == BOOL.TRUE) {
-		$("#GameStatus").text("GAME DRAWN {insufficient material to mate}");
-		return BOOL.TRUE;
-	}
+function MoveExists(move) {
 	GenerateMoves();
-	var MoveNum = 0;
-	var found = 0;
-	for (MoveNum = brd_moveListStart[brd_ply]; MoveNum < brd_moveListStart[brd_ply + 1]; ++MoveNum) {
-		if (MakeMove(brd_moveList[MoveNum]) == BOOL.FALSE) {
+	var index;
+	var moveFound = NOMOVE;
+	for (index = brd_moveListStart[brd_ply]; index < brd_moveListStart[brd_ply + 1]; ++index) {
+		moveFound = brd_moveList[index];
+		if (MakeMove(moveFound) == BOOL.FALSE) {
 			continue;
 		}
-		found++;
 		TakeMove();
-		break;
-	}
-	$("#currentFenSpan").text(BoardToFen());
-	if (found != 0) return BOOL.FALSE;
-	var InCheck = SqAttacked(brd_pList[PCEINDEX(Kings[brd_side], 0)], brd_side ^ 1);
-	if (InCheck == BOOL.TRUE) {
-		if (brd_side == COLOURS.WHITE) {
-			$("#GameStatus").text("GAME OVER {black mates}");
-			GameController.winner = 'black';
-			return BOOL.TRUE;
-		} else {
-			$("#GameStatus").text("GAME OVER {white mates}");
-			GameController.winner = 'white';
+		if (move == moveFound) {
 			return BOOL.TRUE;
 		}
-	} else {
-		$("#GameStatus").text("GAME DRAWN {stalemate}"); return BOOL.TRUE;
 	}
 	return BOOL.FALSE;
-}
-function PreSearch() {
-	if (GameController.GameOver != BOOL.TRUE) {
-		srch_thinking = BOOL.TRUE;
-		StartThinking();
-		setTimeout(function () { StartSearch(); }, 200);
-	}
-}
-function StartSearch() {
-	srch_depth = MAXDEPTH;
-	var t = $.now();
-	var tt = $('#ThinkTimeChoice').val();
-	if (nundef(tt)) tt = 6;
-	srch_time = parseInt(tt) * 1000;
-	SearchPosition();
-	StopThinking();
-	if (FLAG_HINT_ONLY) {
-		FLAG_HINT_ONLY = false;
-		let info = Move2FromTo(srch_best);
-		let sq = info.from.sq;
-		HintAnimation(sq, 1000);
-	} else {
-		MakeMove(srch_best);
-		MoveGUIPiece(srch_best);
-		CheckAndSet();
-	}
-}
-$(document).on('click', '.Piece', function (e) {
-	if (srch_thinking == BOOL.FALSE && GameController.PlayerSide == brd_side) {
-		if (UserMove.from == SQUARES.NO_SQ)
-			UserMove.from = ClickedSquare(e.pageX, e.pageY);
-		else
-			UserMove.to = ClickedSquare(e.pageX, e.pageY);
-		MakeUserMove();
-	}
-});
-$(document).on('click', '.Square', function (e) {
-	if (srch_thinking == BOOL.FALSE && GameController.PlayerSide == brd_side && UserMove.from != SQUARES.NO_SQ) {
-		UserMove.to = ClickedSquare(e.pageX, e.pageY);
-		MakeUserMove();
-	}
-});
-$(document).ajaxComplete(function () { });
-function ActivateChessWidgets() {
-	StopThinking();
-	$("#SetFen").click(function () {
-		var fenStr = $("#fenIn").val();
-		ParseFen(fenStr);
-		PrintBoard();
-		SetInitialBoardPieces();
-		GameController.PlayerSide = brd_side;
-		CheckAndSet();
-		EvalPosition();
-		NewGameAjax();
-	});
-	$("#UndoButton").click(function () {
-		if (brd_hisPly > 0) {
-			TakeMove(); if (brd_hisPly > 0) TakeMove();
-			brd_ply = 0;
-			SetInitialBoardPieces();
-			$("#currentFenSpan").text(BoardToFen());
-		}
-	});
-	$("#HintButton").click(function () {
-		FLAG_HINT_ONLY = true;
-		let move = PreSearch();
-	});
-	$("#SearchButton").click(function () {
-		GameController.PlayerSide = brd_side ^ 1;
-		PreSearch();
-	});
-	$("#FlipButton").click(function () {
-		GameController.BoardFlipped ^= 1;
-		SetInitialBoardPieces();
-	});
-	$("#EndGameButton").click(function () {
-		let fen = chooseRandom(FenPositionList).FEN;
-		NewGame(fen);
-		NewGameAjax();
-	});
-	$("#NewGameButton").click(function () {
-		NewGame();
-		NewGameAjax();
-	});
-}
-function AddGUIPiece(sq, pce) {
-	var rank = RanksBrd[sq];
-	var file = FilesBrd[sq];
-	var rankName = "rank" + (rank + 1);
-	var fileName = "file" + (file + 1);
-	pieceFileName = "../base/assets/images/chess/" + SideChar[PieceCol[pce]] + PceChar[pce].toUpperCase() + ".png";
-	imageString = "<image src=\"" + pieceFileName + "\" class=\"Piece clickElement " + rankName + " " + fileName + "\"/>";
-	$("#ChessBoard").append(imageString);
-}
-function ClearAllPieces() {
-	$(".Piece").remove();
-}
-function ClickedSquare(pageX, pageY) {
-	var position = $("#ChessBoard").position();
-	let dBoard = mBy('ChessBoard');
-	let rBoard = setRectInt(dBoard);
-	let dParent = mBy('ChessBoard').parentNode;
-	let r = setRectInt(dParent);
-	var workedX = Math.floor(position.left);
-	var workedY = Math.floor(position.top);
-	var pageX = Math.floor(pageX);
-	var pageY = Math.floor(pageY);
-	var file = Math.floor((pageX - workedX - r.l) / 60);
-	var rank = 7 - Math.floor((pageY - workedY - r.t) / 60);
-	var sq = FR2SQ(file, rank); //file=col, rank=row (both 0-based)
-	if (GameController.BoardFlipped == BOOL.TRUE) {
-		sq = MIRROR120(sq);
-	}
-	SetSqSelected(sq); // must go here before mirror
-	return sq;
-}
-function DeselectSq(sq) {
-	if (GameController.BoardFlipped == BOOL.TRUE) {
-		sq = MIRROR120(sq);
-	}
-	$(".Square").each(function (index) {
-		if ((RanksBrd[sq] == 7 - Math.round($(this).position().top / 60)) && (FilesBrd[sq] == Math.round($(this).position().left / 60))) {
-			$(this).removeClass('SqSelected');
-		}
-	});
-}
-function EvalInit() {
-	var index = 0;
-	for (index = 0; index < 10; ++index) {
-		PawnRanksWhite[index] = 0;
-		PawnRanksBlack[index] = 0;
-	}
-}
-function HintAnimation(sq, ms = 2000) {
-	if (GameController.BoardFlipped == BOOL.TRUE) { sq = MIRROR120(sq); }
-	$(".Square").each(function (index) {
-		if ((RanksBrd[sq] == 7 - Math.round($(this).position().top / 60)) && (FilesBrd[sq] == Math.round($(this).position().left / 60))) {
-			animateProperty(this, 'opacity', '1', '0', '1', ms);
-		}
-	});
-}
-function InitBoardSquares() {
-	var light = 0;
-	var rankName;
-	var fileName;
-	var divString;
-	var lightString;
-	var lastLight = 0;
-	for (rankIter = RANKS.RANK_8; rankIter >= RANKS.RANK_1; rankIter--) {
-		light = lastLight ^ 1;
-		lastLight ^= 1;
-		rankName = "rank" + (rankIter + 1);
-		for (fileIter = FILES.FILE_A; fileIter <= FILES.FILE_H; fileIter++) {
-			fileName = "file" + (fileIter + 1);
-			if (light == 0) lightString = "Light";
-			else lightString = "Dark";
-			divString = "<div class=\"Square clickElement " + rankName + " " + fileName + " " + lightString + "\"/>";
-			light ^= 1;
-			$("#ChessBoard").append(divString);
-		}
-	}
-}
-function InitBoardVars() {
-	var index = 0;
-	for (index = 0; index < MAXGAMEMOVES; index++) {
-		brd_history.push({
-			move: NOMOVE,
-			castlePerm: 0,
-			enPas: 0,
-			fiftyMove: 0,
-			posKey: 0
-		});
-	}
-	for (index = 0; index < PVENTRIES; index++) {
-		brd_PvTable.push({
-			move: NOMOVE,
-			posKey: 0
-		});
-	}
-}
-function InitHashKeys() {
-	var index = 0;
-	for (index = 0; index < 13 * 120; ++index) {
-		PieceKeys[index] = RAND_32();
-	}
-	SideKey = RAND_32();
-	for (index = 0; index < 16; ++index) {
-		CastleKeys[index] = RAND_32();
-	}
-}
-function InitSq120To64() {
-	var index = 0;
-	var file = FILES.FILE_A;
-	var rank = RANKS.RANK_1;
-	var sq = SQUARES.A1;
-	var sq64 = 0;
-	for (index = 0; index < BRD_SQ_NUM; ++index) {
-		Sq120ToSq64[index] = 65;
-	}
-	for (index = 0; index < 64; ++index) {
-		Sq64ToSq120[index] = 120;
-	}
-	for (rank = RANKS.RANK_1; rank <= RANKS.RANK_8; ++rank) {
-		for (file = FILES.FILE_A; file <= FILES.FILE_H; ++file) {
-			sq = FR2SQ(file, rank);
-			Sq64ToSq120[sq64] = sq;
-			Sq120ToSq64[sq] = sq64;
-			sq64++;
-		}
-	}
-}
-function InitFilesRanksBrd() {
-	var index = 0;
-	var file = FILES.FILE_A;
-	var rank = RANKS.RANK_1;
-	var sq = SQUARES.A1;
-	var sq64 = 0;
-	for (index = 0; index < BRD_SQ_NUM; ++index) {
-		FilesBrd[index] = SQUARES.OFFBOARD;
-		RanksBrd[index] = SQUARES.OFFBOARD;
-	}
-	for (rank = RANKS.RANK_1; rank <= RANKS.RANK_8; ++rank) {
-		for (file = FILES.FILE_A; file <= FILES.FILE_H; ++file) {
-			sq = FR2SQ(file, rank);
-			FilesBrd[sq] = file;
-			RanksBrd[sq] = rank;
-		}
-	}
-}
-function MakeUserMove() {
-	if (UserMove.from != SQUARES.NO_SQ && UserMove.to != SQUARES.NO_SQ) {
-		var parsed = ParseMove(UserMove.from, UserMove.to);
-		DeselectSq(UserMove.from);
-		DeselectSq(UserMove.to);
-		if (parsed != NOMOVE) {
-			MakeMove(parsed);
-			MoveGUIPiece(parsed);
-			CheckAndSet();
-			PreSearch();
-		} else {
-			ShowChessMessage('illegal move!', 1000);
-		}
-		UserMove.from = SQUARES.NO_SQ;
-		UserMove.to = SQUARES.NO_SQ;
-	}
 }
 function MoveGUIPiece(move) {
 	var from = FROMSQ(move);
@@ -5168,6 +4619,21 @@ function MoveGUIPiece(move) {
 	}
 	printGameLine();
 }
+function MovePiece(from, to) {
+	var index = 0;
+	var pce = brd_pieces[from];
+	var col = PieceCol[pce];
+	HASH_PCE(pce, from);
+	brd_pieces[from] = PIECES.EMPTY;
+	HASH_PCE(pce, to);
+	brd_pieces[to] = pce;
+	for (index = 0; index < brd_pceNum[pce]; ++index) {
+		if (brd_pList[PCEINDEX(pce, index)] == from) {
+			brd_pList[PCEINDEX(pce, index)] = to;
+			break;
+		}
+	}
+}
 function NewGame(fen) {
 	if (nundef(fen)) fen = START_FEN;
 	ParseFen(fen);
@@ -5183,6 +4649,291 @@ function NewGame(fen) {
 }
 function NewGameAjax() {
 }
+function ParseFen(fen) {
+	var rank = RANKS.RANK_8;
+	var file = FILES.FILE_A;
+	var piece = 0;
+	var count = 0;
+	var i = 0;
+	var sq64 = 0;
+	var sq120 = 0;
+	var fenCnt = 0;
+	ResetBoard();
+	while ((rank >= RANKS.RANK_1) && fenCnt < fen.length) {
+		count = 1;
+		switch (fen[fenCnt]) {
+			case 'p': piece = PIECES.bP; break;
+			case 'r': piece = PIECES.bR; break;
+			case 'n': piece = PIECES.bN; break;
+			case 'b': piece = PIECES.bB; break;
+			case 'k': piece = PIECES.bK; break;
+			case 'q': piece = PIECES.bQ; break;
+			case 'P': piece = PIECES.wP; break;
+			case 'R': piece = PIECES.wR; break;
+			case 'N': piece = PIECES.wN; break;
+			case 'B': piece = PIECES.wB; break;
+			case 'K': piece = PIECES.wK; break;
+			case 'Q': piece = PIECES.wQ; break;
+			case '1':
+			case '2':
+			case '3':
+			case '4':
+			case '5':
+			case '6':
+			case '7':
+			case '8':
+				piece = PIECES.EMPTY;
+				count = fen[fenCnt].charCodeAt() - '0'.charCodeAt();
+				break;
+			case '/':
+			case ' ':
+				rank--;
+				file = FILES.FILE_A;
+				fenCnt++;
+				continue;
+			default:
+				printf("FEN error \n");
+				return;
+		}
+		for (i = 0; i < count; i++) {
+			sq64 = rank * 8 + file;
+			sq120 = SQ120(sq64);
+			if (piece != PIECES.EMPTY) {
+				brd_pieces[sq120] = piece;
+			}
+			file++;
+		}
+		fenCnt++;
+	}
+	brd_side = (fen[fenCnt] == 'w') ? COLOURS.WHITE : COLOURS.BLACK;
+	fenCnt += 2;
+	for (i = 0; i < 4; i++) {
+		if (fen[fenCnt] == ' ') {
+			break;
+		}
+		switch (fen[fenCnt]) {
+			case 'K': brd_castlePerm |= CASTLEBIT.WKCA; break;
+			case 'Q': brd_castlePerm |= CASTLEBIT.WQCA; break;
+			case 'k': brd_castlePerm |= CASTLEBIT.BKCA; break;
+			case 'q': brd_castlePerm |= CASTLEBIT.BQCA; break;
+			default: break;
+		}
+		fenCnt++;
+	}
+	fenCnt++;
+	if (fen[fenCnt] != '-') {
+		file = fen[fenCnt].charCodeAt() - 'a'.charCodeAt();
+		rank = fen[fenCnt + 1].charCodeAt() - '1'.charCodeAt();
+		brd_enPas = FR2SQ(file, rank);
+	}
+	brd_posKey = GeneratePosKey();
+	UpdateListsMaterial();
+}
+function ParseMove(from, to) {
+	GenerateMoves();
+	var Move = NOMOVE;
+	var PromPce = PIECES.EMPTY;
+	var found = BOOL.FALSE;
+	for (index = brd_moveListStart[brd_ply]; index < brd_moveListStart[brd_ply + 1]; ++index) {
+		Move = brd_moveList[index];
+		if (FROMSQ(Move) == from && TOSQ(Move) == to) {
+			PromPce = PROMOTED(Move);
+			if (PromPce != PIECES.EMPTY) {
+				if ((PromPce == PIECES.wQ && brd_side == COLOURS.WHITE) || (PromPce == PIECES.bQ && brd_side == COLOURS.BLACK)) {
+					found = BOOL.TRUE;
+					break;
+				}
+				continue;
+			}
+			found = BOOL.TRUE;
+			break;
+		}
+	}
+	if (found != BOOL.FALSE) {
+		if (MakeMove(Move) == BOOL.FALSE) {
+			return NOMOVE;
+		}
+		TakeMove();
+		return Move;
+	}
+	return NOMOVE;
+}
+function PawnsInit() {
+	var index = 0;
+	for (index = 0; index < 10; ++index) {
+		PawnRanksWhite[index] = RANKS.RANK_8;
+		PawnRanksBlack[index] = RANKS.RANK_1;
+	}
+	pce = PIECES.wP;
+	for (pceNum = 0; pceNum < brd_pceNum[pce]; ++pceNum) {
+		sq = brd_pList[PCEINDEX(pce, pceNum)];
+		if (RanksBrd[sq] < PawnRanksWhite[FilesBrd[sq] + 1]) {
+			PawnRanksWhite[FilesBrd[sq] + 1] = RanksBrd[sq];
+		}
+	}
+	pce = PIECES.bP;
+	for (pceNum = 0; pceNum < brd_pceNum[pce]; ++pceNum) {
+		sq = brd_pList[PCEINDEX(pce, pceNum)];
+		if (RanksBrd[sq] > PawnRanksBlack[FilesBrd[sq] + 1]) {
+			PawnRanksBlack[FilesBrd[sq] + 1] = RanksBrd[sq];
+		}
+	}
+}
+function PCEINDEX(pce, pceNum) { return (pce * 10 + pceNum); }
+function PickNextMove(moveNum) {
+	var index = 0;
+	var bestScore = 0;
+	var bestNum = moveNum;
+	for (index = moveNum; index < brd_moveListStart[brd_ply + 1]; ++index) {
+		if (brd_moveScores[index] > bestScore) {
+			bestScore = brd_moveScores[index];
+			bestNum = index;
+		}
+	}
+	temp = brd_moveList[moveNum];
+	brd_moveList[moveNum] = brd_moveList[bestNum];
+	brd_moveList[bestNum] = temp;
+	temp = brd_moveScores[moveNum];
+	brd_moveScores[moveNum] = brd_moveScores[bestNum];
+	brd_moveScores[bestNum] = temp;
+}
+function PreSearch() {
+	if (GameController.GameOver != BOOL.TRUE) {
+		srch_thinking = BOOL.TRUE;
+		StartThinking();
+		setTimeout(function () { StartSearch(); }, 200);
+	}
+}
+function PrintBoard() {
+	return;
+	var sq, file, rank, piece;
+	for (rank = RANKS.RANK_8; rank >= RANKS.RANK_1; rank--) {
+		var line = ((rank + 1) + "  ");
+		for (file = FILES.FILE_A; file <= FILES.FILE_H; file++) {
+			sq = FR2SQ(file, rank);
+			piece = brd_pieces[sq];
+			line += (" " + PceChar[piece] + " ");
+		}
+		console.log(line);
+	}
+	console.log("");
+	var line = "   ";
+	for (file = FILES.FILE_A; file <= FILES.FILE_H; file++) {
+		line += (' ' + String.fromCharCode('a'.charCodeAt() + file) + ' ');
+	}
+	console.log(line);
+	console.log("side:" + SideChar[brd_side]);
+	console.log("enPas:" + brd_enPas);
+	line = "";
+	if (brd_castlePerm & CASTLEBIT.WKCA) line += 'K';
+	if (brd_castlePerm & CASTLEBIT.WQCA) line += 'Q';
+	if (brd_castlePerm & CASTLEBIT.BKCA) line += 'k';
+	if (brd_castlePerm & CASTLEBIT.BQCA) line += 'q';
+	console.log("castle:" + line);
+	console.log("key:" + brd_posKey.toString(16));
+}
+function printGameLine() {
+	var moveNum = 0;
+	var gameLine = "";
+	for (moveNum = 0; moveNum < brd_hisPly; ++moveNum) {
+		gameLine += PrMove(brd_history[moveNum].move) + " ";
+	}
+	return $.trim(gameLine);
+}
+function PrMove(move) {
+	var MvStr;
+	var ff = FilesBrd[FROMSQ(move)];
+	var rf = RanksBrd[FROMSQ(move)];
+	var ft = FilesBrd[TOSQ(move)];
+	var rt = RanksBrd[TOSQ(move)];
+	MvStr = String.fromCharCode('a'.charCodeAt() + ff) + String.fromCharCode('1'.charCodeAt() + rf) +
+		String.fromCharCode('a'.charCodeAt() + ft) + String.fromCharCode('1'.charCodeAt() + rt)
+	var promoted = PROMOTED(move);
+	if (promoted != PIECES.EMPTY) {
+		var pchar = 'q';
+		if (PieceKnight[promoted] == BOOL.TRUE) {
+			pchar = 'n';
+		} else if (PieceRookQueen[promoted] == BOOL.TRUE && PieceBishopQueen[promoted] == BOOL.FALSE) {
+			pchar = 'r';
+		} else if (PieceRookQueen[promoted] == BOOL.FALSE && PieceBishopQueen[promoted] == BOOL.TRUE) {
+			pchar = 'b';
+		}
+		MvStr += pchar;
+	}
+	return MvStr;
+}
+function ProbePvTable() {
+	var index = brd_posKey % PVENTRIES;
+	if (brd_PvTable[index].posKey == brd_posKey) {
+		return brd_PvTable[index].move;
+	}
+	return NOMOVE;
+}
+function PROMOTED(m) { return (((m) >> 20) & 0xF); }
+function PrSq(sq) {
+	var file = FilesBrd[sq];
+	var rank = RanksBrd[sq];
+	var sqStr = String.fromCharCode('a'.charCodeAt() + file) + String.fromCharCode('1'.charCodeAt() + rank);
+	return sqStr;
+}
+function Quiescence(alpha, beta) {
+	if ((srch_nodes & 2047) == 0) CheckUp();
+	srch_nodes++;
+	if (IsRepetition() || brd_fiftyMove >= 100) {
+		return 0;
+	}
+	if (brd_ply > MAXDEPTH - 1) {
+		return EvalPosition();
+	}
+	var Score = EvalPosition();
+	if (Score >= beta) {
+		return beta;
+	}
+	if (Score > alpha) {
+		alpha = Score;
+	}
+	GenerateCaptures();
+	var MoveNum = 0;
+	var Legal = 0;
+	var OldAlpha = alpha;
+	var BestMove = NOMOVE;
+	Score = -INFINITE;
+	var PvMove = ProbePvTable();
+	if (PvMove != NOMOVE) {
+		for (MoveNum = brd_moveListStart[brd_ply]; MoveNum < brd_moveListStart[brd_ply + 1]; ++MoveNum) {
+			if (brd_moveList[MoveNum] == PvMove) {
+				brd_moveScores[MoveNum].score = 2000000;
+				break;
+			}
+		}
+	}
+	for (MoveNum = brd_moveListStart[brd_ply]; MoveNum < brd_moveListStart[brd_ply + 1]; ++MoveNum) {
+		PickNextMove(MoveNum);
+		if (MakeMove(brd_moveList[MoveNum]) == BOOL.FALSE) {
+			continue;
+		}
+		Legal++;
+		Score = -Quiescence(-beta, -alpha);
+		TakeMove();
+		if (srch_stop == BOOL.TRUE) return 0;
+		if (Score > alpha) {
+			if (Score >= beta) {
+				if (Legal == 1) {
+					srch_fhf++;
+				}
+				srch_fh++;
+				return beta;
+			}
+			alpha = Score;
+			BestMove = brd_moveList[MoveNum];
+		}
+	}
+	if (alpha != OldAlpha) {
+		StorePvMove(BestMove);
+	}
+	return alpha;
+}
+function RAND_32() { return (Math.floor((Math.random() * 255) + 1) << 23) | (Math.floor((Math.random() * 255) + 1) << 16) | (Math.floor((Math.random() * 255) + 1) << 8) | Math.floor((Math.random() * 255) + 1); }
 function RemoveGUIPiece(sq) {
 	$(".Piece").each(function (index) {
 		if ((RanksBrd[sq] == 7 - Math.round($(this).position().top / 60)) && (FilesBrd[sq] == Math.round($(this).position().left / 60))) {
@@ -5190,15 +4941,72 @@ function RemoveGUIPiece(sq) {
 		}
 	});
 }
-function SetSqSelected(sq) {
-	if (GameController.BoardFlipped == BOOL.TRUE) {
-		sq = MIRROR120(sq);
+function ResetBoard() {
+	var index = 0;
+	for (index = 0; index < BRD_SQ_NUM; ++index) {
+		brd_pieces[index] = SQUARES.OFFBOARD;
 	}
-	$(".Square").each(function (index) {
-		if ((RanksBrd[sq] == 7 - Math.round($(this).position().top / 60)) && (FilesBrd[sq] == Math.round($(this).position().left / 60))) {
-			$(this).addClass('SqSelected');
+	for (index = 0; index < 64; ++index) {
+		brd_pieces[SQ120(index)] = PIECES.EMPTY;
+	}
+	for (index = 0; index < 14 * 120; ++index) {
+		brd_pList[index] = PIECES.EMPTY;
+	}
+	for (index = 0; index < 2; ++index) {
+		brd_material[index] = 0;
+	}
+	for (index = 0; index < 13; ++index) {
+		brd_pceNum[index] = 0;
+	}
+	brd_side = COLOURS.BOTH;
+	brd_enPas = SQUARES.NO_SQ;
+	brd_fiftyMove = 0;
+	brd_ply = 0;
+	brd_hisPly = 0;
+	brd_castlePerm = 0;
+	brd_posKey = 0;
+	brd_moveListStart[brd_ply] = 0;
+}
+function SearchPosition() {
+	var bestMove = NOMOVE;
+	var bestScore = -INFINITE;
+	var currentDepth = 0;
+	var pvNum = 0;
+	var line;
+	ClearForSearch();
+	if (GameController.BookLoaded == BOOL.TRUE) {
+		bestMove = BookMove();
+		if (bestMove != NOMOVE) {
+			$("#OrderingOut").text("Ordering:");
+			$("#DepthOut").text("Depth: ");
+			$("#ScoreOut").text("Score:");
+			$("#NodesOut").text("Nodes:");
+			$("#TimeOut").text("Time: 0s");
+			$("#BestOut").text("BestMove: " + PrMove(bestMove) + '(Book)');
+			srch_best = bestMove;
+			srch_thinking = BOOL.FALSE;
+			return;
 		}
-	});
+	}
+	for (currentDepth = 1; currentDepth <= srch_depth; ++currentDepth) {
+		bestScore = AlphaBeta(-INFINITE, INFINITE, currentDepth, BOOL.TRUE);
+		if (srch_stop == BOOL.TRUE) break;
+		pvNum = GetPvLine(currentDepth);
+		bestMove = brd_PvArray[0];
+		line = ("Depth:" + currentDepth + " best:" + PrMove(bestMove) + " Score:" + bestScore + " nodes:" + srch_nodes);
+		if (currentDepth != 1) {
+			line += (" Ordering:" + ((srch_fhf / srch_fh) * 100).toFixed(2) + "%");
+		}
+		domUpdate_depth = currentDepth;
+		domUpdate_move = bestMove;
+		domUpdate_score = bestScore;
+		domUpdate_nodes = srch_nodes;
+		domUpdate_ordering = ((srch_fhf / srch_fh) * 100).toFixed(2);
+	}
+	$("#BestOut").text("BestMove: " + PrMove(bestMove));
+	UpdateDOMStats();
+	srch_best = bestMove;
+	srch_thinking = BOOL.FALSE;
 }
 function SetInitialBoardPieces() {
 	var sq;
@@ -5227,6 +5035,16 @@ function SetInitialBoardPieces() {
 		}
 	}
 }
+function SetSqSelected(sq) {
+	if (GameController.BoardFlipped == BOOL.TRUE) {
+		sq = MIRROR120(sq);
+	}
+	$(".Square").each(function (index) {
+		if ((RanksBrd[sq] == 7 - Math.round($(this).position().top / 60)) && (FilesBrd[sq] == Math.round($(this).position().left / 60))) {
+			$(this).addClass('SqSelected');
+		}
+	});
+}
 function ShowChessMessage(s, ms) {
 	$("#GameStatus").text(s);
 	if (isdef(ms)) setTimeout(() => $("#GameStatus").text(''), ms)
@@ -5237,6 +5055,74 @@ function ShowFenPosition() {
 	mStyle(dTitle, { align: 'left' }); //,bg:'random'});
 	dTitle.innerHTML = `<div style='margin-left:78px;width:483px;text-align:center;'>Turn: ${pl}</div>`;
 }
+function SQ120(sq64) { return Sq64ToSq120[(sq64)]; }
+function SQ64(sq120) { return Sq120ToSq64[(sq120)]; }
+function SqAttacked(sq, side) {
+	var pce;
+	var t_sq;
+	var index;
+	if (side == COLOURS.WHITE) {
+		if (brd_pieces[sq - 11] == PIECES.wP || brd_pieces[sq - 9] == PIECES.wP) {
+			return BOOL.TRUE;
+		}
+	} else {
+		if (brd_pieces[sq + 11] == PIECES.bP || brd_pieces[sq + 9] == PIECES.bP) {
+			return BOOL.TRUE;
+		}
+	}
+	for (index = 0; index < 8; ++index) {
+		pce = brd_pieces[sq + KnDir[index]];
+		if (pce != SQUARES.OFFBOARD && PieceKnight[pce] == BOOL.TRUE && PieceCol[pce] == side) {
+			return BOOL.TRUE;
+		}
+	}
+	for (index = 0; index < 4; ++index) {
+		dir = RkDir[index];
+		t_sq = sq + dir;
+		pce = brd_pieces[t_sq];
+		while (pce != SQUARES.OFFBOARD) {
+			if (pce != PIECES.EMPTY) {
+				if (PieceRookQueen[pce] == BOOL.TRUE && PieceCol[pce] == side) {
+					return BOOL.TRUE;
+				}
+				break;
+			}
+			t_sq += dir;
+			pce = brd_pieces[t_sq];
+		}
+	}
+	for (index = 0; index < 4; ++index) {
+		dir = BiDir[index];
+		t_sq = sq + dir;
+		pce = brd_pieces[t_sq];
+		while (pce != SQUARES.OFFBOARD) {
+			if (pce != PIECES.EMPTY) {
+				if (PieceBishopQueen[pce] == BOOL.TRUE && PieceCol[pce] == side) {
+					return BOOL.TRUE;
+				}
+				break;
+			}
+			t_sq += dir;
+			pce = brd_pieces[t_sq];
+		}
+	}
+	for (index = 0; index < 8; ++index) {
+		pce = brd_pieces[sq + KiDir[index]];
+		if (pce != SQUARES.OFFBOARD && PieceKing[pce] == BOOL.TRUE && PieceCol[pce] == side) {
+			return BOOL.TRUE;
+		}
+	}
+	return BOOL.FALSE;
+}
+function SqFromAlg(moveAlg) {
+	if (moveAlg.length != 2) return SQUARES.NO_SQ;
+	if (moveAlg[0] > 'h' || moveAlg[0] < 'a') return SQUARES.NO_SQ;
+	if (moveAlg[1] > '8' || moveAlg[1] < '1') return SQUARES.NO_SQ;
+	file = moveAlg[0].charCodeAt() - 'a'.charCodeAt();
+	rank = moveAlg[1].charCodeAt() - '1'.charCodeAt();
+	return FR2SQ(file, rank);
+}
+function SQOFFBOARD(sq) { if (FilesBrd[sq] == SQUARES.OFFBOARD) return BOOL.TRUE; return BOOL.FALSE; }
 function StartChessGame() {
 	InitFilesRanksBrd();
 	InitSq120To64();
@@ -5250,6 +5136,41 @@ function StartChessGame() {
 	NewGame();
 	NewGameAjax();
 }
+function StartSearch() {
+	srch_depth = MAXDEPTH;
+	var t = $.now();
+	var tt = $('#ThinkTimeChoice').val();
+	if (nundef(tt)) tt = 6;
+	srch_time = parseInt(tt) * 1000;
+	SearchPosition();
+	StopThinking();
+	if (FLAG_HINT_ONLY) {
+		FLAG_HINT_ONLY = false;
+		let info = Move2FromTo(srch_best);
+		let sq = info.from.sq;
+		HintAnimation(sq, 1000);
+	} else {
+		MakeMove(srch_best);
+		MoveGUIPiece(srch_best);
+		CheckAndSet();
+	}
+}
+$(document).on('click', '.Piece', function (e) {
+	if (srch_thinking == BOOL.FALSE && GameController.PlayerSide == brd_side) {
+		if (UserMove.from == SQUARES.NO_SQ)
+			UserMove.from = ClickedSquare(e.pageX, e.pageY);
+		else
+			UserMove.to = ClickedSquare(e.pageX, e.pageY);
+		MakeUserMove();
+	}
+});
+$(document).on('click', '.Square', function (e) {
+	if (srch_thinking == BOOL.FALSE && GameController.PlayerSide == brd_side && UserMove.from != SQUARES.NO_SQ) {
+		UserMove.to = ClickedSquare(e.pageX, e.pageY);
+		MakeUserMove();
+	}
+});
+$(document).ajaxComplete(function () { });
 function StartThinking() {
 	let img = mBy('ThinkingPng');
 	show(img);
@@ -5262,23 +5183,105 @@ function StopThinking() {
 	hide(img);
 	hideShield();
 }
+function StorePvMove(move) {
+	var index = brd_posKey % PVENTRIES;
+	brd_PvTable[index].move = move;
+	brd_PvTable[index].posKey = brd_posKey;
+}
+function TakeMove() {
+	brd_hisPly--;
+	brd_ply--;
+	var move = brd_history[brd_hisPly].move;
+	var from = FROMSQ(move);
+	var to = TOSQ(move);
+	if (brd_enPas != SQUARES.NO_SQ) HASH_EP();
+	HASH_CA();
+	brd_castlePerm = brd_history[brd_hisPly].castlePerm;
+	brd_fiftyMove = brd_history[brd_hisPly].fiftyMove;
+	brd_enPas = brd_history[brd_hisPly].enPas;
+	if (brd_enPas != SQUARES.NO_SQ) HASH_EP();
+	HASH_CA();
+	brd_side ^= 1;
+	HASH_SIDE();
+	if ((MFLAGEP & move) != 0) {
+		if (brd_side == COLOURS.WHITE) {
+			AddPiece(to - 10, PIECES.bP);
+		} else {
+			AddPiece(to + 10, PIECES.wP);
+		}
+	} else if ((MFLAGCA & move) != 0) {
+		switch (to) {
+			case SQUARES.C1: MovePiece(SQUARES.D1, SQUARES.A1); break;
+			case SQUARES.C8: MovePiece(SQUARES.D8, SQUARES.A8); break;
+			case SQUARES.G1: MovePiece(SQUARES.F1, SQUARES.H1); break;
+			case SQUARES.G8: MovePiece(SQUARES.F8, SQUARES.H8); break;
+			default: break;
+		}
+	}
+	MovePiece(to, from);
+	var captured = CAPTURED(move);
+	if (captured != PIECES.EMPTY) {
+		AddPiece(to, captured);
+	}
+	if (PROMOTED(move) != PIECES.EMPTY) {
+		ClearPiece(from);
+		AddPiece(from, (PieceCol[PROMOTED(move)] == COLOURS.WHITE ? PIECES.wP : PIECES.bP));
+	}
+}
+function ThreeFoldRep() {
+	var i = 0, r = 0;
+	for (i = 0; i < brd_hisPly; ++i) {
+		if (brd_history[i].posKey == brd_posKey) {
+			r++;
+		}
+	}
+	return r;
+}
+function TOSQ(m) { return (((m) >> 7) & 0x7F); }
+function UpdateDOMStats() {
+	var scoreText = "Score: " + (domUpdate_score / 100).toFixed(2);
+	if (Math.abs(domUpdate_score) > MATE - MAXDEPTH) {
+		scoreText = "Score: " + "Mate In " + (MATE - Math.abs(domUpdate_score)) + " moves";
+	}
+	$("#OrderingOut").text("Ordering: " + domUpdate_ordering + "%");
+	$("#DepthOut").text("Depth: " + domUpdate_depth);
+	$("#ScoreOut").text(scoreText);
+	$("#NodesOut").text("Nodes: " + domUpdate_nodes);
+	$("#TimeOut").text("Time: " + (($.now() - srch_start) / 1000).toFixed(1) + "s");
+}
+function UpdateListsMaterial() {
+	var piece, sq, index, colour;
+	for (index = 0; index < BRD_SQ_NUM; ++index) {
+		sq = index;
+		piece = brd_pieces[index];
+		if (piece != PIECES.OFFBOARD && piece != PIECES.EMPTY) {
+			colour = PieceCol[piece];
+			brd_material[colour] += PieceVal[piece];
+			brd_pList[PCEINDEX(piece, brd_pceNum[piece])] = sq;
+			brd_pceNum[piece]++;
+		}
+	}
+}
 //#endregion chess
 
 //#region markers
 const MarkerText = ['✔️', '❌'];
 const MarkerId = { SUCCESS: 0, FAIL: 1 };
 var Markers = [];
-function mpOver(d, dParent, fz, color, picStyle) {
-	let b = getRect(dParent);
-	let cx = b.w / 2 + b.x;
-	let cy = b.h / 2 + b.y;
-	d.style.top = picStyle == 'segoeBlack' ? ((cy - fz * 2 / 3) + 'px') : ((cy - fz / 2) + 'px');
-	d.style.left = picStyle == 'segoeBlack' ? ((cx - fz / 3) + 'px') : ((cx - fz * 1.2 / 2) + 'px');
-	d.style.color = color;
-	d.style.fontSize = fz + 'px';
-	d.style.display = 'block';
-	let { isText, isOmoji } = getParamsForMaPicStyle(picStyle);
-	d.style.fontFamily = isString(isOmoji) ? isOmoji : isOmoji ? 'emoOpen' : 'emoNoto';
+function clearMarkers() {
+	for (const m of Markers) {
+		mRemove(m);
+	}
+	Markers = [];
+}
+function createMarker(markerId) {
+	let divs = document.getElementsByClassName('feedbackMarker');
+	let d;
+	d = mCreate('div');
+	d.innerHTML = MarkerText[markerId]; //>0? '✔️':'❌';
+	mClass(d, 'feedbackMarker');
+	document.body.appendChild(d);
+	Markers.push(d);
 	return d;
 }
 function getParamsForMaPicStyle(desc = 'segoeBlack') {
@@ -5294,27 +5297,24 @@ function getParamsForMaPicStyle(desc = 'segoeBlack') {
 		default: return { isText: true, isOmoji: false };
 	}
 }
-function markerSuccess() { return createMarker(MarkerId.SUCCESS); }
 function markerFail() { return createMarker(MarkerId.FAIL); }
-function createMarker(markerId) {
-	let divs = document.getElementsByClassName('feedbackMarker');
-	let d;
-	d = mCreate('div');
-	d.innerHTML = MarkerText[markerId]; //>0? '✔️':'❌';
-	mClass(d, 'feedbackMarker');
-	document.body.appendChild(d);
-	Markers.push(d);
+function markerSuccess() { return createMarker(MarkerId.SUCCESS); }
+function mpOver(d, dParent, fz, color, picStyle) {
+	let b = getRect(dParent);
+	let cx = b.w / 2 + b.x;
+	let cy = b.h / 2 + b.y;
+	d.style.top = picStyle == 'segoeBlack' ? ((cy - fz * 2 / 3) + 'px') : ((cy - fz / 2) + 'px');
+	d.style.left = picStyle == 'segoeBlack' ? ((cx - fz / 3) + 'px') : ((cx - fz * 1.2 / 2) + 'px');
+	d.style.color = color;
+	d.style.fontSize = fz + 'px';
+	d.style.display = 'block';
+	let { isText, isOmoji } = getParamsForMaPicStyle(picStyle);
+	d.style.fontFamily = isString(isOmoji) ? isOmoji : isOmoji ? 'emoOpen' : 'emoNoto';
 	return d;
 }
 function mRemoveGracefully(elem) {
 	mClass(elem, 'aniFastDisappear');
 	setTimeout(() => mRemove(elem), 500);
-}
-function clearMarkers() {
-	for (const m of Markers) {
-		mRemove(m);
-	}
-	Markers = [];
 }
 function removeMarkers() {
 	for (const m of Markers) {
@@ -5927,6 +5927,11 @@ class UIGraph extends AGraph {
 
 //#region speech
 const MASTERVOLUME = 0.1;
+const germanNumbers = {
+	ein: 1, eins: 1, zwei: 2, 1: 'eins', 2: 'zwei', 3: 'drei', drei: 3, vier: 4, 4: 'vier', 5: 'fuenf', fuenf: 5, sechs: 6, 6: 'sechs', sex: 6,
+	sieben: 7, 7: 'sieben', 8: 'acht', acht: 8, 9: 'neun', neun: 9, zehn: 10, elf: 11, zwoelf: 12, zwanzig: 20, dreissig: 30,
+	10: 'zehn', 11: 'elf', 12: 'zwoelf', 20: 'zwanzig', 30: 'dreissig', vierzig: 40, fuenfzig: 50, 40: 'vierzig', 50: 'fuenfzig'
+};
 var RecogOutput = false;
 var RecogOutputError = true;
 var MicrophoneUi;
@@ -5985,7 +5990,7 @@ class Recorder {
 		rec.onerror = ev => {
 			genHandler(ev, 'error');
 			if (ev.error == 'network') {
-				alert('no internet connection: Speech Recognition is not available! (error:'+ev.error+')');
+				alert('no internet connection: Speech Recognition is not available! (error:' + ev.error + ')');
 				RecognitionAvailable = false;
 			} //else {
 			if (RecogOutputError) console.error(ev);
@@ -6043,7 +6048,7 @@ class Speaker {
 			deutsch: 'Google Deutsch',
 			spanish: 'Google español',
 			D: 'Google Deutsch',
-			S:'Google español',
+			S: 'Google español',
 			F: 'Google français',
 			french: 'Google français',
 			C: 'Google 日本語',
@@ -6069,8 +6074,8 @@ class Speaker {
 	setLanguage(lang) { this.lang = lang; }
 	enq(args) { this.q.push(args); }
 	deq() {
-		if (nundef(this.voices)){
-			setTimeout(this.deq.bind(this),500);
+		if (nundef(this.voices)) {
+			setTimeout(this.deq.bind(this), 500);
 		}
 		else if (!isEmpty(this.q)) {
 			let args = this.q.pop();
@@ -6118,38 +6123,6 @@ class Speaker {
 		return [vkey, voice];
 	}
 }
-function mMicrophone(dParent, color) {
-	let d = mDiv(dParent);
-	d.innerHTML = '🎤';
-	let c = bestContrastingColor(color, ['yellow', 'orange', 'red']);
-	let bg = c;
-	let style = { bg: bg, rounding: '50%', fz: 50, padding: 5, transition: 'opacity .35s ease-in-out' };
-	mStyle(d, style);
-	mLinebreak(dParent);
-	return d;
-}
-function MicrophoneShow() {
-	if (nundef(MicrophoneUi)) return;
-	if (RecogOutput) console.log('* mic start')
-	MicrophoneUi.style.opacity = 1;
-}
-function MicrophoneHide() {
-	if (nundef(MicrophoneUi)) return;
-	if (RecogOutput) console.log('* mic end')
-	MicrophoneUi.style.opacity = .31;
-}
-function isSimilar(reqAnswer, answer, lang) {
-	if (answer == reqAnswer) return true;
-	else if (replaceAll(answer, ' ', '') == replaceAll(reqAnswer, ' ', '')) return true;
-	else if (differInAtMost(reqAnswer, answer, 1)) return true;
-	else if (isSimilarSound(reqAnswer, answer, lang)) return true;
-	else return false;
-}
-const germanNumbers = {
-	ein: 1, eins: 1, zwei: 2, 1: 'eins', 2: 'zwei', 3: 'drei', drei: 3, vier: 4, 4: 'vier', 5: 'fuenf', fuenf: 5, sechs: 6, 6: 'sechs', sex: 6,
-	sieben: 7, 7: 'sieben', 8: 'acht', acht: 8, 9: 'neun', neun: 9, zehn: 10, elf: 11, zwoelf: 12, zwanzig: 20, dreissig: 30,
-	10: 'zehn', 11: 'elf', 12: 'zwoelf', 20: 'zwanzig', 30: 'dreissig', vierzig: 40, fuenfzig: 50, 40: 'vierzig', 50: 'fuenfzig'
-};
 function convertTimesAndNumbersToWords(w) {
 	if (w.includes(':')) {
 		let h = stringBefore(w, ':');
@@ -6173,6 +6146,13 @@ function convertTimesAndNumbersToWords(w) {
 function differInAtMost(req, given, n = 1) {
 	let diffs = levDist(req, given);
 	return diffs <= n;
+}
+function isSimilar(reqAnswer, answer, lang) {
+	if (answer == reqAnswer) return true;
+	else if (replaceAll(answer, ' ', '') == replaceAll(reqAnswer, ' ', '')) return true;
+	else if (differInAtMost(reqAnswer, answer, 1)) return true;
+	else if (isSimilarSound(reqAnswer, answer, lang)) return true;
+	else return false;
 }
 function isSimilarSound(reqAnswer, s, lang) {
 	let sParts = s.split(' ');
@@ -6217,6 +6197,26 @@ function levDist(s, t) {
 		}
 	}
 	return d[n][m];
+}
+function MicrophoneHide() {
+	if (nundef(MicrophoneUi)) return;
+	if (RecogOutput) console.log('* mic end')
+	MicrophoneUi.style.opacity = .31;
+}
+function MicrophoneShow() {
+	if (nundef(MicrophoneUi)) return;
+	if (RecogOutput) console.log('* mic start')
+	MicrophoneUi.style.opacity = 1;
+}
+function mMicrophone(dParent, color) {
+	let d = mDiv(dParent);
+	d.innerHTML = '🎤';
+	let c = bestContrastingColor(color, ['yellow', 'orange', 'red']);
+	let bg = c;
+	let style = { bg: bg, rounding: '50%', fz: 50, padding: 5, transition: 'opacity .35s ease-in-out' };
+	mStyle(d, style);
+	mLinebreak(dParent);
+	return d;
 }
 function sepWords(text, voiceKey, s = '') { //<silence msec="200" />') {
 	text = text.toLowerCase();
@@ -6496,31 +6496,11 @@ function ipadd(elem) {
 	elem.addEventListener('dragleave', OnDragLeave);
 	elem.addEventListener('drop', OnDrop);
 	elem.onclick = OnClickClick;
-	DA.data_transport=null;
+	DA.data_transport = null;
 }
 //#endregion test_ui_helpers
 
 //#region time
-function timeConversion(duration, format = 'Hmsh') {
-	const portions = [];
-	const msInHour = 1000 * 60 * 60;
-	const hours = Math.trunc(duration / msInHour);
-	if (format.includes('H')) portions.push((hours < 10 ? '0' : '') + hours);
-	duration = duration - (hours * msInHour); // hours + 'h');
-	const msInMinute = 1000 * 60;
-	const minutes = Math.trunc(duration / msInMinute);
-	if (format.includes('m')) portions.push((minutes < 10 ? '0' : '') + minutes);// minutes + 'm');
-	duration = duration - (minutes * msInMinute);
-	const msInSecond = 1000;
-	const seconds = Math.trunc(duration / 1000);
-	if (format.includes('s')) portions.push((seconds < 10 ? '0' : '') + seconds);//seconds + 's');
-	duration = duration - (seconds * msInSecond);
-	const hundreds = duration / 10;
-	if (format.includes('h')) portions.push((hundreds < 10 ? '0' : '') + hundreds);//hundreds);
-	return portions.join(':');
-}
-function renewTimer(G, elem, onTimeOver = null) { if (nundef(GameTimer)) GameTimer = new TimerClass(G); GameTimer.restart(G, elem, onTimeOver); }
-function checkTimer(G) { if (nundef(GameTimer)) return false; return GameTimer.check(G); }
 class TimerClass {
 	constructor(g, elem) {
 		this.started, this.elapsed, this.onTimeOver = null, this.elem, this.timeLeft, this.settings = g;
@@ -6588,6 +6568,26 @@ class TimeoutManager {
 		TO[key] = setTimeout(ms, callback);
 	}
 }
+function checkTimer(G) { if (nundef(GameTimer)) return false; return GameTimer.check(G); }
+function renewTimer(G, elem, onTimeOver = null) { if (nundef(GameTimer)) GameTimer = new TimerClass(G); GameTimer.restart(G, elem, onTimeOver); }
+function timeConversion(duration, format = 'Hmsh') {
+	const portions = [];
+	const msInHour = 1000 * 60 * 60;
+	const hours = Math.trunc(duration / msInHour);
+	if (format.includes('H')) portions.push((hours < 10 ? '0' : '') + hours);
+	duration = duration - (hours * msInHour); // hours + 'h');
+	const msInMinute = 1000 * 60;
+	const minutes = Math.trunc(duration / msInMinute);
+	if (format.includes('m')) portions.push((minutes < 10 ? '0' : '') + minutes);// minutes + 'm');
+	duration = duration - (minutes * msInMinute);
+	const msInSecond = 1000;
+	const seconds = Math.trunc(duration / 1000);
+	if (format.includes('s')) portions.push((seconds < 10 ? '0' : '') + seconds);//seconds + 's');
+	duration = duration - (seconds * msInSecond);
+	const hundreds = duration / 10;
+	if (format.includes('h')) portions.push((hundreds < 10 ? '0' : '') + hundreds);//hundreds);
+	return portions.join(':');
+}
 //#endregion time
 
 //#region maze
@@ -6598,13 +6598,13 @@ class MazeGraph extends AGraph {
 		let m = this.m = this.createMaze(cols, rows, sz, gap);
 		let dMaze = this.dMaze = this.createDiv(dParent, cols, rows, sz, gap);
 		let szMaze = getSize(dMaze);
-		let dGraph = this.dGraph = mDiv(dParent, { align:'left', w: szMaze.w, h: szMaze.h, bg: 'pink', maleft: 20});//, opacity: 0 });
+		let dGraph = this.dGraph = mDiv(dParent, { align: 'left', w: szMaze.w, h: szMaze.h, bg: 'pink', maleft: 20 });//, opacity: 0 });
 		this.mazeId = dGraph.id = getUID();
 		let sb = this.sb = mDiv(dParent, { w: 40 }); mCenterCenterFlex(this.sb);
-		hide(dGraph);hide(sb);
+		hide(dGraph); hide(sb);
 		this.items = this.createCellItems();
 	}
-	clear(){super.clear(); } //dTable.firstChild.remove(); } //mBy(this.mazeId).remove();}
+	clear() { super.clear(); } //dTable.firstChild.remove(); } //mBy(this.mazeId).remove();}
 	getTopLeftCell() { return this.getCell(0, 0); }
 	getTopRightCell() { return this.getCell(0, this.cols - 1); }
 	getBottomLeftCell() { return this.getCell(this.rows - 1, 0); }
@@ -6758,10 +6758,10 @@ class MazeGraph extends AGraph {
 	}
 	showGraph() {
 		this.dGraph.style.opacity = 1;
-		if (this.hasVisual) {show(this.dGraph); return;}
+		if (this.hasVisual) { show(this.dGraph); return; }
 		this.addVisual(this.dGraph);
 		this.storeCurrentPositions();
-		this.addLayoutControls(this.sb, ['show','hide','prest', 'grid', 'klay', 'rand', 'euler', 'reset', 'store']);//,'grid','euler','prest');		
+		this.addLayoutControls(this.sb, ['show', 'hide', 'prest', 'grid', 'klay', 'rand', 'euler', 'reset', 'store']);//,'grid','euler','prest');		
 	}
 	hideGraph() {
 		if (isdef(this.dGraph) && this.hasVisual) {
@@ -6772,6 +6772,7 @@ class MazeGraph extends AGraph {
 //#endregion maze
 
 //#region ai
+var CCC = 0;
 class SoloPlayer {
 	constructor(user) {
 		this.color = getColorDictColor(user.settings.userColor);
@@ -6788,7 +6789,6 @@ class AIPlayer {
 	}
 	setData(o) { copyKeys(o, this); }
 }
-var CCC = 0;
 function AIMinimax(g, callback) {
 	let state = g.getState();
 	state = boardToNode(state);
@@ -6800,10 +6800,39 @@ function AIMinimax(g, callback) {
 	MAXIMIZER = g.plTurn;
 	MINIMIZER = g.plOpp;
 	SelectedMove = null;
-	let algorithm = g.copyState==true ? minimaxCopy : myMinimax;
+	let algorithm = g.copyState == true ? minimaxCopy : myMinimax;
 	let val = algorithm(state, 0, -Infinity, Infinity, g.searchDepth, true);
 	CCC = 0;
 	callback(SelectedMove);
+}
+function minimaxCopy(node, depth, alpha, beta, maxDepth, maxim) {
+	CCC += 1;
+	if (depth >= maxDepth) return F_HEURISTIC(node, MAXIMIZER, MINIMIZER);
+	let ec = F_END(node, depth); if (ec.reached) return ec.val;
+	depth += 1;
+	var move, result;
+	var availableMoves = F_MOVES(node);
+	let player = maxim ? MAXIMIZER : MINIMIZER;
+	let nodeSafe = jsCopy(node);
+	for (var i = 0; i < availableMoves.length; i++) {
+		move = availableMoves[i];
+		let node1 = jsCopy(node);
+		console.assert(sameList(nodeSafe, node), 'HA!');
+		F_APPLYMOVE(node1, move, player);
+		result = minimaxCopy(node1, depth, alpha, beta, maxDepth, !maxim);
+		if (maxim) {
+			if (result > alpha) {
+				alpha = result;
+				if (depth == 1) SelectedMove = move;
+			} else if (alpha >= beta) { return alpha; }
+		} else {
+			if (result < beta) {
+				beta = result;
+				if (depth == 1) SelectedMove = move;
+			} else if (beta <= alpha) { return beta; }
+		}
+	}
+	return maxim ? alpha : beta;
 }
 function myMinimax(node, depth, alpha, beta, maxDepth, maxim) {
 	CCC += 1;
@@ -6832,63 +6861,9 @@ function myMinimax(node, depth, alpha, beta, maxDepth, maxim) {
 	}
 	return maxim ? alpha : beta;
 }
-function minimaxCopy(node, depth, alpha, beta, maxDepth, maxim) {
-	CCC += 1;
-	if (depth >= maxDepth) return F_HEURISTIC(node,MAXIMIZER,MINIMIZER);
-	let ec = F_END(node, depth); if (ec.reached) return ec.val;
-	depth += 1;
-	var move, result;
-	var availableMoves = F_MOVES(node);
-	let player = maxim ? MAXIMIZER : MINIMIZER;
-	let nodeSafe = jsCopy(node);
-	for (var i = 0; i < availableMoves.length; i++) {
-		move = availableMoves[i];
-		let node1 = jsCopy(node);
-		console.assert(sameList(nodeSafe,node),'HA!');
-		F_APPLYMOVE(node1, move, player);
-		result = minimaxCopy(node1, depth, alpha, beta, maxDepth, !maxim);
-		if (maxim) {
-			if (result > alpha) {
-				alpha = result;
-				if (depth == 1) SelectedMove = move;
-			} else if (alpha >= beta) { return alpha; }
-		} else {
-			if (result < beta) {
-				beta = result;
-				if (depth == 1) SelectedMove = move;
-			} else if (beta <= alpha) { return beta; }
-		}
-	}
-	return maxim ? alpha : beta;
-}
 //#endregion ai
 
 //#region all
-function canAct() { return (aiActivated || uiActivated) && !auxOpen; }
-function canHumanAct() { return uiActivated && !auxOpen; }
-function setGame(game, immediate = false) {
-	cleanupOldGame();
-	resetUIDs();
-	if (isdef(G) && G.id != game) Score.gameChange = true;
-	G = new (classByName(capitalize(game)))(game, DB.games[game]);
-	Settings = new SettingsClass(G, dAux);
-	if (nundef(U.games[game])) {
-		if (G.controllerType == 'solitaire') { U.games[game] = { nTotal: 0, nCorrect: 0, nCorrect1: 0, startLevel: 0 }; }
-		else U.games[game] = {};
-	}
-	if (isdef(G.maxLevel)) G.level = Math.min(getUserStartLevel(game), G.maxLevel);
-	if (G.id != 'gAristo') Settings.updateGameValues(U, G); //hier werden die belinda settings geadded
-	save_user(); //das sollte nur gemacht werden wenn wirklich was sich geaendert hat!
-	switch (G.controllerType) {
-		case 'solitaire': GC = PROJECTNAME.startsWith('bel')?new ControllerSolitaire(G, U):new ControllerSolitaireMinimal(G, U); break;
-		case 'solo': GC = new ControllerTTT(G, U); break;
-		case 'chess': GC = new ControllerChess(G, U); break;
-		case 'c52': GC = new ControllerC52(G, U); break;
-	}
-	G.controller = GC;
-	showGameTitle();
-	if (immediate) GC.startGame();
-}
 function all2DigitFractionsUnder1() {
 	let fr = {
 		1: [2, 3, 4, 5, 6, 7, 8, 9],
@@ -6912,23 +6887,22 @@ function all2DigitFractionsUnder1Expanded() {
 	}
 	return res;
 }
-function getTextForMixed(full, num, denom) {
-	let s = '' + full;
-	if (isdef(num) && isdef(denom)) s += ' ' + num + '&frasl;' + denom;
-	return s;
-}
-function getTextForFractionX(num, denom) {
-	if (num == denom) return '1';
-	else if (denom == 1) return num;
-	else if (num / denom > 2) {
-		let mixed = getMixedNumber(num, denom);
-		return getTextForMixed(mixed.full, mixed.n, mixed.d);
-	} else {
-		let s = '' + num + '&frasl;' + denom; return s;
+function canAct() { return (aiActivated || uiActivated) && !auxOpen; }
+function canHumanAct() { return uiActivated && !auxOpen; }
+function get3FractionVariants(fr, sameNum = false, sameDenom = true) {
+	let num = fr.n;
+	let rnd1 = randomNumber(1, 2);
+	let rnd2 = rnd1 + randomNumber(1, 3);
+	let rnd3 = rnd2 + randomNumber(1, 5);
+	let nums = sameNum ? [num, num, num, num] : [num, num + rnd1, num > 5 ? (num - rnd2) : num + rnd2, num + rnd3];
+	let den = fr.d;
+	let denoms = sameDenom ? [den, den, den, den] : sameNum ? [den, den + 1, den + 2, den > 2 ? den - 1 : den + 3]
+		: [den, den + 1, den + 2, den];
+	let frlist = [];
+	for (let i = 0; i < 4; i++) {
+		frlist.push(math.fraction(nums[i], denoms[i]));
 	}
-}
-function getTextForFraction(num, denom) {
-	let s = '' + num + '&frasl;' + denom; return s;
+	return frlist;
 }
 function getMixedNumber(num, denom) {
 	const quotient = Math.floor(num / denom);
@@ -6951,20 +6925,46 @@ function getRandomFraction(num, denom) {
 	let fr = chooseRandom(flist);
 	return math.fraction(Number(fr.numer), Number(fr.denom));
 }
-function get3FractionVariants(fr, sameNum = false, sameDenom = true) {
-	let num = fr.n;
-	let rnd1 = randomNumber(1, 2);
-	let rnd2 = rnd1 + randomNumber(1, 3);
-	let rnd3 = rnd2 + randomNumber(1, 5);
-	let nums = sameNum ? [num, num, num, num] : [num, num + rnd1, num > 5 ? (num - rnd2) : num + rnd2, num + rnd3];
-	let den = fr.d;
-	let denoms = sameDenom ? [den, den, den, den] : sameNum ? [den, den + 1, den + 2, den > 2 ? den - 1 : den + 3]
-		: [den, den + 1, den + 2, den];
-	let frlist = [];
-	for (let i = 0; i < 4; i++) {
-		frlist.push(math.fraction(nums[i], denoms[i]));
+function getTextForFraction(num, denom) {
+	let s = '' + num + '&frasl;' + denom; return s;
+}
+function getTextForFractionX(num, denom) {
+	if (num == denom) return '1';
+	else if (denom == 1) return num;
+	else if (num / denom > 2) {
+		let mixed = getMixedNumber(num, denom);
+		return getTextForMixed(mixed.full, mixed.n, mixed.d);
+	} else {
+		let s = '' + num + '&frasl;' + denom; return s;
 	}
-	return frlist;
+}
+function getTextForMixed(full, num, denom) {
+	let s = '' + full;
+	if (isdef(num) && isdef(denom)) s += ' ' + num + '&frasl;' + denom;
+	return s;
+}
+function setGame(game, immediate = false) {
+	cleanupOldGame();
+	resetUIDs();
+	if (isdef(G) && G.id != game) Score.gameChange = true;
+	G = new (classByName(capitalize(game)))(game, DB.games[game]);
+	Settings = new SettingsClass(G, dAux);
+	if (nundef(U.games[game])) {
+		if (G.controllerType == 'solitaire') { U.games[game] = { nTotal: 0, nCorrect: 0, nCorrect1: 0, startLevel: 0 }; }
+		else U.games[game] = {};
+	}
+	if (isdef(G.maxLevel)) G.level = Math.min(getUserStartLevel(game), G.maxLevel);
+	if (G.id != 'gAristo') Settings.updateGameValues(U, G); //hier werden die belinda settings geadded
+	save_user(); //das sollte nur gemacht werden wenn wirklich was sich geaendert hat!
+	switch (G.controllerType) {
+		case 'solitaire': GC = PROJECTNAME.startsWith('bel') ? new ControllerSolitaire(G, U) : new ControllerSolitaireMinimal(G, U); break;
+		case 'solo': GC = new ControllerTTT(G, U); break;
+		case 'chess': GC = new ControllerChess(G, U); break;
+		case 'c52': GC = new ControllerC52(G, U); break;
+	}
+	G.controller = GC;
+	showGameTitle();
+	if (immediate) GC.startGame();
 }
 //#endregion all
 
@@ -8265,16 +8265,6 @@ class GSteps extends Game {
 		return isCorrect;
 	}
 }
-function ensureDictionary(){
-	if (nundef(Dictionary)) { Dictionary = { E: {}, S: {}, F: {}, C: {}, D: {} } };
-	for (const k in Syms) {
-		for (const lang of ['E', 'D', 'F', 'C', 'S']) {
-			let w = Syms[k][lang];
-			if (nundef(w)) continue;
-			Dictionary[lang][w.toLowerCase()] = Dictionary[lang][w.toUpperCase()] = k;
-		}
-	}
-}
 class GSwap extends Game {
 	constructor(name, o) {
 		super(name, o);
@@ -8518,7 +8508,7 @@ class GWritePic extends Game {
 		else { return false; }
 	}
 }
-class GameTimed extends Game{
+class GameTimed extends Game {
 	constructor(name, o) { super(name, o); }
 	clear() { clearInterval(this.TOI); super.clear(); this.timer = null; }
 	makeTimer() {
@@ -8647,10 +8637,20 @@ class GSpotit extends GameTimed {
 		}
 		this.controller.activateUi.bind(this.controller)();
 	}
-	activate(){}
+	activate() { }
 	onTimeup() {
 		Selected = { isCorrect: false, correctUis: this.getSharedSymbols(), correctionDelay: this.items.length * 2000 };
 		this.controller.evaluate.bind(this.controller)();
+	}
+}
+function ensureDictionary() {
+	if (nundef(Dictionary)) { Dictionary = { E: {}, S: {}, F: {}, C: {}, D: {} } };
+	for (const k in Syms) {
+		for (const lang of ['E', 'D', 'F', 'C', 'S']) {
+			let w = Syms[k][lang];
+			if (nundef(w)) continue;
+			Dictionary[lang][w.toLowerCase()] = Dictionary[lang][w.toUpperCase()] = k;
+		}
 	}
 }
 //#endregion classes
@@ -9212,7 +9212,6 @@ class GChess extends GMinimalGame {
 
 //#region controller3
 var verbose = false;
-function write() { if (verbose) console.log(...arguments); }
 class ControllerTTT {
 	constructor(g, user) {
 		this.g = g;
@@ -9294,18 +9293,18 @@ class ControllerMinimal {
 		resetState();
 		this.g.startGame(fen);
 	}
-	startRound(){}
-	prompt(){}
-	uiInteract(){}
-	activateUi(){}
-	deactivateUi(){}
+	startRound() { }
+	prompt() { }
+	uiInteract() { }
+	activateUi() { }
+	deactivateUi() { }
 	evaluate() {
 		this.write('evaluate');
 		return;
 	}
 }
-class ControllerChess extends ControllerMinimal{
-	constructor(g,user){super(g,user);}
+class ControllerChess extends ControllerMinimal {
+	constructor(g, user) { super(g, user); }
 	evaluate() {
 		super.evaluate();
 		this.write('____________GameController\n', GameController);
@@ -9314,9 +9313,119 @@ class ControllerChess extends ControllerMinimal{
 class ControllerC52 extends ControllerMinimal {
 	constructor(g, user) { super(g, user); }
 }
+function write() { if (verbose) console.log(...arguments); }
 //#endregion controller3
 
 //#region game
+var TOFleetingMessage;
+function _simpleOptions(options = {}, defsOuter = {}) {
+	options.showPic = valf(options.showPic, isdef(options.fzPic));
+	options.showLabels = isdef(options.fz);
+	options.szPic = { w: options.w, h: options.h };
+	options.fzText = options.fz;
+	if (nundef(options.rounding)) options.rounding = 4;
+	if (nundef(options.margin)) options.margin = 4;
+	if (nundef(options.padding)) options.padding = 0;
+	if (nundef(options.labelStyles)) options.labelStyles = {};
+	if (options.showLabels) { if (nundef(options.labelPos)) options.labelBottom = true; options.labelStyles.fz = options.fzText; }
+	options.picStyles = { fz: options.fzPic };
+	let [w, h] = [options.szPic.w, options.szPic.h];
+	options.outerStyles = {
+		w: w, h: h, bg: options.bg, fg: options.fg,
+		display: 'inline-flex', 'flex-direction': 'column',
+		'justify-content': 'center', 'align-items': 'center', 'vertical-align': 'top',
+		padding: 0, box: true, margin: options.margin, rounding: options.rounding,
+	};
+	if (isdef(defsOuter)) addKeys(defsOuter, options.outerStyles);
+	return options;
+}
+function _visualizeAritOp(op, a, b, dParent, symResult) {
+	op = isString(op) ? OPS[op] : op;
+	let dx = mDiv(dParent); mFlex(dx); mStyle(dx, { 'align-items': 'center', gap: 16 });
+	let d1 = visNumber(a, dx, 'blue');
+	let d2 = visOperator(op.wr, dx);
+	let d3 = visNumber(b, dx, 'green');
+	let d4 = visOperator('=', dx);
+	let result = isdef(symResult) ? symResult : op.f(a, b);
+	let d5 = visNumber(result, dx, 'red');
+	return dx;
+}
+function _visualizeMult(a, b, dParent, symResult) {
+	op = OPS.mult;
+	let dx = mDiv(dParent); mFlex(dx); mStyle(dx, { 'align-items': 'center', gap: 16 });
+	visNumber(a, dx, 'blue', 'v');
+	for (let i = 1; i < b; i++) {
+		let d2 = visOperator('+', dx);
+		visNumber(a, dx, 'blue', 'v');
+	}
+	let d4 = visOperator('=', dx);
+	let result = isdef(symResult) ? symResult : op.f(a, b);
+	let d5 = visNumber(result, dx, 'red');
+	return dx;
+}
+function _visualizeNumber(n, dParent, color, or = 'h') {
+	let root = Math.sqrt(n);
+	let rows = Math.floor(root);
+	let cols = Math.ceil(root);
+	if (or == 'v') { let h = rows; rows = cols; cols = h; }
+	let dArea = mDiv(dParent, { display: 'inline-grid', 'grid-template-columns': `repeat(${cols}, 1fr)`, bg: 'white', fg: color });
+	for (let i = 0; i < n; i++) {
+		let item = getItem('plain-circle');
+		let d = miPic(item, dArea, { fz: 12, margin: 6 });
+		iAdd(item, { div: d });
+		mAppend(dArea, d);
+	}
+	return dArea;
+}
+function activateFocusGroup(iFocus) {
+	if (isdef(iFocus)) Goal.iFocus = iFocus;
+	if (Goal.iFocus === null) {
+		console.log('nothing to activate');
+		return;
+	}
+	let g = Goal.words[Goal.iFocus];
+	g.div.style.backgroundColor = 'black';
+}
+function addNthInputElement(dParent, n) {
+	mLinebreak(dParent, 10);
+	let d = mDiv(dParent);
+	let dInp = mCreate('input');
+	dInp.type = "text"; dInp.autocomplete = "off";
+	dInp.style.margin = '10px;'
+	dInp.id = 'inputBox' + n;
+	dInp.style.fontSize = '20pt';
+	mAppend(d, dInp);
+	return dInp;
+}
+function aniGameOver(msg, silent = false) {
+	if (!silent && !G.silent) { writeSound(); playSound('goodBye'); }
+	interrupt();
+	show('freezer2');
+	let dComment = mBy('dCommentFreezer2');
+	let dMessage = mBy('dMessageFreezer2');
+	let d = mBy('dContentFreezer2');
+	clearElement(d);
+	mStyle(d, { fz: 20, matop: 40, bg: 'silver', fg: 'indigo', rounding: 20, padding: 25 })
+	let style = { matop: 4 };
+	dComment.innerHTML = 'Great Job!';
+	dMessage.innerHTML = isdef(msg) ? msg : 'Time for a Break...';
+	d.style.textAlign = 'center';
+	mText('Unit Score:', d, { fz: 22 });
+	for (const gname in U.session) {
+		let sc = U.session[gname];
+		if (sc.nTotal == 0) continue;
+		if (DB.games[gname].controllerType == 'solitaire') mText(`${DB.games[gname].friendly}: ${sc.nCorrect}/${sc.nTotal} correct answers (${sc.percentage}%) `, d, style);
+		else if (DB.games[gname].controllerType == 'solo') {
+			mText(`${DB.games[gname].friendly}: Won:${sc.nWins}, Lost:${sc.nLoses}, Tied:${sc.nTied} `, d, style);
+		}
+	}
+	mClass(mBy('freezer2'), 'aniSlowlyAppear');
+}
+function aniInstruction(spoken, v) {
+	if (isdef(spoken)) say(spoken, v);
+	mClass(dInstruction, 'onPulse');
+	setTimeout(() => mRemoveClass(dInstruction, 'onPulse'), 500);
+}
 function animate(elem, aniclass, timeoutms) {
 	mClass(elem, aniclass);
 	setTimeout(() => mRemoveClass(elem, aniclass), timeoutms);
@@ -9326,22 +9435,6 @@ function animateColorScale(elem, color = 'green', scale = 1.5, timeoutms = 2000,
 	setCSSVariable('--aniScale', scale);
 	mClass(elem, aniClass);
 	setTimeout(() => mRemoveClass(elem, aniClass), timeoutms);
-}
-function aniInstruction(spoken,v) {
-	if (isdef(spoken)) say(spoken,v);
-	mClass(dInstruction, 'onPulse');
-	setTimeout(() => mRemoveClass(dInstruction, 'onPulse'), 500);
-}
-function createLetterInputsX(s, dParent, style, idForContainerDiv) {
-	let d = mDiv(dParent);
-	if (isdef(idForContainerDiv)) d.id = idForContainerDiv;
-	inputs = [];
-	for (let i = 0; i < s.length; i++) {
-		let d1 = mDiv(d);
-		d1.innerHTML = s[i];
-		mStyle(d1, style);
-	}
-	return d;
 }
 function blankInputs(d, ilist, blink = true) {
 	let inputs = [];
@@ -9353,11 +9446,93 @@ function blankInputs(d, ilist, blink = true) {
 	}
 	return inputs;
 }
+function blankWordInputs(wi, n, pos = 'random') {
+	let indivInputs = [];
+	let remels =
+		pos == 'random' ? choose(wi, n)
+			: pos == 'notStart' ? arrTake(wi.slice(1, wi.length - 1), n)
+				: pos == 'start' ? arrTake(wi, n)
+					: takeFromTo(wi, wi.length - n, wi.length);
+	for (const el of remels) {
+		for (const inp of el.charInputs) { unfillCharInput(inp); }
+		indivInputs = indivInputs.concat(el.charInputs);
+		el.hasBlanks = true;
+		el.nMissing = el.charInputs.length;
+		if (n > 1) iDiv(el).onclick = onClickWordInput;
+	}
+	return { iFocus: null, words: remels, letters: indivInputs };
+}
 function buildWordFromLetters(dParent) {
 	let letters = Array.from(dParent.children);
 	let s = letters.map(x => x.innerHTML);
 	s = s.join('');
 	return s;
+}
+function calcMemorizingTime(numItems, randomGoal = true) {
+	let ldep = Math.max(6, randomGoal ? numItems * 2 : numItems);
+	return ldep;
+}
+function calcRowsColsSizeAbWo(n, wmax, hmax, showLabels, wimax = 200, himax = 200, fw = 1, fh = 1) {
+	let rows = n > 35 ? 6 : n > 28 ? 5 : n > 24 && !showLabels || n > 21 ? 4 : n > 8 ? 3 : n > 3 ? 2 : 1;
+	let cols = Math.ceil(n / rows);
+	return calcSizeAbWo(n, rows, cols, wmax, hmax, wimax, himax, fw, fh);
+}
+function calcSizeAbWo(n, rows, cols, wmax, hmax, wimax = 200, himax = 200, fw = 1, fh = 1) {
+	if (nundef(cols)) cols = Math.ceil(n / rows); else if (nundef(rows)) rows = Math.ceil(n / cols);
+	let wi = wmax * fw / cols;
+	let hi = hmax * fh / rows;
+	wi = Math.min(wi, wimax);
+	hi = Math.min(hi, himax);
+	return [wi, hi, rows, cols];
+}
+function clearFleetingMessage() {
+	clearTimeout(TOFleetingMessage);
+	clearElement(dLineBottom);
+}
+function clearGameTitle() { clearElement(dGameTitle); }
+function clearLevel() { clearElement(dLevel); clearBadges(); }
+function clearScore() { clearElement(dScore) }
+function clearStats() {
+	clearLevel();
+	clearScore();
+	clearGameTitle();
+}
+function clearTable() {
+	clearElement(dLineTableMiddle); clearElement(dLineTitleMiddle); removeMarkers();
+}
+function colorPrepper(val) {
+	return `<span style="color:${ColorDict[val].c}">${ColorDict[val][G.language].toUpperCase()}</span>`;
+}
+function containsColorWord(s) {
+	let colors = ['old', 'blond', 'red', 'blue', 'green', 'purple', 'black', 'brown', 'white', 'grey', 'gray', 'yellow', 'orange'];
+	for (const c of colors) {
+		if (s.toLowerCase().includes(c)) return false;
+	}
+	return true;
+}
+function correctBlanks() {
+	let wrong = getWrongWords();
+	if (nundef(TOList)) TOList = {};
+	Selected.feedbackUI = wrong.map(x => iDiv(x));
+	failPictureGoal();
+	let t1 = setTimeout(removeMarkers, 1000);
+	let t2 = setTimeout(() => wrong.map(x => { correctWordInput(x); animate(iDiv(x), 'komisch', 1300); }), 1000);
+	TOList.correction = [t1, t2];
+	return 2500;
+}
+function correctWordInput(winp) { winp.charInputs.map(x => refillCharInput(x, x.letter)); }
+function createContainers(list, dArea, styles) {
+	let i = 0;
+	let containers = [];
+	let defStyles = { w: 150, h: 200, bg: 'random', rounding: 12, display: 'inline-block', margin: 12 };
+	addKeys(defStyles, styles);
+	for (const cat of list) {
+		let cont = mTitledDiv(cat, dArea, styles, {}, 'c' + i);
+		mStyle(cont, { h: '100%' });
+		i += 1;
+		containers.push({ label: cat, div: cont });
+	}
+	return containers;
 }
 function createLetterInputs(s, dParent, style, idForContainerDiv, colorWhiteSpaceChars = true, preserveColorsBetweenWhiteSpace = true) {
 	let d = mDiv(dParent);
@@ -9387,100 +9562,38 @@ function createLetterInputs(s, dParent, style, idForContainerDiv, colorWhiteSpac
 	}
 	return d;
 }
-function isVariableColor(c) { return c == 'random' || c == 'randPastel' || c == 'randDark' || c == 'randLight' || isList(c); }
-function scrambleInputs(d) {
-	let children = Array.from(d.children);
-	shuffle(children);
-	for (const ch of children) {
-		mAppend(d, ch);
+function createLetterInputsX(s, dParent, style, idForContainerDiv) {
+	let d = mDiv(dParent);
+	if (isdef(idForContainerDiv)) d.id = idForContainerDiv;
+	inputs = [];
+	for (let i = 0; i < s.length; i++) {
+		let d1 = mDiv(d);
+		d1.innerHTML = s[i];
+		mStyle(d1, style);
 	}
+	return d;
 }
-function setNumberSequenceGoal() {
-	let blank = blankWordInputs(G.words, G.numMissing, G.posMissing);
-	Goal = { seq: G.seq, words: G.words, chars: G.letters, blankWords: blank.words, blankChars: blank.letters, iFocus: blank.iFocus };
-	Goal.qCharIndices = Goal.blankChars.map(x => x.index);
-	Goal.qWordIndices = Goal.blankWords.map(x => x.iWord);
-}
-function showEquation(words, dParent, idForContainerDiv, sep = null, styleContainer = {}, styleWord = {}, styleLetter = {}, styleSep = {}, colorWhiteSpaceChars = true, preserveColorsBetweenWhiteSpace = true) {
-	if (isEmpty(styleWord)) {
-		let sz = 80;
-		let fg = helleFarbe(G.color);
-		styleWord = {
-			margin: 8, padding: 8, rounding: '50%', w: 'auto', h: sz, display: 'flex', fg: fg, bg: 'transparent',
-			'align-items': 'center', border: 'transparent', outline: 'none', fz: sz, 'justify-content': 'center',
-		};
+function createMultipleChoiceElements(correctAnswer, wrongAnswers, dParent, dFeedbackUI, styles) {
+	if (nundef(Goal)) Goal = {};
+	let choices = wrongAnswers; choices.push(correctAnswer);
+	Goal.correctChoice = correctAnswer;
+	if (isYesNo(choices)) {
+		sortByDescending(choices, 'text');// = [{ num: 1, text: 'yes' }, { num: 0, text: 'no' }];
+	} else {
+		shuffle(choices);
+		if (coin()) shuffle(choices);
 	}
-	let dContainer = mDiv(dParent);
-	if (!isEmpty(styleContainer)) mStyle(dContainer, styleContainer); else mClass(dContainer, 'flexWrap');
-	dContainer.id = idForContainerDiv;
-	let inputGroups = [];
-	let charInputs = [];
-	let iWord = 0;
+	Goal.choices = choices;
+	Goal.feedbackUI = dFeedbackUI;
 	let idx = 0;
-	let numWords = words.length;
-	for (const w of words) {
-		let dGroup = mDiv(dContainer);
-		mStyle(dGroup, styleWord);
-		dGroup.id = idForContainerDiv + '_' + iWord;
-		let g = { dParent: dContainer, word: w, iWord: iWord, div: dGroup, oStyle: styleWord, ofg: dGroup.style.color, obg: dGroup.style.backgroundColor };
-		inputGroups.push(g);
-		let inputs = [];
-		let iLetter = 0;
-		let wString = w.toString();
-		for (const l of wString) {
-			let dLetter = mDiv(dGroup);
-			if (!isEmpty(styleLetter)) mStyle(dLetter, styleLetter);
-			dLetter.innerHTML = l;
-			let inp = { group: g, div: dLetter, letter: l, iLetter: iLetter, index: idx, oStyle: styleLetter, ofg: dLetter.style.color, obg: dLetter.style.backgroundColor };
-			charInputs.push(inp);
-			inputs.push(inp);
-			iLetter += 1; idx += 1;
+	for (const ch of choices) {
+		let dButton = mButton(ch.text, onClickChoice, dParent, { wmin: 100, fz: 36, margin: 20, rounding: 4, vpadding: 4, hpadding: 10 }, ['toggleButtonClass']);
+		dButton.id = 'bChoice_' + idx; idx += 1;
+		if (ch.text == correctAnswer.text) {
+			Goal.choice = ch.toString();
+			Goal.buttonCorrect = dButton; //else console.log('ch', ch.toString(), 'res', wp.result.text)
 		}
-		g.charInputs = inputs;
-		if (iWord < words.length - 1 && isdef(sep)) {
-			let dSep = mDiv(dContainer);
-			dSep.innerHTML = sep;
-			if (isdef(styleSep)) mStyle(dSep, styleSep);
-		}
-		iWord += 1;
 	}
-	return [inputGroups, charInputs];// { words: inputGroups, letters: charInputs };
-}
-function blankWordInputs(wi, n, pos = 'random') {
-	let indivInputs = [];
-	let remels =
-		pos == 'random' ? choose(wi, n)
-			: pos == 'notStart' ? arrTake(wi.slice(1, wi.length - 1), n)
-				: pos == 'start' ? arrTake(wi, n)
-					: takeFromTo(wi, wi.length - n, wi.length);
-	for (const el of remels) {
-		for (const inp of el.charInputs) { unfillCharInput(inp); }
-		indivInputs = indivInputs.concat(el.charInputs);
-		el.hasBlanks = true;
-		el.nMissing = el.charInputs.length;
-		if (n > 1) iDiv(el).onclick = onClickWordInput;
-	}
-	return { iFocus: null, words: remels, letters: indivInputs };
-}
-function onClickWordInput(ev) {
-	return;
-	if (!canAct()) return;
-	ev.cancelBubble = true;
-	let id = evToClosestId(ev);
-	let iWord = Number(stringAfter(id, '_'));
-	let g = Goal.words[iWord];
-	if (nundef(g.hasBlanks) || !g.hasBlanks) return;
-	deactivateFocusGroup();
-	activateFocusGroup(g.iWord);
-}
-function activateFocusGroup(iFocus) {
-	if (isdef(iFocus)) Goal.iFocus = iFocus;
-	if (Goal.iFocus === null) {
-		console.log('nothing to activate');
-		return;
-	}
-	let g = Goal.words[Goal.iFocus];
-	g.div.style.backgroundColor = 'black';
 }
 function deactivateFocusGroup() {
 	if (Goal.iFocus === null) {
@@ -9490,60 +9603,223 @@ function deactivateFocusGroup() {
 	g.div.style.backgroundColor = g.obg;
 	Goal.iFocus = null;
 }
-function onKeyWordInput(ev) {
-	let charEntered = ev.key.toString();
-	if (!isAlphaNum(charEntered)) return;
-	let ch = charEntered.toUpperCase();
-	Selected = { lastLetterEntered: ch };
-	let cands = Goal.blankChars;
-	if (Goal.iFocus) {
-		let word = Goal.words[Goal.iFocus];
-		if (word.hasBlanks) cands = word.charInputs.filter(x => x.isBlank);
-		else deactivateFocusGroup();
+function detectArea(dParent, w, h) {
+	let rect = isdef(dParent) ? getRect(dParent) : null;
+	if (nundef(w)) { w = rect ? rect.w : window.innerWidth; }
+	if (nundef(h)) { h = rect ? rect.h : window.innerHeight; }
+	return [w, h];
+}
+function failPictureGoal(withComment = false) {
+	if (withComment && G.spokenFeedback) {
+		let lang = G.language;
+		const comments = {
+			E: ['too bad', 'oh', 'oops', 'nope'],
+			D: ['aber geh', 'nicht ganz', 'falsch'],
+			S: ['no'],
+			F: ['non'],
+			C: ['不正确'],
+		}[lang];
+		say(chooseRandom(comments), lang);
 	}
-	console.assert(!isEmpty(cands));
-	let isLastOfGroup = (Goal.iFocus != null) && cands.length == 1;
-	let isVeryLast = Goal.blankChars.length == 1;
-	let target = firstCond(cands, x => x.letter == ch);
-	let isMatch = target != null;
-	if (!isMatch) target = cands[0];
-	fillCharInput(target, ch);
-	return { target: target, isMatch: isMatch, isLastOfGroup: isLastOfGroup, isVeryLast: isVeryLast, ch: ch };
+	if (isdef(Selected) && isdef(Selected.feedbackUI)) {
+		let uilist = isList(Selected.feedbackUI) ? Selected.feedbackUI : [Selected.feedbackUI];
+		let sz = getRect(uilist[0]).h;
+		for (const ui of uilist) {
+			mpOver(markerFail(), ui, sz * (1 / 2), 'red', 'openMojiTextBlack');
+		}
+	}
 }
-function unfillCharInput(inp) {
-	let d = iDiv(inp);
-	d.innerHTML = '_';
-	mClass(d, 'blink');
-	inp.isBlank = true;
+function failSomePictures(withComment = false) {
+	if (withComment && G.spokenFeedback) {
+		const comments = (G.language == 'E' ? ['too bad'] : ["aber geh'"]);
+		sayRandomVoice(chooseRandom(comments));
+	}
+	for (const p of Pictures) {
+		let ui = iDiv(p);
+		let sz = getRect(ui).h;
+		if (p.isCorrect == false) {
+			mpOver(markerFail(), ui, sz * (1 / 2), 'red', 'openMojiTextBlack');
+		} else mpOver(markerSuccess(), ui, sz * (4 / 5), 'limegreen', 'segoeBlack');
+	}
 }
-function unfillChar(inp) { unfillCharInput(inp); }
+function failThumbsDown(withComment = false) {
+	if (withComment && G.spokenFeedback) {
+		const comments = (G.language == 'E' ? ['too bad'] : ["aber geh'"]);
+		sayRandomVoice(chooseRandom(comments));
+	}
+	let p1 = firstCond(Pictures, x => x.key == 'thumbs down');
+	iDiv(p1).style.opacity = 1;
+	let p2 = firstCond(Pictures, x => x.key == 'thumbs up');
+	iDiv(p2).style.display = 'none';
+}
 function fillCharInput(inp, ch) {
 	let d = iDiv(inp);
 	d.innerHTML = ch;
 	mRemoveClass(d, 'blink');
 }
-function correctWordInput(winp) { winp.charInputs.map(x => refillCharInput(x, x.letter)); }
-function refillCharInput(inp, ch) { fillCharInput(inp, ch); }
-function getInputStringOfWord(winp) { return winp.charInputs.map(x => iDiv(x).innerHTML).join(''); }
+function fleetingMessage(msg, styles, fade = false, ms = 3000) {
+	let d = mDiv(dLineBottom);
+	if (isString(msg)) {
+		d.innerHTML = msg;
+		mStyle(d, styles)
+	} else {
+		mAppend(d, msg);
+	}
+	if (fade) animateProperty(dLineBottom, 'opacity', 1, .4, 0, ms);
+	return d;
+}
+function gameOver(msg, silent = false) { TOMain = setTimeout(aniGameOver(msg, silent), DELAY); }
+function getColorLabelInstruction(cmd, color, label) {
+	if (nundef(color)) color = Goal.color;
+	let colorWord = color[G.language];
+	let colorSpan = `<span style='color:${color.c}'>${colorWord.toUpperCase()}</span>`;
+	if (nundef(label)) label = Goal.label;
+	let labelSpan = `<b>${label.toUpperCase()}</b>`;
+	let eCommand, dCommand;
+	switch (cmd) {
+		case 'click': eCommand = cmd + ' the'; dCommand = cmd; break
+		case 'then': eCommand = cmd + ' the'; dCommand = 'dann'; break
+	}
+	let eInstr = `${eCommand} ${colorWord} ${label}`;
+	let dInstr = `${dCommand} ${label} in ${colorWord}`;
+	let spoken = G.language == 'E' ? eInstr : dInstr;
+	let written = spoken.replace(colorWord, colorSpan).replace(label, labelSpan);
+	console.log('spoken', spoken, 'written', written);
+	return [written, spoken];
+}
+function getCorrectWords() { return Goal.seq; }
+function getCorrectWordString(sep = ' ') { return getCorrectWords().join(sep); }
+function getDistinctVals(list, prop) {
+	let res = [];
+	for (const item of list) {
+		let val = item[prop];
+		addIf(res, val);
+	}
+	return res;
+}
 function getInputStringOfChar(inp) { return iDiv(inp).innerHTML; }
+function getInputStringOfWord(winp) { return winp.charInputs.map(x => iDiv(x).innerHTML).join(''); }
 function getInputWords() { return Goal.words.map(x => getInputStringOfWord(x)); }
-function getQWords() { return Goal.qWordIndices.map(x => Goal.words[x]); }
+function getInputWordString(sep = ' ') { return getInputWords().join(sep); }
+function getOperationHintString(i) {
+	if (i == 0) {
+		let spOp = G.oop.sp; if (G.language == 'D') spOp = DD[spOp];
+		let sSpoken = [G.operand, spOp, G.step].join(' ');
+		let sWritten = visOperation(G.op, G.operand, G.step, null, '?');
+		return [sSpoken, sWritten];
+	} else {
+		let result = G.oop.f(G.operand, G.step);
+		let lstSpoken = i == 1 ? result == 0 ? [result] : ['count', 'the red dots'] : [G.operand, G.oop.sp, G.step, 'equals', result];
+		if (G.language == 'D') lstSpoken = lstSpoken.map(x => translateToGerman(x));
+		let sSpoken = lstSpoken.join(' ');
+		let sWritten = visOperation(G.op, G.operand, G.step, null);
+		return [sSpoken, sWritten];
+	}
+}
+function getOptionsMinimalistic(dParent, handler, w = 0, h = 0, ifs = {}, options = {}, g) {
+	[w, h] = detectArea(dParent, w, h);
+	let defOptions = {
+		isRegular: true, hugeFont: true, szPic: { w: 200, h: 200 }, gap: 15, shufflePositions: true,
+		showPic: true, showLabels: true, luc: 'l', labelPos: 'bottom', language: g.language, keySet: g.vocab,
+		w: w, h: h, fz: 24, fzText: 24, fzPic: 96, ifs: ifs, handler: handler, ifs: ifs, handler: handler,
+	};
+	addSimpleProps(g, options);
+	addKeys(defOptions, options);
+	if (options.numRepeat > 1 && nundef(options.ifs.bg)) {
+		let bg = isdef(options.colorKeys) ? 'white' : (i) => options.sameBackground ? computeColor('random') : 'random';
+		let fg = isdef(options.colorKeys) ? 'black' : 'contrast';
+		options.ifs.bg = bg;
+		options.ifs.fg = fg;
+	}
+	return options;
+}
+function getOrdinal(i) { return G.numRepeat == 1 ? '' : G.language == 'E' ? ordinal_suffix_of(i) : '' + i + '. '; }
+function getOrdinalColorLabelInstruction(cmd, ordinal, color, label) {
+	if (nundef(ordinal)) ordinal = getOrdinal(Goal.iRepeat);
+	if (nundef(color)) color = Goal.color;
+	let colorWord = '', colorSpan = '';
+	if (isdef(color)) {
+		colorWord = nundef(color) ? '' : nundef(color[G.language]) ? color.E : color[G.language];
+		if (G.language == 'D' && !isEmpty(ordinal) && !['lila', 'rosa'].includes(colorWord)) colorWord += 'e';
+		colorSpan = `<span style='color:${color.c}'>${colorWord.toUpperCase()}</span>`;
+	}
+	if (nundef(label)) label = Goal.label;
+	let labelSpan = `<b>${label.toUpperCase()}</b>`;
+	let eCommand, dCommand;
+	switch (cmd) {
+		case 'click': eCommand = cmd + ' the'; dCommand = cmd; break
+		case 'then': eCommand = cmd + ' the'; dCommand = 'dann'; break
+	}
+	let eInstr = `${eCommand} ${ordinal} ${colorWord} ${label}`;
+	let dInstr = ordinal == '' ? `${dCommand} ${label} ${colorWord == '' ? '' : 'in ' + colorWord}`
+		: `${dCommand} ${ordinal} ${colorWord} ${label}`;
+	let ecorr = `${ordinal} ${colorWord} ${label}`
+	let dcorr = ordinal == '' ? `${label} ${colorWord == '' ? '' : 'in ' + colorWord}`
+		: `${ordinal} ${colorWord} ${label}`;
+	let corr = G.language == 'E' ? ecorr : dcorr;
+	let spoken = G.language == 'E' ? eInstr : dInstr;
+	let written = spoken.replace(colorWord, colorSpan).replace(label, labelSpan);
+	return [written, spoken, corr];
+}
 function getQChars() {
 	return Goal.qCharIndices.map(x => Goal.chars[x]);
 }
+function getQWords() { return Goal.qWordIndices.map(x => Goal.words[x]); }
+function getStandardFz(wi, hi, showPic, showLabels, wLongest) {
+	let hText = showPic ? hi / 3 : hi;
+	return showLabels ? idealFontSize(wLongest, wi, hText) : 0;
+}
+function getStandardFzPic(wi, hi, showLabels) { return Math.min(wi * .8, showLabels ? hi * .6 : hi * .75); }
 function getWrongChars() { return getQChars().filter(x => getInputStringOfChar(x) != x.letter); }
 function getWrongWords() { return getQWords().filter(x => getInputStringOfWord(x) != x.word); }
-function getCorrectWords() { return Goal.seq; }
-function getCorrectWordString(sep = ' ') { return getCorrectWords().join(sep); }
-function getInputWordString(sep = ' ') { return getInputWords().join(sep); }
-function makeExpSequence() {
-	G.operand = randomNumber(G.minNum, G.maxNum);
-	G.op = chooseRandom(G.ops); //G.op ist jetzt ein key in OPS
-	G.step = G.op == 'minus' ? randomNumber(0, G.operand) : randomNumber(G.minFactor, G.maxFactor); // > upper ? 0 : randomNumber(G.minFactor, upper); // chooseRandom(G.steps);
-	G.oop = OPS[G.op];
-	G.result = G.oop.f(G.operand, G.step);
-	G.seq = [G.operand, G.oop.wr, G.step, '=', G.result];//,'=',13]; // _createNumberSequence(G.seqLen, G.minNum, G.maxNum, G.step, G.op);
-	return G.seq;
+function hideMouse() {
+	var x = dTable.getElementsByTagName("DIV");
+	for (const el of x) { el.prevCursor = el.style.cursor; }
+	for (const p of Pictures) {
+		mRemoveClass(iDiv(p), 'frameOnHover'); iDiv(p).style.cursor = 'none';
+		for (const ch of iDiv(p).children) ch.style.cursor = 'none';
+	}
+	for (const el of x) { mClass(el, 'noCursor'); }
+}
+function hintEngineStart(hintFunc, hintlist, initialDelay) {
+	G.hintFunc = hintFunc;
+	recShowHints(hintlist, QContextCounter, initialDelay, d => initialDelay + 2000); //showNumSeqHint(G.trialNumber);
+}
+function isVariableColor(c) { return c == 'random' || c == 'randPastel' || c == 'randDark' || c == 'randLight' || isList(c); }
+function isYesNo(choices) { return !firstCond(choices, x => !(['yes', 'no'].includes(x.text))); }
+function labelPrepper(val) { return `<b>${val.toUpperCase()}</b>`; }
+function logicFilter(allPics, exceptProps) {
+	let props = { label: { vals: getDistinctVals(allPics, 'label'), friendly: '' } };
+	if (G.numColors > 1) props.colorKey = { vals: getDistinctVals(allPics, 'colorKey'), friendly: 'color' };
+	if (G.numRepeat > 1) props.iRepeat = { vals: getDistinctVals(allPics, 'iRepeat'), friendly: 'number' };
+	if (sameList(Object.keys(props), exceptProps)) return ['no props left', 'no', [], 'unknown'];
+	let lstSpoken, lstWritten, piclist = [];
+	let prop = chooseRandom(arrWithout(Object.keys(props), exceptProps));
+	let val = chooseRandom(props[prop].vals);
+	lstSpoken = [];
+	if (prop == 'label') {
+		lstSpoken.push(val);// + (G.language == 'E' ? 's' : ''));
+		lstWritten = [labelPrepper(val)];
+		piclist = allPics.filter(x => x.label == val);
+	} else if (prop == 'colorKey') {
+		lstSpoken = lstSpoken.concat(['with', props[prop].friendly, ColorDict[val][G.language]]);
+		lstWritten = ['with', props[prop].friendly, colorPrepper(val)];
+		piclist = allPics.filter(x => x[prop] == val);
+	} else if (prop == 'iRepeat') {
+		let op = (G.level > 2 && G.numRepeat > 2 && val > 1 && val < G.numRepeat) ? chooseRandom(['leq', 'geq', 'eq']) : 'eq';
+		let oop = OPS[op];
+		lstSpoken = lstSpoken.concat(['with', props[prop].friendly, oop.sp, val]);
+		lstWritten = ['with', props[prop].friendly, oop.wr, val];
+		piclist = allPics.filter(x => oop.f(x[prop], val));
+	}
+	if (nundef(lstWritten)) lstWritten = lstSpoken;
+	let s = lstSpoken.join(' ');
+	let w = lstWritten.join(' ');
+	if (G.language == 'D') {
+		s = s.split(' ').map(x => translateToGerman(x)).join(' ');
+		w = w.split(' ').map(x => translateToGerman(x)).join(' ');
+	}
+	return [s, w, piclist, prop];
 }
 function logicMulti(n) {
 	let allPics = Pictures;
@@ -9591,185 +9867,14 @@ function logicMulti(n) {
 	w = prefix + ' ' + w;
 	return [s, w, pics];
 }
-function logicFilter(allPics, exceptProps) {
-	let props = { label: { vals: getDistinctVals(allPics, 'label'), friendly: '' } };
-	if (G.numColors > 1) props.colorKey = { vals: getDistinctVals(allPics, 'colorKey'), friendly: 'color' };
-	if (G.numRepeat > 1) props.iRepeat = { vals: getDistinctVals(allPics, 'iRepeat'), friendly: 'number' };
-	if (sameList(Object.keys(props), exceptProps)) return ['no props left', 'no', [], 'unknown'];
-	let lstSpoken, lstWritten, piclist = [];
-	let prop = chooseRandom(arrWithout(Object.keys(props), exceptProps));
-	let val = chooseRandom(props[prop].vals);
-	lstSpoken = [];
-	if (prop == 'label') {
-		lstSpoken.push(val);// + (G.language == 'E' ? 's' : ''));
-		lstWritten = [labelPrepper(val)];
-		piclist = allPics.filter(x => x.label == val);
-	} else if (prop == 'colorKey') {
-		lstSpoken = lstSpoken.concat(['with', props[prop].friendly, ColorDict[val][G.language]]);
-		lstWritten = ['with', props[prop].friendly, colorPrepper(val)];
-		piclist = allPics.filter(x => x[prop] == val);
-	} else if (prop == 'iRepeat') {
-		let op = (G.level > 2 && G.numRepeat > 2 && val > 1 && val < G.numRepeat) ? chooseRandom(['leq', 'geq', 'eq']) : 'eq';
-		let oop = OPS[op];
-		lstSpoken = lstSpoken.concat(['with', props[prop].friendly, oop.sp, val]);
-		lstWritten = ['with', props[prop].friendly, oop.wr, val];
-		piclist = allPics.filter(x => oop.f(x[prop], val));
-	}
-	if (nundef(lstWritten)) lstWritten = lstSpoken;
-	let s = lstSpoken.join(' ');
-	let w = lstWritten.join(' ');
-	if (G.language == 'D') {
-		s = s.split(' ').map(x => translateToGerman(x)).join(' ');
-		w = w.split(' ').map(x => translateToGerman(x)).join(' ');
-	}
-	return [s, w, piclist, prop];
-}
-function colorPrepper(val) {
-	return `<span style="color:${ColorDict[val].c}">${ColorDict[val][G.language].toUpperCase()}</span>`;
-}
-function labelPrepper(val) { return `<b>${val.toUpperCase()}</b>`; }
-function hintEngineStart(hintFunc, hintlist, initialDelay) {
-	G.hintFunc = hintFunc;
-	recShowHints(hintlist, QContextCounter, initialDelay, d => initialDelay + 2000); //showNumSeqHint(G.trialNumber);
-}
-function getOperationHintString(i) {
-	if (i == 0) {
-		let spOp = G.oop.sp; if (G.language == 'D') spOp = DD[spOp];
-		let sSpoken = [G.operand, spOp, G.step].join(' ');
-		let sWritten = visOperation(G.op, G.operand, G.step, null, '?');
-		return [sSpoken, sWritten];
-	} else {
-		let result = G.oop.f(G.operand, G.step);
-		let lstSpoken = i == 1 ? result == 0 ? [result] : ['count', 'the red dots'] : [G.operand, G.oop.sp, G.step, 'equals', result];
-		if (G.language == 'D') lstSpoken = lstSpoken.map(x => translateToGerman(x));
-		let sSpoken = lstSpoken.join(' ');
-		let sWritten = visOperation(G.op, G.operand, G.step, null);
-		return [sSpoken, sWritten];
-	}
-}
-function recShowHints(ilist, rc, delay = 3000, fProgression = d => d * 1.5) {
-	if (isEmpty(ilist) || QContextCounter != rc) return;
-	let i = ilist.shift();
-	TOTrial = setTimeout(() => recShowHintsNext(i, ilist, rc, fProgression(delay), fProgression), delay);
-}
-function showSayHint(i) {
-	let [spoken, written] = G.hintFunc(i);
-	if (spoken) sayRandomVoice(spoken); //setTimeout(() => sayRandomVoice(spoken), 300+ms);
-	if (written) showFleetingMessage(written, 0, { fz: 40 });
-}
-function recShowHintsNext(i, ilist, rc, delay, fProgression) {
-	showSayHint(i);
-	if (QContextCounter == rc) recShowHints(ilist, rc, delay, fProgression);
-}
-function correctBlanks() {
-	let wrong = getWrongWords();
-	if (nundef(TOList)) TOList = {};
-	Selected.feedbackUI = wrong.map(x => iDiv(x));
-	failPictureGoal();
-	let t1 = setTimeout(removeMarkers, 1000);
-	let t2 = setTimeout(() => wrong.map(x => { correctWordInput(x); animate(iDiv(x), 'komisch', 1300); }), 1000);
-	TOList.correction = [t1, t2];
-	return 2500;
-}
-function translateToGerman(w) {
-	if (isNumber(w)) return w;
-	else if (isdef(DD[w])) return DD[w];
-	else return w;
-}
-function hideMouse() {
-	var x = dTable.getElementsByTagName("DIV");
-	for (const el of x) { el.prevCursor = el.style.cursor; }
-	for (const p of Pictures) {
-		mRemoveClass(iDiv(p), 'frameOnHover'); iDiv(p).style.cursor = 'none';
-		for (const ch of iDiv(p).children) ch.style.cursor = 'none';
-	}
-	for (const el of x) { mClass(el, 'noCursor'); }
-}
-function showMouse() {
-	var x = dTable.getElementsByTagName("DIV");
-	if (nundef(x) || nundef(x[0]) || nundef(x[0].prevCursor)) { console.log('did NOT hide mouse!'); return; }
-	for (const el of x) {
-		mRemoveClass(el, 'noCursor');
-	} //.style.cursor = 'none';
-	for (const el of x) { el.style.cursor = el.prevCursor; }
-	for (const p of Pictures) {
-		mRemoveClass(iDiv(p), 'noCursor');
-		mClass(iDiv(p), 'frameOnHover'); iDiv(p).style.cursor = 'pointer';
-		for (const ch of iDiv(p).children) ch.style.cursor = 'pointer';
-	} //iDiv(p)mClass.style.cursor = 'none';}
-}
-function turnCardsAfter(secs, removeBg = false) {
-	let qc = QContextCounter;
-	for (const p of Pictures) { slowlyTurnFaceDown(p, secs - 1, removeBg); }
-	TOMain = setTimeout(() => {
-		let wr = 'click '+`<b>${Goal.label}</b>`;
-		let sp = `click ${Goal.label}`;
-		show_instruction(wr, dTitle, sp);
-		showMouse();
-		GC.activateUi.bind(GC)(); //activateUi();
-	}, secs * 1000);
-}
-function slowlyTurnFaceDown(pic, secs = 5, removeBg = false) {
-	let ui = iDiv(pic);
-	for (const p1 of ui.children) {
-		p1.style.transition = `opacity ${secs}s ease-in-out`;
-		p1.style.opacity = 0;
-	}
-	if (removeBg) {
-		ui.style.transition = `background-color ${secs}s ease-in-out`;
-		ui.style.backgroundColor = 'dimgray';
-	}
-	pic.isFaceUp = false;
-}
-function successThumbsUp(withComment = true) {
-	if (withComment && G.spokenFeedback) {
-		const comments = (G.language == 'E' ? ['YEAH!', 'Excellent!!!', 'CORRECT!', 'Great!!!'] : ['gut', 'Sehr Gut!!!', 'richtig!!', 'Bravo!!!']);
-		sayRandomVoice(chooseRandom(comments));
-	}
-	let p1 = firstCond(Pictures, x => x.key == 'thumbs up');
-	iDiv(p1).style.opacity = 1;
-	let p2 = firstCond(Pictures, x => x.key == 'thumbs down');
-	iDiv(p2).style.display = 'none';
-}
-function failThumbsDown(withComment = false) {
-	if (withComment && G.spokenFeedback) {
-		const comments = (G.language == 'E' ? ['too bad'] : ["aber geh'"]);
-		sayRandomVoice(chooseRandom(comments));
-	}
-	let p1 = firstCond(Pictures, x => x.key == 'thumbs down');
-	iDiv(p1).style.opacity = 1;
-	let p2 = firstCond(Pictures, x => x.key == 'thumbs up');
-	iDiv(p2).style.display = 'none';
-}
-function successPictureGoal(withComment = true) {
-	if (withComment && G.spokenFeedback) {
-		let lang = G.language;
-		const comments = {
-			E: ['YEAH!', 'Excellent!!!', 'CORRECT!', 'Great!!!'],
-			D: ['gut', 'Sehr Gut!!!', 'richtig!!', 'Bravo!!!'],
-			S: ['bien', 'muy bien!!!', 'eccelente!!', 'bravo!!!'],
-			F: ['bien', 'tres bien!!!', 'fantastique!!', 'bravo!!!', 'excellent!!!'],
-			C: ['优秀', '好的!!!', '正确的!!', 'Bravo!!!'],
-		}[lang];
-		say(chooseRandom(comments), lang);
-	}
-	if (isdef(Selected) && isdef(Selected.feedbackUI)) {
-		let uilist;
-		if (isdef(Selected.positiveFeedbackUI)) uilist = [Selected.positiveFeedbackUI];
-		else uilist = isList(Selected.feedbackUI) ? Selected.feedbackUI : [Selected.feedbackUI];
-		let sz = getRect(uilist[0]).h;
-		for (const ui of uilist) {
-			let d = markerSuccess();
-			mpOver(d, ui, sz * (4 / 5), 'limegreen', 'segoeBlack');
-		}
-	}
-}
-function mXit(elem, sz = 50) {
-	if (nundef(sz)) sz = getRect(elem).h;
-	let d = markerFail();
-	mpOver(d, elem, sz / 2, 'red', 'openMojiTextBlack');
-	mMoveBy(d, 0, -4);
-	return d;
+function makeExpSequence() {
+	G.operand = randomNumber(G.minNum, G.maxNum);
+	G.op = chooseRandom(G.ops); //G.op ist jetzt ein key in OPS
+	G.step = G.op == 'minus' ? randomNumber(0, G.operand) : randomNumber(G.minFactor, G.maxFactor); // > upper ? 0 : randomNumber(G.minFactor, upper); // chooseRandom(G.steps);
+	G.oop = OPS[G.op];
+	G.result = G.oop.f(G.operand, G.step);
+	G.seq = [G.operand, G.oop.wr, G.step, '=', G.result];//,'=',13]; // _createNumberSequence(G.seqLen, G.minNum, G.maxNum, G.step, G.op);
+	return G.seq;
 }
 function mCheckit(elem, sz = 50) {
 	if (G.spokenFeedback) {
@@ -9782,310 +9887,13 @@ function mCheckit(elem, sz = 50) {
 	mMoveBy(d, 0, -4);
 	return d;
 }
-function failPictureGoal(withComment = false) {
-	if (withComment && G.spokenFeedback) {
-		let lang = G.language;
-		const comments = {
-			E: ['too bad', 'oh', 'oops', 'nope'],
-			D: ['aber geh', 'nicht ganz', 'falsch'],
-			S: ['no'],
-			F: ['non'],
-			C: ['不正确'],
-		}[lang];
-		say(chooseRandom(comments), lang);
-	}
-	if (isdef(Selected) && isdef(Selected.feedbackUI)) {
-		let uilist = isList(Selected.feedbackUI) ? Selected.feedbackUI : [Selected.feedbackUI];
-		let sz = getRect(uilist[0]).h;
-		for (const ui of uilist) {
-			mpOver(markerFail(), ui, sz * (1 / 2), 'red', 'openMojiTextBlack');
-		}
-	}
-}
-function failSomePictures(withComment = false) {
-	if (withComment && G.spokenFeedback) {
-		const comments = (G.language == 'E' ? ['too bad'] : ["aber geh'"]);
-		sayRandomVoice(chooseRandom(comments));
-	}
-	for (const p of Pictures) {
-		let ui = iDiv(p);
-		let sz = getRect(ui).h;
-		if (p.isCorrect == false) {
-			mpOver(markerFail(), ui, sz * (1 / 2), 'red', 'openMojiTextBlack');
-		}else mpOver(markerSuccess(), ui, sz * (4 / 5), 'limegreen', 'segoeBlack');
-	}
-}
-function showCorrectWord(sayit = true) {
-	let anim = G.spokenFeedback ? 'onPulse' : 'onPulse1';
-	let div = mBy(Goal.id);
-	mClass(div, anim);
-	if (!sayit || !G.spokenFeedback) G.spokenFeedback ? 3000 : 300;
-	let correctionPhrase = isdef(Goal.correctionPhrase) ? Goal.correctionPhrase : Goal.label;
-	say(correctionPhrase, G.language);
-	return G.spokenFeedback ? 3000 : 300;
-}
-function showCorrectUis() {
-	let anim = 'onPulse5'; 
-	for(const ui of Selected.correctUis){		mClass(ui,anim);	}
-	return Selected.correctionDelay;
-}
-function showCorrectWordInTitle(sayit = true) {
-	let anim = G.spokenFeedback ? 'onPulse' : 'onPulse1';
-	clearElement(dInstruction);
-	let d1 = mText(`<b>${Goal.label}</b>`, dInstruction, { fz: 36, display: 'inline-block' });
-	mClass(dInstruction, anim);
-	showFleetingMessage(Goal.label);
-	if (!sayit || !G.spokenFeedback) G.spokenFeedback ? 3000 : 300;
-	let correctionPhrase = isdef(Goal.correctionPhrase) ? Goal.correctionPhrase : Goal.label;
-	sayRandomVoice(correctionPhrase);
-	return G.spokenFeedback ? 3000 : 300;
-}
-function showCorrectWords(sayit = true) {
-	if (nundef(TOList)) TOList = {};
-	TOList.correctWords = [];
-	let anim = 'onPulse2';
-	let to = 0;
-	let speaking = sayit && G.spokenFeedback;
-	let ms = speaking ? 2000 : 1000;
-	for (const goal of Goal.pics) {
-		TOList.correctWords.push(setTimeout(() => {
-			let div = mBy(goal.id);
-			mClass(div, anim);
-			if (speaking) sayRandomVoice((G.language == 'E' ? 'the ' : ' ') + goal.correctionPhrase);
-		}, to));
-		to += ms;
-	}
-	if (!sayit || !G.spokenFeedback) return to;
-	return to + ms;
-}
-function showCorrectPictureLabels(sayit = true) { return 1000; }
-function shortHintPicRemove() {
-	mRemoveClass(mBy(Goal.id), 'onPulse1');
-}
-function shortHintPic() {
-	mClass(mBy(Goal.id), 'onPulse1');
-	TOMain = setTimeout(() => shortHintPicRemove(), 800);
-}
-var TOFleetingMessage;
-function clearFleetingMessage() {
-	clearTimeout(TOFleetingMessage);
-	clearElement(dLineBottom);
-}
-function showActiveMessage(msg, handler, styles = {}, fade = false) {
-	let defStyles = { fz: 22, rounding: 10, vpadding: 12, hpadding: 0, matop: 50 };
-	styles = mergeOverride(defStyles, styles);
-	if (nundef(styles.fg)) styles.fg = colorIdealText(G.color);
-	clearFleetingMessage();
-	let d = fleetingMessage(msg, styles, fade);
-	d.onclick = handler;
-}
-function showFleetingMessage(msg, msDelay, styles = {}, fade = false, ms = 3000) {
-	let defStyles = { fz: 22, rounding: 10, padding: '2px 12px', matop: 50 };
-	styles = mergeOverride(defStyles, styles);
-	if (nundef(styles.fg)) styles.fg = colorIdealText(G.color);
-	clearFleetingMessage();
-	if (msDelay) {
-		TOFleetingMessage = setTimeout(() => fleetingMessage(msg, styles, fade, ms), msDelay);
-	} else {
-		fleetingMessage(msg, styles, fade, ms);
-	}
-}
-function fleetingMessage(msg, styles, fade = false, ms=3000) {
-	let d = mDiv(dLineBottom);
-	if (isString(msg)) {
-		d.innerHTML = msg;
-		mStyle(d, styles)
-	} else {
-		mAppend(d, msg);
-	}
-	if (fade) animateProperty(dLineBottom, 'opacity', 1, .4, 0, ms);
+function mXit(elem, sz = 50) {
+	if (nundef(sz)) sz = getRect(elem).h;
+	let d = markerFail();
+	mpOver(d, elem, sz / 2, 'red', 'openMojiTextBlack');
+	mMoveBy(d, 0, -4);
 	return d;
 }
-function writeSound() { return; console.log('calling playSound'); }
-function gameOver(msg, silent = false) { TOMain = setTimeout(aniGameOver(msg, silent), DELAY); }
-function aniGameOver(msg, silent = false) {
-	if (!silent && !G.silent) { writeSound(); playSound('goodBye'); }
-	interrupt();
-	show('freezer2');
-	let dComment = mBy('dCommentFreezer2');
-	let dMessage = mBy('dMessageFreezer2');
-	let d = mBy('dContentFreezer2');
-	clearElement(d);
-	mStyle(d, { fz: 20, matop: 40, bg: 'silver', fg: 'indigo', rounding: 20, padding: 25 })
-	let style = { matop: 4 };
-	dComment.innerHTML = 'Great Job!';
-	dMessage.innerHTML = isdef(msg) ? msg : 'Time for a Break...';
-	d.style.textAlign = 'center';
-	mText('Unit Score:', d, { fz: 22 });
-	for (const gname in U.session) {
-		let sc = U.session[gname];
-		if (sc.nTotal == 0) continue;
-		if (DB.games[gname].controllerType == 'solitaire') mText(`${DB.games[gname].friendly}: ${sc.nCorrect}/${sc.nTotal} correct answers (${sc.percentage}%) `, d, style);
-		else if (DB.games[gname].controllerType == 'solo') {
-			mText(`${DB.games[gname].friendly}: Won:${sc.nWins}, Lost:${sc.nLoses}, Tied:${sc.nTied} `, d, style);
-		}
-	}
-	mClass(mBy('freezer2'), 'aniSlowlyAppear');
-}
-function visNumber(n, dParent, color, or = 'h', asNumber = [0]) {
-	if (!isNumber(n) || asNumber.includes(n)) return zText('' + n, dParent, { fg: 'white', fz: 64 });
-	return _visualizeNumber(n, dParent, color, or);
-}
-function visOperator(s, dParent, styles = { fg: 'white', fz: 64 }) {
-	zText(s, dParent, styles);
-}
-function visOperation(op, a, b, dParent, symResult) {
-	switch (op) {
-		case 'plus':
-		case 'minus': return _visualizeAritOp(op, a, b, dParent, symResult); break;
-		case 'mult': return _visualizeMult(a, b, dParent, symResult); break;
-	}
-}
-function _visualizeMult(a, b, dParent, symResult) {
-	op = OPS.mult;
-	let dx = mDiv(dParent); mFlex(dx); mStyle(dx, { 'align-items': 'center', gap: 16 });
-	visNumber(a, dx, 'blue', 'v');
-	for (let i = 1; i < b; i++) {
-		let d2 = visOperator('+', dx);
-		visNumber(a, dx, 'blue', 'v');
-	}
-	let d4 = visOperator('=', dx);
-	let result = isdef(symResult) ? symResult : op.f(a, b);
-	let d5 = visNumber(result, dx, 'red');
-	return dx;
-}
-function _visualizeAritOp(op, a, b, dParent, symResult) {
-	op = isString(op) ? OPS[op] : op;
-	let dx = mDiv(dParent); mFlex(dx); mStyle(dx, { 'align-items': 'center', gap: 16 });
-	let d1 = visNumber(a, dx, 'blue');
-	let d2 = visOperator(op.wr, dx);
-	let d3 = visNumber(b, dx, 'green');
-	let d4 = visOperator('=', dx);
-	let result = isdef(symResult) ? symResult : op.f(a, b);
-	let d5 = visNumber(result, dx, 'red');
-	return dx;
-}
-function _visualizeNumber(n, dParent, color, or = 'h') {
-	let root = Math.sqrt(n);
-	let rows = Math.floor(root);
-	let cols = Math.ceil(root);
-	if (or == 'v') { let h = rows; rows = cols; cols = h; }
-	let dArea = mDiv(dParent, { display: 'inline-grid', 'grid-template-columns': `repeat(${cols}, 1fr)`, bg: 'white', fg: color });
-	for (let i = 0; i < n; i++) {
-		let item = getItem('plain-circle');
-		let d = miPic(item, dArea, { fz: 12, margin: 6 });
-		iAdd(item, { div: d });
-		mAppend(dArea, d);
-	}
-	return dArea;
-}
-function zText(text, dParent, textStyles, hText, vCenter = false) {
-	let tSize = getSizeWithStyles(text, textStyles);
-	let extra = 0, lines = 1;
-	if (isdef(hText)) {
-		extra = hText - tSize.h;
-		if (textStyles.fz) lines = Math.floor(tSize.h / textStyles.fz);
-	}
-	let dText = isdef(text) ? mText(text, dParent, textStyles) : mDiv(dParent);
-	if (extra > 0 && vCenter) {
-		dText.style.paddingTop = (extra / 2) + 'px';
-		dText.style.paddingBottom = (extra / 2) + 'px';
-	}
-	return { text: text, div: dText, extra: extra, lines: lines, h: tSize.h, w: tSize.w, fz: textStyles.fz };
-}
-function turnFaceUpSimple(pic) {
-	let ui = iDiv(pic);
-	mRemoveClass(ui, 'frameOnHover');
-	ui.style.transition = null;
-	for (const ch of ui.children) { ch.style.transition = null; ch.style.opacity = 1; }
-	pic.isFaceUp = true;
-}
-function getOptionsMinimalistic(dParent, handler, w = 0, h = 0, ifs = {}, options = {}, g) {
-	[w, h] = detectArea(dParent, w, h);
-	let defOptions = {
-		isRegular: true, hugeFont: true, szPic: { w: 200, h: 200 }, gap: 15, shufflePositions: true,
-		showPic: true, showLabels: true, luc: 'l', labelPos: 'bottom', language: g.language, keySet: g.vocab,
-		w: w, h: h, fz: 24, fzText: 24, fzPic: 96, ifs: ifs, handler: handler, ifs: ifs, handler: handler,
-	};
-	addSimpleProps(g, options);
-	addKeys(defOptions, options);
-	if (options.numRepeat > 1 && nundef(options.ifs.bg)) {
-		let bg = isdef(options.colorKeys) ? 'white' : (i) => options.sameBackground ? computeColor('random') : 'random';
-		let fg = isdef(options.colorKeys) ? 'black' : 'contrast';
-		options.ifs.bg = bg;
-		options.ifs.fg = fg;
-	}
-	return options;
-}
-function _simpleOptions(options = {}, defsOuter = {}) {
-	options.showPic = valf(options.showPic, isdef(options.fzPic));
-	options.showLabels = isdef(options.fz);
-	options.szPic = { w: options.w, h: options.h };
-	options.fzText = options.fz;
-	if (nundef(options.rounding)) options.rounding = 4;
-	if (nundef(options.margin)) options.margin = 4;
-	if (nundef(options.padding)) options.padding = 0;
-	if (nundef(options.labelStyles)) options.labelStyles = {};
-	if (options.showLabels) { if (nundef(options.labelPos)) options.labelBottom = true; options.labelStyles.fz = options.fzText; }
-	options.picStyles = { fz: options.fzPic };
-	let [w, h] = [options.szPic.w, options.szPic.h];
-	options.outerStyles = {
-		w: w, h: h, bg: options.bg, fg: options.fg,
-		display: 'inline-flex', 'flex-direction': 'column',
-		'justify-content': 'center', 'align-items': 'center', 'vertical-align': 'top',
-		padding: 0, box: true, margin: options.margin, rounding: options.rounding,
-	};
-	if (isdef(defsOuter)) addKeys(defsOuter, options.outerStyles);
-	return options;
-}
-function detectArea(dParent, w, h) {
-	let rect = isdef(dParent) ? getRect(dParent) : null;
-	if (nundef(w)) { w = rect ? rect.w : window.innerWidth; }
-	if (nundef(h)) { h = rect ? rect.h : window.innerHeight; }
-	return [w, h];
-}
-function calcRowsColsSizeAbWo(n, wmax, hmax, showLabels, wimax = 200, himax = 200, fw = 1, fh = 1) {
-	let rows = n > 35 ? 6 : n > 28 ? 5 : n > 24 && !showLabels || n > 21 ? 4 : n > 8 ? 3 : n > 3 ? 2 : 1;
-	let cols = Math.ceil(n / rows);
-	return calcSizeAbWo(n, rows, cols, wmax, hmax, wimax, himax, fw, fh);
-}
-function calcSizeAbWo(n, rows, cols, wmax, hmax, wimax = 200, himax = 200, fw = 1, fh = 1) {
-	if (nundef(cols)) cols = Math.ceil(n / rows); else if (nundef(rows)) rows = Math.ceil(n / cols);
-	let wi = wmax * fw / cols;
-	let hi = hmax * fh / rows;
-	wi = Math.min(wi, wimax);
-	hi = Math.min(hi, himax);
-	return [wi, hi, rows, cols];
-}
-function myShowPics(handler, ifs = {}, options = {}, keys, labels) {
-	options.showPic = true; //if (nundef(options.showLabels)) options.showLabels = G.showLabels;
-	options.wimax = options.himax = 200;
-	options.w = window.innerWidth - 180; options.h = window.innerHeight - 220;
-	Pictures = showPictures(dTable, handler, ifs, options, keys, labels);
-}
-function myShowLabels(onClickPictureHandler, ifs = {}, options = {}, keys, labels) {
-	options.wimax = 200; options.himax = 50;
-	options.w = window.innerWidth - 180; options.h = 50; options.fz = 22;
-	options.showPic = false; options.showLabels = true;
-	return showPictures(dTable, onClickPictureHandler, ifs, options, keys, labels);
-}
-function showPictures(dParent, handler, ifs = {}, options = {}, keys, labels) {
-	options = getOptionsMinimalistic(dParent, handler, options.w, options.h, ifs, options, G);
-	if (nundef(keys)) keys = choose(G.keys, G.numPics);
-	let items = genItemsFromKeys(keys, options);
-	if (isdef(labels)) {
-		options.showLabels = true;
-		for (let i = 0; i < items.length; i++) item[i].label = labels[i % labels.length];
-	}
-	let dArea = mDiv(dParent);
-	let rect = myPresent(dArea, items, options);
-	return items;
-}
-function getStandardFz(wi, hi, showPic, showLabels, wLongest) {
-	let hText = showPic ? hi / 3 : hi;
-	return showLabels ? idealFontSize(wLongest, wi, hText) : 0;
-}
-function getStandardFzPic(wi, hi, showLabels) { return Math.min(wi * .8, showLabels ? hi * .6 : hi * .75); }
 function myPresent(dArea, items, options) {
 	let showLabels = options.showLabels;
 	let w = options.w * valf(options.fw, .9);
@@ -10131,28 +9939,17 @@ function myPresent(dArea, items, options) {
 	items.map(x => mAppend(dArea, iDiv(x)));
 	return getRect(dArea);
 }
-function isYesNo(choices) { return !firstCond(choices, x => !(['yes', 'no'].includes(x.text))); }
-function createMultipleChoiceElements(correctAnswer, wrongAnswers, dParent, dFeedbackUI, styles) {
-	if (nundef(Goal)) Goal = {};
-	let choices = wrongAnswers; choices.push(correctAnswer);
-	Goal.correctChoice = correctAnswer;
-	if (isYesNo(choices)) {
-		sortByDescending(choices, 'text');// = [{ num: 1, text: 'yes' }, { num: 0, text: 'no' }];
-	} else {
-		shuffle(choices);
-		if (coin()) shuffle(choices);
-	}
-	Goal.choices = choices;
-	Goal.feedbackUI = dFeedbackUI;
-	let idx = 0;
-	for (const ch of choices) {
-		let dButton = mButton(ch.text, onClickChoice, dParent, { wmin: 100, fz: 36, margin: 20, rounding: 4, vpadding: 4, hpadding: 10 }, ['toggleButtonClass']);
-		dButton.id = 'bChoice_' + idx; idx += 1;
-		if (ch.text == correctAnswer.text) {
-			Goal.choice = ch.toString();
-			Goal.buttonCorrect = dButton; //else console.log('ch', ch.toString(), 'res', wp.result.text)
-		}
-	}
+function myShowLabels(onClickPictureHandler, ifs = {}, options = {}, keys, labels) {
+	options.wimax = 200; options.himax = 50;
+	options.w = window.innerWidth - 180; options.h = 50; options.fz = 22;
+	options.showPic = false; options.showLabels = true;
+	return showPictures(dTable, onClickPictureHandler, ifs, options, keys, labels);
+}
+function myShowPics(handler, ifs = {}, options = {}, keys, labels) {
+	options.showPic = true; //if (nundef(options.showLabels)) options.showLabels = G.showLabels;
+	options.wimax = options.himax = 200;
+	options.w = window.innerWidth - 180; options.h = window.innerHeight - 220;
+	Pictures = showPictures(dTable, handler, ifs, options, keys, labels);
 }
 function onClickChoice(ev) {
 	let id = evToClosestId(ev);
@@ -10162,106 +9959,47 @@ function onClickChoice(ev) {
 	Goal.buttonClicked = b;
 	G.controller.evaluate.bind(G.controller)();
 }
-function addNthInputElement(dParent, n) {
-	mLinebreak(dParent, 10);
-	let d = mDiv(dParent);
-	let dInp = mCreate('input');
-	dInp.type = "text"; dInp.autocomplete = "off";
-	dInp.style.margin = '10px;'
-	dInp.id = 'inputBox' + n;
-	dInp.style.fontSize = '20pt';
-	mAppend(d, dInp);
-	return dInp;
+function onClickWordInput(ev) {
+	return;
+	if (!canAct()) return;
+	ev.cancelBubble = true;
+	let id = evToClosestId(ev);
+	let iWord = Number(stringAfter(id, '_'));
+	let g = Goal.words[iWord];
+	if (nundef(g.hasBlanks) || !g.hasBlanks) return;
+	deactivateFocusGroup();
+	activateFocusGroup(g.iWord);
 }
-function calcMemorizingTime(numItems, randomGoal = true) {
-	let ldep = Math.max(6, randomGoal ? numItems * 2 : numItems);
-	return ldep;
-}
-function clearTable() {
-	clearElement(dLineTableMiddle); clearElement(dLineTitleMiddle); removeMarkers();
-}
-function clearStats() {
-	clearLevel();
-	clearScore();
-	clearGameTitle();
-}
-function clearScore() { clearElement(dScore) }
-function clearLevel() { clearElement(dLevel); clearBadges(); }
-function clearGameTitle() { clearElement(dGameTitle); }
-function containsColorWord(s) {
-	let colors = ['old', 'blond', 'red', 'blue', 'green', 'purple', 'black', 'brown', 'white', 'grey', 'gray', 'yellow', 'orange'];
-	for (const c of colors) {
-		if (s.toLowerCase().includes(c)) return false;
+function onKeyWordInput(ev) {
+	let charEntered = ev.key.toString();
+	if (!isAlphaNum(charEntered)) return;
+	let ch = charEntered.toUpperCase();
+	Selected = { lastLetterEntered: ch };
+	let cands = Goal.blankChars;
+	if (Goal.iFocus) {
+		let word = Goal.words[Goal.iFocus];
+		if (word.hasBlanks) cands = word.charInputs.filter(x => x.isBlank);
+		else deactivateFocusGroup();
 	}
-	return true;
+	console.assert(!isEmpty(cands));
+	let isLastOfGroup = (Goal.iFocus != null) && cands.length == 1;
+	let isVeryLast = Goal.blankChars.length == 1;
+	let target = firstCond(cands, x => x.letter == ch);
+	let isMatch = target != null;
+	if (!isMatch) target = cands[0];
+	fillCharInput(target, ch);
+	return { target: target, isMatch: isMatch, isLastOfGroup: isLastOfGroup, isVeryLast: isVeryLast, ch: ch };
 }
-function createContainers(list, dArea, styles) {
-	let i = 0;
-	let containers = [];
-	let defStyles = { w: 150, h: 200, bg: 'random', rounding: 12, display: 'inline-block', margin: 12 };
-	addKeys(defStyles, styles);
-	for (const cat of list) {
-		let cont = mTitledDiv(cat, dArea, styles, {}, 'c' + i);
-		mStyle(cont, { h: '100%' });
-		i += 1;
-		containers.push({ label: cat, div: cont });
-	}
-	return containers;
+function recShowHints(ilist, rc, delay = 3000, fProgression = d => d * 1.5) {
+	if (isEmpty(ilist) || QContextCounter != rc) return;
+	let i = ilist.shift();
+	TOTrial = setTimeout(() => recShowHintsNext(i, ilist, rc, fProgression(delay), fProgression), delay);
 }
-function getDistinctVals(list, prop) {
-	let res = [];
-	for (const item of list) {
-		let val = item[prop];
-		addIf(res, val);
-	}
-	return res;
+function recShowHintsNext(i, ilist, rc, delay, fProgression) {
+	showSayHint(i);
+	if (QContextCounter == rc) recShowHints(ilist, rc, delay, fProgression);
 }
-function getOrdinal(i) { return G.numRepeat == 1 ? '' : G.language == 'E' ? ordinal_suffix_of(i) : '' + i + '. '; }
-function getColorLabelInstruction(cmd, color, label) {
-	if (nundef(color)) color = Goal.color;
-	let colorWord = color[G.language];
-	let colorSpan = `<span style='color:${color.c}'>${colorWord.toUpperCase()}</span>`;
-	if (nundef(label)) label = Goal.label;
-	let labelSpan = `<b>${label.toUpperCase()}</b>`;
-	let eCommand, dCommand;
-	switch (cmd) {
-		case 'click': eCommand = cmd + ' the'; dCommand = cmd; break
-		case 'then': eCommand = cmd + ' the'; dCommand = 'dann'; break
-	}
-	let eInstr = `${eCommand} ${colorWord} ${label}`;
-	let dInstr = `${dCommand} ${label} in ${colorWord}`;
-	let spoken = G.language == 'E' ? eInstr : dInstr;
-	let written = spoken.replace(colorWord, colorSpan).replace(label, labelSpan);
-	console.log('spoken', spoken, 'written', written);
-	return [written, spoken];
-}
-function getOrdinalColorLabelInstruction(cmd, ordinal, color, label) {
-	if (nundef(ordinal)) ordinal = getOrdinal(Goal.iRepeat);
-	if (nundef(color)) color = Goal.color;
-	let colorWord = '', colorSpan = '';
-	if (isdef(color)) {
-		colorWord = nundef(color) ? '' : nundef(color[G.language]) ? color.E : color[G.language];
-		if (G.language == 'D' && !isEmpty(ordinal) && !['lila', 'rosa'].includes(colorWord)) colorWord += 'e';
-		colorSpan = `<span style='color:${color.c}'>${colorWord.toUpperCase()}</span>`;
-	}
-	if (nundef(label)) label = Goal.label;
-	let labelSpan = `<b>${label.toUpperCase()}</b>`;
-	let eCommand, dCommand;
-	switch (cmd) {
-		case 'click': eCommand = cmd + ' the'; dCommand = cmd; break
-		case 'then': eCommand = cmd + ' the'; dCommand = 'dann'; break
-	}
-	let eInstr = `${eCommand} ${ordinal} ${colorWord} ${label}`;
-	let dInstr = ordinal == '' ? `${dCommand} ${label} ${colorWord == '' ? '' : 'in ' + colorWord}`
-		: `${dCommand} ${ordinal} ${colorWord} ${label}`;
-	let ecorr = `${ordinal} ${colorWord} ${label}`
-	let dcorr = ordinal == '' ? `${label} ${colorWord == '' ? '' : 'in ' + colorWord}`
-		: `${ordinal} ${colorWord} ${label}`;
-	let corr = G.language == 'E' ? ecorr : dcorr;
-	let spoken = G.language == 'E' ? eInstr : dInstr;
-	let written = spoken.replace(colorWord, colorSpan).replace(label, labelSpan);
-	return [written, spoken, corr];
-}
+function refillCharInput(inp, ch) { fillCharInput(inp, ch); }
 function removePicture(pic, reorder = false) {
 	removeInPlace(Pictures, pic);
 	if (reorder) {
@@ -10295,11 +10033,18 @@ function sayRandomVoice(e, g, voice = 'random') {
 	let [r, p, v] = [.8, .9, 1];
 	if (!G.silent) Speech.say(G.language == 'E' || nundef(g) ? e : g, r, p, v, voice);
 }
-function sayTryAgain() { 
-	if (G.silent) showFleetingMessage('Try Again!',0,{},true); 
-	else sayRandomVoice('try again!'); 
+function sayTryAgain() {
+	if (G.silent) showFleetingMessage('Try Again!', 0, {}, true);
+	else sayRandomVoice('try again!');
 }
-function setBackgroundColor(elem,color) { if (nundef(elem)) elem = mBy('md').parentNode; mStyle(elem, { bg: getColorDictColor(isdef(color) ? color : G.color) }); }
+function scrambleInputs(d) {
+	let children = Array.from(d.children);
+	shuffle(children);
+	for (const ch of children) {
+		mAppend(d, ch);
+	}
+}
+function setBackgroundColor(elem, color) { if (nundef(elem)) elem = mBy('md').parentNode; mStyle(elem, { bg: getColorDictColor(isdef(color) ? color : G.color) }); }
 function setGoal(index) {
 	if (nundef(index)) {
 		let rnd = G.numPics < 2 ? 0 : randomNumber(0, G.numPics - 2);
@@ -10317,6 +10062,144 @@ function setMultiGoal(n, indices) {
 		for (const i of indices) Goal.pics.push(Pictures[i]);
 	}
 }
+function setNumberSequenceGoal() {
+	let blank = blankWordInputs(G.words, G.numMissing, G.posMissing);
+	Goal = { seq: G.seq, words: G.words, chars: G.letters, blankWords: blank.words, blankChars: blank.letters, iFocus: blank.iFocus };
+	Goal.qCharIndices = Goal.blankChars.map(x => x.index);
+	Goal.qWordIndices = Goal.blankWords.map(x => x.iWord);
+}
+function shortHintPic() {
+	mClass(mBy(Goal.id), 'onPulse1');
+	TOMain = setTimeout(() => shortHintPicRemove(), 800);
+}
+function shortHintPicRemove() {
+	mRemoveClass(mBy(Goal.id), 'onPulse1');
+}
+function show_instruction(written, dParent, spoken, { fz, voice } = {}) {
+	clearElement(dParent);
+	let d = mDiv(dParent);
+	mStyle(d, { margin: 15 })
+	mClass(d, 'flexWrap');
+	if (nundef(fz)) fz = 36;
+	let d1 = mText(written, d, { fz: fz, display: 'inline-block' });
+	let sym = symbolDict.speaker;
+	let d2 = mText(sym.text, d, {
+		fz: fz + 2, weight: 900, display: 'inline-block',
+		family: sym.family, 'padding-left': 14
+	});
+	dFeedback = dInstruction = d;
+	dInstruction.addEventListener('click', () => aniInstruction(spoken));
+	if (isdef(spoken)) say(spoken, isdef(voice) ? voice : G.lang == 'E' ? 'random' : G.lang); //sayRandomVoice(spoken, spoken, voice);
+}
+function showActiveMessage(msg, handler, styles = {}, fade = false) {
+	let defStyles = { fz: 22, rounding: 10, vpadding: 12, hpadding: 0, matop: 50 };
+	styles = mergeOverride(defStyles, styles);
+	if (nundef(styles.fg)) styles.fg = colorIdealText(G.color);
+	clearFleetingMessage();
+	let d = fleetingMessage(msg, styles, fade);
+	d.onclick = handler;
+}
+function showCorrectPictureLabels(sayit = true) { return 1000; }
+function showCorrectUis() {
+	let anim = 'onPulse5';
+	for (const ui of Selected.correctUis) { mClass(ui, anim); }
+	return Selected.correctionDelay;
+}
+function showCorrectWord(sayit = true) {
+	let anim = G.spokenFeedback ? 'onPulse' : 'onPulse1';
+	let div = mBy(Goal.id);
+	mClass(div, anim);
+	if (!sayit || !G.spokenFeedback) G.spokenFeedback ? 3000 : 300;
+	let correctionPhrase = isdef(Goal.correctionPhrase) ? Goal.correctionPhrase : Goal.label;
+	say(correctionPhrase, G.language);
+	return G.spokenFeedback ? 3000 : 300;
+}
+function showCorrectWordInTitle(sayit = true) {
+	let anim = G.spokenFeedback ? 'onPulse' : 'onPulse1';
+	clearElement(dInstruction);
+	let d1 = mText(`<b>${Goal.label}</b>`, dInstruction, { fz: 36, display: 'inline-block' });
+	mClass(dInstruction, anim);
+	showFleetingMessage(Goal.label);
+	if (!sayit || !G.spokenFeedback) G.spokenFeedback ? 3000 : 300;
+	let correctionPhrase = isdef(Goal.correctionPhrase) ? Goal.correctionPhrase : Goal.label;
+	sayRandomVoice(correctionPhrase);
+	return G.spokenFeedback ? 3000 : 300;
+}
+function showCorrectWords(sayit = true) {
+	if (nundef(TOList)) TOList = {};
+	TOList.correctWords = [];
+	let anim = 'onPulse2';
+	let to = 0;
+	let speaking = sayit && G.spokenFeedback;
+	let ms = speaking ? 2000 : 1000;
+	for (const goal of Goal.pics) {
+		TOList.correctWords.push(setTimeout(() => {
+			let div = mBy(goal.id);
+			mClass(div, anim);
+			if (speaking) sayRandomVoice((G.language == 'E' ? 'the ' : ' ') + goal.correctionPhrase);
+		}, to));
+		to += ms;
+	}
+	if (!sayit || !G.spokenFeedback) return to;
+	return to + ms;
+}
+function showEquation(words, dParent, idForContainerDiv, sep = null, styleContainer = {}, styleWord = {}, styleLetter = {}, styleSep = {}, colorWhiteSpaceChars = true, preserveColorsBetweenWhiteSpace = true) {
+	if (isEmpty(styleWord)) {
+		let sz = 80;
+		let fg = helleFarbe(G.color);
+		styleWord = {
+			margin: 8, padding: 8, rounding: '50%', w: 'auto', h: sz, display: 'flex', fg: fg, bg: 'transparent',
+			'align-items': 'center', border: 'transparent', outline: 'none', fz: sz, 'justify-content': 'center',
+		};
+	}
+	let dContainer = mDiv(dParent);
+	if (!isEmpty(styleContainer)) mStyle(dContainer, styleContainer); else mClass(dContainer, 'flexWrap');
+	dContainer.id = idForContainerDiv;
+	let inputGroups = [];
+	let charInputs = [];
+	let iWord = 0;
+	let idx = 0;
+	let numWords = words.length;
+	for (const w of words) {
+		let dGroup = mDiv(dContainer);
+		mStyle(dGroup, styleWord);
+		dGroup.id = idForContainerDiv + '_' + iWord;
+		let g = { dParent: dContainer, word: w, iWord: iWord, div: dGroup, oStyle: styleWord, ofg: dGroup.style.color, obg: dGroup.style.backgroundColor };
+		inputGroups.push(g);
+		let inputs = [];
+		let iLetter = 0;
+		let wString = w.toString();
+		for (const l of wString) {
+			let dLetter = mDiv(dGroup);
+			if (!isEmpty(styleLetter)) mStyle(dLetter, styleLetter);
+			dLetter.innerHTML = l;
+			let inp = { group: g, div: dLetter, letter: l, iLetter: iLetter, index: idx, oStyle: styleLetter, ofg: dLetter.style.color, obg: dLetter.style.backgroundColor };
+			charInputs.push(inp);
+			inputs.push(inp);
+			iLetter += 1; idx += 1;
+		}
+		g.charInputs = inputs;
+		if (iWord < words.length - 1 && isdef(sep)) {
+			let dSep = mDiv(dContainer);
+			dSep.innerHTML = sep;
+			if (isdef(styleSep)) mStyle(dSep, styleSep);
+		}
+		iWord += 1;
+	}
+	return [inputGroups, charInputs];// { words: inputGroups, letters: charInputs };
+}
+function showFleetingMessage(msg, msDelay, styles = {}, fade = false, ms = 3000) {
+	let defStyles = { fz: 22, rounding: 10, padding: '2px 12px', matop: 50 };
+	styles = mergeOverride(defStyles, styles);
+	if (nundef(styles.fg)) styles.fg = colorIdealText(G.color);
+	clearFleetingMessage();
+	if (msDelay) {
+		TOFleetingMessage = setTimeout(() => fleetingMessage(msg, styles, fade, ms), msDelay);
+	} else {
+		fleetingMessage(msg, styles, fade, ms);
+	}
+}
+function showGameTitle() { dGameTitle.innerHTML = G.friendly; }
 function showHiddenThumbsUpDown(sz = 100) {
 	let d = mDiv(dTable, { hmin: sz * 1.5 });
 	mCenterFlex(d);
@@ -10351,33 +10234,6 @@ function showInstruction(text, cmd, dParent, isSpoken, spoken, fz, voice) {
 	if (!isSpoken) return;
 	sayRandomVoice(isdef(spoken) ? spoken : (cmd + " " + text), null, "david");
 }
-function show_instruction(written, dParent, spoken, { fz, voice } = {}) {
-	clearElement(dParent);
-	let d = mDiv(dParent);
-	mStyle(d, { margin: 15 })
-	mClass(d, 'flexWrap');
-	if (nundef(fz)) fz = 36;
-	let d1 = mText(written, d, { fz: fz, display: 'inline-block' });
-	let sym = symbolDict.speaker;
-	let d2 = mText(sym.text, d, {
-		fz: fz + 2, weight: 900, display: 'inline-block',
-		family: sym.family, 'padding-left': 14
-	});
-	dFeedback = dInstruction = d;
-	dInstruction.addEventListener('click', () => aniInstruction(spoken));
-	if (isdef(spoken)) say(spoken, isdef(voice)?voice:G.lang == 'E'?'random':G.lang); //sayRandomVoice(spoken, spoken, voice);
-}
-function showLevel() {
-	dLevel.innerHTML = 'level: ' + (G.level + 1) + '/' + (G.maxLevel + 1);
-}
-function showGameTitle() { dGameTitle.innerHTML = G.friendly; }
-function showPictureHints(items, dParentProp) {
-	for (const item of items) {
-		let d1 = item[dParentProp];
-		mRemoveChildrenFromIndex(d1, 1);
-		let dHint = item.dHint = miPic(item, d1);
-	}
-}
 function showLabelPercentHintAfter(percent, msecs) {
 	let len = Goal.label.length;
 	let sublen = Math.floor(len * percent / 100); let restlen = len - sublen;
@@ -10386,14 +10242,47 @@ function showLabelPercentHintAfter(percent, msecs) {
 	hintWord = hintWord.toUpperCase();
 	showFleetingMessage(hintWord, msecs, { fz: 32 });
 }
-function showTextHints(items, dParentProp, textProp, removeFirst = true) {
+function showLevel() {
+	dLevel.innerHTML = 'level: ' + (G.level + 1) + '/' + (G.maxLevel + 1);
+}
+function showMouse() {
+	var x = dTable.getElementsByTagName("DIV");
+	if (nundef(x) || nundef(x[0]) || nundef(x[0].prevCursor)) { console.log('did NOT hide mouse!'); return; }
+	for (const el of x) {
+		mRemoveClass(el, 'noCursor');
+	} //.style.cursor = 'none';
+	for (const el of x) { el.style.cursor = el.prevCursor; }
+	for (const p of Pictures) {
+		mRemoveClass(iDiv(p), 'noCursor');
+		mClass(iDiv(p), 'frameOnHover'); iDiv(p).style.cursor = 'pointer';
+		for (const ch of iDiv(p).children) ch.style.cursor = 'pointer';
+	} //iDiv(p)mClass.style.cursor = 'none';}
+}
+function showPictureHints(items, dParentProp) {
 	for (const item of items) {
 		let d1 = item[dParentProp];
-		let hint = item[textProp];
-		let dHint = item.dHint = mText(hint, d1);
+		mRemoveChildrenFromIndex(d1, 1);
+		let dHint = item.dHint = miPic(item, d1);
 	}
 }
-function showScore(showScoreString=true) {
+function showPictures(dParent, handler, ifs = {}, options = {}, keys, labels) {
+	options = getOptionsMinimalistic(dParent, handler, options.w, options.h, ifs, options, G);
+	if (nundef(keys)) keys = choose(G.keys, G.numPics);
+	let items = genItemsFromKeys(keys, options);
+	if (isdef(labels)) {
+		options.showLabels = true;
+		for (let i = 0; i < items.length; i++) item[i].label = labels[i % labels.length];
+	}
+	let dArea = mDiv(dParent);
+	let rect = myPresent(dArea, items, options);
+	return items;
+}
+function showSayHint(i) {
+	let [spoken, written] = G.hintFunc(i);
+	if (spoken) sayRandomVoice(spoken); //setTimeout(() => sayRandomVoice(spoken), 300+ms);
+	if (written) showFleetingMessage(written, 0, { fz: 40 });
+}
+function showScore(showScoreString = true) {
 	if (G.controllerType == 'solitaire') {
 		if (Score.gameChange) showBadgesX(dLeiste, G.level, onClickBadgeX, G.maxLevel);
 		if (showScoreString) scoreString = 'question: ' + (Score.nTotal + 1) + '/' + G.samplesPerGame;
@@ -10410,13 +10299,65 @@ function showScore(showScoreString=true) {
 		setTimeout(() => { if (showScoreString) dScore.innerHTML = 'score ' + GC.human.score + ':' + GC.ai.score; }, 300);
 	}
 }
-function showStats(showScoreString=true) {
+function showStats(showScoreString = true) {
 	if (nundef(Score)) initScore();
 	showGameTitle();
 	showLevel();
 	showScore(showScoreString);
 	Score.levelChange = false;
 	Score.gameChange = false;
+}
+function showTextHints(items, dParentProp, textProp, removeFirst = true) {
+	for (const item of items) {
+		let d1 = item[dParentProp];
+		let hint = item[textProp];
+		let dHint = item.dHint = mText(hint, d1);
+	}
+}
+function slowlyTurnFaceDown(pic, secs = 5, removeBg = false) {
+	let ui = iDiv(pic);
+	for (const p1 of ui.children) {
+		p1.style.transition = `opacity ${secs}s ease-in-out`;
+		p1.style.opacity = 0;
+	}
+	if (removeBg) {
+		ui.style.transition = `background-color ${secs}s ease-in-out`;
+		ui.style.backgroundColor = 'dimgray';
+	}
+	pic.isFaceUp = false;
+}
+function successPictureGoal(withComment = true) {
+	if (withComment && G.spokenFeedback) {
+		let lang = G.language;
+		const comments = {
+			E: ['YEAH!', 'Excellent!!!', 'CORRECT!', 'Great!!!'],
+			D: ['gut', 'Sehr Gut!!!', 'richtig!!', 'Bravo!!!'],
+			S: ['bien', 'muy bien!!!', 'eccelente!!', 'bravo!!!'],
+			F: ['bien', 'tres bien!!!', 'fantastique!!', 'bravo!!!', 'excellent!!!'],
+			C: ['优秀', '好的!!!', '正确的!!', 'Bravo!!!'],
+		}[lang];
+		say(chooseRandom(comments), lang);
+	}
+	if (isdef(Selected) && isdef(Selected.feedbackUI)) {
+		let uilist;
+		if (isdef(Selected.positiveFeedbackUI)) uilist = [Selected.positiveFeedbackUI];
+		else uilist = isList(Selected.feedbackUI) ? Selected.feedbackUI : [Selected.feedbackUI];
+		let sz = getRect(uilist[0]).h;
+		for (const ui of uilist) {
+			let d = markerSuccess();
+			mpOver(d, ui, sz * (4 / 5), 'limegreen', 'segoeBlack');
+		}
+	}
+}
+function successThumbsUp(withComment = true) {
+	if (withComment && G.spokenFeedback) {
+		const comments = (G.language == 'E' ? ['YEAH!', 'Excellent!!!', 'CORRECT!', 'Great!!!'] : ['gut', 'Sehr Gut!!!', 'richtig!!', 'Bravo!!!']);
+		sayRandomVoice(chooseRandom(comments));
+	}
+	let p1 = firstCond(Pictures, x => x.key == 'thumbs up');
+	iDiv(p1).style.opacity = 1;
+	let p2 = firstCond(Pictures, x => x.key == 'thumbs down');
+	iDiv(p2).style.display = 'none';
 }
 function toggleSelectionOfPicture(pic, selectedPics) {
 	let ui = iDiv(pic);
@@ -10432,123 +10373,98 @@ function toggleSelectionOfPicture(pic, selectedPics) {
 		}
 	}
 }
+function translateToGerman(w) {
+	if (isNumber(w)) return w;
+	else if (isdef(DD[w])) return DD[w];
+	else return w;
+}
+function turnCardsAfter(secs, removeBg = false) {
+	let qc = QContextCounter;
+	for (const p of Pictures) { slowlyTurnFaceDown(p, secs - 1, removeBg); }
+	TOMain = setTimeout(() => {
+		let wr = 'click ' + `<b>${Goal.label}</b>`;
+		let sp = `click ${Goal.label}`;
+		show_instruction(wr, dTitle, sp);
+		showMouse();
+		GC.activateUi.bind(GC)(); //activateUi();
+	}, secs * 1000);
+}
+function turnFaceUpSimple(pic) {
+	let ui = iDiv(pic);
+	mRemoveClass(ui, 'frameOnHover');
+	ui.style.transition = null;
+	for (const ch of ui.children) { ch.style.transition = null; ch.style.opacity = 1; }
+	pic.isFaceUp = true;
+}
+function unfillChar(inp) { unfillCharInput(inp); }
+function unfillCharInput(inp) {
+	let d = iDiv(inp);
+	d.innerHTML = '_';
+	mClass(d, 'blink');
+	inp.isBlank = true;
+}
+function visNumber(n, dParent, color, or = 'h', asNumber = [0]) {
+	if (!isNumber(n) || asNumber.includes(n)) return zText('' + n, dParent, { fg: 'white', fz: 64 });
+	return _visualizeNumber(n, dParent, color, or);
+}
+function visOperation(op, a, b, dParent, symResult) {
+	switch (op) {
+		case 'plus':
+		case 'minus': return _visualizeAritOp(op, a, b, dParent, symResult); break;
+		case 'mult': return _visualizeMult(a, b, dParent, symResult); break;
+	}
+}
+function visOperator(s, dParent, styles = { fg: 'white', fz: 64 }) {
+	zText(s, dParent, styles);
+}
+function writeSound() { return; console.log('calling playSound'); }
+function zText(text, dParent, textStyles, hText, vCenter = false) {
+	let tSize = getSizeWithStyles(text, textStyles);
+	let extra = 0, lines = 1;
+	if (isdef(hText)) {
+		extra = hText - tSize.h;
+		if (textStyles.fz) lines = Math.floor(tSize.h / textStyles.fz);
+	}
+	let dText = isdef(text) ? mText(text, dParent, textStyles) : mDiv(dParent);
+	if (extra > 0 && vCenter) {
+		dText.style.paddingTop = (extra / 2) + 'px';
+		dText.style.paddingBottom = (extra / 2) + 'px';
+	}
+	return { text: text, div: dText, extra: extra, lines: lines, h: tSize.h, w: tSize.w, fz: textStyles.fz };
+}
 //#endregion game
 
 //#region house
-function convertToGraphElements(g1,house) {
+function addAdjacencyFromTo(r1, r2, dir, rect) {
+	let house = Items[r1.house];
+	if (!r2) rect = rrto(rect, house.rect);
+	lookupAddToList(r1, ['walls', dir], { rect: rect, dir: dir, room: r2 ? r2.id : r2, door: null });
+	let dir2 = r2 ? getOppDir(dir) : dir;
+	lookupAddToList(r2 ? r2 : Items[r1.house], ['walls', dir2], { rect: rect, dir: dir2, room: r1.id, door: null });
+}
+function areNeighbors(r1, r2) {
+	let res = firstCond(r1.doors, x => x.includes(r1.id) && x.includes(r2.id));
+	return res != null;
+}
+function convertToGraphElements(g1, house) {
 	let vertices = house.rooms.map(x => Items[x]);
 	let doors = [];
 	for (const v of vertices) {
 		v.center = getCenter(v.rect);
-		v.center.x+=v.rect.l-house.rect.l;
-		v.center.y+=v.rect.t-house.rect.t;
-		g1.addNode(v,v.center);
+		v.center.x += v.rect.l - house.rect.l;
+		v.center.y += v.rect.t - house.rect.t;
+		g1.addNode(v, v.center);
 		doors = union(doors, v.doors);
 	}
-	let centers = g1.getNodes().map(x=>x.data('center'));
-	g1.storePositions('prest',centers);
+	let centers = g1.getNodes().map(x => x.data('center'));
+	g1.storePositions('prest', centers);
 	let edges = doors.map(x => Items[x]).filter(x => x.rooms.length == 2);
 	for (const e of edges) {
 		if (e.rooms.length < 2) continue;
 		e.source = e.rooms[0];
 		e.target = e.rooms[1];
-		g1.addEdge(e.source,e.target,e);
+		g1.addEdge(e.source, e.target, e);
 	}
-}
-function setPositionData(g1) {
-	let ids = g1.getNodeIds();
-	for (const id of ids) {
-		let pos = g1.getProp(id, 'center');
-		g1.setPosition(id, pos.x, pos.y);
-	}
-	g1.reset();
-}
-function iDoor(r1, dir, r2, styles = {}) {
-	r1 = isString(r1) ? Items[r1] : r1;
-	let house = Items[r1.house];
-	r2 = isdef(r2) ? isString(r2) ? Items[r2] : r2 : null;
-	let wall = r2 ? findWall(r1, r2) : isdef(dir) ? findFreeWall(r1, r1.walls[dir]) : findFreeWall(r1);
-	if (wall.door) { errlog('there is already a door between', r1.id, 'and', r2); return; }
-	let szDoor = valf(styles.szDoor, house.szDoor);
-	let bg = valf(styles.bg, house.bg);
-	let dParent = iDiv(house);
-	let wr = wall.rect;
-	if (nundef(r2) && wall.room) { r2 = Items[wall.room]; } //console.log('r2',r2); }
-	let dr = jsCopy(wr);
-	let or = wall.dir == 'e' || wall.dir == 'w' ? 'v' : 'h';
-	if (or == 'v') {
-		let len = wr.h;
-		let offy = (len - szDoor) / 2;
-		dr.y = dr.t = dr.t + offy;
-		dr.h = szDoor;
-	} else {
-		let len = wr.w;
-		let offx = (len - szDoor) / 2;
-		dr.x = dr.l = dr.l + offx;
-		dr.w = szDoor;
-	}
-	let id = getDoorId(r1.id, r2 ? r2.id : house.id);
-	let door = { rooms: [r1.id], rect: dr, id: id, or: or }; //, source: r1.id, target: r2 ? r2.id : house.id };
-	if (r2) { r2.doors.push(id); door.rooms.push(r2.id); } else { house.doors.push(id); }
-	r1.doors.push(id);
-	let stylesPlus = { position: 'absolute', left: dr.x, top: dr.y, w: dr.w, h: dr.h, bg: bg };
-	copyKeys(stylesPlus, styles);
-	d = mDiv(dParent, styles);
-	iAdd(door, { div: d });
-	return door;
-}
-function iHouse(dParent, ns = 1, styles = { w: 500, h: 400 }) {
-	let d = mDiv(dParent, { display: 'inline-grid', position: 'relative', box: true });
-	ns = isNumber(ns) ? d.style.gridTemplateAreas = getLayoutSample(ns) : ns; //'"z z d" "a a c" "a a c"';// getLayoutSample(3);
-	let s = d.style.gridTemplateAreas = ns;
-	let letterList = filterDistinctLetters(s);
-	let wallWidth = valf(styles.gap, 4);
-	let lines = s.split('"').filter(x => !isWhiteSpaceString(x));
-	let cols = lines[0].split(' ').length;
-	let rows = lines.length;
-	let wHouse = Math.round(styles.w / cols) * cols + wallWidth * cols + 1;
-	let hHouse = Math.round(styles.h / rows) * rows + wallWidth * rows + 1;
-	d.style.gridTemplateRows = `repeat(${rows}, 1fr)`;// / repeat(${cols}, 1fr)`;
-	d.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;// / repeat(${cols}, 1fr)`;
-	let szDoor = valf(styles.szDoor, 40);
-	let [wallColor, floorColor] = [valf(styles.fg, 'white'), valf(styles.bg, BLUE)];
-	mStyle(d, { bg: wallColor, w: wHouse, h: hHouse, gap: wallWidth, padding: wallWidth });
-	let rooms = [];
-	for (const ch of letterList) { //['a', 'c', 'd', 'f', 'z']) {
-		let r = iRoom(d, ch, { bg: floorColor });
-		rooms.push(r);
-	}
-	let house = { rect: getRect(d), fg: wallColor, bg: floorColor, doors: [], rooms: rooms.map(x => x.id), roomLetters: letterList, szDoor: szDoor, wallWidth: wallWidth };
-	house.roomsByLetter = {};
-	rooms.map(x => house.roomsByLetter[x.ch] = x.id);
-	iAdd(house, { div: d });
-	rooms.map(x => x.house = house.id);
-	roomAdjacency(house);
-	return house;
-}
-function iRoom(dParent, ch, styles) {
-	let def = { 'grid-area': ch, position: 'relative' };
-	copyKeys(def, styles);
-	let dCell = mDiv(dParent, styles);
-	let rect = getRect(dCell);
-	let size = Math.round(rect.w * rect.h / 1000);
-	let room = { id: ch, ch: ch, bg: dCell.style.backgroundColor, rect: rect, size: size };
-	delete Items[ch];
-	iAdd(room, { div: dCell });
-	room.doors = [];
-	room.furniture = [];
-	room.hasDoor = () => !isEmpty(room.doors)
-	room.hasPassThrough = () => room.doors.length >= 2;
-	return room;
-}
-function findWall(r1, r2) {
-	for (const dir in r1.walls) {
-		let walls = r1.walls[dir];
-		for (const wall of walls) {
-			if (wall.r2 == r2.id) return wall;
-		}
-	}
-	return null;
 }
 function findFreeWall(r1, walls) {
 	r1 = isString(r1) ? Items[r1] : r1;
@@ -10561,89 +10477,33 @@ function findFreeWall(r1, walls) {
 	walls = walls.filter(x => !x.door);
 	return isEmpty(walls) ? null : chooseRandom(walls);
 }
-function hideOuterDoors(house) {
-	for (const did of jsCopy(house.doors)) {
-		let door = Items[did];
-		hide(iDiv(door));//.remove();
+function findWall(r1, r2) {
+	for (const dir in r1.walls) {
+		let walls = r1.walls[dir];
+		for (const wall of walls) {
+			if (wall.r2 == r2.id) return wall;
+		}
 	}
+	return null;
 }
-function roomAdjacency(house) {
+function getCornerRoomsDict(house) {
 	let rooms = house.rooms.map(x => Items[x]);
-	for (let i = 0; i < rooms.length; i++) {
-		for (let j = i + 1; j < rooms.length; j++) {
-			let [r1, r2] = [rooms[i], rooms[j]];
-			let [e1, e2] = [r1.rect, r2.rect];
-			let rhoeher = e1.t < e2.t ? r1 : r2;
-			let rleft = e1.x < e2.x ? r1 : r2;
-			let rniedriger = (rhoeher == r1 ? r2 : r1);
-			let rright = (rleft == r1 ? r2 : r1);
-			let diff = 2 * house.wallWidth; // =min length between rooms to warrant a wall
-			let y1 = Math.max(e1.t, e2.t);
-			let y2 = Math.min(e1.b, e2.b);
-			let dCommony = y2 - y1;
-			if (dCommony > diff && isCloseTo(rright.rect.l, rleft.rect.r)) {
-				let dr = {
-					x: rleft.rect.r - house.rect.l,
-					y: rniedriger.rect.t - house.rect.t, //fuer door: + (dCommony - szDoor) / 2,
-					w: rright.rect.l - rleft.rect.r, //house.wallWidth,
-					h: dCommony, //fuer door: szDoor
-				};
-				extendRect(dr);
-				addAdjacencyFromTo(rleft, rright, 'e', dr);
-			}
-			let x1 = Math.max(e1.l, e2.l);
-			let x2 = Math.min(e1.r, e2.r);
-			let dCommonx = x2 - x1;
-			if (dCommonx > diff && isCloseTo(rniedriger.rect.t, rhoeher.rect.b)) {
-				let dr = {
-					x: rright.rect.l - house.rect.l, //fuer door: + (dCommonx - szDoor) / 2,
-					y: rhoeher.rect.b - house.rect.t,
-					w: dCommonx, //fuer door: szDoor, 
-					h: house.wallWidth
-				};
-				extendRect(dr);
-				addAdjacencyFromTo(rhoeher, rniedriger, 's', dr);
-			}
-		}
+	let result = {};
+	for (const r of rooms) {
+		let isN = r.isN = isNorthRoom(house, r);
+		let isS = r.isS = isSouthRoom(house, r);
+		let isW = r.isW = isWestRoom(house, r);
+		let isE = r.isE = isEastRoom(house, r);
+		if (isN && isW) result.NW = r.id;
+		else if (isN && isE) result.NE = r.id;
+		else if (isS && isE) result.SE = r.id;
+		else if (isS && isW) result.SW = r.id;
 	}
-	for (let i = 0; i < rooms.length; i++) {
-		let r = rooms[i];
-		if (isCloseTo(r.rect.l, house.rect.l)) {
-			let wallRect = { x: house.rect.l, y: r.rect.t, w: house.wallWidth, h: r.rect.h };
-			extendRect(wallRect);
-			addAdjacencyFromTo(r, null, 'w', wallRect);
-		}
-		if (isCloseTo(r.rect.r, house.rect.r)) {
-			let wallRect = { x: r.rect.r, y: r.rect.t, w: house.wallWidth, h: r.rect.h };
-			extendRect(wallRect);
-			addAdjacencyFromTo(r, null, 'e', wallRect);
-		}
-		if (isCloseTo(r.rect.t, house.rect.t)) {
-			let wallRect = { x: r.rect.l, y: house.rect.t, w: r.rect.w, h: house.wallWidth };
-			extendRect(wallRect);
-			addAdjacencyFromTo(r, null, 'n', wallRect);
-		}
-		if (isCloseTo(r.rect.b, house.rect.b)) {
-			let wallRect = { x: r.rect.l, y: r.rect.b, w: r.rect.w, h: house.wallWidth };
-			extendRect(wallRect);
-			addAdjacencyFromTo(r, null, 's', wallRect);
-		}
-	}
-}
-function addAdjacencyFromTo(r1, r2, dir, rect) {
-	let house = Items[r1.house];
-	if (!r2) rect = rrto(rect, house.rect);
-	lookupAddToList(r1, ['walls', dir], { rect: rect, dir: dir, room: r2 ? r2.id : r2, door: null });
-	let dir2 = r2 ? getOppDir(dir) : dir;
-	lookupAddToList(r2 ? r2 : Items[r1.house], ['walls', dir2], { rect: rect, dir: dir2, room: r1.id, door: null });
-}
-function areNeighbors(r1, r2) {
-	let res = firstCond(r1.doors, x => x.includes(r1.id) && x.includes(r2.id));
-	return res != null;
+	return result;
 }
 function getDoorId(r1, r2) { return r1 + '_' + r2 + '_' + r1; }
 function getLayoutSample(n) {
-	if (G.level > 4){
+	if (G.level > 4) {
 	}
 	let samples = {
 		1: '"a"',
@@ -10733,52 +10593,177 @@ function getLayoutSample(n) {
 	return s;
 }
 function getOppDir(dir) { return { e: 'w', w: 'e', n: 's', s: 'n' }[dir]; }
-function getCornerRoomsDict(house) {
-	let rooms = house.rooms.map(x => Items[x]);
-	let result = {};
-	for (const r of rooms) {
-		let isN = r.isN = isNorthRoom(house, r);
-		let isS = r.isS = isSouthRoom(house, r);
-		let isW = r.isW = isWestRoom(house, r);
-		let isE = r.isE = isEastRoom(house, r);
-		if (isN && isW) result.NW = r.id;
-		else if (isN && isE) result.NE = r.id;
-		else if (isS && isE) result.SE = r.id;
-		else if (isS && isW) result.SW = r.id;
+function hideOuterDoors(house) {
+	for (const did of jsCopy(house.doors)) {
+		let door = Items[did];
+		hide(iDiv(door));//.remove();
 	}
-	return result;
 }
+function iDoor(r1, dir, r2, styles = {}) {
+	r1 = isString(r1) ? Items[r1] : r1;
+	let house = Items[r1.house];
+	r2 = isdef(r2) ? isString(r2) ? Items[r2] : r2 : null;
+	let wall = r2 ? findWall(r1, r2) : isdef(dir) ? findFreeWall(r1, r1.walls[dir]) : findFreeWall(r1);
+	if (wall.door) { errlog('there is already a door between', r1.id, 'and', r2); return; }
+	let szDoor = valf(styles.szDoor, house.szDoor);
+	let bg = valf(styles.bg, house.bg);
+	let dParent = iDiv(house);
+	let wr = wall.rect;
+	if (nundef(r2) && wall.room) { r2 = Items[wall.room]; } //console.log('r2',r2); }
+	let dr = jsCopy(wr);
+	let or = wall.dir == 'e' || wall.dir == 'w' ? 'v' : 'h';
+	if (or == 'v') {
+		let len = wr.h;
+		let offy = (len - szDoor) / 2;
+		dr.y = dr.t = dr.t + offy;
+		dr.h = szDoor;
+	} else {
+		let len = wr.w;
+		let offx = (len - szDoor) / 2;
+		dr.x = dr.l = dr.l + offx;
+		dr.w = szDoor;
+	}
+	let id = getDoorId(r1.id, r2 ? r2.id : house.id);
+	let door = { rooms: [r1.id], rect: dr, id: id, or: or }; //, source: r1.id, target: r2 ? r2.id : house.id };
+	if (r2) { r2.doors.push(id); door.rooms.push(r2.id); } else { house.doors.push(id); }
+	r1.doors.push(id);
+	let stylesPlus = { position: 'absolute', left: dr.x, top: dr.y, w: dr.w, h: dr.h, bg: bg };
+	copyKeys(stylesPlus, styles);
+	d = mDiv(dParent, styles);
+	iAdd(door, { div: d });
+	return door;
+}
+function iHouse(dParent, ns = 1, styles = { w: 500, h: 400 }) {
+	let d = mDiv(dParent, { display: 'inline-grid', position: 'relative', box: true });
+	ns = isNumber(ns) ? d.style.gridTemplateAreas = getLayoutSample(ns) : ns; //'"z z d" "a a c" "a a c"';// getLayoutSample(3);
+	let s = d.style.gridTemplateAreas = ns;
+	let letterList = filterDistinctLetters(s);
+	let wallWidth = valf(styles.gap, 4);
+	let lines = s.split('"').filter(x => !isWhiteSpaceString(x));
+	let cols = lines[0].split(' ').length;
+	let rows = lines.length;
+	let wHouse = Math.round(styles.w / cols) * cols + wallWidth * cols + 1;
+	let hHouse = Math.round(styles.h / rows) * rows + wallWidth * rows + 1;
+	d.style.gridTemplateRows = `repeat(${rows}, 1fr)`;// / repeat(${cols}, 1fr)`;
+	d.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;// / repeat(${cols}, 1fr)`;
+	let szDoor = valf(styles.szDoor, 40);
+	let [wallColor, floorColor] = [valf(styles.fg, 'white'), valf(styles.bg, BLUE)];
+	mStyle(d, { bg: wallColor, w: wHouse, h: hHouse, gap: wallWidth, padding: wallWidth });
+	let rooms = [];
+	for (const ch of letterList) { //['a', 'c', 'd', 'f', 'z']) {
+		let r = iRoom(d, ch, { bg: floorColor });
+		rooms.push(r);
+	}
+	let house = { rect: getRect(d), fg: wallColor, bg: floorColor, doors: [], rooms: rooms.map(x => x.id), roomLetters: letterList, szDoor: szDoor, wallWidth: wallWidth };
+	house.roomsByLetter = {};
+	rooms.map(x => house.roomsByLetter[x.ch] = x.id);
+	iAdd(house, { div: d });
+	rooms.map(x => x.house = house.id);
+	roomAdjacency(house);
+	return house;
+}
+function iRoom(dParent, ch, styles) {
+	let def = { 'grid-area': ch, position: 'relative' };
+	copyKeys(def, styles);
+	let dCell = mDiv(dParent, styles);
+	let rect = getRect(dCell);
+	let size = Math.round(rect.w * rect.h / 1000);
+	let room = { id: ch, ch: ch, bg: dCell.style.backgroundColor, rect: rect, size: size };
+	delete Items[ch];
+	iAdd(room, { div: dCell });
+	room.doors = [];
+	room.furniture = [];
+	room.hasDoor = () => !isEmpty(room.doors)
+	room.hasPassThrough = () => room.doors.length >= 2;
+	return room;
+}
+function isEastRoom(house, room) { return isCloseTo(room.rect.r, house.rect.r, house.wallWidth); }
 function isNorthRoom(house, room) { return isCloseTo(room.rect.t, house.rect.t, house.wallWidth); }
 function isSouthRoom(house, room) { return isCloseTo(room.rect.b, house.rect.b, house.wallWidth); }
-function isEastRoom(house, room) { return isCloseTo(room.rect.r, house.rect.r, house.wallWidth); }
 function isWestRoom(house, room) { return isCloseTo(room.rect.l, house.rect.l, house.wallWidth); }
+function roomAdjacency(house) {
+	let rooms = house.rooms.map(x => Items[x]);
+	for (let i = 0; i < rooms.length; i++) {
+		for (let j = i + 1; j < rooms.length; j++) {
+			let [r1, r2] = [rooms[i], rooms[j]];
+			let [e1, e2] = [r1.rect, r2.rect];
+			let rhoeher = e1.t < e2.t ? r1 : r2;
+			let rleft = e1.x < e2.x ? r1 : r2;
+			let rniedriger = (rhoeher == r1 ? r2 : r1);
+			let rright = (rleft == r1 ? r2 : r1);
+			let diff = 2 * house.wallWidth; // =min length between rooms to warrant a wall
+			let y1 = Math.max(e1.t, e2.t);
+			let y2 = Math.min(e1.b, e2.b);
+			let dCommony = y2 - y1;
+			if (dCommony > diff && isCloseTo(rright.rect.l, rleft.rect.r)) {
+				let dr = {
+					x: rleft.rect.r - house.rect.l,
+					y: rniedriger.rect.t - house.rect.t, //fuer door: + (dCommony - szDoor) / 2,
+					w: rright.rect.l - rleft.rect.r, //house.wallWidth,
+					h: dCommony, //fuer door: szDoor
+				};
+				extendRect(dr);
+				addAdjacencyFromTo(rleft, rright, 'e', dr);
+			}
+			let x1 = Math.max(e1.l, e2.l);
+			let x2 = Math.min(e1.r, e2.r);
+			let dCommonx = x2 - x1;
+			if (dCommonx > diff && isCloseTo(rniedriger.rect.t, rhoeher.rect.b)) {
+				let dr = {
+					x: rright.rect.l - house.rect.l, //fuer door: + (dCommonx - szDoor) / 2,
+					y: rhoeher.rect.b - house.rect.t,
+					w: dCommonx, //fuer door: szDoor, 
+					h: house.wallWidth
+				};
+				extendRect(dr);
+				addAdjacencyFromTo(rhoeher, rniedriger, 's', dr);
+			}
+		}
+	}
+	for (let i = 0; i < rooms.length; i++) {
+		let r = rooms[i];
+		if (isCloseTo(r.rect.l, house.rect.l)) {
+			let wallRect = { x: house.rect.l, y: r.rect.t, w: house.wallWidth, h: r.rect.h };
+			extendRect(wallRect);
+			addAdjacencyFromTo(r, null, 'w', wallRect);
+		}
+		if (isCloseTo(r.rect.r, house.rect.r)) {
+			let wallRect = { x: r.rect.r, y: r.rect.t, w: house.wallWidth, h: r.rect.h };
+			extendRect(wallRect);
+			addAdjacencyFromTo(r, null, 'e', wallRect);
+		}
+		if (isCloseTo(r.rect.t, house.rect.t)) {
+			let wallRect = { x: r.rect.l, y: house.rect.t, w: r.rect.w, h: house.wallWidth };
+			extendRect(wallRect);
+			addAdjacencyFromTo(r, null, 'n', wallRect);
+		}
+		if (isCloseTo(r.rect.b, house.rect.b)) {
+			let wallRect = { x: r.rect.l, y: r.rect.b, w: r.rect.w, h: house.wallWidth };
+			extendRect(wallRect);
+			addAdjacencyFromTo(r, null, 's', wallRect);
+		}
+	}
+}
 function rrto(r1, r2) {
 	let r = jsCopy(r1);
 	r.x -= r2.x; r.l -= r2.x; r.r -= r2.x;
 	r.y -= r2.y; r.t -= r2.y; r.b -= r2.y;
 	return r;
 }
+function setPositionData(g1) {
+	let ids = g1.getNodeIds();
+	for (const id of ids) {
+		let pos = g1.getProp(id, 'center');
+		g1.setPosition(id, pos.x, pos.y);
+	}
+	g1.reset();
+}
 //#endregion house
 
 //#region item
-function addLabels(items, lang = 'E', luc = 'c') {
-	for (const item of items) {
-		let label = item.info[lang];
-		item.label = luc == 'c' ? toNoun(label) : luc == 'l' ? label : label.toUpperCase();
-	}
-}
-function addRepeatInfo(dPic, iRepeat, wpic) {
-	let szi = Math.max(Math.floor(wpic / 8), 8);
-	dPic.style.position = 'relative';
-	let d2 = mText('' + iRepeat, dPic, { fz: szi, weight: 'bold', fg: 'contrast', position: 'absolute', left: szi / 2, top: szi / 2 - 2 });
-	return d2;
-}
-function applyColorkey(item) {
-	let l = item.live;
-	let sShade = '0 0 0 ' + item.textShadowColor;
-	item.shadeStyles = { 'text-shadow': sShade, fg: anyColorToStandardString('black', l.options.contrast) };
-	let ui = l.options.showPic ? l.dPic : l.dLabel;
-	mStyle(ui, item.shadeStyles);
+function _calcFontPicFromText(options, overrideExisting = true) {
+	if (nundef(options.fzPic) || overrideExisting) options.fzPic = Math.floor(options.fzText * 4 * (options.luc == 'u' ? .7 : .6)); //taking 4 as min word length
+	return options.fzPic;
 }
 function _extendItemsAndOptions(items, options) {
 	options.longestLabel = findLongestWord(items.map(x => x.label));
@@ -10802,11 +10787,97 @@ function _extendItemsAndOptions(items, options) {
 	options.N = items.length;
 	return items;
 }
+function _extendOptions(options, defOptions, createArea = true) {
+	defOptions = {
+		wper: 96, hper: 96, dParent: dTable,
+		showPic: true, szPic: { w: 120, h: 120 }, bg: 'random', fg: 'white', margin: 4, rounding: 6,
+		showLabels: true, luc: 'l', labelPos: 'bottom', lang: 'E', keySet: 'all',
+		fzText: 20, fzPic: 60,
+		padding: .025, gap: .1, isUniform: true, isRegular: false, fillArea: true,
+		shufflePositions: false, sameBackground: true, showRepeat: false, repeat: 1,
+		contrast: .32,
+		ifs: {},
+		handler: _standardHandler,
+	};
+	addKeys(defOptions, options);
+	if (createArea && nundef(options.dArea)) {
+		if (isdef(options.wArea) && isdef(options.hArea)) {
+			options.dArea = getMainArea(options.dParent, { w: options.wArea, h: options.hArea });
+		} else if (isdef(options.areaPadding)) {
+			options.dArea = getMainAreaPadding(options.dParent, padding = options.areaPadding);
+		} else options.dArea = getMainAreaPercent(options.dParent, null, options.wper, options.hper, getUID());
+		options.area = getRect(options.dArea);
+		options.idArea = options.dArea.id;
+		options.aRatio = options.area.w / options.area.h;
+		options.containerShape = options.area.w > options.area.h ? 'L' : 'P';
+	}
+	if (options.repeat > 1 && nundef(options.ifs.bg)) {
+		let bg = isdef(options.colorKeys) ? 'white' : (i) => options.sameBackground ? computeColor('random') : 'random';
+		let fg = isdef(options.colorKeys) ? 'black' : 'white';
+		options.ifs.bg = bg;
+		options.ifs.fg = fg;
+	}
+	_calcFontPicFromText(options, false);
+	if (nundef(options.labelStyles)) options.labelStyles = {};
+	if (options.showLabels) {
+		if (options.labelPos == 'bottom') options.labelBottom = true; else options.labelTop = true;
+		options.labelStyles.fz = options.fzText;
+	}
+	options.picStyles = { fz: options.fzPic };
+	let [w, h] = [options.szPic.w, options.szPic.h];
+	options.outerStyles = {
+		w: w, h: h, bg: options.bg, fg: options.fg,
+		display: 'inline-flex', 'flex-direction': 'column',
+		'justify-content': 'center', 'align-items': 'center', 'vertical-align': 'top',
+		padding: 0, box: true, margin: options.margin, rounding: options.rounding,
+	};
+	return options;
+}
+function _getKeysCond(n, cond, keySet = 'all') {
+	if (isString(keySet)) keySet = KeySets[keySet];
+	let keys = isdef(cond) ? isString(cond) ?
+		isdef(KeySets[cond]) ? KeySets[cond] : keySet.filter(x => x.includes(cond))
+		: keySet.filter(x => cond(Syms[x])) : keySet;
+	keys = n >= keys.length ? keys : choose(keys, n);
+	return keys;
+}
+function _standardHandler(handler) {
+	let f = isdef(handler) ?
+		ev => { ev.cancelBubble = true; let res = handler(ev, evToItem(ev)); } //console.log('clicked', evToItem(ev).key, 'res', res); }
+		: ev => { ev.cancelBubble = true; console.log('clicked on', evToClosestId(ev), evToLive(ev), evToItem(ev)); };
+	return f;
+}
+function addLabel(item, label, styles) {
+	item.label = label;
+	let div = iDiv(item);
+	if (isdef(item.live.dLabel)) mRemove(item.live.dLabel);
+	let dLabel = item.live.dLabel = mDiv(div, styles, null, label);
+	mCenterFlex(div, true, true);
+	mStyle(div, { 'vertical-align': 'top' });
+	return dLabel;
+}
+function addLabels(items, lang = 'E', luc = 'c') {
+	for (const item of items) {
+		let label = item.info[lang];
+		item.label = luc == 'c' ? toNoun(label) : luc == 'l' ? label : label.toUpperCase();
+	}
+}
+function addRepeatInfo(dPic, iRepeat, wpic) {
+	let szi = Math.max(Math.floor(wpic / 8), 8);
+	dPic.style.position = 'relative';
+	let d2 = mText('' + iRepeat, dPic, { fz: szi, weight: 'bold', fg: 'contrast', position: 'absolute', left: szi / 2, top: szi / 2 - 2 });
+	return d2;
+}
+function applyColorkey(item) {
+	let l = item.live;
+	let sShade = '0 0 0 ' + item.textShadowColor;
+	item.shadeStyles = { 'text-shadow': sShade, fg: anyColorToStandardString('black', l.options.contrast) };
+	let ui = l.options.showPic ? l.dPic : l.dLabel;
+	mStyle(ui, item.shadeStyles);
+}
 function evToItem(ev) { let id = evToClosestId(ev); return isdef(id) ? Items[id] : null; }
 function evToItemC(ev) { ev.cancelBubble = true; return evToItem(ev); }
 function findItemFromEvent(items, ev) { return evToItemC(ev); }
-function registeredItemCopy(orig) { let item = jsCopy(orig); item.id = iRegister(item); return item; }
-function registerAsNewItem(item) { item.id = iRegister(item); return item; }
 function genItems(n, options) { let keys = genKeys(n, options); let items = genItemsFromKeys(keys, options); return items; }
 function genItemsFromKeys(keys, options = {}) {
 	let items = [];
@@ -10826,15 +10897,19 @@ function genKeys(n, options) {
 	let keys = _getKeysCond(n, cond, keySet);
 	return keys;
 }
-function _getKeysCond(n, cond, keySet = 'all') {
-	if (isString(keySet)) keySet = KeySets[keySet];
-	let keys = isdef(cond) ? isString(cond) ?
-		isdef(KeySets[cond]) ? KeySets[cond] : keySet.filter(x => x.includes(cond))
-		: keySet.filter(x => cond(Syms[x])) : keySet;
-	keys = n >= keys.length ? keys : choose(keys, n);
-	return keys;
+function getArea(dParent, styles, id) {
+	let defStyles = { display: 'inline-block' };
+	styles = mergeOverride(defStyles, styles);
+	let d = mDiv(dParent, styles, id);
+	return d;
 }
 function getItem(k) { return infoToItem(Syms[k]); }
+function getMainAreaPercent(dParent, bg = 'grey', wPercent = 94, hPercent = 96, id) {
+	clearElement(dParent);
+	let aTable = percentOf(dParent, wPercent, hPercent); //getRect(dTable);
+	let dArea = getArea(dParent, { w: aTable.w, h: aTable.h, layout: 'hcc', bg: bg }, id);
+	return dArea;
+}
 function getNItemsPerKeylist(n, keylists, options = {}) {
 	let items = [];
 	for (const list of keylists) {
@@ -10879,15 +10954,8 @@ function modLabel(item, newLabel, styles) {
 	item.label = newLabel;
 	return dLabel;
 }
-function addLabel(item, label, styles) {
-	item.label = label;
-	let div = iDiv(item);
-	if (isdef(item.live.dLabel)) mRemove(item.live.dLabel);
-	let dLabel = item.live.dLabel = mDiv(div, styles, null, label);
-	mCenterFlex(div, true, true);
-	mStyle(div, { 'vertical-align': 'top' });
-	return dLabel;
-}
+function registerAsNewItem(item) { item.id = iRegister(item); return item; }
+function registeredItemCopy(orig) { let item = jsCopy(orig); item.id = iRegister(item); return item; }
 function removeLabel(item) {
 	if (isdef(item.live.dLabel)) {
 		item.live.dLabel.remove();
@@ -10947,77 +11015,46 @@ function zRepeatInColorEachItem(items, colorKeys) {
 	}
 	return itColors;
 }
-function _standardHandler(handler) {
-	let f = isdef(handler) ?
-		ev => { ev.cancelBubble = true; let res = handler(ev, evToItem(ev)); } //console.log('clicked', evToItem(ev).key, 'res', res); }
-		: ev => { ev.cancelBubble = true; console.log('clicked on', evToClosestId(ev), evToLive(ev), evToItem(ev)); };
-	return f;
-}
-function _extendOptions(options, defOptions, createArea = true) {
-	defOptions = {
-		wper: 96, hper: 96, dParent: dTable,
-		showPic: true, szPic: { w: 120, h: 120 }, bg: 'random', fg: 'white', margin: 4, rounding: 6,
-		showLabels: true, luc: 'l', labelPos: 'bottom', lang: 'E', keySet: 'all',
-		fzText: 20, fzPic: 60,
-		padding: .025, gap: .1, isUniform: true, isRegular: false, fillArea: true,
-		shufflePositions: false, sameBackground: true, showRepeat: false, repeat: 1,
-		contrast: .32,
-		ifs: {},
-		handler: _standardHandler,
-	};
-	addKeys(defOptions, options);
-	if (createArea && nundef(options.dArea)) {
-		if (isdef(options.wArea) && isdef(options.hArea)) {
-			options.dArea = getMainArea(options.dParent, { w: options.wArea, h: options.hArea });
-		} else if (isdef(options.areaPadding)) {
-			options.dArea = getMainAreaPadding(options.dParent, padding = options.areaPadding);
-		} else options.dArea = getMainAreaPercent(options.dParent, null, options.wper, options.hper, getUID());
-		options.area = getRect(options.dArea);
-		options.idArea = options.dArea.id;
-		options.aRatio = options.area.w / options.area.h;
-		options.containerShape = options.area.w > options.area.h ? 'L' : 'P';
-	}
-	if (options.repeat > 1 && nundef(options.ifs.bg)) {
-		let bg = isdef(options.colorKeys) ? 'white' : (i) => options.sameBackground ? computeColor('random') : 'random';
-		let fg = isdef(options.colorKeys) ? 'black' : 'white';
-		options.ifs.bg = bg;
-		options.ifs.fg = fg;
-	}
-	_calcFontPicFromText(options, false);
-	if (nundef(options.labelStyles)) options.labelStyles = {};
-	if (options.showLabels) {
-		if (options.labelPos == 'bottom') options.labelBottom = true; else options.labelTop = true;
-		options.labelStyles.fz = options.fzText;
-	}
-	options.picStyles = { fz: options.fzPic };
-	let [w, h] = [options.szPic.w, options.szPic.h];
-	options.outerStyles = {
-		w: w, h: h, bg: options.bg, fg: options.fg,
-		display: 'inline-flex', 'flex-direction': 'column',
-		'justify-content': 'center', 'align-items': 'center', 'vertical-align': 'top',
-		padding: 0, box: true, margin: options.margin, rounding: options.rounding,
-	};
-	return options;
-}
-function _calcFontPicFromText(options, overrideExisting = true) {
-	if (nundef(options.fzPic) || overrideExisting) options.fzPic = Math.floor(options.fzText * 4 * (options.luc == 'u' ? .7 : .6)); //taking 4 as min word length
-	return options.fzPic;
-}
-function getMainAreaPercent(dParent, bg = 'grey', wPercent = 94, hPercent = 96, id) {
-	clearElement(dParent);
-	let aTable = percentOf(dParent, wPercent, hPercent); //getRect(dTable);
-	let dArea = getArea(dParent, { w: aTable.w, h: aTable.h, layout: 'hcc', bg: bg }, id);
-	return dArea;
-}
-function getArea(dParent, styles, id) {
-	let defStyles = { display: 'inline-block' };
-	styles = mergeOverride(defStyles, styles);
-	let d = mDiv(dParent, styles, id);
-	return d;
-}
 //#endregion item
 
 //#region keys
+function filterWordByLengthG(g, k, w, allowSpaces = false) {
+	if (nundef(g.minWordLength)) g.minWordLength = 0;
+	if (nundef(g.maxWordLength)) g.maxWordLength = 50;
+	return filterByLength(w, g.minWordLength, g.maxWordLength, allowSpaces);
+}
+function genCats(n) {
+	let di = {};
+	let cats = Object.keys(Categories);
+	for (let i = 0; i < n; i++) {
+		let cat = chooseRandom(cats);
+		let incompat = Daat.incompatibleCats[cat];
+		cats = arrMinus(cats, incompat);
+		removeInPlace(cats, cat);
+		di[cat] = Categories[cat];
+	}
+	return di;
+}
+function getAnimals() {
+	let gr = 'Animals & Nature';
+	let result = [];
+	for (const sg in ByGroupSubgroup[gr]) {
+		if (startsWith(sg, 'anim')) result = result.concat(ByGroupSubgroup[gr][sg]);
+	}
+	return result;
+}
+function getGSGElements(gCond, sCond) {
+	let keys = [];
+	let byg = ByGroupSubgroup;
+	for (const gKey in byg) {
+		if (!gCond(gKey)) continue;
+		for (const sKey in byg[gKey]) {
+			if (!sCond(sKey)) continue;
+			keys = keys.concat(byg[gKey][sKey]);
+		}
+	}
+	return keys.sort();
+}
 function getKeySets() {
 	makeCategories();	//console.log('Categories',Categories)
 	let res = {};
@@ -11033,14 +11070,6 @@ function getKeySets() {
 	localStorage.setItem('KeySets', JSON.stringify(res));
 	return res;
 }
-function getAnimals() {
-	let gr = 'Animals & Nature';
-	let result = [];
-	for (const sg in ByGroupSubgroup[gr]) {
-		if (startsWith(sg, 'anim')) result = result.concat(ByGroupSubgroup[gr][sg]);
-	}
-	return result;
-}
 function getNature() {
 	let gr = 'Animals & Nature';
 	let result = [];
@@ -11048,18 +11077,6 @@ function getNature() {
 		result = result.concat(ByGroupSubgroup[gr][sg]);
 	}
 	return result;
-}
-function getGSGElements(gCond, sCond) {
-	let keys = [];
-	let byg = ByGroupSubgroup;
-	for (const gKey in byg) {
-		if (!gCond(gKey)) continue;
-		for (const sKey in byg[gKey]) {
-			if (!sCond(sKey)) continue;
-			keys = keys.concat(byg[gKey][sKey]);
-		}
-	}
-	return keys.sort();
 }
 function makeCategories() {
 	let keys = Categories = {
@@ -11097,18 +11114,6 @@ function makeCategories() {
 		transport: [],
 	}
 }
-function genCats(n) {
-	let di = {};
-	let cats = Object.keys(Categories);
-	for (let i = 0; i < n; i++) {
-		let cat = chooseRandom(cats);
-		let incompat = Daat.incompatibleCats[cat];
-		cats = arrMinus(cats, incompat);
-		removeInPlace(cats, cat);
-		di[cat] = Categories[cat];
-	}
-	return di;
-}
 function removeDuplicates(keys, prop) {
 	let di = {};
 	let res = [];
@@ -11119,11 +11124,6 @@ function removeDuplicates(keys, prop) {
 		di[item.key] = true;
 	}
 	return res.map(x => x.key);
-}
-function setKeysG(g, filterFunc, nMin, key) {
-	if (nundef(nMin)) nMin = 25;
-	if (isdef(g.numPics)) nMin = Math.max(25, g.numPics);
-	return setKeys({ nMin: nMin, lang: g.language, key: valf(key, g.vocab), keySets: KeySets, filterFunc: filterFunc, param: g });
 }
 function setKeys({ allowDuplicates, nMin = 25, lang, key, keySets, filterFunc, param, confidence, sortByFunc } = {}) {
 	let keys = jsCopy(keySets[key]);
@@ -11159,10 +11159,10 @@ function setKeys({ allowDuplicates, nMin = 25, lang, key, keySets, filterFunc, p
 	}
 	return primary;
 }
-function filterWordByLengthG(g, k, w, allowSpaces = false) {
-	if (nundef(g.minWordLength)) g.minWordLength = 0;
-	if (nundef(g.maxWordLength)) g.maxWordLength = 50;
-	return filterByLength(w, g.minWordLength, g.maxWordLength, allowSpaces);
+function setKeysG(g, filterFunc, nMin, key) {
+	if (nundef(nMin)) nMin = 25;
+	if (isdef(g.numPics)) nMin = Math.max(25, g.numPics);
+	return setKeys({ nMin: nMin, lang: g.language, key: valf(key, g.vocab), keySets: KeySets, filterFunc: filterFunc, param: g });
 }
 //#endregion keys
 
@@ -11218,6 +11218,49 @@ function gatherItems(n, options) {
 	}
 	return items;
 }
+function getBlinkingLetter(item) {
+	if (nundef(item.letters)) return null;
+	return firstCond(item.letters, x => x.isBlinking);
+}
+function getConsonants(w, except = []) {
+	w = w.toLowerCase();
+	let vowels = 'aeiouy' + except.join('');
+	let res = [];
+	for (let i = 0; i < w.length; i++) {
+		if (!vowels.includes(w[i])) res.push({ i: i, letter: w[i] });
+	}
+	return res;
+}
+function getLettersExcept(w, except = []) {
+	w = w.toLowerCase();
+	let res = [];
+	for (let i = 0; i < w.length; i++) {
+		if (!except.includes(w[i])) res.push({ i: i, letter: w[i] });
+	}
+	return res;
+}
+function getRandomConsonant(w, except = []) { let cons = getConsonants(w, except); return chooseRandom(cons); }
+function getRandomLetter(w, except = []) { let cons = getLettersExcept(w, except); return chooseRandom(cons); }
+function getRandomVowel(w, except = []) { let vowels = getVowels(w, except); return chooseRandom(vowels); }
+function getVowels(w, except = []) {
+	w = w.toLowerCase();
+	let vowels = 'aeiouy';
+	let res = [];
+	for (let i = 0; i < w.length; i++) {
+		if (vowels.includes(w[i]) && !except.includes(w[i])) res.push({ i: i, letter: w[i] });
+	}
+	return res;
+}
+function iLetters(s, dParent, style) {
+	let d = mDiv(dParent);
+	for (let i = 0; i < s.length; i++) {
+		let d1 = mDiv(d);
+		d1.innerHTML = s[i];
+		mStyle(d1, style);
+	}
+	return d;
+}
+function isWord(w) { return lookup(Dictionary, [G.language, w]); }//isdef(Dictionary[G.language][w]); }
 function pickSuitableItems(n, options) {
 	let items = genItems(n, options);
 	let words = items.map(x => x.label);
@@ -11232,58 +11275,6 @@ function pickSuitableItems(n, options) {
 	}
 	return items;
 }
-function getLettersExcept(w, except = []) {
-	w = w.toLowerCase();
-	let res = [];
-	for (let i = 0; i < w.length; i++) {
-		if (!except.includes(w[i])) res.push({ i: i, letter: w[i] });
-	}
-	return res;
-}
-function getVowels(w, except = []) {
-	w = w.toLowerCase();
-	let vowels = 'aeiouy';
-	let res = [];
-	for (let i = 0; i < w.length; i++) {
-		if (vowels.includes(w[i]) && !except.includes(w[i])) res.push({ i: i, letter: w[i] });
-	}
-	return res;
-}
-function getConsonants(w, except = []) {
-	w = w.toLowerCase();
-	let vowels = 'aeiouy' + except.join('');
-	let res = [];
-	for (let i = 0; i < w.length; i++) {
-		if (!vowels.includes(w[i])) res.push({ i: i, letter: w[i] });
-	}
-	return res;
-}
-function getRandomVowel(w, except = []) { let vowels = getVowels(w, except); return chooseRandom(vowels); }
-function getRandomConsonant(w, except = []) { let cons = getConsonants(w, except); return chooseRandom(cons); }
-function getRandomLetter(w, except = []) { let cons = getLettersExcept(w, except); return chooseRandom(cons); }
-function getBlinkingLetter(item) {
-	if (nundef(item.letters)) return null;
-	return firstCond(item.letters, x => x.isBlinking);
-}
-function iLetters(s, dParent, style) {
-	let d = mDiv(dParent);
-	for (let i = 0; i < s.length; i++) {
-		let d1 = mDiv(d);
-		d1.innerHTML = s[i];
-		mStyle(d1, style);
-	}
-	return d;
-}
-function isWord(w) { return lookup(Dictionary,[G.language,w]); }//isdef(Dictionary[G.language][w]); }
-function stopBlinking(item) { if (isdef(item)) { item.isBlinking = false; mRemoveClass(iDiv(item), 'blink'); } }
-function startBlinking(item, items, unique = true) {
-	if (unique) {
-		let prevLetter = firstCond(items, x => x.isBlinking == true);
-		stopBlinking(prevLetter);
-	}
-	mClass(iDiv(item), 'blink');
-	item.isBlinking = true;
-}
 function showCorrectLabelSwapping() {
 	for (const p of Pictures) {
 		for (const l of p.letters) {
@@ -11297,11 +11288,28 @@ function showCorrectLabelSwapping() {
 	DELAY = 3000;
 	return 3000;
 }
+function startBlinking(item, items, unique = true) {
+	if (unique) {
+		let prevLetter = firstCond(items, x => x.isBlinking == true);
+		stopBlinking(prevLetter);
+	}
+	mClass(iDiv(item), 'blink');
+	item.isBlinking = true;
+}
+function stopBlinking(item) { if (isdef(item)) { item.isBlinking = false; mRemoveClass(iDiv(item), 'blink'); } }
 //#endregion letter
 
 //#region math
+function fractionConvert(wp, diop) {
+	let n = wp.result.number;
+	let t = typeof n;
+	if (isFractionType(n)) {
+		wp.isFractionResult = true;
+		wp.result.text = getTextForFraction(n.n, n.d);
+	}
+}
 function getOperand(type) { let x = OPS[type]; return randomNumber(Math.max(2, x.min), x.max); }
-function getRandomWP(min = 0, max = 35) { let n=randomNumber(min, max); console.log('wp',n); return jsCopy(WordP[n]); }// chooseRandom(WordP.slice(min,max));}
+function getRandomWP(min = 0, max = 35) { let n = randomNumber(min, max); console.log('wp', n); return jsCopy(WordP[n]); }// chooseRandom(WordP.slice(min,max));}
 function instantiateNames(wp) {
 	let text = wp.text;
 	let parts = text.split('@P');
@@ -11355,14 +11363,14 @@ function instantiateNumbers(wp) {
 	fractionConvert(wp, diop);
 	return [diop, eq];
 }
-function valToString(n) { if (isFractionType(n)) return getTextForFractionX(n.n, n.d); else return n; }
+function isFractionType(x) { return isDict(x) && isdef(x.n) && isdef(x.d); }
 function replaceSol(sol, diop) {
 	let rhs = stringBefore(sol, '=');
 	let type = rhs.includes('*') ? rhs.includes('R') ? 'div' : 'mult' : rhs.includes('R') ? 'minus' : 'plus';
 	let i = 0;
 	while (i < rhs.length) {
 		if (rhs[i] == 'R') { diop.R = getOperand(type); i += 1; }
-		else if (rhs[i] == 'r' && !isLetter(rhs[i+1])) { if (nundef(diop.r)) diop.r = getOperand(type); i += 1; } //zwischenergebnis
+		else if (rhs[i] == 'r' && !isLetter(rhs[i + 1])) { if (nundef(diop.r)) diop.r = getOperand(type); i += 1; } //zwischenergebnis
 		else if (rhs[i] == 'N') {
 			i += 1;
 			let inum = Number(rhs[i]);
@@ -11427,23 +11435,42 @@ function replaceSol(sol, diop) {
 	diop[lhs] = result;
 	return [result, eq];
 }
-function isFractionType(x) { return isDict(x) && isdef(x.n) && isdef(x.d); }
-function fractionConvert(wp, diop) {
-	let n = wp.result.number;
-	let t = typeof n;
-	if (isFractionType(n)) {
-		wp.isFractionResult = true;
-		wp.result.text = getTextForFraction(n.n, n.d);
-	}
-}
+function valToString(n) { if (isFractionType(n)) return getTextForFractionX(n.n, n.d); else return n; }
 //#endregion math
 
 //#region onClick
-function onClickFreezer2(ev) {
-	clearTable(); mRemoveClass(mBy('freezer2'), 'aniSlowlyAppear'); hide('freezer2'); auxOpen = false;
-	savedb();
+function clearTimeouts() {
+	onclick = null;
+	clearTimeout(TOMain); //console.log('TOMain cleared')
+	clearTimeout(TOFleetingMessage);
+	clearTimeout(TOTrial);
+	if (isdef(TOList)) { for (const k in TOList) { TOList[k].map(x => clearTimeout(x)); } }
+}
+function closeAux() {
+	hide(dAux);
+	hide('dGo');
+	show('dGear');
+	show('dFloppy');
+	show('dTemple');
+	if (Settings.hasChanged) { Settings.updateSettings(); db_save(); }
+	Settings.hasChanged = false;
+	auxOpen = false;
+}
+function hideShield() { setTimeout(() => { mBy('dShield').style.display = 'none' }, 500); }
+function interrupt() {
+	STOPAUS = true;
+	uiActivated = aiActivated = false;
+	clearTimeouts(); //legacy
+	if (isdef(G.clear)) G.clear();
+	if (isdef(GC.clear)) GC.clear();
+	TOMan.clear();
+	clearMarkers();
 }
 function onClickFloppy() {
+	savedb();
+}
+function onClickFreezer2(ev) {
+	clearTable(); mRemoveClass(mBy('freezer2'), 'aniSlowlyAppear'); hide('freezer2'); auxOpen = false;
 	savedb();
 }
 function onClickGear() {
@@ -11473,38 +11500,11 @@ function onClickGo(ev) {
 	}
 }
 function onClickMenuItem(ev) { onClickGo(ev); }
-function onClickNextGame(){	setNextGame(); GC.startGame();}
-function hideShield(){setTimeout(()=>{mBy('dShield').style.display = 'none'},500);}
+function onClickNextGame() { setNextGame(); GC.startGame(); }
 function onClickTemple() {
 	openAux();
 	hide('dTemple');
 	createMenuUi(dAux, U.avGames, onClickMenuItem);
-}
-function clearTimeouts() {
-	onclick = null;
-	clearTimeout(TOMain); //console.log('TOMain cleared')
-	clearTimeout(TOFleetingMessage);
-	clearTimeout(TOTrial);
-	if (isdef(TOList)) { for (const k in TOList) { TOList[k].map(x => clearTimeout(x)); } }
-}
-function closeAux() {
-	hide(dAux);
-	hide('dGo');
-	show('dGear');
-	show('dFloppy');
-	show('dTemple');
-	if (Settings.hasChanged) { Settings.updateSettings(); db_save(); }
-	Settings.hasChanged = false;
-	auxOpen = false;
-}
-function interrupt() {
-	STOPAUS = true;
-	uiActivated = aiActivated = false;
-	clearTimeouts(); //legacy
-	if (isdef(G.clear)) G.clear();
-	if (isdef(GC.clear)) GC.clear();
-	TOMan.clear();
-	clearMarkers();
 }
 function openAux() { interrupt(); show(dAux); show('dGo'); }
 //#endregion onClick
@@ -11552,14 +11552,34 @@ function scoring(isCorrect) {
 //#endregion scoring
 
 //#region ui
-function initSidebar() {
-	let dParent = mBy('sidebar');
-	clearElement(dParent);
-	dLeiste = mDiv(dParent);
-	mStyle(dLeiste, { 'min-width': 70, 'max-height': '100vh', display: 'flex', 'flex-flow': 'column wrap' });
-}
 function initAux() {
 	dAux = mBy('dAux');
+}
+function initLineBottom() {
+	dLineBottomOuter = mDiv(table); dLineBottomOuter.id = 'lineBottomOuter';
+	dLineBottom = mDiv(dLineBottomOuter); dLineBottom.id = 'lineBottom';
+	dLineBottomLeft = mDiv(dLineBottom); dLineBottomLeft.id = 'lineBottomLeft';
+	dLineBottomRight = mDiv(dLineBottom); dLineBottomRight.id = 'lineBottomRight';
+	dLineBottom = mDiv(dLineBottom); dLineBottom.id = 'lineBottomMiddle';
+	mLinebreak(table);
+}
+function initLineTable() {
+	dLineTableOuter = mDiv(table); dLineTableOuter.id = 'lineTableOuter';
+	dLineTable = mDiv(dLineTableOuter); dLineTable.id = 'lineTable';
+	dLineTableLeft = mDiv(dLineTable); dLineTableLeft.id = 'lineTableLeft';
+	dLineTableMiddle = mDiv(dLineTable); dLineTableMiddle.id = 'lineTableMiddle';
+	mClass(dLineTableMiddle, 'flexWrap');
+	dLineTableRight = mDiv(dLineTable); dLineTableRight.id = 'lineTableRight';
+	mLinebreak(table);
+}
+function initLineTitle() {
+	dLineTitleOuter = mDiv(table); dLineTitleOuter.id = 'lineTitleOuter';
+	dLineTitle = mDiv(dLineTitleOuter); dLineTitle.id = 'lineTitle';
+	if (!PROJECTNAME.startsWith('bel')) mStyle(dLineTitle, { matop: 5 });
+	dLineTitleLeft = mDiv(dLineTitle); dLineTitleLeft.id = 'lineTitleLeft';
+	dLineTitleRight = mDiv(dLineTitle); dLineTitleRight.id = 'lineTitleRight';
+	dLineTitleMiddle = mDiv(dLineTitle); dLineTitleMiddle.id = 'lineTitleMiddle';
+	mLinebreak(table);
 }
 function initLineTop() {
 	dLineTopOuter = mDiv(table); dLineTopOuter.id = 'lineTopOuter';
@@ -11577,31 +11597,11 @@ function initLineTop() {
 	d.id = 'time';
 	mLinebreak(table);
 }
-function initLineTitle() {
-	dLineTitleOuter = mDiv(table); dLineTitleOuter.id = 'lineTitleOuter';
-	dLineTitle = mDiv(dLineTitleOuter); dLineTitle.id = 'lineTitle';
-	if (!PROJECTNAME.startsWith('bel')) mStyle(dLineTitle,{matop:5});
-	dLineTitleLeft = mDiv(dLineTitle); dLineTitleLeft.id = 'lineTitleLeft';
-	dLineTitleRight = mDiv(dLineTitle); dLineTitleRight.id = 'lineTitleRight';
-	dLineTitleMiddle = mDiv(dLineTitle); dLineTitleMiddle.id = 'lineTitleMiddle';
-	mLinebreak(table);
-}
-function initLineTable() {
-	dLineTableOuter = mDiv(table); dLineTableOuter.id = 'lineTableOuter';
-	dLineTable = mDiv(dLineTableOuter); dLineTable.id = 'lineTable';
-	dLineTableLeft = mDiv(dLineTable); dLineTableLeft.id = 'lineTableLeft';
-	dLineTableMiddle = mDiv(dLineTable); dLineTableMiddle.id = 'lineTableMiddle';
-	mClass(dLineTableMiddle, 'flexWrap');
-	dLineTableRight = mDiv(dLineTable); dLineTableRight.id = 'lineTableRight';
-	mLinebreak(table);
-}
-function initLineBottom() {
-	dLineBottomOuter = mDiv(table); dLineBottomOuter.id = 'lineBottomOuter';
-	dLineBottom = mDiv(dLineBottomOuter); dLineBottom.id = 'lineBottom';
-	dLineBottomLeft = mDiv(dLineBottom); dLineBottomLeft.id = 'lineBottomLeft';
-	dLineBottomRight = mDiv(dLineBottom); dLineBottomRight.id = 'lineBottomRight';
-	dLineBottom = mDiv(dLineBottom); dLineBottom.id = 'lineBottomMiddle';
-	mLinebreak(table);
+function initSidebar() {
+	let dParent = mBy('sidebar');
+	clearElement(dParent);
+	dLeiste = mDiv(dParent);
+	mStyle(dLeiste, { 'min-width': 70, 'max-height': '100vh', display: 'flex', 'flex-flow': 'column wrap' });
 }
 //#endregion ui
 
@@ -11651,13 +11651,6 @@ function loadUser(newUser, game) {
 	console.assert(isdef(game), "user.js: no game in loadUser!!!!!!!");
 	setGame(game);
 }
-function showUsernameOnScreen(isEditable=true){
-	let uiName = 'spUser';
-	let dUser = mBy(uiName);
-	if (isdef(dUser)) return;
-	dUser = isEditable? editableUsernameUi(dLineTopLeft):mText(Username, dLineTopLeft);
-	dUser.id = uiName; 
-}
 function save_user(db_dirty = true) {
 	if (isdef(G)) U.lastGame = G.id;
 	if (!startsWith(Username, 'test')) localStorage.setItem('user', Username);
@@ -11669,6 +11662,13 @@ function setNextGame() {
 	let i = U.avGames.indexOf(game);
 	let iNew = (i + 1) % U.avGames.length;
 	setGame(U.avGames[iNew]);
+}
+function showUsernameOnScreen(isEditable = true) {
+	let uiName = 'spUser';
+	let dUser = mBy(uiName);
+	if (isdef(dUser)) return;
+	dUser = isEditable ? editableUsernameUi(dLineTopLeft) : mText(Username, dLineTopLeft);
+	dUser.id = uiName;
 }
 function updateUserScore() {
 	if (nundef(Score.nTotal) || Score.nTotal <= 0) return;
@@ -11714,5 +11714,5 @@ function startUnit() {
 	U.session = {};
 	if (START_IN_MENU) { START_IN_MENU = false; onClickTemple(); } else GC.startGame();
 }
-//#endregion
+//#endregion start
 

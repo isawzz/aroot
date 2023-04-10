@@ -1,5 +1,31 @@
 
 
+function assemble_complete_code(list, di) {
+	CODE.byKey = di;
+	CODE.keylist = list;
+	//console.log('...',list[0],di[list[0]]);//var list problem!!!!!
+	let region = null, fname = di[list[0]].fname;
+	let text = `//#region ${fname}\n`;
+	for (const k of list) {
+		if (!k || nundef(di[k])) continue;
+		let o = di[k];
+
+		//if (o.key == 'verify_min_req') console.log('verify_min_req', o)
+
+		if (fname != o.fname) {
+			text += `//#endregion ${fname}\n\n//#region ${o.fname}\n`;
+			fname = o.fname;
+		}
+		text += o.code;
+
+	}
+
+	text += `//#endregion\n\n`;
+	downloadAsText(text, 'bundle', 'js');
+	lookupSetOverride(DA, ['bundle', 'text'], text)
+
+	AU.ta.value = text;
+}
 
 //#region bundle generation
 function mClosureUI(dParent) {

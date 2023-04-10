@@ -3084,7 +3084,7 @@ card index dividers:
   w: 125
   h: 117
 carousel:
-  key: carousel horse
+  key: carousel
   hexcode: 1F3A0
   hex: 1F3A0
   family: emoNoto

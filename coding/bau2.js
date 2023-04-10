@@ -1,18 +1,18 @@
 
 //#region bundle generation
 function mClosureUI(dParent) {
-	let d=mDiv(dParent,{gap:10});mFlexWrap(d);
-	let d1=mDiv(d);
+	let d = mDiv(dParent, { gap: 10 }); mFlexWrap(d);
+	let d1 = mDiv(d);
 	mDiv(d1, {}, null, 'project')
 	mDiv(d1, {}, null, '<input type="text" id="inp_project" value="gamesfull"/>')
-	let d2=mDiv(d);
+	let d2 = mDiv(d);
 	mDiv(d2, {}, null, 'seed')
 	mDiv(d2, {}, null, '<input type="text" id="inp_seed" value="start"/>')
-	let d3=mDiv(d);
+	let d3 = mDiv(d);
 	mDiv(d3, {}, null, 'output')
 	mDiv(d3, {}, null, '<input type="text" id="inp_dirout" value="games"/>')
 
-	let d4=mDiv(dParent,{gap:12}); mFlexWrap(d4);
+	let d4 = mDiv(dParent, { gap: 12 }); mFlexWrap(d4);
 	mButton('bundle', onclickBundle, d4);
 	mButton('closure', onclickClosure, d4);
 	mButton('belinda bundle', belinda_bundle, d4);
@@ -92,7 +92,7 @@ async function __parsefile(f, byKey, ckeys, idx) {
 				// if (o.type == 'async') {o.type = 'function';console.log('async',kw)}
 				if (prev) {
 					if (prev.type != o.type) {
-						console.log('DUPLICATE', kw,prev);
+						console.log('DUPLICATE', kw, prev);
 						console.log('... change from', prev.type, 'to', o.type);
 					}
 					//loesche den alten!
@@ -133,7 +133,7 @@ async function __parsefile(f, byKey, ckeys, idx) {
 }
 async function onclickBundle() {
 	let [dir, files, seed, dirout] = await get_dir_files_seed();
-	let byKey = {}, ckeys = [], idx = 0; 
+	let byKey = {}, ckeys = [], idx = 0;
 	//console.log(files)
 	let text = '';
 	for (const f of files) {
@@ -151,15 +151,42 @@ async function onclickBundle() {
 	DA.codedir = dir;
 	DA.dirout = dirout;
 }
-function assemble_complete_code(list, di) {
-	CODE.byKey = di;
-	CODE.keylist = list;
+function assemble_code_sorted(list, di) {
+	//console.log('...',list[0],di[list[0]]);//var list problem!!!!!
+	let text = ''
+
+	let byFT = {},fnames=[];
+	for (const k of list) {
+		let o = di[k];
+		lookupAddIfToList(byFT, [o.fname, o.type], k);
+		addIf(fnames,o.fname);
+	}
+
+	for(const fname of fnames){
+		text +=  `//#region ${fname}\n`;
+		for (const t of ['const', 'var', 'cla', 'func']) {
+			let keys = byFT[fname][t];
+			if (nundef(keys)) continue;
+			if (t == 'func') keys = sortCaseInsensitive(keys);
+			for (const k of keys) {
+				if (!k || nundef(di[k])) continue;
+				let o = di[k];
+				text += o.code;
+			}
+		}
+		text += `//#endregion ${fname}\n\n`;
+	}
+	return text;
+}
+function assemble_code_orig(list, di) {
 	//console.log('...',list[0],di[list[0]]);//var list problem!!!!!
 	let region = null, fname = di[list[0]].fname;
 	let text = `//#region ${fname}\n`;
+
 	for (const k of list) {
 		if (!k || nundef(di[k])) continue;
 		let o = di[k];
+		//console.log('o.type',o.type)
 
 		//if (o.key == 'verify_min_req') console.log('verify_min_req', o)
 
@@ -170,22 +197,29 @@ function assemble_complete_code(list, di) {
 		text += o.code;
 
 	}
-
 	text += `//#endregion\n\n`;
+	return text;
+}
+function assemble_complete_code(list, di, sort_functions = true) {
+	CODE.byKey = di;
+	CODE.keylist = list;
+
+	text = sort_functions ? assemble_code_sorted(list, di) : assemble_code_orig(list, di);
+
 	downloadAsText(text, 'bundle', 'js');
 	lookupSetOverride(DA, ['bundle', 'text'], text)
 
 	AU.ta.value = text;
 }
-function write_new_index_html(dir,filename='bundle') {
+function write_new_index_html(dir, filename = 'bundle') {
 	//let project = stringAfterLast(dir,'/');	console.log('project',project)
 	let text = DA.indexhtml;
 
-	
+
 	let scripts = `</body><script src="../${dir}/${filename}.js"></script><script>onload = start;</script>\n</html>`;
 	let newtext = stringBefore(text, `</body>`) + scripts;
 
-	downloadAsText(newtext,`index`,'html')
+	//downloadAsText(newtext,`index`,'html')
 }
 //#endregion bundle generation
 
