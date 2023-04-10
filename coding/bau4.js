@@ -29,48 +29,48 @@ function belinda_get_games() {
 }
 function belinda_get_imports() {
 	return `
-	<script src="../belinda/js/globals.js"></script>
-	<script src="../belinda/js/base.js"></script>
-	<script src="../belinda/js/areas.js"></script>
-	<script src="../belinda/js/audio.js"></script>
-	<script src="../belinda/js/badges.js"></script>
-	<script src="../belinda/js/banner.js"></script>
-	<script src="../belinda/js/board.js"></script>
-	<script src="../belinda/js/cards.js"></script>
-	<script src="../belinda/js/chess.js"></script>
-	<script src="../belinda/js/markers.js"></script>
-	<script src="../belinda/js/menu.js"></script>
-	<script src="../belinda/js/mGraph.js"></script>
-	<script src="../belinda/js/speech.js"></script>
-	<script src="../belinda/js/settings.js"></script>
-	<script src="../belinda/js/test_ui_helpers.js"></script>
-	<script src="../belinda/js/time.js"></script>
-	<script src="../belinda/js/maze.js"></script>
-	<script src="../belinda/js/ai.js"></script>
-	<script src="../belinda/js/all.js"></script>
-	<script src="../belinda/js/classes.js"></script>
-	<script src="../belinda/js/debug.js"></script>
-	<script src="../belinda/js/controller.js"></script>
-	<script src="../belinda/js/classes3.js"></script>
-	<script src="../belinda/js/controller3.js"></script>
-	<script src="../belinda/js/game.js"></script>
-	<script src="../belinda/js/house.js"></script>
-	<script src="../belinda/js/item.js"></script>
-	<script src="../belinda/js/keys.js"></script>
-	<script src="../belinda/js/legacy.js"></script>
-	<script src="../belinda/js/letter.js"></script>
-	<script src="../belinda/js/math.js"></script>
-	<script src="../belinda/js/onClick.js"></script>
-	<script src="../belinda/js/scoring.js"></script>
-	<script src="../belinda/js/testing.js"></script>
-	<script src="../belinda/js/ui.js"></script>
-	<script src="../belinda/js/user.js"></script>
-	<script src="../belinda/js/work.js"></script>
-	<script src="../belinda/js/workUI.js"></script>
+	<script src="../belindafull/js/globals.js"></script>
+	<script src="../belindafull/js/base.js"></script>
+	<script src="../belindafull/js/areas.js"></script>
+	<script src="../belindafull/js/audio.js"></script>
+	<script src="../belindafull/js/badges.js"></script>
+	<script src="../belindafull/js/banner.js"></script>
+	<script src="../belindafull/js/board.js"></script>
+	<script src="../belindafull/js/cards.js"></script>
+	<script src="../belindafull/js/chess.js"></script>
+	<script src="../belindafull/js/markers.js"></script>
+	<script src="../belindafull/js/menu.js"></script>
+	<script src="../belindafull/js/mGraph.js"></script>
+	<script src="../belindafull/js/speech.js"></script>
+	<script src="../belindafull/js/settings.js"></script>
+	<script src="../belindafull/js/test_ui_helpers.js"></script>
+	<script src="../belindafull/js/time.js"></script>
+	<script src="../belindafull/js/maze.js"></script>
+	<script src="../belindafull/js/ai.js"></script>
+	<script src="../belindafull/js/all.js"></script>
+	<script src="../belindafull/js/classes.js"></script>
+	<script src="../belindafull/js/debug.js"></script>
+	<script src="../belindafull/js/controller.js"></script>
+	<script src="../belindafull/js/classes3.js"></script>
+	<script src="../belindafull/js/controller3.js"></script>
+	<script src="../belindafull/js/game.js"></script>
+	<script src="../belindafull/js/house.js"></script>
+	<script src="../belindafull/js/item.js"></script>
+	<script src="../belindafull/js/keys.js"></script>
+	<script src="../belindafull/js/legacy.js"></script>
+	<script src="../belindafull/js/letter.js"></script>
+	<script src="../belindafull/js/math.js"></script>
+	<script src="../belindafull/js/onClick.js"></script>
+	<script src="../belindafull/js/scoring.js"></script>
+	<script src="../belindafull/js/testing.js"></script>
+	<script src="../belindafull/js/ui.js"></script>
+	<script src="../belindafull/js/user.js"></script>
+	<script src="../belindafull/js/work.js"></script>
+	<script src="../belindafull/js/workUI.js"></script>
 	`
 }
 async function belinda_get_index_html() {
-	return await route_path_text('../belinda/html/index.html');
+	return await route_path_text('../belindafull/html/index.html');
 }
 async function belinda_closure() {
 	let indexhtml = DA.indexhtml = await belinda_get_index_html();
@@ -97,7 +97,7 @@ async function belinda_closure() {
 	}
 	symlist = symlist.concat(['csv2list','ControllerSolitaireMinimal'])
 
-	//console.log('belinda sym list',symlist); 
+	//console.log('belindafull sym list',symlist); 
 
 	let done = minimizeCode(di, klist, symlist);
 	//console.log('done', done); //return;
@@ -115,8 +115,8 @@ async function belinda_bundle() {
 	let files = belinda_get_imports().split('src="');
 	files = files.map(x => stringBefore(x, '"'));
 	files.shift(); //console.log(files); return;
-	files.push('../belinda/start.js');
-	let dirout = 'bella';
+	files.push('../belindafull/start.js');
+	let dirout = 'belinda';
 	let byKey = {}, ckeys = [], idx = 0;
 	let text = '';
 	for (const f of files) {
@@ -134,7 +134,6 @@ async function belinda_bundle() {
 	//DA.codedir = dir;
 	DA.dirout = dirout;
 }
-
 async function belinda_parsefile(f, byKey, ckeys, idx) {
 	let chunk = '', error = '', state, kw = null, blocktype = null, region = null;
 	//let linestarts = [];

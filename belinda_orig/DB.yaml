@@ -325,7 +325,7 @@ users:
       - gAbacus
       - gRiddle
       - gC4
-    lastGame: gMaze
+    lastGame: gColoku
     settings:
       userColor: blue
       samplesPerGame: 10
@@ -350,12 +350,6 @@ users:
         startPosition: empty
         startPlayer: random
         searchDepth: 4
-        nTotal: 1
-        nCorrect: 1
-        nCorrect1: 0
-        nWins: 1
-        nLoses: 0
-        percentage: 100
       gCats:
         startLevel: 4
         trials: 2
@@ -386,10 +380,10 @@ users:
         startLevel: 5
         showHint: false
         trials: 1
-        nTotal: 5
-        nCorrect: 1
-        nCorrect1: 1
-        percentage: 20
+        nTotal: 2
+        nCorrect: 0
+        nCorrect1: 0
+        percentage: 0
       gMissingLetter:
         startLevel: 6
       gMissingNumber:
@@ -439,11 +433,6 @@ users:
       gWritePic:
         startLevel: 5
       gChess: {}
-      gSpotit:
-        nTotal: 0
-        nCorrect: 0
-        nCorrect1: 0
-        startLevel: 0
     avAddons:
       - aPasscode
       - aAddress

@@ -3,7 +3,6 @@ users:
   nil:
     id: nil
     avGames:
-      - gSpotit
       - gColoku
       - gMaze
       - gKrieg
@@ -301,7 +300,6 @@ users:
   gul:
     id: gul
     avGames:
-      - gSpotit
       - gColoku
       - gMaze
       - gSteps
@@ -325,7 +323,7 @@ users:
       - gAbacus
       - gRiddle
       - gC4
-    lastGame: gSpotit
+    lastGame: gNamit
     settings:
       userColor: blue
       samplesPerGame: 10
@@ -350,17 +348,11 @@ users:
         startPosition: empty
         startPlayer: random
         searchDepth: 4
-        nTotal: 1
-        nCorrect: 1
-        nCorrect1: 0
-        nWins: 1
-        nLoses: 0
-        percentage: 100
       gCats:
         startLevel: 4
         trials: 2
       gColoku:
-        startLevel: 11
+        startLevel: 3
       gElim:
         startLevel: 3
       gHouse:
@@ -386,10 +378,10 @@ users:
         startLevel: 5
         showHint: false
         trials: 1
-        nTotal: 5
-        nCorrect: 1
-        nCorrect1: 1
-        percentage: 20
+        nTotal: 2
+        nCorrect: 0
+        nCorrect1: 0
+        percentage: 0
       gMissingLetter:
         startLevel: 6
       gMissingNumber:
@@ -439,11 +431,6 @@ users:
       gWritePic:
         startLevel: 5
       gChess: {}
-      gSpotit:
-        nTotal: 0
-        nCorrect: 0
-        nCorrect1: 0
-        startLevel: 0
     avAddons:
       - aPasscode
       - aAddress
@@ -456,21 +443,12 @@ users:
       aPassword:
         open: false
     session:
-      gMem:
-        startLevel: 0
-        nTotal: 3
-        nCorrect: 1
-        nCorrect1: 1
-        nWins: 0
-        nLoses: 0
-        nTied: 0
-        percentage: 33
-      gC4:
+      gNamit:
         startLevel: 0
         nTotal: 1
         nCorrect: 1
-        nCorrect1: 0
-        nWins: 1
+        nCorrect1: 1
+        nWins: 0
         nLoses: 0
         nTied: 0
         percentage: 100
@@ -1647,38 +1625,6 @@ games:
     color: midnightblue
     controllerType: word
     numPlayers: 2
-  gSpotit:
-    friendly: Spotit
-    logo: spy
-    color: silver
-    controllerType: solitaire
-    showTime: true
-    rows: 3
-    cols: 2
-    numCards: 2
-    vocab: animals
-    levels:
-      '0':
-        vocab: animals
-      '1':
-        cols: 2
-        vocab: lifePlus
-      '2':
-        rows: 4
-        cols: 2
-        vocab: objects
-      '3':
-        rows: 4
-        cols: 2
-        vocab: all
-      '4':
-        rows: 5
-        cols: 2
-        vocab: all
-      '5':
-        rows: 5
-        cols: 2
-        vocab: nemo
   gAristo:
     friendly: Aristocracy
     logo: crown
