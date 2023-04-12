@@ -190,19 +190,19 @@ async function load_Codebase(dir, path_allcode) {
 	//console.log('intersection',inter);
 	//7748 in intersection, also ca 400 jeweils extra, ergibt total of 8500 keys ca.
 }
-function loadCodebase(o = {}) {
-	o = JSON.stringify(o);
+function loadCodebase(o,callback) {
+	o = JSON.stringify(valf(o,{}));
 	var xml = new XMLHttpRequest();
 	xml.onload = function () {
 		if (xml.readyState == 4 || xml.status == 200) {
-			loadCodebaseResult(xml.responseText);
+			loadCodebaseResult(xml.responseText,callback);
 		} else { console.log('WTF?????') }
 	}
 	xml.open("POST", "api.php", true);
 	xml.send(o);
 
 }
-function loadCodebaseResult(result) {
+function loadCodebaseResult(result,callback) {
 	let obj = JSON.parse(result);
 	//console.log('result',result);
 	DA.all = jsyaml.load(obj.all);
@@ -227,6 +227,9 @@ function loadCodebaseResult(result) {
 	CODE.all = keys;
 	CODE.keylist = Object.keys(keys)
 	CODE.keysSorted = CODE.keylist;
+
+	console.log('LOADED CODEBASE!')
+	if (isdef(callback))	callback();
 
 }
 function lookupToggle(o, list) {

@@ -1,0 +1,18 @@
+/* #region resets */
+html, body {
+  height: 100%; margin:0; padding:0; box-sizing:border-box;
+}
+.page-wrap {
+	margin: 0;
+	box-sizing: border-box;
+  min-height: 90%;
+  /* min-height: calc( 100% - 30px ); */
+  /* margin-bottom: -40px; equal to footer height */
+}
+.page-wrap:after {
+  content: "";
+  display: block;
+}
+.site-footer, .page-wrap:after {
+  height: 28px; 
+}

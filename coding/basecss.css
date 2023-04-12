@@ -43,7 +43,11 @@ body {
 
 	resize: none;
 }
-
+#dSurprise{
+	background: blue;
+	min-width: 500px;
+	min-height: 300px;
+}
 
 
 

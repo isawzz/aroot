@@ -1,5 +1,638 @@
 
 
+function css_handle_line(dicode, chunk, line, parsing, comment, cname, type) {
+	//[valid, parsing, comment, chunk] = css_handle_line(dicode, chunk, line, parsing, comment, cname, 'class');
+	let valid = false, newchunk = chunk;
+	let lt = line.trim(); //console.log('ende',lt.endsWith('\n')); //return;
+	if (line.startsWith((type == 'class' ? '.' : type == 'id' ? '#' : type == 'tag' ? '' : '@keyframes ') + cname)) {
+		parsing = true; comment = false;
+		valid = true; newchunk = line + '\n';
+		return [valid, parsing, comment, newchunk];
+	} else if (lt.startsWith('/*') && !lt.endsWith('/*')) { comment = true; return [valid, parsing, comment, newchunk]; }
+	else if (lt.startsWith('/*')) { return [valid, parsing, comment, newchunk]; }
+	else if (lt.endsWith('*/') && !line.includes('/*')) { comment = false; return [valid, parsing, comment, newchunk]; }
+	else if (comment) { return [valid, parsing, comment, newchunk]; }
+	if (parsing) {
+		if (line.startsWith('}')) {
+			parsing = false;
+			lookupAddToList(dicode, [cname], chunk + line + '\n'); //finish up code for cname
+			newchunk = ''; // chunk + line + '\n';
+		} else { valid = true; newchunk = chunk + line + '\n'; }
+	} else assertion(!line.includes(',') || line.startsWith(' '), 'COMMA!!!', line)
+
+	return [valid, parsing, comment, newchunk];
+}
+function _____parse_css_classes(tcss, code, html) {
+	let t = replaceAllSpecialChars(tcss, '\t', '  ');
+	let lines = t.split('\r\n');
+	let di = {};
+	for (const line of lines) {
+		if (line.startsWith('.')) {
+			let word = firstWordIncluding(line, ['_', '-']);
+			// console.log('word', word);
+			lookupAddIfToList(di, ['classes'], word);
+		}
+	}
+	let included_classes = [];
+	for (const cname of di.classes) {
+		if (code.includes(`'${cname}'`) || code.includes(`"${cname}"`)) addIf(included_classes, cname);
+		if (html.includes(`'${cname}'`) || html.includes(`"${cname}"`)) addIf(included_classes, cname);
+	}
+	console.log('all classes', di.classes);
+	console.log('included_classes', sortCaseInsensitive(included_classes));
+	let dicode = {};
+	let parsing = false, chunk = '', comment = false, valid = false;
+	for (const cname of included_classes) { // sortCaseInsensitive(included_classes)) {
+		for (const line of lines) {
+			[valid, parsing, comment, chunk] = css_handle_line(dicode, chunk, line, parsing, comment, cname, 'class');
+		}
+	}
+	let output = '';
+	let keylist = sortCaseInsensitive(get_keys(dicode));
+	console.log('keylist', keylist)
+	for (const k of keylist) {
+		for (const c of dicode[k]) {
+			output += c + '\n';
+		}
+	}
+	return [dicode, output];
+}
+function _____parse_css_ids(tcss, code, html) {
+	let t = replaceAllSpecialChars(tcss, '\t', '  ');
+	let lines = t.split('\r\n');
+	let di = {};
+	for (const line of lines) { if (line.startsWith('#')) { let word = firstWordIncluding(line, ['_', '-']); lookupAddIfToList(di, ['classes'], word); } }
+	let included_classes = [];
+	for (const cname of di.classes) {
+		if (code.includes(`'${cname}'`) || code.includes(`"${cname}"`)) addIf(included_classes, cname);
+		if (html.includes(`${cname}`) || html.includes(`${cname}`)) addIf(included_classes, cname);
+	}
+	console.log('all classes', di.classes);
+	console.log('included_classes', included_classes);
+
+	let dicode = {};
+	let parsing = false, chunk = '', comment = false, valid = false;
+	for (const cname of included_classes) {
+		for (const line of lines) {
+			[valid, parsing, comment, chunk] = css_handle_line(dicode, chunk, line, parsing, comment, cname, 'id');
+			//if (valid) chunk += line + '\n';
+		}
+	}
+	let output = '';
+	let keylist = sortCaseInsensitive(get_keys(dicode));
+	for (const k of keylist) {
+		//console.log('k',k,'\n___\n')
+		//output += '#' + k + ' {\n';
+		for (const codeline of dicode[k]) {
+			if (isEmpty(codeline.trim())) continue;
+			output += codeline + '\n';
+		}
+		//output += '}\n';
+
+	}
+	return [dicode, output];
+}
+function _____parse_css_keyframes(tcss, code, html) {
+	let t = replaceAllSpecialChars(tcss, '\t', '  ');
+	let lines = t.split('\r\n');
+	let di = {};
+	for (const line of lines) {
+		if (line.startsWith('@keyframes')) {
+			let word = firstWordIncluding(stringAfter(line, 'keyframes'), ['_', '-']);
+			console.log('=====word', word);
+			lookupAddIfToList(di, ['classes'], word);
+		}
+	}
+	let included_classes = [];
+	for (const cname of di.classes) {
+		if (code.includes(`'${cname}'`) || code.includes(`"${cname}"`)) addIf(included_classes, cname);
+		if (html.includes(`'${cname}'`) || html.includes(`"${cname}"`)) addIf(included_classes, cname);
+	}
+	console.log('all classes', di.classes);
+	console.log('included_classes', included_classes);
+	let dicode = {};
+	let parsing = false, chunk = '', comment = false, valid = false;
+	for (const cname of included_classes) {
+		for (const line of lines) {
+			[valid, parsing, comment, chunk] = css_handle_line(dicode, chunk, line, parsing, comment, cname, 'keyframes');
+			//if (valid) chunk += line + '\n';
+		}
+	}
+	let output = '';
+	let keylist = sortCaseInsensitive(get_keys(dicode));
+	for (const k of keylist) {
+		//console.log('k',k,'\n___\n')
+		//output += '@keyframes ' + k + ' {\n';
+		for (const codeline of dicode[k]) {
+			if (isEmpty(codeline.trim())) continue;
+			output += codeline + '\n';
+		}
+		//output += '}\n';
+
+	}
+	return [dicode, output];
+}
+function _____parse_css_tags(tcss, code, html) {
+	let t = replaceAllSpecialChars(tcss, '\t', '  ');
+	let lines = t.split('\r\n');
+	let di = {};
+	for (const line of lines) { if (isLetter(line[0])) { let word = firstWordIncluding(line, []); lookupAddIfToList(di, ['classes'], word); } }
+	let included_classes = di.classes; console.log('included_classes', included_classes);
+	let dicode = {}; let parsing = false, chunk = '', comment = false, valid = false;
+	for (const cname of included_classes) {
+		for (const line of lines) { [valid, parsing, comment, chunk] = css_handle_line(dicode, chunk, line, parsing, comment, cname, 'tag'); }
+	}
+	let output = '';
+	let keylist = sortCaseInsensitive(get_keys(dicode));
+	for (const k of keylist) { for (const c of dicode[k]) { output += c + '\n'; } }
+	return [dicode, output];
+}
+
+
+//#region bau1.js vor cleanup (parse css)
+
+
+function firstWordIncluding(s, allowed = '_-') {
+	let res = '', i = 0;
+	while (!isLetter(s[i]) && !isDigit(s[i]) && !allowed.includes(s[i])) i++;
+	while (isLetter(s[i]) || isDigit(s[i]) || allowed.includes(s[i])) { res += s[i]; i++; }
+	return res;
+}
+async function games_css_closure() {
+
+
+	//mClear(document.body);	let d=mDiv(document.body,{},'dSurprise'); return;
+
+	let tcss = await route_path_text('../games/basemin.css');
+	let code = await route_path_text('../games/bundle.js');
+	let html = await route_path_text('../games/index.html');
+
+	let [diclasses, outputclasses] = parse_css_classes(tcss, code, html);
+	let [dikeyframes, outputkeyframes] = parse_css_keyframes(tcss, code, html);
+	let [diids, outputids] = parse_css_ids(tcss, code, html);
+	let [ditags, outputtags] = parse_css_tags(tcss, code, html);
+
+	//let res = outputclasses; 
+	//let res = outputkeyframes; 
+	let res = outputtags + '\n' + outputids + '\n' + outputkeyframes + '\n' + outputclasses;
+
+	AU.ta.value = res; //keylist.join('\n');
+
+}
+function parse_css_tags(tcss, code, html) {
+	let t = replaceAllSpecialChars(tcss, '\t', '  ');
+
+	let lines = t.split('\r\n');
+	// console.log('lines', lines);
+
+	let di = {};
+	for (const line of lines) {
+		if (isLetter(line[0])) {
+			let word = firstWordIncluding(line, []);
+			//console.log('word', word);
+			lookupAddIfToList(di, ['classes'], word);
+		}
+	}
+
+	let included_classes = di.classes;
+	console.log('included_classes', included_classes);
+
+	// let dicode = {};
+	// let parsing = false; let chunk = '';
+	// for (const cname of included_classes) {
+	// 	for (const line of lines) {
+	// 		if (line.trim().startsWith('/*')) continue;
+	// 		if (parsing) {
+	// 			chunk += line + '\n';
+	// 			if (line.startsWith('}')) {
+	// 				parsing = false;
+	// 				lookupAddToList(dicode, [cname], chunk); //finish up code for cname
+	// 			}
+	// 		} else if (line.startsWith(cname)) {
+	// 			parsing = true;
+	// 			chunk = line + '\n';
+	// 		}
+	// 	}
+	// }
+
+	let dicode = {};
+	let parsing = false, chunk = '', comment = false, valid = false;
+	for (const cname of included_classes) {
+		for (const line of lines) {
+			[valid, parsing, comment, chunk] = css_handle_line(dicode, chunk, line, parsing, comment, cname, 'tag');
+			//if (valid) chunk += line + '\n';
+		}
+	}
+
+	let output = '';
+	let keylist = sortCaseInsensitive(get_keys(dicode));
+	for (const k of keylist) {
+		for (const c of dicode[k]) {
+			output += c + '\n';
+		}
+	}
+
+	return [dicode, output];
+}
+function parse_css_ids(tcss, code, html) {
+	let t = replaceAllSpecialChars(tcss, '\t', '  ');
+
+	let lines = t.split('\r\n');
+	// console.log('lines', lines);
+
+	let di = {};
+	for (const line of lines) {
+		if (line.startsWith('#')) {
+			let word = firstWordIncluding(line, ['_', '-']);
+			//console.log('word', word);
+			lookupAddIfToList(di, ['classes'], word);
+		}
+	}
+
+	let included_classes = [];
+	for (const cname of di.classes) {
+		if (code.includes(`'${cname}'`) || code.includes(`"${cname}"`)) addIf(included_classes, cname);
+		if (html.includes(`${cname}`) || html.includes(`${cname}`)) addIf(included_classes, cname);
+	}
+
+	console.log('all classes', di.classes);
+	console.log('included_classes', included_classes);
+
+	// //return [];
+	// let dicode = {};
+	// for (const cname of included_classes) {
+	// 	let parts = t.split(cname);
+	// 	parts = parts.slice(1);
+
+	// 	for (const p of parts) {
+	// 		let key, codelines = [];
+	// 		if (p.startsWith(':')) {
+	// 			//it is a pseudo-class
+	// 			let pseudo = firstWord(p);
+	// 			console.log('pseudo', pseudo);
+	// 			key = `${cname}:${pseudo}`;
+	// 		} else key = cname;
+
+	// 		let txt = stringBefore(stringAfter(p, '{'), '}');
+	// 		let txtparts = txt.split('\r\n');
+	// 		if (key == 'btnX') console.log('txt', txt)
+	// 		for (const codeline of txtparts) {
+	// 			let trimmed = codeline.trim();
+	// 			if (trimmed.startsWith('/*')) continue;
+	// 			let cl = replaceAllSpecialChars(codeline, '\r', '');
+	// 			cl = replaceAllSpecialChars(codeline, '\n', '');
+	// 			codelines.push(cl);
+	// 			if (key == 'btnX') console.log('codeline', codeline)
+	// 		}
+	// 		codelines.map(x => lookupAddToList(dicode, [key], x));
+	// 	}
+	// 	// console.log('parts of',cname,parts); break;
+	// }
+
+	let dicode = {};
+	let parsing = false, chunk = '', comment = false, valid = false;
+	for (const cname of included_classes) {
+		for (const line of lines) {
+			[valid, parsing, comment, chunk] = css_handle_line(dicode, chunk, line, parsing, comment, cname, 'id');
+			//if (valid) chunk += line + '\n';
+		}
+	}
+
+
+	let output = '';
+	let keylist = sortCaseInsensitive(get_keys(dicode));
+	for (const k of keylist) {
+		//console.log('k',k,'\n___\n')
+		//output += '#' + k + ' {\n';
+		for (const codeline of dicode[k]) {
+			if (isEmpty(codeline.trim())) continue;
+			output += codeline + '\n';
+		}
+		//output += '}\n';
+
+	}
+
+
+	return [dicode, output];
+}
+
+
+function __parse_css_keyframes(tcss, code, html) {
+	let t = replaceAllSpecialChars(tcss, '\t', '  ');
+
+	let lines = t.split('\r\n');
+	// console.log('lines', lines);
+
+	let di = {};
+
+	for (const line of lines) {
+		if (line.startsWith('@keyframes')) {
+			let word = firstWordIncluding(stringAfter(line, 'keyframes'), ['_', '-']);
+			console.log('=====word', word);
+			lookupAddIfToList(di, ['classes'], word);
+		}
+	}
+
+	let included_classes = [];
+	for (const cname of di.classes) {
+		if (code.includes(`'${cname}'`) || code.includes(`"${cname}"`)) addIf(included_classes, cname);
+		if (html.includes(`'${cname}'`) || html.includes(`"${cname}"`)) addIf(included_classes, cname);
+	}
+
+	console.log('all classes', di.classes);
+	console.log('included_classes', included_classes);
+
+	//return [];
+	let dicode = {};
+	for (const cname of included_classes) {
+		let p = stringAfter(t, `@keyframes ${cname}`);
+		p = stringAfter(p, '{')
+		let key = cname;
+		let codelines = [];
+		//console.log('p', p)
+		let kflines = p.split('\r\n');
+		for (const codeline of kflines) {
+			let trimmed = codeline.trim();
+			if (trimmed.startsWith('/*') || isEmpty(trimmed)) continue;
+			if (codeline.startsWith('}')) break;
+			let cl = replaceAllSpecialChars(codeline, '\r', '');
+			cl = replaceAllSpecialChars(codeline, '\n', '');
+			codelines.push(cl);
+		}
+		codelines.map(x => lookupAddToList(dicode, [key], x));
+		// console.log('parts of',cname,parts); break;
+		// break;
+	}
+
+	//console.log('move',dicode.move); return [];
+
+	let output = '';
+	let keylist = sortCaseInsensitive(get_keys(dicode));
+	for (const k of keylist) {
+		//console.log('k',k,'\n___\n')
+		output += '@keyframes ' + k + ' {\n';
+		for (const codeline of dicode[k]) {
+			if (isEmpty(codeline.trim())) continue;
+			output += codeline + '\n';
+		}
+		output += '}\n';
+
+	}
+
+
+	return [dicode, output];
+}
+
+function parse_css_keyframes(tcss, code, html) {
+	let t = replaceAllSpecialChars(tcss, '\t', '  ');
+
+	let lines = t.split('\r\n');
+	// console.log('lines', lines);
+
+	let di = {};
+
+	for (const line of lines) {
+		if (line.startsWith('@keyframes')) {
+			let word = firstWordIncluding(stringAfter(line, 'keyframes'), ['_', '-']);
+			console.log('=====word', word);
+			lookupAddIfToList(di, ['classes'], word);
+		}
+	}
+
+	let included_classes = [];
+	for (const cname of di.classes) {
+		if (code.includes(`'${cname}'`) || code.includes(`"${cname}"`)) addIf(included_classes, cname);
+		if (html.includes(`'${cname}'`) || html.includes(`"${cname}"`)) addIf(included_classes, cname);
+	}
+
+	console.log('all classes', di.classes);
+	console.log('included_classes', included_classes);
+
+	// //return [];
+	// let dicode = {};
+	// for (const cname of included_classes) {
+	// 	let p = stringAfter(t, `@keyframes ${cname}`);
+	// 	p = stringAfter(p, '{')
+	// 	let key = cname;
+	// 	let codelines = [];
+	// 	//console.log('p', p)
+	// 	let kflines = p.split('\r\n');
+	// 	for (const codeline of kflines) {
+	// 		let trimmed = codeline.trim();
+	// 		if (trimmed.startsWith('/*') || isEmpty(trimmed)) continue;
+	// 		if (codeline.startsWith('}')) break;
+	// 		let cl = replaceAllSpecialChars(codeline, '\r', '');
+	// 		cl = replaceAllSpecialChars(codeline, '\n', '');
+	// 		codelines.push(cl);
+	// 	}
+	// 	codelines.map(x => lookupAddToList(dicode, [key], x));
+	// 	// console.log('parts of',cname,parts); break;
+	// 	// break;
+	// }
+
+	let dicode = {};
+	let parsing = false, chunk = '', comment = false, valid = false;
+	for (const cname of included_classes) {
+		for (const line of lines) {
+			[valid, parsing, comment, chunk] = css_handle_line(dicode, chunk, line, parsing, comment, cname, 'keyframes');
+			//if (valid) chunk += line + '\n';
+		}
+	}
+
+
+	//console.log('move',dicode.move); return [];
+
+	let output = '';
+	let keylist = sortCaseInsensitive(get_keys(dicode));
+	for (const k of keylist) {
+		//console.log('k',k,'\n___\n')
+		//output += '@keyframes ' + k + ' {\n';
+		for (const codeline of dicode[k]) {
+			if (isEmpty(codeline.trim())) continue;
+			output += codeline + '\n';
+		}
+		//output += '}\n';
+
+	}
+
+
+	return [dicode, output];
+}
+
+function css_handle_line(dicode, chunk, line, parsing, comment, cname, type) {
+	//[valid, parsing, comment, chunk] = css_handle_line(dicode, chunk, line, parsing, comment, cname, 'class');
+	let valid = false, newchunk = chunk;
+	let lt = line.trim(); //console.log('ende',lt.endsWith('\n')); //return;
+	if (line.startsWith((type == 'class' ? '.' : type == 'id' ? '#' : type == 'tag' ? '' : '@keyframes ') + cname)) {
+		parsing = true; comment = false;
+		valid = true; newchunk = line + '\n';
+		return [valid, parsing, comment, newchunk];
+	} else if (lt.startsWith('/*') && !lt.endsWith('/*')) { comment = true; return [valid, parsing, comment, newchunk]; }
+	else if (lt.startsWith('/*')) { return [valid, parsing, comment, newchunk]; }
+	else if (lt.endsWith('*/') && !line.includes('/*')) { comment = false; return [valid, parsing, comment, newchunk]; }
+	else if (comment) { return [valid, parsing, comment, newchunk]; }
+	if (parsing) {
+		//valid=true; //chunk += line + '\n'; 
+		if (line.startsWith('}')) {
+			parsing = false;
+			lookupAddToList(dicode, [cname], chunk + line + '\n'); //finish up code for cname
+			newchunk = ''; // chunk + line + '\n';
+		} else { valid = true; newchunk = chunk + line + '\n'; }
+	} else assertion(!line.includes(',') || line.startsWith(' '), 'COMMA!!!', line)
+
+	return [valid, parsing, comment, newchunk];
+}
+
+function parse_css_classes(tcss, code, html) {
+	let t = replaceAllSpecialChars(tcss, '\t', '  ');
+	let lines = t.split('\r\n');
+	let di = {};
+	for (const line of lines) {
+		if (line.startsWith('.')) {
+			let word = firstWordIncluding(line, ['_', '-']);
+			// console.log('word', word);
+			lookupAddIfToList(di, ['classes'], word);
+		}
+	}
+	let included_classes = [];
+	for (const cname of di.classes) {
+		if (code.includes(`'${cname}'`) || code.includes(`"${cname}"`)) addIf(included_classes, cname);
+		if (html.includes(`'${cname}'`) || html.includes(`"${cname}"`)) addIf(included_classes, cname);
+	}
+	console.log('all classes', di.classes);
+	console.log('included_classes', included_classes);
+	let dicode = {};
+	let parsing = false, chunk = '', comment = false, valid = false;
+	for (const cname of sortCaseInsensitive(included_classes)) {
+		for (const line of lines) {
+			[valid, parsing, comment, chunk] = css_handle_line(dicode, chunk, line, parsing, comment, cname, 'class');
+			//if (valid) chunk += line + '\n';
+		}
+	}
+
+	let output = '';
+	let keylist = sortCaseInsensitive(get_keys(dicode));
+	for (const k of keylist) {
+		for (const c of dicode[k]) {
+			output += c + '\n';
+		}
+	}
+	return [dicode, output];
+}
+
+function rest_parse_css_classes() {
+
+	for (const cname of included_classes) {
+		let parts = t.split(cname);
+		parts = parts.slice(1);
+
+		for (const p of parts) {
+			let key, codelines = [];
+			if (p.startsWith(':')) {
+				//it is a pseudo-class
+				let pseudo = firstWord(p);
+				console.log('pseudo', pseudo);
+				key = `${cname}:${pseudo}`;
+			} else key = cname;
+
+			let txt = stringBefore(stringAfter(p, '{'), '}');
+			let txtparts = txt.split('\r\n');
+			if (key == 'btnX') console.log('txt', txt)
+			for (const codeline of txtparts) {
+				let trimmed = codeline.trim();
+				if (trimmed.startsWith('/*')) continue;
+				let cl = replaceAllSpecialChars(codeline, '\r', '');
+				cl = replaceAllSpecialChars(codeline, '\n', '');
+				codelines.push(cl);
+				if (key == 'btnX') console.log('codeline', codeline)
+			}
+			codelines.map(x => lookupAddToList(dicode, [key], x));
+		}
+		// console.log('parts of',cname,parts); break;
+	}
+
+	let output = '';
+	let keylist = sortCaseInsensitive(get_keys(dicode));
+	for (const k of keylist) {
+		//console.log('k',k,'\n___\n')
+		output += '.' + k + ' {\n';
+		for (const codeline of dicode[k]) {
+			if (isEmpty(codeline.trim())) continue;
+			output += codeline + '\n';
+		}
+		output += '}\n';
+
+	}
+
+
+	return [dicode, output];
+}
+
+
+
+//#endregion
+
+
+function parse_css_classes(tcss, code, html) {
+	let t = replaceAllSpecialChars(tcss, '\t', '  ');
+
+	let lines = t.split('\r\n');
+	// console.log('lines', lines);
+
+	let di = {};
+
+
+	for (const line of lines) {
+		if (line.startsWith('.')) {
+			let word = firstWordIncluding(line, ['_', '-']);
+			// console.log('word', word);
+			lookupAddIfToList(di, ['classes'], word);
+		}
+	}
+
+	let included_classes = [];
+	for (const cname of di.classes) {
+		if (code.includes(`'${cname}'`) || code.includes(`"${cname}"`)) addIf(included_classes, cname);
+		if (html.includes(`'${cname}'`) || html.includes(`"${cname}"`)) addIf(included_classes, cname);
+	}
+
+	console.log('all classes', di.classes);
+	console.log('included_classes', included_classes);
+
+	//return;
+	let dicode = {};
+	let parsing = false, chunk = '', comment = false;
+	for (const cname of included_classes) {
+		for (const line of lines) {
+
+			let lt = line.trim();
+			if (lt.startsWith('/*') && !lt.endsWith('/*')) { comment = true; continue; }
+			else if (lt.startsWith('/*')) { continue; }
+			else if (lt.endsWith('*/') && !line.includes('/*')) { comment = false; continue; }
+			else if (comment) continue;
+			if (parsing) {
+				chunk += line + '\n';
+				if (line.startsWith('}')) {
+					parsing = 0;
+					lookupAddToList(dicode, [cname], chunk); //finish up code for cname
+				}
+			} else if (line.startsWith('.' + cname)) {
+				parsing = 1;
+				chunk = line + '\n';
+			} else assertion(!line.includes(',') || line.startsWith(' '), 'COMMA!!!', line)
+		}
+	}
+
+	let output = '';
+	let keylist = sortCaseInsensitive(get_keys(dicode));
+	for (const k of keylist) {
+		for (const c of dicode[k]) {
+			output += c + '\n';
+		}
+	}
+	return [dicode, output];
+}
+
 function assemble_complete_code(list, di) {
 	CODE.byKey = di;
 	CODE.keylist = list;
@@ -109,7 +742,7 @@ async function __parsefile(f, byKey, ckeys, idx) {
 				// if (o.type == 'async') {o.type = 'function';console.log('async',kw)}
 				if (prev) {
 					if (prev.type != o.type) {
-						console.log('DUPLICATE', kw,prev);
+						console.log('DUPLICATE', kw, prev);
 						console.log('... change from', prev.type, 'to', o.type);
 					}
 					//loesche den alten!
@@ -195,14 +828,14 @@ function assemble_complete_code(list, di) {
 	AU.ta.value = text;
 	//console.log('last keys',arrTakeLast(list,2))
 }
-function write_new_index_html(dir,filename='bundle') {
+function write_new_index_html(dir, filename = 'bundle') {
 	//let project = stringAfterLast(dir,'/');	console.log('project',project)
 	let text = DA.indexhtml;
 
 	let scripts = `</body><script src="${dir}test/${filename}.js"></script><script>onload = start;</script>\n</html>`;
 	let newtext = stringBefore(text, `</body>`) + scripts;
 
-	downloadAsText(newtext,`index`,'html')
+	downloadAsText(newtext, `index`, 'html')
 }
 //#endregion bundle generation
 
@@ -325,57 +958,57 @@ async function onclickClosure() {
 
 }
 function _NO_computeClosure(symlist) {
-  let keys = {};
-  for (const k in CODE.di) { for (const k1 in CODE.di[k]) keys[k1] = CODE.di[k][k1]; }
-  CODE.all = keys;
-  CODE.keylist = Object.keys(keys)
-  // let inter = intersection(Object.keys(keys), Object.keys(window));
-  let done = {};
-  let tbd = valf(symlist, ['start']);
-  let MAX = 1007, i = 0;
-  //let alltext = '';
-  while (!isEmpty(tbd)) {
-    if (++i > MAX) break;
-    let sym = tbd[0];
-		console.log('sym',sym)
-    let o = CODE.all[sym];
-		console.log('o',o)
-    if (nundef(o)) o = getObjectFromWindow(sym);
-		if (nundef(o)) {console.log('not',sym);removeInPlace(tbd,sym);continue;}
-    if (o.type == 'var' && !o.name.startsWith('d') && o.name == o.name.toLowerCase()) { tbd.shift(); continue; }
-    if (o.type != 'func') { tbd.shift(); lookupSet(done, [o.type, sym], o); continue; }
-    let olive = window[sym];
-    if (nundef(olive)) { tbd.shift(); lookupSet(done, [o.type, sym], o); continue; }
-    let text = olive.toString();
+	let keys = {};
+	for (const k in CODE.di) { for (const k1 in CODE.di[k]) keys[k1] = CODE.di[k][k1]; }
+	CODE.all = keys;
+	CODE.keylist = Object.keys(keys)
+	// let inter = intersection(Object.keys(keys), Object.keys(window));
+	let done = {};
+	let tbd = valf(symlist, ['start']);
+	let MAX = 1007, i = 0;
+	//let alltext = '';
+	while (!isEmpty(tbd)) {
+		if (++i > MAX) break;
+		let sym = tbd[0];
+		console.log('sym', sym)
+		let o = CODE.all[sym];
+		console.log('o', o)
+		if (nundef(o)) o = getObjectFromWindow(sym);
+		if (nundef(o)) { console.log('not', sym); removeInPlace(tbd, sym); continue; }
+		if (o.type == 'var' && !o.name.startsWith('d') && o.name == o.name.toLowerCase()) { tbd.shift(); continue; }
+		if (o.type != 'func') { tbd.shift(); lookupSet(done, [o.type, sym], o); continue; }
+		let olive = window[sym];
+		if (nundef(olive)) { tbd.shift(); lookupSet(done, [o.type, sym], o); continue; }
+		let text = olive.toString();
 		//console.log('text',text)
-    //if (!isEmpty(text)) alltext += text + '\r\n';
-    let words = toWords(text, true);
-    words = words.filter(x => text.includes(' ' + x));
+		//if (!isEmpty(text)) alltext += text + '\r\n';
+		let words = toWords(text, true);
+		words = words.filter(x => text.includes(' ' + x));
 		//console.log('words',words)
-    for (const w of words) {
-      if (nundef(done[w]) && w != sym && (isdef(window[w]) || isdef(CODE.all[w]))) addIf(tbd, w);
-    }
-    tbd.shift();
-    lookupSet(done, [o.type, sym], o);
-  }
+		for (const w of words) {
+			if (nundef(done[w]) && w != sym && (isdef(window[w]) || isdef(CODE.all[w]))) addIf(tbd, w);
+		}
+		tbd.shift();
+		lookupSet(done, [o.type, sym], o);
+	}
 
-	console.log('done',done);
+	console.log('done', done);
 	return done;
 
-  let tres = '';
-  for (const k of ['const', 'var', 'cla', 'func']) {
-    console.log('done', k, done[k])
-    let o = done[k]; if (nundef(o)) continue;
-    let klist = get_keys(o);
-    if (k == 'func') klist = sortCaseInsensitive(klist);
-    for (const k1 of klist) {
-      let code = CODE.justcode[k1];
-      if (!isEmptyOrWhiteSpace(code)) tres += code + '\r\n';
-    }
-  }
+	let tres = '';
+	for (const k of ['const', 'var', 'cla', 'func']) {
+		console.log('done', k, done[k])
+		let o = done[k]; if (nundef(o)) continue;
+		let klist = get_keys(o);
+		if (k == 'func') klist = sortCaseInsensitive(klist);
+		for (const k1 of klist) {
+			let code = CODE.justcode[k1];
+			if (!isEmptyOrWhiteSpace(code)) tres += code + '\r\n';
+		}
+	}
 }
 function ___BAD___computeClosure(keysOrText = []) {
-	if (nundef(keysOrText)) keysOrText=['start']
+	if (nundef(keysOrText)) keysOrText = ['start']
 	let done = {};
 	let tbd = isList(keysOrText) ? keysOrText : extractKeywords(keysOrText);
 
@@ -442,7 +1075,7 @@ function computeClosure(symlist) {
 	let MAX = 1000000, i = 0;
 	let visited = {};
 	while (!isEmpty(tbd)) {
-		if (++i > MAX) break; else console.log('i',i)
+		if (++i > MAX) break; else console.log('i', i)
 		let sym = tbd[0];
 		if (isdef(visited[sym])) { tbd.shift(); continue; }
 		visited[sym] = true;
@@ -499,10 +1132,10 @@ function computeClosure(symlist) {
 		if (++i > MAX) break;
 		let sym = tbd[0];
 		if (isdef(visited[sym])) { tbd.shift(); continue; }
-		visited[sym]=true;
+		visited[sym] = true;
 		let o = CODE.all[sym];
 		// if (sym == 'ensureColorDict') console.log('!!!!',sym)
-		if (sym == 'MS') console.log('!!!!',sym)
+		if (sym == 'MS') console.log('!!!!', sym)
 		if (nundef(o)) o = getObjectFromWindow(sym);
 		if (nundef(o)) { tbd.shift(); continue; } //console.log('not',sym);
 		if (o.type == 'var' && !o.name.startsWith('d') && o.name == o.name.toLowerCase()) { tbd.shift(); continue; }
@@ -517,7 +1150,7 @@ function computeClosure(symlist) {
 
 		//words = words.filter(x => text.includes(' ' + x) || text.includes(x + '(')  || text.includes(x + ','));
 		//console.log('words',words)
-		if (sym=='compute_closure') console.log('',sym,words)
+		if (sym == 'compute_closure') console.log('', sym, words)
 		//if (sym=='colorFrom') console.log('',sym,words, words.includes('ensureColorDict'))
 		for (const w of words) {
 			if (nundef(done[w]) && w != sym && isCodeWord(w)) addIf(tbd, w);

@@ -300,10 +300,10 @@ fieldset .disabled {
 	width: 100%;
 }
 
-.move {
-	animation: move var(--ms) ease;
+.css_move_animation {
+	animation: css_move_animation var(--ms) ease;
 }
-@keyframes move {
+@keyframes css_move_animation {
 	0% {
 		transform: translateX(0) translateY(0);
 	}

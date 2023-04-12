@@ -27854,7 +27854,8 @@ function toUmlaut(w) {  if (isList(w)) {
     return w;
   }
 }
-function toWords(s, allow_ = false) {  let arr = allow_ ? s.split(/[\W]+/) : s.split(/[\W|_]+/);
+function toWords(s, allow_ = false) {  
+	let arr = allow_ ? s.split(/[\W]+/) : s.split(/[\W|_]+/);
   return arr.filter(x => !isEmpty(x));
 }
 function toWordsSpeech(s) {  var th = ['', 'thousand', 'million', 'billion', 'trillion'];
