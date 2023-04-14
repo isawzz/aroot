@@ -325,10 +325,10 @@ users:
       - gAbacus
       - gRiddle
       - gC4
-    lastGame: gMaze
+    lastGame: gCats
     settings:
       userColor: blue
-      samplesPerGame: 10
+      samplesPerGame: 2
       minutesPerUnit: 10
       incrementLevelOnPositiveStreak: 6
       decrementLevelOnNegativeStreak: 4
@@ -345,7 +345,14 @@ users:
       gAbacus:
         startLevel: 3
       gAnagram:
-        startLevel: 6
+        startLevel: 7
+        nTotal: 2
+        nCorrect: 2
+        nCorrect1: 2
+        nWins: 0
+        nLoses: 0
+        nTied: 1
+        percentage: 100
       gC4:
         startPosition: empty
         startPlayer: random
@@ -363,6 +370,13 @@ users:
         startLevel: 11
       gElim:
         startLevel: 3
+        nTotal: 2
+        nCorrect: 2
+        nCorrect1: 2
+        nWins: 0
+        nLoses: 0
+        nTied: 1
+        percentage: 100
       gHouse:
         nTotal: 11
         nCorrect: 10
@@ -383,13 +397,13 @@ users:
         startLevel: 4
         percentage: 30
       gMem:
-        startLevel: 5
+        startLevel: 4
         showHint: false
         trials: 1
-        nTotal: 5
-        nCorrect: 1
-        nCorrect1: 1
-        percentage: 20
+        nTotal: 8
+        nCorrect: 2
+        nCorrect1: 2
+        percentage: 25
       gMissingLetter:
         startLevel: 6
       gMissingNumber:
@@ -424,6 +438,10 @@ users:
         percentage: 100
       gSwap:
         startLevel: 0
+        nTotal: 2
+        nCorrect: 2
+        nCorrect1: 2
+        percentage: 100
       gTouchColors:
         startLevel: 6
       gTouchPic:
@@ -436,6 +454,13 @@ users:
         startPosition: empty
         startPlayer: random
         searchDepth: 5
+        nTotal: 1
+        nCorrect: 0
+        nCorrect1: 0
+        nWins: 0
+        nLoses: 0
+        nTied: 1
+        percentage: 0
       gWritePic:
         startLevel: 5
       gChess: {}
@@ -455,7 +480,52 @@ users:
         open: false
       aPassword:
         open: false
-    session: {}
+    session:
+      gMem:
+        startLevel: 0
+        nTotal: 3
+        nCorrect: 1
+        nCorrect1: 1
+        nWins: 0
+        nLoses: 0
+        nTied: 0
+        percentage: 33
+      gSwap:
+        startLevel: 0
+        nTotal: 2
+        nCorrect: 2
+        nCorrect1: 2
+        nWins: 0
+        nLoses: 0
+        nTied: 0
+        percentage: 100
+      gTTT:
+        startLevel: 0
+        nTotal: 1
+        nCorrect: 0
+        nCorrect1: 0
+        nWins: 0
+        nLoses: 0
+        nTied: 1
+        percentage: 0
+      gElim:
+        startLevel: 0
+        nTotal: 2
+        nCorrect: 2
+        nCorrect1: 2
+        nWins: 0
+        nLoses: 0
+        nTied: 1
+        percentage: 100
+      gAnagram:
+        startLevel: 0
+        nTotal: 2
+        nCorrect: 2
+        nCorrect1: 2
+        nWins: 0
+        nLoses: 0
+        nTied: 1
+        percentage: 100
   wala:
     id: wala
     avGames:

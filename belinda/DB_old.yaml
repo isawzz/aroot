@@ -325,10 +325,10 @@ users:
       - gAbacus
       - gRiddle
       - gC4
-    lastGame: gSpotit
+    lastGame: gTouchPic
     settings:
       userColor: blue
-      samplesPerGame: 10
+      samplesPerGame: 2
       minutesPerUnit: 10
       incrementLevelOnPositiveStreak: 6
       decrementLevelOnNegativeStreak: 4
@@ -455,25 +455,7 @@ users:
         open: false
       aPassword:
         open: false
-    session:
-      gMem:
-        startLevel: 0
-        nTotal: 3
-        nCorrect: 1
-        nCorrect1: 1
-        nWins: 0
-        nLoses: 0
-        nTied: 0
-        percentage: 33
-      gC4:
-        startLevel: 0
-        nTotal: 1
-        nCorrect: 1
-        nCorrect1: 0
-        nWins: 1
-        nLoses: 0
-        nTied: 0
-        percentage: 100
+    session: {}
   wala:
     id: wala
     avGames:

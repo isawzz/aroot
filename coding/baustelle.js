@@ -1,3 +1,901 @@
+
+async function cssGenerateFrom(cssfile, codefile, htmlfile) {
+	if (!isList(cssfile)) cssfile = [cssfile];
+	let tcss='';
+	for(const f of cssfile){	tcss += await route_path_text(f); }
+	let code = await route_path_text(codefile);
+	let html = await route_path_text(htmlfile);
+
+	cssNormalize(tcss,code,html); return;
+}
+
+
+//#region css closure gen NEW
+function cssKeysNeeded(tcss, code, html) {
+	let t = replaceAllSpecialChars(tcss, '\t', '  ');
+	let lines = t.split('\r\n');
+	let allkeys = [], newlines = []; //in newlines
+	let di = {};
+	for (const line of lines) {
+		if (cssIsKeywordLine(line)) {
+			let newline = line.startsWith('@') ? stringAfter(line, ' ') : line.startsWith(':') ? stringAfter(line, ':') : line;
+			//let words = 
+			//let sep = line.includes('{')?'{':',';
+			//let word = stringBefore(newline,sep).trim(); console.log('word',word)
+			//let word = firstWordIncluding(newline, '_-');
+			let word = firstWordIncluding(newline, '_-: ').trim();
+			//if (line.includes(':')) console.log('line', line, '=', word);
+			newline = word + stringAfter(newline, word);
+			addIf(allkeys, word);
+			newlines.push(newline)
+			let ch = line[0];
+			let type = isLetter(ch) ? 't' : ch == '.' ? 'c' : ch == '@' ? 'k' : ch == ':' ? 'r' : 'i';
+			di[word] = { type: type, key: word }
+		} else {
+			newlines.push(line);
+			//console.log('line[0]',line[0]==' '?'SPACE':line[0])
+		}
+	}
+	let neededkeys = [];
+	for (const k of allkeys) {
+		if (['rubberBand'].includes(k)) continue;
+		let ktest = k.includes(' ') ? stringBefore(k, ' ') : k.includes(':') ? stringBefore(k, ':') : k;
+		if (['root'].some(x => x == k)) addIf(neededkeys, k);
+		else if (code.includes(`${ktest}`) || code.includes(`'${ktest}'`) || code.includes(`"${ktest}"`)) addIf(neededkeys, k);
+		else if (html.includes(`${ktest}`)) addIf(neededkeys, k);
+	}
+	//console.log('allkeys', allkeys); console.log('needed', neededkeys);
+	//linestartsTest(newlines)
+	return [di, neededkeys, newlines];
+}
+function cssNormalize(tcss, code, html) {
+
+	[di, neededkeys, newlines] = cssKeysNeeded(tcss, code, html);
+	console.log('needed', sortCaseInsensitive(neededkeys))
+
+	let clause = '';
+	let state = 'search_kw'; // search_kw search_clause_start search_clause_end
+	for (const kw of neededkeys) {
+		//if (kw == 'pulse') console.log('kw', kw, di[kw].type)
+		let i = 0;
+		for (const line of newlines) {
+			let lt = line.trim(); //console.log('ende',lt.endsWith('\n')); //return;
+			//if (line[0]==' ') console.log('SPC')
+			//if (stringBefore(line,' ') == kw) { //.startsWith(kw)) {
+			if (line.startsWith(kw) && firstWordIncluding(line, '_-: ').trim() == kw) { //firstWordIncluding(line, '_- ').trim() == kw)	{
+				//look for start of corresponding clause!
+				assertion(line.includes('{') || line.includes(','), `WEIRED LINE: ${line}`)
+				if (line.includes('{')) {
+					clause = '{\n'; state = 'search_clause_end';
+				} else if (line.includes(',')) {
+					state = 'search_clause_start';
+				}
+			} else if (state == 'search_clause_start' && line.includes('{')) {
+				clause = '{\n'; state = 'search_clause_end';
+			} else if (state == 'search_clause_end') {
+				if (line[0] == '}') {
+					//if (kw == 'pulse') console.log('i', i++, line)
+					clause += line;
+					//clause can be added for kw
+					let cleanclause = cssCleanupClause(clause, kw);
+					lookupAddIfToList(di, [kw, 'clauses'], cleanclause);
+					lookupAddIfToList(di, [kw, 'fullclauses'], clause);
+					state = 'search_kw';
+				} else {
+					clause += line + '\n';
+				}
+			}
+		}
+	}
+
+	//return;
+	//console.log('di', di)
+	//sort kw by type and name
+	let dis = {};
+	for (const o of get_values(di)) {
+		if (nundef(o.clauses)) continue;
+		//console.log('o', o)
+		let x = lookup(dis, [o.type, o.key]); if (x) console.log('DUPL:', o.key, o.type)
+		lookupSet(dis, [o.type, o.key], o);
+	}
+
+	let text = '';
+	for (const type in dis) {
+		//console.log('type', type)
+		let ksorted = sortCaseInsensitive(get_keys(dis[type]));
+		//console.log('keys', ksorted)
+		//let type = isLetter(ch) ? 't' : ch=='.'?'c':ch=='@'?'k':'i'
+		let prefix = type == 't' ? '' : type == 'k' ? '@keyframes ' : type == 'c' ? '.' : type == 'r' ? ':' : '#';
+
+		for (const kw of ksorted) {
+			//if (kw.startsWith('pulse')) console.log(':',kw,type,prefix)
+			let startfix = prefix + kw;
+			//console.log('clauses',type,kw,dis[type][kw].clauses.length)
+			for (const clause of dis[type][kw].clauses) {
+				text += startfix + clause;
+			}
+		}
+	}
+
+
+	//console.log(dis.id.sidebar)
+	AU.ta.value = text;
+}
+function cssCleanupClause(t, kw) {
+	let lines = t.split('\n');
+	let comment = false;
+
+	let state='copy';
+
+	let res = '';
+	for (const line of lines) {
+		let lt = line.trim();
+		let [cstart,cend,mstart] = [lt.startsWith('/*'),lt.endsWith('*/'),line.includes('/*')];
+		//console.log('___line',line,'\n..state',state,'start',cstart,'end',cend,'mid',mstart)
+		if (state=='skip'){
+			if (cend) state='copy';
+			continue;
+		}else if (state == 'copy'){
+			if (cstart && cend) {continue;}
+			else if (cstart) {state = 'skip';continue;}
+			else if (mstart) {
+				//copy up to /* and set skip
+				res+= stringBefore(line,'/*')+'\n'; 
+				if (!cend) state = 'skip';
+			}else{
+				res += line + '\n';		
+			}
+		}
+		//console.log('...state:',state)
+	}
+	if (kw == 'bAdd') console.log(res);
+	return res;
+}
+
+//#endregion
+
+//#region belinda bundle and closure gen
+function belinda_get_games() {
+	return [
+		'gSpotit',
+		'gColoku',
+		'gMaze',
+		'gSteps',
+		'gSentence',
+		'gTouchColors',
+		'gSayPic',
+		'gReversi',
+		'gMissingLetter',
+		'gNamit',
+		'gTouchPic',
+		'gHouse',
+		'gWritePic',
+		'gChess',
+		'gPremem',
+		'gMem',
+		'gSwap',
+		'gTTT',
+		'gElim',
+		'gAnagram',
+		'gCats',
+		'gAbacus',
+		'gRiddle',
+		'gC4',
+	];
+}
+function belinda_get_imports() {
+	return `
+	<script src="../belindafull/js/globals.js"></script>
+	<script src="../belindafull/js/base.js"></script>
+	<script src="../belindafull/js/areas.js"></script>
+	<script src="../belindafull/js/audio.js"></script>
+	<script src="../belindafull/js/badges.js"></script>
+	<script src="../belindafull/js/banner.js"></script>
+	<script src="../belindafull/js/board.js"></script>
+	<script src="../belindafull/js/cards.js"></script>
+	<script src="../belindafull/js/chess.js"></script>
+	<script src="../belindafull/js/markers.js"></script>
+	<script src="../belindafull/js/menu.js"></script>
+	<script src="../belindafull/js/mGraph.js"></script>
+	<script src="../belindafull/js/speech.js"></script>
+	<script src="../belindafull/js/settings.js"></script>
+	<script src="../belindafull/js/test_ui_helpers.js"></script>
+	<script src="../belindafull/js/time.js"></script>
+	<script src="../belindafull/js/maze.js"></script>
+	<script src="../belindafull/js/ai.js"></script>
+	<script src="../belindafull/js/all.js"></script>
+	<script src="../belindafull/js/classes.js"></script>
+	<script src="../belindafull/js/debug.js"></script>
+	<script src="../belindafull/js/controller.js"></script>
+	<script src="../belindafull/js/classes3.js"></script>
+	<script src="../belindafull/js/controller3.js"></script>
+	<script src="../belindafull/js/game.js"></script>
+	<script src="../belindafull/js/house.js"></script>
+	<script src="../belindafull/js/item.js"></script>
+	<script src="../belindafull/js/keys.js"></script>
+	<script src="../belindafull/js/legacy.js"></script>
+	<script src="../belindafull/js/letter.js"></script>
+	<script src="../belindafull/js/math.js"></script>
+	<script src="../belindafull/js/onClick.js"></script>
+	<script src="../belindafull/js/scoring.js"></script>
+	<script src="../belindafull/js/testing.js"></script>
+	<script src="../belindafull/js/ui.js"></script>
+	<script src="../belindafull/js/user.js"></script>
+	<script src="../belindafull/js/work.js"></script>
+	<script src="../belindafull/js/workUI.js"></script>
+	`
+}
+async function belinda_get_index_html() {
+	return await route_path_text('../belindafull/html/index.html');
+}
+async function belinda_closure() {
+	let indexhtml = DA.indexhtml = await belinda_get_index_html();
+	let [di, klist] = [lookup(DA, ['bundle', 'di']), lookup(DA, ['bundle', 'klist'])];
+	if (!di) {
+		await belinda_bundle();
+		[di, klist] = [lookup(DA, ['bundle', 'di']), lookup(DA, ['bundle', 'klist'])];
+	}
+	//console.log('di', di)
+
+	//all die onclick dinsplit('onclick=").shift()ger dazu
+	let symlist = ['start'];
+	console
+	let onclicks = DA.indexhtml.split('onclick="'); //.shift();
+	onclicks.shift();
+	console.log('onclicks', onclicks);
+	for (const oncl of onclicks) {
+		console.log('oncl', oncl)
+		let code = stringBefore(oncl, '(');
+		symlist.push(code);
+	}
+	for(const cl of belinda_get_games()){
+		symlist.push(capitalize(cl));
+	}
+	symlist = symlist.concat(['csv2list','ControllerSolitaireMinimal'])
+
+	//console.log('belindafull sym list',symlist); 
+
+	let done = minimizeCode(di, klist, symlist);
+	//console.log('done', done); //return;
+
+	let newklist = klist.filter(x => isdef(done[x]))
+	lookupSetOverride(DA, ['closure', 'di'], done, newklist)
+	lookupSetOverride(DA, ['closure', 'klist'],);
+
+	assemble_complete_code(newklist, done);
+
+	//write_new_index_html(DA.dirout, 'closure');
+
+}
+async function belinda_bundle() {
+	let files = belinda_get_imports().split('src="');
+	files = files.map(x => stringBefore(x, '"'));
+	files.shift(); //console.log(files); return;
+	files.push('../belindafull/start.js');
+	let dirout = 'belinda';
+	let byKey = {}, ckeys = [], idx = 0;
+	let text = '';
+	for (const f of files) {
+		let [filetext, idxnew] = await belinda_parsefile(f, byKey, ckeys, idx);
+		idx = idxnew;
+		text += filetext;
+	}
+	//assemble text!!!
+
+	assemble_complete_code(ckeys, byKey);
+
+	lookupSetOverride(DA, ['bundle', 'di'], byKey)
+	lookupSetOverride(DA, ['bundle', 'klist'], ckeys)
+
+	//write_new_index_html(dirout);
+	//DA.codedir = dir;
+	DA.dirout = dirout;
+}
+async function belinda_parsefile(f, byKey, ckeys, idx) {
+	let chunk = '', error = '', state, kw = null, blocktype = null, region = null;
+	//let linestarts = [];
+	let txt = await route_path_text(f);
+	let fname = stringAfterLast(f, '/'); fname = stringBefore(fname, '.');
+	let text = `//#region ${fname}\n`;
+	let lines = txt.split('\n'); //console.log('lines[0]',lines[0]);
+
+	for (const line of lines) {
+		let [w, type] = getLineStart(line);	//console.log('linestart', w, type);
+		if (type == 'WTF') {
+			//if (fname == 'test_ui_helpers') console.log('WTF',w,'\n..',line,w); 
+			if (kw == 'uiGetContact') console.log('WTF', w, '\n..', line, w);
+			if (w == 'SPACE') chunk += line + '\n';
+			continue;
+		}
+		else if (type == 'empty') {
+			// if (fname == 'test_ui_helpers') console.log('empty', w, '\n..', line, w);
+			// if (kw == 'uiGetContact') console.log('empty', w, '\n..', line, w);
+			continue;
+		}
+		else if (type == 'in_process') {
+
+			if (line.includes('//#region') || line.includes('//#endregion')) continue;
+			if (kw) { chunk += line + '\n'; } else error += line + '\n';
+		}
+		else if (type == 'REGION') { if (w == type) region = stringAfter(line, '//#region ').trim(); }
+		else if (type == 'block') {
+			if (kw) {
+				//close previous block!
+				let prev = lookup(byKey, [kw]);
+				let oldfname = prev ? prev.fname : fname;
+				let o = { key: kw, code: chunk, fname: oldfname, region: region ?? oldfname, type: blocktype, idx: idx++ };
+				// if (o.type == 'async') {o.type = 'function';console.log('async',kw)}
+				if (prev) {
+					if (prev.type != o.type) {
+						console.log('DUPLICATE', kw, prev);
+						console.log('... change from', prev.type, 'to', o.type);
+					}
+					//loesche den alten!
+					//ckeys[prev.idx] = null;
+				} else { ckeys.push(kw); }
+				//lookupSetOverride(di, [blocktype, region, kw], o);
+				lookupSetOverride(byKey, [kw], o);
+
+
+			}
+			kw = w == 'async' ? stringAfter(line, 'function ') : stringAfter(line, ' '); kw = firstWord(kw, true);
+			let blocktypes = { function: 'func', class: 'cla', async: 'func', var: 'var', const: 'const' };
+			blocktype = blocktypes[w]; //w == 'async' ? 'function' : w; //hier async turns into function!!!
+			chunk = line + '\n';
+			//console.log('?',blocktype,kw,line);
+			//console.log('kw',kw);
+		} else { console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'); break; }
+	}
+	if (kw) {
+		//close previous block!
+		let prev = lookup(byKey, [kw]);
+		let oldfname = prev ? prev.fname : fname;
+		let o = { key: kw, code: chunk, fname: oldfname, region: region ?? oldfname, type: blocktype, idx: idx++ };
+		if (prev) {
+			//console.log('DUPLICATE', kw);
+			if (prev.type != o.type) {
+				console.log('... change from', prev.type, 'to', o.type);
+			}
+			//loesche den alten!
+			//ckeys[prev.idx] = null;
+		} else { ckeys.push(kw); }
+		lookupSetOverride(byKey, [kw], o);
+
+
+	}
+	text += `//#endregion ${fname}\n\n`;
+	return [text, idx];
+}
+//#endregion
+
+//#region closure generation
+function minimizeCode(di, klist, symlist = ['start']) {
+	let done = {};
+	let tbd = symlist; console.log('symlist', symlist)
+	let MAX = 1000000, i = 0;
+	let visited = { grid: true, jQuery: true, config: true, Number: true, sat: true, hallo: true, autocomplete: true, PI: true };
+	while (!isEmpty(tbd)) {
+		if (++i > MAX) break; //else console.log('i',i)
+		let sym = tbd[0]; //console.log('sym', sym);
+		if (isdef(visited[sym])) { tbd.shift(); continue; }
+		visited[sym] = true;
+		let o = di[sym];
+		//if (nundef(o)) { console.log('not def', sym); tbd.shift(); continue; }
+		if (nundef(o)) { tbd.shift(); continue; } //console.log('not def',sym);
+		let text = o.code; //always using last function body!!!
+		let words = toWords(text, true);
+		for (const w of words) { if (nundef(done[w]) && nundef(visited[w]) && w != sym && isdef(di[w])) addIf(tbd, w); }
+		assertion(sym == tbd[0], 'W T F')
+		tbd.shift();
+		done[sym] = o;
+	}
+	//console.log('done',done);
+	//==>assertion(isdef(done.SOCKETSERVER),'no SOCK.......')
+	return done;
+}
+async function onclickClosure() {
+	let [di, klist] = [lookup(DA, ['bundle', 'di']), lookup(DA, ['bundle', 'klist'])];
+	if (!di) {
+		await onclickBundle();
+		[di, klist] = [lookup(DA, ['bundle', 'di']), lookup(DA, ['bundle', 'klist'])];
+	}
+	//console.log('di', di)
+
+	//all die onclick dinsplit('onclick=").shift()ger dazu
+	let symlist = ['start'];
+	console
+	let onclicks = DA.indexhtml.split('onclick="'); //.shift();
+	onclicks.shift();
+	console.log('onclicks',onclicks);
+	for (const oncl of onclicks) {
+		console.log('oncl', oncl)
+		let code = stringBefore(oncl, '(');
+		symlist.push(code);
+	}
+
+	let done = minimizeCode(di, klist, symlist);
+	console.log('done', done)
+
+	let newklist = klist.filter(x => isdef(done[x]))
+	lookupSetOverride(DA, ['closure', 'di'], done, newklist)
+	lookupSetOverride(DA, ['closure', 'klist'],);
+
+	assemble_complete_code(newklist, done);
+
+	write_new_index_html(DA.dirout, 'closure');
+
+}
+
+//#endregion
+
+//#region bundle generation
+function mClosureUI(dParent) {
+	let d = mDiv(dParent, { gap: 10 }); mFlexWrap(d);
+	let d1 = mDiv(d);
+	mDiv(d1, {}, null, 'project')
+	mDiv(d1, {}, null, '<input type="text" id="inp_project" value="gamesfull"/>')
+	let d2 = mDiv(d);
+	mDiv(d2, {}, null, 'seed')
+	mDiv(d2, {}, null, '<input type="text" id="inp_seed" value="start"/>')
+	let d3 = mDiv(d);
+	mDiv(d3, {}, null, 'output')
+	mDiv(d3, {}, null, '<input type="text" id="inp_dirout" value="games"/>')
+
+	let d4 = mDiv(dParent, { gap: 12 }); mFlexWrap(d4);
+	mButton('bundle', onclickBundle, d4);
+	mButton('closure', onclickClosure, d4);
+	mButton('belinda bundle', belinda_bundle, d4);
+	mButton('belinda closure', belinda_closure, d4);
+}
+function getLineStart(line) {
+
+	if (isEmpty(line.trim())) { return ['', 'empty'] }
+
+	let type = 'in_process';
+	let w = stringBefore(line, ' ');
+	let ch = line[0];
+	let i = 0; while (line[i] == '\t') { i++; }
+	let fw = line.slice(i);
+	//whilestringAfterLast(line, '\t');
+	//if (isdef(fw) && fw.startsWith('//')) console.log('comm',line)
+	if (line.startsWith('//#region')) { w = 'REGION'; type = 'REGION' }
+	else if (line.startsWith('//#endregion')) { w = 'ENDREGION'; type = 'REGION' }
+	else if (line.startsWith('//')) { w = 'COMMENT'; type = 'empty' }
+	else if (isdef(fw) && fw.startsWith('//')) { w = 'COMMENT'; type = 'empty' }
+	else if (ch == '\t') { w = 'TAB'; }
+	else if (ch == '}' || ch == '{') { w = 'BRACKET' }
+	else if (nundef(ch)) { w = 'UNDEFINED'; type = 'WTF' }
+	else if (ch == ' ') { w = 'SPACE'; type = 'WTF' }
+	else if (ch == '\r') { type = 'WTF' }
+	else if (nundef(fw)) { w = fw; type = 'WTF' }
+
+	if (['async', 'class', 'const', 'function', 'var'].includes(w)) type = 'block';
+	else if (isLetter(ch)) type = 'WTF';
+
+	return [w, type];
+}
+async function get_dir_files_seed() {
+
+	//first go to project dir and load all js files
+	let dir = '../' + mBy('inp_project').value;
+	let list = mBy('inp_seed').value.split(' ');
+
+	//console.log('dir', dir, 'list', list)
+
+	//hol mir erstmal das index file
+	let textIndex = DA.indexhtml = await route_path_text(dir + '/index.html');
+	let arr = textIndex.split('script src="');
+	arr.shift();
+	let files = arr.map(x => stringBefore(x, '"'));
+
+
+	files = files.filter(x => !x.includes('alibs'));
+	//console.log('files', files)
+	let dirout = mBy('inp_dirout').value;
+	return [dir, files, list, dirout];
+}
+async function __parsefile(f, byKey, ckeys, idx) {
+	let chunk = '', error = '', state, kw = null, blocktype = null, region = null;
+	//let linestarts = [];
+	let txt = await route_path_text(f);
+	let fname = stringAfterLast(f, '/'); fname = stringBefore(fname, '.');
+	let text = `//#region ${fname}\n`;
+	let lines = txt.split('\n'); //console.log('lines[0]',lines[0]);
+
+	for (const line of lines) {
+		let [w, type] = getLineStart(line);	//console.log('linestart', w, type);
+		if (type == 'WTF') { continue; } //console.log('linestart', w, type); 
+		else if (type == 'empty') { continue; }
+		else if (type == 'in_process') {
+
+			if (line.includes('//#region') || line.includes('//#endregion')) continue;
+			if (kw) { chunk += line + '\n'; } else error += line + '\n';
+		}
+		else if (type == 'REGION') { if (w == type) region = stringAfter(line, '//#region ').trim(); }
+		else if (type == 'block') {
+			if (kw) {
+				//close previous block!
+				let prev = lookup(byKey, [kw]);
+				let oldfname = prev ? prev.fname : fname;
+				let o = { key: kw, code: chunk, fname: oldfname, region: region ?? oldfname, type: blocktype, idx: idx++ };
+				// if (o.type == 'async') {o.type = 'function';console.log('async',kw)}
+				if (prev) {
+					if (prev.type != o.type) {
+						console.log('DUPLICATE', kw, prev);
+						console.log('... change from', prev.type, 'to', o.type);
+					}
+					//loesche den alten!
+					//ckeys[prev.idx] = null;
+				} else { ckeys.push(kw); }
+				//lookupSetOverride(di, [blocktype, region, kw], o);
+				lookupSetOverride(byKey, [kw], o);
+
+
+			}
+			kw = w == 'async' ? stringAfter(line, 'function ') : stringAfter(line, ' '); kw = firstWord(kw, true);
+			let blocktypes = { function: 'func', class: 'cla', async: 'func', var: 'var', const: 'const' };
+			blocktype = blocktypes[w]; //w == 'async' ? 'function' : w; //hier async turns into function!!!
+			chunk = line + '\n';
+			//console.log('?',blocktype,kw,line);
+			//console.log('kw',kw);
+		} else { console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'); break; }
+	}
+	if (kw) {
+		//close previous block!
+		let prev = lookup(byKey, [kw]);
+		let oldfname = prev ? prev.fname : fname;
+		let o = { key: kw, code: chunk, fname: oldfname, region: region ?? oldfname, type: blocktype, idx: idx++ };
+		if (prev) {
+			//console.log('DUPLICATE', kw);
+			if (prev.type != o.type) {
+				console.log('... change from', prev.type, 'to', o.type);
+			}
+			//loesche den alten!
+			//ckeys[prev.idx] = null;
+		} else { ckeys.push(kw); }
+		lookupSetOverride(byKey, [kw], o);
+
+
+	}
+	text += `//#endregion ${fname}\n\n`;
+	return [text, idx];
+}
+async function onclickBundle() {
+	let [dir, files, seed, dirout] = await get_dir_files_seed();
+	let byKey = {}, ckeys = [], idx = 0;
+	//console.log(files)
+	let text = '';
+	for (const f of files) {
+		let [filetext, idxnew] = await __parsefile(f, byKey, ckeys, idx);
+		idx = idxnew;
+		text += filetext;
+	}
+	//assemble text!!!
+	assemble_complete_code(ckeys, byKey);
+
+	lookupSetOverride(DA, ['bundle', 'di'], byKey)
+	lookupSetOverride(DA, ['bundle', 'klist'], ckeys)
+
+	write_new_index_html(dirout);
+	DA.codedir = dir;
+	DA.dirout = dirout;
+}
+function assemble_code_sorted(list, di) {
+	//console.log('...',list[0],di[list[0]]);//var list problem!!!!!
+	let text = ''
+
+	let byFT = {},fnames=[];
+	for (const k of list) {
+		let o = di[k];
+		lookupAddIfToList(byFT, [o.fname, o.type], k);
+		addIf(fnames,o.fname);
+	}
+
+	for(const fname of fnames){
+		text +=  `//#region ${fname}\n`;
+		for (const t of ['const', 'var', 'cla', 'func']) {
+			let keys = byFT[fname][t];
+			if (nundef(keys)) continue;
+			if (t == 'func') keys = sortCaseInsensitive(keys);
+			for (const k of keys) {
+				if (!k || nundef(di[k])) continue;
+				let o = di[k];
+				text += o.code;
+			}
+		}
+		text += `//#endregion ${fname}\n\n`;
+	}
+	return text;
+}
+function assemble_code_orig(list, di) {
+	//console.log('...',list[0],di[list[0]]);//var list problem!!!!!
+	let region = null, fname = di[list[0]].fname;
+	let text = `//#region ${fname}\n`;
+
+	for (const k of list) {
+		if (!k || nundef(di[k])) continue;
+		let o = di[k];
+		//console.log('o.type',o.type)
+
+		//if (o.key == 'verify_min_req') console.log('verify_min_req', o)
+
+		if (fname != o.fname) {
+			text += `//#endregion ${fname}\n\n//#region ${o.fname}\n`;
+			fname = o.fname;
+		}
+		text += o.code;
+
+	}
+	text += `//#endregion\n\n`;
+	return text;
+}
+function assemble_complete_code(list, di, sort_functions = true) {
+	CODE.byKey = di;
+	CODE.keylist = list;
+
+	text = sort_functions ? assemble_code_sorted(list, di) : assemble_code_orig(list, di);
+
+	downloadAsText(text, 'bundle', 'js');
+	lookupSetOverride(DA, ['bundle', 'text'], text)
+
+	AU.ta.value = text;
+}
+function write_new_index_html(dir, filename = 'bundle') {
+	//let project = stringAfterLast(dir,'/');	console.log('project',project)
+	let text = DA.indexhtml;
+
+
+	let scripts = `</body><script src="../${dir}/${filename}.js"></script><script>onload = start;</script>\n</html>`;
+	let newtext = stringBefore(text, `</body>`) + scripts;
+
+	//downloadAsText(newtext,`index`,'html')
+}
+//#endregion bundle generation
+
+//#region css closure generation
+function firstWordIncluding(s, allowed = '_-') {
+	let res = '', i = 0;
+	while (!isLetter(s[i]) && !isDigit(s[i]) && !allowed.includes(s[i])) i++;
+	while (isLetter(s[i]) || isDigit(s[i]) || allowed.includes(s[i])) { res += s[i]; i++; }
+	return res;
+}
+async function prettyCss(cssfile, codefile, htmlfile) {
+	let tcss = await route_path_text(cssfile);
+	let code = await route_path_text(codefile);
+	let html = await route_path_text(htmlfile);
+
+	let [diclasses, outputclasses] = parse_css_classes(tcss, code, html);
+	let [dikeyframes, outputkeyframes] = parse_css_keyframes(tcss, code, html);
+	let [diids, outputids] = parse_css_ids(tcss, code, html);
+	let [ditags, outputtags] = parse_css_tags(tcss, code, html);
+
+	// let res = outputtags;
+	//let res = outputkeyframes; 
+	let res = outputtags + '\n' + outputids + '\n' + outputkeyframes + '\n' + outputclasses;
+
+	AU.ta.value = res;
+
+}
+
+async function games_css_closure() {
+	let tcss = await route_path_text('../games/basemin.css');
+	let code = await route_path_text('../games/bundle.js');
+	let html = await route_path_text('../games/index.html');
+
+	let [diclasses, outputclasses] = parse_css_classes(tcss, code, html);
+	let [dikeyframes, outputkeyframes] = parse_css_keyframes(tcss, code, html);
+	let [diids, outputids] = parse_css_ids(tcss, code, html);
+	let [ditags, outputtags] = parse_css_tags(tcss, code, html);
+
+	// let res = outputtags;
+	//let res = outputkeyframes; 
+	let res = outputtags + '\n' + outputids + '\n' + outputkeyframes + '\n' + outputclasses;
+
+	AU.ta.value = res;
+
+}
+function cssIsKeywordLine(line) { return line.startsWith(':') || line.startsWith('.') || line.startsWith('#') || line.startsWith('@keyframes') || isLetter(line[0]); }
+function parse_css_keywords(lines) {
+	let have_primary = false;
+	let di = {};
+	for (const line of lines) {
+		if (cssIsKeywordLine(line)) {
+			let word = firstWordIncluding(line, ['_', '-']);
+			lookupAddIfToList(di, [have_primary ? 'sec' : 'prim'], word);
+			have_primary = true;
+			// console.log('word', word);
+		} else {
+			have_primary = false;
+		}
+	}
+	return di;
+}
+function parse_css_classes(tcss, code, html) {
+	let t = replaceAllSpecialChars(tcss, '\t', '  ');
+	let lines = t.split('\r\n');
+	let di = {};
+	for (const line of lines) {
+		if (line.startsWith('.')) {
+			let word = firstWordIncluding(line, ['_', '-']);
+			// console.log('word', word);
+			lookupAddIfToList(di, ['classes'], word);
+		}
+	}
+	let included_classes = [];
+	for (const cname of di.classes) {
+		if (code.includes(`'${cname}'`) || code.includes(`"${cname}"`)) addIf(included_classes, cname);
+		if (html.includes(`${cname}`)) addIf(included_classes, cname);
+	}
+	console.log('all classes', sortCaseInsensitive(di.classes));
+	console.log('included_classes', sortCaseInsensitive(included_classes));
+	let dicode = {};
+	let parsing = false, chunk = '', comment = false;
+	for (const cname of included_classes) {
+		for (const line of lines) {
+			let lt = line.trim(); //console.log('ende',lt.endsWith('\n')); //return;
+			if (line.startsWith('.' + cname)) {
+				assertion(parsing == false, 'NEW KW WHILE PARSING!!!!!!!!!!!!')
+				parsing = true; comment = false;
+				chunk = line + '\n';
+				continue;
+			} else if (lt.startsWith('/*')) {
+				comment = !lt.endsWith(('*/'));
+				continue;
+			} else if (lt.endsWith('*/')) {
+				comment = false; continue;
+			} else if (comment) { continue; }
+			if (parsing) {
+				if (line.startsWith('}')) {
+					parsing = false;
+					lookupAddToList(dicode, [cname], chunk + line + '\n'); //finish up code for cname
+					chunk = ''; // chunk + line + '\n';
+				} else {
+					chunk += line + '\n';
+				}
+			} else {
+				assertion(!line.includes(',') || line.startsWith(' '), 'COMMA!!!', line);
+			}
+		}
+	}
+	let output = css_complete_text(dicode);
+	return [dicode, output];
+}
+function parse_css_ids(tcss, code, html) {
+	let t = replaceAllSpecialChars(tcss, '\t', '  ');
+	let lines = t.split('\r\n');
+	let di = {};
+	for (const line of lines) { if (line.startsWith('#')) { let word = firstWordIncluding(line, ['_', '-']); lookupAddIfToList(di, ['classes'], word); } }
+	let included_classes = [];
+	for (const cname of di.classes) {
+		if (code.includes(`'${cname}'`) || code.includes(`"${cname}"`)) addIf(included_classes, cname);
+		if (html.includes(`${cname}`)) addIf(included_classes, cname);
+	}
+	console.log('all classes', di.classes);
+	console.log('included_classes', included_classes);
+	let dicode = {};
+	let parsing = false, chunk = '', comment = false;
+	for (const cname of included_classes) {
+		for (const line of lines) {
+			let lt = line.trim();
+			if (line.startsWith('#' + cname)) {
+				assertion(parsing == false, 'NEW KW WHILE PARSING!!!!!!!!!!!!')
+				parsing = true; comment = false;
+				chunk = line + '\n';
+				continue;
+			} else if (lt.startsWith('/*')) {
+				comment = !lt.endsWith(('*/'));
+				continue;
+			} else if (lt.endsWith('*/')) {
+				comment = false; continue;
+			} else if (comment) { continue; }
+			if (parsing) {
+				if (line.startsWith('}')) {
+					parsing = false;
+					lookupAddToList(dicode, [cname], chunk + line + '\n'); //finish up code for cname
+					chunk = ''; // chunk + line + '\n';
+				} else {
+					chunk += line + '\n';
+				}
+			} else assertion(!line.includes(',') || line.startsWith(' '), 'COMMA!!!', line)
+		}
+	}
+	let output = css_complete_text(dicode);
+	return [dicode, output];
+}
+function parse_css_keyframes(tcss, code, html) {
+	let t = replaceAllSpecialChars(tcss, '\t', '  ');
+	let lines = t.split('\r\n');
+	let di = {};
+	for (const line of lines) {
+		if (line.startsWith('@keyframes')) {
+			let word = firstWordIncluding(stringAfter(line, 'keyframes'), ['_', '-']);
+			console.log('=====word', word);
+			lookupAddIfToList(di, ['classes'], word);
+		}
+	}
+	if (isEmpty(di)) return [];
+	let included_classes = [];
+	for (const cname of di.classes) {
+		if (code.includes(`'${cname}'`) || code.includes(`"${cname}"`)) addIf(included_classes, cname);
+		if (html.includes(`${cname}`)) addIf(included_classes, cname);
+	}
+	console.log('all classes', di.classes);
+	console.log('included_classes', included_classes);
+	let dicode = {};
+	let parsing = false, chunk = '', comment = false;
+	for (const cname of included_classes) {
+		for (const line of lines) {
+			let lt = line.trim(); //console.log('ende',lt.endsWith('\n')); //return;
+			if (line.startsWith('@keyframes ' + cname)) {
+				assertion(parsing == false, 'NEW KW WHILE PARSING!!!!!!!!!!!!')
+				parsing = true; comment = false;
+				chunk = line + '\n';
+				continue;
+			} else if (lt.startsWith('/*')) {
+				comment = !lt.endsWith(('*/'));
+				continue;
+			} else if (lt.endsWith('*/')) {
+				comment = false; continue;
+			} else if (comment) { continue; }
+			if (parsing) {
+				if (line.startsWith('}')) {
+					parsing = false;
+					lookupAddToList(dicode, [cname], chunk + line + '\n'); //finish up code for cname
+					chunk = ''; // chunk + line + '\n';
+				} else {
+					chunk += line + '\n';
+				}
+			} else assertion(!line.includes(',') || line.startsWith(' '), 'COMMA!!!', line)
+		}
+	}
+	let output = css_complete_text(dicode);
+	return [dicode, output];
+}
+function parse_css_tags(tcss, code, html) {
+	let t = replaceAllSpecialChars(tcss, '\t', '  ');
+	let lines = t.split('\r\n');
+	let di = {};
+	for (const line of lines) { if (isLetter(line[0])) { let word = firstWordIncluding(line, []); lookupAddIfToList(di, ['classes'], word); } }
+	let included_classes = di.classes; console.log('included_classes', included_classes);
+	let dicode = {};
+	let parsing = false, chunk = '', comment = false;
+	for (const cname of included_classes) {
+		for (const line of lines) {
+			let lt = line.trim(); //console.log('ende',lt.endsWith('\n')); //return;
+			if (line.startsWith(cname)) {
+				assertion(parsing == false, 'NEW KW WHILE PARSING!!!!!!!!!!!!')
+				parsing = true; comment = false;
+				chunk = line + '\n';
+				continue;
+			} else if (lt.startsWith('/*')) {
+				comment = !lt.endsWith(('*/'));
+				continue;
+			} else if (lt.endsWith('*/')) {
+				comment = false; continue;
+			} else if (comment) { continue; }
+			if (parsing) {
+				if (line.startsWith('}')) {
+					parsing = false;
+					lookupAddToList(dicode, [cname], chunk + line + '\n'); //finish up code for cname
+					chunk = ''; // chunk + line + '\n';
+				} else {
+					chunk += line + '\n';
+				}
+			} else assertion(!line.includes(',') || line.startsWith(' '), 'COMMA!!!', line)
+		}
+	}
+	let output = css_complete_text(dicode);
+	return [dicode, output];
+}
+function css_complete_text(dicode) {
+	let output = '';
+	let keylist = sortCaseInsensitive(get_keys(dicode));
+	for (const k of keylist) { for (const c of dicode[k]) { output += c; } }
+	return output;
+}
+
+//#endregion
+
 function addDummy(dParent) {
 	let dummy = mCreate('button');
 	mAppend(dParent, dummy);
