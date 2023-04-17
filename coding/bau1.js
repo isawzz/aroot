@@ -1,4 +1,4 @@
-
+//#region bundle closure css
 function addCodeBlock(byKey, ckeys, kw, chunk, fname, region, blocktype, idx) {
 	let prev = lookup(byKey, [kw]);
 	let oldfname = prev ? prev.fname : fname;
@@ -13,46 +13,26 @@ function addCodeBlock(byKey, ckeys, kw, chunk, fname, region, blocktype, idx) {
 }
 async function bundleGenFromProject(projectname, genfiles) {
 	//assume projectname has to be a top leve folder inside of the dir where coding resides!
-	await bundleGenerateFrom(`../${projectname}/index.html`, null, genfiles);
+	return await bundleGenerateFrom(`../${projectname}/index.html`, null, genfiles);
 }
-async function bundleGenerateFrom(htmlScriptsFile, htmlBodyFile = null, download = true) {
-	let html = await route_path_text(htmlScriptsFile);
-	if (htmlBodyFile) html += await route_path_text(htmlBodyFile);
-	let dirhtml = stringBeforeLast(htmlScriptsFile, '/');
-	let project = stringAfter(dirhtml, '/'); if (project.includes('/')) project = stringBefore(project, '/');
-	let files = extractFilesFromHtml(html, htmlScriptsFile);
+async function cssGenerateFrom(cssfile, codefile, htmlfile) {
+	if (!isList(cssfile)) cssfile = [cssfile];
+	let tcss = '';
+	for (const f of cssfile) { tcss += await route_path_text(f); }
+	let code = codefile.endsWith('.js') ? await route_path_text(codefile) : codefile;
+	let html = htmlfile.endsWith('.html') ? await route_path_text(htmlfile) : htmlfile;
 
-	let byKey = {}, ckeys = [], idx = 0, haveBundle = false;
-	if (files.length == 1) {
-		haveBundle = true;
-		console.log('bundle already generated!!!', files[0]);
-	}
-	for (const f of files) { let idxnew = await parseCodeFile(f, byKey, ckeys, idx); idx = idxnew; }
-	let bundle_code = assemble_code_sorted(ckeys, byKey, haveBundle);
-	if (download) downloadAsText(bundle_code, `${project}_bundle`, 'js');
-
-	//closure!
-	let seed = ['start'].concat(extractOnclickFromHtml(html));
-	let byKeyMinimized = minimizeCode(byKey, ckeys, seed);
-	let ckeysMinimized = ckeys.filter(x => isdef(byKeyMinimized[x]));
-	let closure_code = assemble_code_sorted(ckeysMinimized, byKeyMinimized, haveBundle);
-	if (download) downloadAsText(closure_code, `${project}_closure`, 'js');
-
-	let scripts = `</body><script src="../${dirhtml}/bundle.js"></script><script>onload = start;</script>\n</html>`;
-	let htmlcode = stringBefore(html, `</body>`) + scripts;
-	if (download) downloadAsText(htmlcode, `${project}_bundle`, 'html')
-	if (download) downloadAsText(htmlcode.replace('/bundle.js', 'closure.js'), `${project}_closure`, 'html')
-
-	AU.ta.value = closure_code;
-
+	return cssNormalize(tcss, code, html);
 }
-function extractFilesFromHtml(html, htmlfile) {
+function extractFilesFromHtml(html, htmlfile, ext = 'js') {
+	let prefix = ext == 'js' ? 'script src="' : 'link rel="stylesheet" href="';
 	let dirhtml = stringBeforeLast(htmlfile, '/');
 	let project = stringAfter(dirhtml, '/'); if (project.includes('/')) project = stringBefore(project, '/');
-	let parts = html.split('script src="');
+	let parts = html.split(prefix);
 	parts.shift();
 	let files = parts.map(x => stringBefore(x, '"'));
-	files = files.filter(x => !x.includes('alibs')); //console.log('files', jsCopy(files))
+	files = files.filter(x => !x.includes('alibs/') && !x.includes('assets/')); //console.log('files', jsCopy(files))
+
 
 	//console.log('dirhtml', dirhtml);
 	let files2 = [];
@@ -66,6 +46,8 @@ function extractFilesFromHtml(html, htmlfile) {
 		}
 
 		if (!f.includes('/')) { files2.push(dirhtml + '/' + f); continue; }
+
+		if (isLetter(f[0])) { files2.push(dirhtml + '/' + f); continue; }
 		console.log('PROBLEM!', f)
 		//file die in f is relative to index.html
 		//ich brauch es relativ to coding/index
@@ -94,7 +76,7 @@ async function parseCodeFile(f, byKey, ckeys, idx) {
 	let lines = txt.split('\n');
 	for (const line of lines) {
 		let [w, type] = getLineStart(line);
-		if (line.includes('`;')) console.log('ACHTUNG!', w, type, line.trim() == '`;');
+		//if (line.includes('`;')) console.log('ACHTUNG!', w, type, line.trim() == '`;');
 		if (line.trim() == '`;' && kw) { chunk += line + '\n'; continue; }
 		if (type == 'WTF') { continue; }
 		else if (type == 'empty') { continue; }
@@ -114,7 +96,7 @@ async function parseCodeFile(f, byKey, ckeys, idx) {
 	if (kw) addCodeBlock(byKey, ckeys, kw, chunk, fname, region, blocktype, idx++);
 	return idx;
 }
-
+//#__endregion
 
 
 

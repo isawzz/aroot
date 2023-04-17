@@ -1,13 +1,4 @@
 
-async function cssGenerateFrom(cssfile, codefile, htmlfile) {
-	if (!isList(cssfile)) cssfile = [cssfile];
-	let tcss='';
-	for(const f of cssfile){	tcss += await route_path_text(f); }
-	let code = await route_path_text(codefile);
-	let html = await route_path_text(htmlfile);
-
-	cssNormalize(tcss,code,html); return;
-}
 
 
 //#region css closure gen NEW
@@ -119,7 +110,8 @@ function cssNormalize(tcss, code, html) {
 
 
 	//console.log(dis.id.sidebar)
-	AU.ta.value = text;
+	//AU.ta.value = text;
+	return text;
 }
 function cssCleanupClause(t, kw) {
 	let lines = t.split('\n');
@@ -1501,7 +1493,17 @@ function sortConstKeys(di) {
 
 	return donelist; //dinew; //Object.keys(dinew);
 }
-function stringMinusLast(s, n = 1) {
+function stringCount(s,sSub,caseInsensitive=true){
+
+	let temp = "Welcome to W3Docs";
+	let m=new RegExp(sSub,'g'+(caseInsensitive?'i':''));
+	let count = (s.match(m)).length;
+	//console.log(count);
+	return count;
+
+	//console.log('m',m);
+	//console.log(m.exec(s));
+}function stringMinusLast(s, n = 1) {
 	return s.substring(0, s.length - n);
 }
 function test_ui() {

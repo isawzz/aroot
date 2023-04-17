@@ -5,9 +5,9 @@ body {
 	color: silver;
 	font: 16pt / 16pt opensans;
 }
-* {
+/* * {
 	box-sizing: border-box;
-}
+} */
 .a {
 	text-decoration: none;
 	padding: 1rem;

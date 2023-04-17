@@ -5,10 +5,15 @@ async function start() {
 	await load_Codebase('../basejs/cb1');
 	await load_assets_fetch('../base/', '../games/')
 
-	await bundleGenFromProject('iconViewer',false);
+	// dTable = document.body;
+	// mClear(dTable);
+	// let x=get_user_pic_and_name()
+
+	let [bundle, closure, csstext, html] = await bundleGenFromProject('coding');
 	//await bundleGenerateFrom('../games/test.html'); 
 
-	//await cssGenerateFrom(['../belinda/css/base.css','../belinda/css/cards.css'], '../belinda/closure.js', '../belinda/html/index.html');
+	//let text = await cssGenerateFrom(['../belinda/css/base.css','../belinda/css/cards.css'], '../belinda/closure.js', '../belinda/html/index.html');
+	AU.ta.value = csstext;
 	//test_cleanup_css_clause();
 	//await prettyCss('../games/basemin.css','../games/closure.js','../games/index.html');
 }

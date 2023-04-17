@@ -15197,35 +15197,6 @@ MazeGraph: >
       }
       return dGridOuter;
     }
-    createDiv_orig(dParent, cols, rows, sz, gap) {
-      let [wCell, hCell] = [sz, sz];
-      let [wTotal, hTotal] = [cols * (wCell + gap), rows * (hCell + gap)];
-      let dGridOuter = this.dMaze = mDiv(dParent, { wmin: wTotal, hmin: hTotal });
-      let m = this.m;
-      let id = 'tMaze';
-      setCSSVariable('--wCell', `${wCell}px`);
-      setCSSVariable('--hCell', `${hCell}px`);
-      let tMaze = createElementFromHtml(`
-        <table id="${id}">
-        <tbody></tbody>
-        </table>
-      `);
-      mAppend(dGridOuter, tMaze);
-      let sBorder = `${1}px solid black`;
-      for (var i = 0; i < m.length; i++) {
-        $('#tMaze > tbody').append("<tr>");
-        for (var j = 0; j < m[i].length; j++) {
-          var selector = this.getCommonIdTable(i, j);
-          $('#tMaze > tbody').append("<td id='" + selector + "'>&nbsp;</td>");
-          if (m[i][j][0] == 0) { $('#' + selector).css('border-top', sBorder); }
-          if (m[i][j][1] == 0) { $('#' + selector).css('border-right', sBorder); }
-          if (m[i][j][2] == 0) { $('#' + selector).css('border-bottom', sBorder); }
-          if (m[i][j][3] == 0) { $('#' + selector).css('border-left', sBorder); }
-        }
-        $('tMmaze > tbody').append("</tr>");
-      }
-      return dGridOuter;
-    }
     createMaze(cols, rows, sz, gap) {
       var dxy = sz + 2 * gap;
       var offs = dxy / 2 + gap;
