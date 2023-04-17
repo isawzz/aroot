@@ -239,7 +239,6 @@ async function belinda_closure() {
 
 	//all die onclick dinsplit('onclick=").shift()ger dazu
 	let symlist = ['start'];
-	console
 	let onclicks = DA.indexhtml.split('onclick="'); //.shift();
 	onclicks.shift();
 	console.log('onclicks', onclicks);
@@ -403,7 +402,6 @@ async function onclickClosure() {
 
 	//all die onclick dinsplit('onclick=").shift()ger dazu
 	let symlist = ['start'];
-	console
 	let onclicks = DA.indexhtml.split('onclick="'); //.shift();
 	onclicks.shift();
 	console.log('onclicks',onclicks);
@@ -456,8 +454,6 @@ function getLineStart(line) {
 	let ch = line[0];
 	let i = 0; while (line[i] == '\t') { i++; }
 	let fw = line.slice(i);
-	//whilestringAfterLast(line, '\t');
-	//if (isdef(fw) && fw.startsWith('//')) console.log('comm',line)
 	if (line.startsWith('//#region')) { w = 'REGION'; type = 'REGION' }
 	else if (line.startsWith('//#endregion')) { w = 'ENDREGION'; type = 'REGION' }
 	else if (line.startsWith('//')) { w = 'COMMENT'; type = 'empty' }
@@ -580,14 +576,14 @@ async function onclickBundle() {
 	DA.codedir = dir;
 	DA.dirout = dirout;
 }
-function assemble_code_sorted(list, di) {
+function assemble_code_sorted(list, di, preserveRegions=false) {
 	//console.log('...',list[0],di[list[0]]);//var list problem!!!!!
 	let text = ''
 
 	let byFT = {},fnames=[];
 	for (const k of list) {
 		let o = di[k];
-		lookupAddIfToList(byFT, [o.fname, o.type], k);
+		lookupAddIfToList(byFT, [preserveRegions?o.region:o.fname, o.type], k);
 		addIf(fnames,o.fname);
 	}
 

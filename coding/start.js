@@ -5,8 +5,8 @@ async function start() {
 	await load_Codebase('../basejs/cb1');
 	await load_assets_fetch('../base/', '../games/')
 
-	await bundleGenFromProject('iconViewer');
-	await bundleGenerateFrom('../games/test.html'); 
+	await bundleGenFromProject('iconViewer',false);
+	//await bundleGenerateFrom('../games/test.html'); 
 
 	//await cssGenerateFrom(['../belinda/css/base.css','../belinda/css/cards.css'], '../belinda/closure.js', '../belinda/html/index.html');
 	//test_cleanup_css_clause();

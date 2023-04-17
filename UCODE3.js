@@ -1,4 +1,196 @@
 
+//#region bundle gen
+async function bundleGenFromProject(projectname) {
+	//assume projectname has to be a top leve folder inside of the dir where coding resides!
+	await bundleGenerateFrom(`../${projectname}/index.html`);
+}
+function extractFilesFromHtml(html) {
+	let dirhtml = stringBeforeLast(htmlfile, '/');
+	let project = stringAfter(dirhtml, '/'); if (project.includes('/')) project = stringBefore(project, '/');
+	let parts = html.split('script src="');
+	parts.shift();
+	let files = parts.map(x => stringBefore(x, '"'));
+	files = files.filter(x => !x.includes('alibs')); console.log('files', jsCopy(files))
+
+	if (files.length == 1 && files[0].includes('/bundle.js')) {
+		console.log('bundle already generated!!!', files[0]);
+		return;
+	}
+
+	console.log('dirhtml', dirhtml);
+	let files2 = [];
+	for (const f of files) {
+		if (f.startsWith(dirhtml)) { files2.push(f); continue; }
+
+		if (f.startsWith('./')) { files2.push(dirhtml + f.substring(1)); continue; }
+
+		if (f.startsWith('../') && stringCount(dirhtml, '../') == 1) {
+			files2.push(f); continue;
+		}
+
+		if (!f.includes('/')) { files2.push(dirhtml + '/' + f); continue; }
+		console.log('PROBLEM!', f)
+		//file die in f is relative to index.html
+		//ich brauch es relativ to coding/index
+		//if (!f.startsWith())
+	}
+	console.log('files2', files2);
+	files = files2;
+	return files;
+}
+function addCodeBlock(byKey, ckeys, kw, chunk, fname, region, blocktype, idx) {
+	//close previous block!
+	let prev = lookup(byKey, [kw]);
+	let oldfname = prev ? prev.fname : fname;
+	let o = { key: kw, code: chunk, fname: oldfname, region: region ?? oldfname, type: blocktype, idx: idx++ };
+	if (prev) {
+		if (prev.type != o.type) {
+			console.log('DUPLICATE', kw, prev);
+			console.log('... change from', prev.type, 'to', o.type);
+		}
+	} else { ckeys.push(kw); }
+	lookupSetOverride(byKey, [kw], o);
+}
+async function parseCodeFile(f, byKey, ckeys, idx) {
+	let chunk = '', kw = null, blocktype = null, region = null;
+	let txt = await route_path_text(f);
+	let fname = stringAfterLast(f, '/'); fname = stringBefore(fname, '.');
+	let lines = txt.split('\n'); //console.log('lines[0]',lines[0]);
+	for (const line of lines) {
+		let [w, type] = getLineStart(line);	//console.log('linestart', w, type);
+		if (type == 'WTF') { continue; } //console.log('linestart', w, type); 
+		else if (type == 'empty') { continue; }
+		else if (type == 'in_process') {
+			if (line.includes('//#region') || line.includes('//#endregion')) continue;
+			if (kw) { chunk += line + '\n'; } //else error += line + '\n';
+		}
+		else if (type == 'REGION') { if (w == type) region = stringAfter(line, '//#region ').trim(); }
+		else if (type == 'block') {
+			if (kw) addCodeBlock(byKey, ckeys, kw, chunk, fname, region, blocktype, idx++);
+			kw = w == 'async' ? stringAfter(line, 'function ') : stringAfter(line, ' '); kw = firstWord(kw, true);
+			let blocktypes = { function: 'func', class: 'cla', async: 'func', var: 'var', const: 'const' };
+			blocktype = blocktypes[w]; //w == 'async' ? 'function' : w; //hier async turns into function!!!
+			chunk = line + '\n';
+			//console.log('?',blocktype,kw,line);
+			//console.log('kw',kw);
+		} else { console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'); break; }
+	}
+	if (kw) addCodeBlock(byKey, ckeys, kw, chunk, fname, region, blocktype, idx++);
+	// if (kw) {
+	// 	//close previous block!
+	// 	let prev = lookup(byKey, [kw]);
+	// 	let oldfname = prev ? prev.fname : fname;
+	// 	let o = { key: kw, code: chunk, fname: oldfname, region: region ?? oldfname, type: blocktype, idx: idx++ };
+	// 	if (prev) {
+	// 		//console.log('DUPLICATE', kw);
+	// 		if (prev.type != o.type) {
+	// 			console.log('... change from', prev.type, 'to', o.type);
+	// 		}
+	// 		//loesche den alten!
+	// 		//ckeys[prev.idx] = null;
+	// 	} else { ckeys.push(kw); }
+	// 	lookupSetOverride(byKey, [kw], o);
+
+
+	// }
+	//text += `//#endregion ${fname}\n\n`;
+	return idx;
+}
+async function bundleGenerateFrom(htmlfile) {
+	let html = await route_path_text(htmlfile);
+	let dirhtml = stringBeforeLast(htmlfile, '/');
+	let project = stringAfter(dirhtml, '/'); if (project.includes('/')) project = stringBefore(project, '/');
+
+	let files = extractFilesFromHtml(html);
+
+	let byKey = {}, ckeys = [], idx = 0;
+	for (const f of files) { let idxnew = await parseCodeFile(f, byKey, ckeys, idx); idx = idxnew; }
+	//assemble text!!!
+	// assemble_complete_code(ckeys, byKey);
+	// CODE.byKey = di;
+	// CODE.keylist = list;
+	let bundle_code = sort_functions ? assemble_code_sorted(ckeys, byKey) : assemble_code_orig(ckeys, byKey);
+	downloadAsText(bundle_code, `${project}_bundle`, 'js');
+	//lookupSetOverride(DA, ['bundle', 'text'], bundle_code)
+	AU.ta.value = bundle_code;
+
+	// lookupSetOverride(DA, [project,'bundle', 'di'], byKey)
+	// lookupSetOverride(DA, [project,'bundle', 'klist'], ckeys)
+
+	//write_new_index_html(dirhtml,project);
+	//let text = DA.indexhtml;
+	let scripts = `</body><script src="../${dirhtml}/bundle.js"></script><script>onload = start;</script>\n</html>`;
+	let newhtml = stringBefore(html, `</body>`) + scripts;
+	downloadAsText(newhtml, `${project}_bundle`, 'html')
+
+
+}
+//#endregion
+
+async function bundleGenerateFrom(htmlfile) {
+	let html = await route_path_text(htmlfile);
+
+	let parts = html.split('script src="');
+	parts.shift();
+	let files = parts.map(x => stringBefore(x, '"'));
+	files = files.filter(x => !x.includes('alibs')); console.log('files', jsCopy(files))
+
+	if (files.length == 1 && files[0].includes('/bundle.js')) {
+		console.log('bundle already generated!!!', files[0]);
+		return;
+	}
+
+	let dirhtml = stringBeforeLast(htmlfile, '/');
+	console.log('dirhtml', dirhtml);
+	let files2=[];
+	let project = stringAfter(dirhtml,'/');if (project.includes('/')) project = stringBefore(project,'/');
+	for (const f of files) {
+		if (f.startsWith(dirhtml)) {files2.push(f);continue;}
+
+		if (f.startsWith('./')) {files2.push(dirhtml+f.substring(1));continue;}
+
+		if (f.startsWith('../') && stringCount(dirhtml,'../') == 1){
+			files2.push(f);continue;
+		}
+
+		if (!f.includes('/')) {files2.push(dirhtml+'/'+f);continue;}
+		console.log('PROBLEM!',f)
+		//file die in f is relative to index.html
+		//ich brauch es relativ to coding/index
+		//if (!f.startsWith())
+	}
+	console.log('files2',files2);
+	files = files2;
+
+	let byKey = {}, ckeys = [], idx = 0;
+	let text = '';
+	for (const f of files) {
+		let [filetext, idxnew] = await __parsefile(f, byKey, ckeys, idx);
+		idx = idxnew;
+		text += filetext;
+	}
+	//assemble text!!!
+	// assemble_complete_code(ckeys, byKey);
+	// CODE.byKey = di;
+	// CODE.keylist = list;
+	let bundle_code = sort_functions ? assemble_code_sorted(ckeys, byKey) : assemble_code_orig(ckeys,byKey);
+	downloadAsText(bundle_code, `${project}_bundle`, 'js');
+	//lookupSetOverride(DA, ['bundle', 'text'], bundle_code)
+	AU.ta.value = bundle_code;
+
+	// lookupSetOverride(DA, [project,'bundle', 'di'], byKey)
+	// lookupSetOverride(DA, [project,'bundle', 'klist'], ckeys)
+
+	//write_new_index_html(dirhtml,project);
+	//let text = DA.indexhtml;
+	let scripts = `</body><script src="../${dirhtml}/bundle.js"></script><script>onload = start;</script>\n</html>`;
+	let newhtml = stringBefore(html, `</body>`) + scripts;
+	downloadAsText(newhtml,`${project}_bundle`,'html')
+
+
+}
+
+
 //#region coding start starttest
 onload = start;
 function start() {
