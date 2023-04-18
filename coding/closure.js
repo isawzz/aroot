@@ -1687,8 +1687,8 @@ async function start() {
 	test_ui_extended();
 	await load_Codebase('../basejs/cb1');
 	await load_assets_fetch('../base/', '../games/')
-	let [bundle, closure, csstext, html] = await bundleGenFromProject('codingfull', true);
-	AU.ta.value = closure; //stringAfter(bundle, 'function getLineStart');
+	let [bundle, closure, csstext, html] = await bundleGenFromProject('coding', true);
+	AU.ta.value = closure;
 }
 function startsWith(s, sSub) {
 	return s.substring(0, sSub.length) == sSub;
@@ -2021,27 +2021,6 @@ function cssCleanupClause(t, kw) {
 	}
 	if (kw == 'bAdd') console.log(res);
 	return res;
-}
-function getLineStart(line) {
-	if (isEmpty(line.trim())) { return ['', 'empty'] }
-	let type = 'in_process';
-	let w = stringBefore(line, ' ');
-	let ch = line[0];
-	let i = 0; while (line[i] == '\t') { i++; }
-	let fw = line.slice(i);
-	if (line.startsWith('//#region')) { w = 'REGION'; type = 'REGION' }
-	else if (line.startsWith('//#endregion')) { w = 'ENDREGION'; type = 'REGION' }
-	else if (line.startsWith('//')) { w = 'COMMENT'; type = 'empty' }
-	else if (isdef(fw) && fw.startsWith('//')) { w = 'COMMENT'; type = 'empty' }
-	else if (ch == '\t') { w = 'TAB'; }
-	else if (ch == '}' || ch == '{') { w = 'BRACKET' }
-	else if (nundef(ch)) { w = 'UNDEFINED'; type = 'WTF' }
-	else if (ch == ' ') { w = 'SPACE'; type = 'WTF' }
-	else if (ch == '\r') { type = 'WTF' }
-	else if (nundef(fw)) { w = fw; type = 'WTF' }
-	if (['async', 'class', 'const', 'function', 'var'].includes(w)) type = 'block';
-	else if (isLetter(ch)) type = 'WTF';
-	return [w, type];
 }
 function firstWordIncluding(s, allowed = '_-') {
 	let res = '', i = 0;
