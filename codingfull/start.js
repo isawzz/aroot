@@ -7,7 +7,7 @@ async function start(){
 
 	// dTable = document.body; mClear(dTable); let x=get_user_pic_and_name()
 
-	let [bundle, closure, csstext, html] = await bundleGenFromProject('coding', true);
+	let [bundle, closure, csstext, html] = await bundleGenFromProject('codingfull', true);
 	//await bundleGenerateFrom('../games/test.html'); 
 
 	//let text = await cssGenerateFrom(['../belinda/css/base.css','../belinda/css/cards.css'], '../belinda/closure.js', '../belinda/html/index.html');

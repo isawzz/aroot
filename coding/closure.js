@@ -1687,7 +1687,7 @@ async function start() {
 	test_ui_extended();
 	await load_Codebase('../basejs/cb1');
 	await load_assets_fetch('../base/', '../games/')
-	let [bundle, closure, csstext, html] = await bundleGenFromProject('coding', true);
+	let [bundle, closure, csstext, html] = await bundleGenFromProject('codingfull', true);
 	AU.ta.value = closure; //stringAfter(bundle, 'function getLineStart');
 }
 function startsWith(s, sSub) {
@@ -1793,7 +1793,7 @@ async function bundleGenerateFrom(htmlScriptsFile, htmlBodyFile = null, download
 	}
 	for (const f of files) { let idxnew = await parseCodeFile(f, byKey, ckeys, idx); idx = idxnew; }
 	let bundle_code = _assemble_code_sorted(ckeys, byKey, haveBundle);
-	let knownNogos = { coding: ['uiGetContact'] };
+	let knownNogos = { codingfull: ['uiGetContact'] };
 	let seed = ['start'].concat(extractOnclickFromHtml(html)); //console.log('seed',seed)
 	let byKeyMinimized = _minimizeCode(byKey, seed, valf(knownNogos[project], []));
 	let ckeysMinimized = ckeys.filter(x => isdef(byKeyMinimized[x]));

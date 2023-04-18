@@ -1688,7 +1688,7 @@ async function start() {
 	await load_Codebase('../basejs/cb1');
 	await load_assets_fetch('../base/', '../games/')
 	let [bundle, closure, csstext, html] = await bundleGenFromProject('coding', true);
-	AU.ta.value = closure; //stringAfter(bundle, 'function getLineStart');
+	AU.ta.value = closure;
 }
 function startsWith(s, sSub) {
 	return s.substring(0, sSub.length) == sSub;
@@ -1793,8 +1793,9 @@ async function bundleGenerateFrom(htmlScriptsFile, htmlBodyFile = null, download
 	}
 	for (const f of files) { let idxnew = await parseCodeFile(f, byKey, ckeys, idx); idx = idxnew; }
 	let bundle_code = _assemble_code_sorted(ckeys, byKey, haveBundle);
+	let knownNogos = { codingfull: ['uiGetContact'] };
 	let seed = ['start'].concat(extractOnclickFromHtml(html)); //console.log('seed',seed)
-	let byKeyMinimized = _minimizeCode(byKey, seed);
+	let byKeyMinimized = _minimizeCode(byKey, seed, valf(knownNogos[project], []));
 	let ckeysMinimized = ckeys.filter(x => isdef(byKeyMinimized[x]));
 	let closure_code = _assemble_code_sorted(ckeysMinimized, byKeyMinimized, haveBundle);
 	let scripts = `</body><script src="../${dirhtml}/closure.js"></script><script>onload = start;</script>\n</html>`;
@@ -1893,7 +1894,7 @@ function _assemble_code_sorted(list, di, preserveRegions = false) {
 	}
 	return text;
 }
-function _minimizeCode(di, symlist = ['start']) {
+function _minimizeCode(di, symlist = ['start'], nogo = []) {
 	let done = {};
 	let tbd = symlist; //console.log('symlist', symlist)
 	let MAX = 1000000, i = 0;
@@ -1908,7 +1909,7 @@ function _minimizeCode(di, symlist = ['start']) {
 		let text = o.code; //always using last function body!!!
 		let words = toWords(text, true);
 		for (const w of words) {
-			if (w.startsWith('uiGetC' + 'ontact')) { console.log('sym', sym, w); return done; }
+			if (nogo.some(x => w.startsWith(x))) continue; //'uiGetC'+'ontact')) {console.log('sym',sym,w);return done;}
 			if (nundef(done[w]) && nundef(visited[w]) && w != sym && isdef(di[w])) addIf(tbd, w);
 		}
 		assertion(sym == tbd[0], 'W T F')
@@ -2020,27 +2021,6 @@ function cssCleanupClause(t, kw) {
 	}
 	if (kw == 'bAdd') console.log(res);
 	return res;
-}
-function getLineStart(line) {
-	if (isEmpty(line.trim())) { return ['', 'empty'] }
-	let type = 'in_process';
-	let w = stringBefore(line, ' ');
-	let ch = line[0];
-	let i = 0; while (line[i] == '\t') { i++; }
-	let fw = line.slice(i);
-	if (line.startsWith('//#region')) { w = 'REGION'; type = 'REGION' }
-	else if (line.startsWith('//#endregion')) { w = 'ENDREGION'; type = 'REGION' }
-	else if (line.startsWith('//')) { w = 'COMMENT'; type = 'empty' }
-	else if (isdef(fw) && fw.startsWith('//')) { w = 'COMMENT'; type = 'empty' }
-	else if (ch == '\t') { w = 'TAB'; }
-	else if (ch == '}' || ch == '{') { w = 'BRACKET' }
-	else if (nundef(ch)) { w = 'UNDEFINED'; type = 'WTF' }
-	else if (ch == ' ') { w = 'SPACE'; type = 'WTF' }
-	else if (ch == '\r') { type = 'WTF' }
-	else if (nundef(fw)) { w = fw; type = 'WTF' }
-	if (['async', 'class', 'const', 'function', 'var'].includes(w)) type = 'block';
-	else if (isLetter(ch)) type = 'WTF';
-	return [w, type];
 }
 function firstWordIncluding(s, allowed = '_-') {
 	let res = '', i = 0;

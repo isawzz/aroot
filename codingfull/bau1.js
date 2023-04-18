@@ -55,7 +55,7 @@ async function bundleGenerateFrom(htmlScriptsFile, htmlBodyFile = null, download
 	let bundle_code = _assemble_code_sorted(ckeys, byKey, haveBundle);
 	//if (download) downloadAsText(bundle_code, `${project}_bundle`, 'js');
 
-	let knownNogos={coding:['uiGetContact']};
+	let knownNogos={codingfull:['uiGetContact']};
 
 	//closure!
 	let seed = ['start'].concat(extractOnclickFromHtml(html)); //console.log('seed',seed)
