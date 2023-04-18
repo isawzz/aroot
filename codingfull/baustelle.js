@@ -963,7 +963,7 @@ function create_left_side_extended() {
 	for (const d of [dt, dse, dsb, dft, dfta]) mStyle(d, { padding: 4, hmin: 10 })
 
 	//hier kommt die neue ui!
-	mClosureUI(dt)
+	//mClosureUI(dt)
 
 
 	mSearchGoLive('keywords', mySearch, dse, { hmargin: 6 }, { selectOnClick: true });
