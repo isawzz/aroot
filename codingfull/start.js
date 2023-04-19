@@ -11,7 +11,7 @@ async function start(){
 	//await bundleGenerateFrom('../games/test.html'); 
 
 	//let text = await cssGenerateFrom(['../belinda/css/base.css','../belinda/css/cards.css'], '../belinda/closure.js', '../belinda/html/index.html');
-	AU.ta.value = closure; //stringAfter(bundle, 'function getLineStart');
+	AU.ta.value = csstext; //stringAfter(bundle, 'function getLineStart');
 	//test_cleanup_css_clause();
 	//await prettyCss('../games/basemin.css','../games/closure.js','../games/index.html');
 

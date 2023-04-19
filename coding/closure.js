@@ -1687,8 +1687,8 @@ async function start() {
 	test_ui_extended();
 	await load_Codebase('../basejs/cb1');
 	await load_assets_fetch('../base/', '../games/')
-	let [bundle, closure, csstext, html] = await bundleGenFromProject('coding', true);
-	AU.ta.value = closure;
+	let [bundle, closure, csstext, html] = await bundleGenFromProject('codingfull', true);
+	AU.ta.value = csstext; //stringAfter(bundle, 'function getLineStart');
 }
 function startsWith(s, sSub) {
 	return s.substring(0, sSub.length) == sSub;
@@ -1798,6 +1798,7 @@ async function bundleGenerateFrom(htmlScriptsFile, htmlBodyFile = null, download
 	let byKeyMinimized = _minimizeCode(byKey, seed, valf(knownNogos[project], []));
 	let ckeysMinimized = ckeys.filter(x => isdef(byKeyMinimized[x]));
 	let closure_code = _assemble_code_sorted(ckeysMinimized, byKeyMinimized, haveBundle);
+	if (download) downloadAsText(closure_code, `${project}_closure`, 'js');
 	let scripts = `</body><script src="../${dirhtml}/closure.js"></script><script>onload = start;</script>\n</html>`;
 	let htmlcode = stringBefore(html, `</body>`) + scripts;
 	AU.ta.value = closure_code;
@@ -2022,6 +2023,27 @@ function cssCleanupClause(t, kw) {
 	if (kw == 'bAdd') console.log(res);
 	return res;
 }
+function getLineStart(line) {
+	if (isEmpty(line.trim())) { return ['', 'empty'] }
+	let type = 'in_process';
+	let w = stringBefore(line, ' ');
+	let ch = line[0];
+	let i = 0; while (line[i] == '\t') { i++; }
+	let fw = line.slice(i);
+	if (line.startsWith('//#region')) { w = 'REGION'; type = 'REGION' }
+	else if (line.startsWith('//#endregion')) { w = 'ENDREGION'; type = 'REGION' }
+	else if (line.startsWith('//')) { w = 'COMMENT'; type = 'empty' }
+	else if (isdef(fw) && fw.startsWith('//')) { w = 'COMMENT'; type = 'empty' }
+	else if (ch == '\t') { w = 'TAB'; }
+	else if (ch == '}' || ch == '{') { w = 'BRACKET' }
+	else if (nundef(ch)) { w = 'UNDEFINED'; type = 'WTF' }
+	else if (ch == ' ') { w = 'SPACE'; type = 'WTF' }
+	else if (ch == '\r') { type = 'WTF' }
+	else if (nundef(fw)) { w = fw; type = 'WTF' }
+	if (['async', 'class', 'const', 'function', 'var'].includes(w)) type = 'block';
+	else if (isLetter(ch)) type = 'WTF';
+	return [w, type];
+}
 function firstWordIncluding(s, allowed = '_-') {
 	let res = '', i = 0;
 	while (!isLetter(s[i]) && !isDigit(s[i]) && !allowed.includes(s[i])) i++;
@@ -2146,7 +2168,8 @@ function stringCount(s, sSub, caseInsensitive = true) {
 	let m = new RegExp(sSub, 'g' + (caseInsensitive ? 'i' : ''));
 	let count = (s.match(m)).length;
 	return count;
-} function stringMinusLast(s, n = 1) {
+} 
+function stringMinusLast(s, n = 1) {
 	return s.substring(0, s.length - n);
 }
 function test_ui_extended() {
@@ -2190,3 +2213,4 @@ function write_code_text_file(keylist) {
 	AU.ta.value = text;
 	return text;
 }
+

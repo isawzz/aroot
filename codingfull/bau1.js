@@ -62,7 +62,7 @@ async function bundleGenerateFrom(htmlScriptsFile, htmlBodyFile = null, download
 	let byKeyMinimized = _minimizeCode(byKey, seed, valf(knownNogos[project],[]) );
 	let ckeysMinimized = ckeys.filter(x => isdef(byKeyMinimized[x]));
 	let closure_code = _assemble_code_sorted(ckeysMinimized, byKeyMinimized, haveBundle);
-	//if (download) downloadAsText(closure_code, `${project}_closure`, 'js');
+	if (download) downloadAsText(closure_code, `${project}_closure`, 'js');
 
 	let scripts = `</body><script src="../${dirhtml}/closure.js"></script><script>onload = start;</script>\n</html>`;
 	let htmlcode = stringBefore(html, `</body>`) + scripts;
