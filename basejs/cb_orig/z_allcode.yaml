@@ -80717,7 +80717,7 @@ faChar: "function faChar(key) {\r
 fadder: function fadder(f, g) { return x => f(x) - g(x); }
 faicon_list: "async function faicon_list() {\r
 
-  \  let txt = await route_path_text('../base/alibs/fa.min.css');\r
+  \  let txt = await route_path_text('../base/alibs/fa/fa.min.css');\r
 
   \  txt = '.fa-0' + stringAfter(txt, '.fa-0');\r
 

@@ -20730,7 +20730,7 @@ function faChar(key) {
 }
 function fadder(f, g) { return x => f(x) - g(x); }
 async function faicon_list() {
-	let txt = await route_path_text('../base/alibs/fa.min.css');
+	let txt = await route_path_text('../base/alibs/fa/fa.min.css');
 	txt = '.fa-0' + stringAfter(txt, '.fa-0');
 	txt = stringBefore(txt, 'sr-only');
 	let parts = txt.split(':before');
