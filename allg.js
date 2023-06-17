@@ -1,4 +1,3 @@
-
 const ALLOW_CALIBRATION = false;
 const allPeeps = []
 const allPlayerTypes = ['me', 'human', 'AI regular', 'AI random', 'AI pass'];
@@ -908,6 +907,8 @@ const STYLE_PARAMS = {
 	weight: 'font-weight',
 	x: 'left',
 	y: 'top',
+	yover: 'overflow-y',
+	xover: 'overflow-x',
 	z: 'z-index'
 };
 const TEAL = '#469990';
@@ -3106,6 +3107,7 @@ var dLineTopOuter;
 var dLineTopRight;
 var dLinks;
 var dLoggedIn;
+var dLogin;
 var dLogo;
 var dMain;
 var dMap;
