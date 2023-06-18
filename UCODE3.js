@@ -1,4 +1,25 @@
 
+function remremrem(){
+  mStyle('dMain',{xover:'hidden'});
+  return;
+  let tags = ['div']; // ['h1','grid','div','p','br'];
+  for(const tag of tags){
+    let divs = document.getElementsByTagName(tag);
+    for(const div of divs){
+      console.log('div',div)
+      mStyle(div,{xover:'hidden'});
+      //if (tag == 'div') mStyle(div,{wmax:'90%'})
+    }
+    
+  }
+
+
+}
+
+function turnOffAutocomplete(){
+  let fields = location.search;
+  mBy('dMain').innerHTML += '<br>HELLO!!! ' + location.search;
+}
 
 function handleResult(result, cmd) {
 	if (result.trim() == "") return;

@@ -870,6 +870,7 @@ const SHERIFF = {
 const STARTING_TAB_OPEN = 'bPlayers';
 const STYLE_PARAMS = {
 	align: 'text-align',
+	valign: 'align-items',
 	acontent: 'align-content',
 	aitems: 'align-items',
 	aspectRatio: 'aspect-ratio',
