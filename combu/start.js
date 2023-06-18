@@ -1,22 +1,22 @@
-
 async function start(){
   bisJetzt(); 
 
 
 }
+function startLoggedIn(obj){
+  console.log('logged in:',obj)
+}
 function onclickLogin(){
-
+  if (DA.sessionType == 'php')  phpPost({ name: 'a1', pwd: 'a1' }, 'login');
 }
 function bisJetzt(){
-  //mStyle('dMain',{box:true,padding:12})
-  let dp=mDiv('dMain');
-  [dStatus,dHeader,dTable,dFooter]=rowLayout(dp,'auto auto 1fr auto');
-  [dLogo,dTop,dLogin]=colLayout(dHeader,'auto 1fr auto');
+  initUI();
   showQuery(dStatus,false);
-
+  
+  DA.sessionType=valf(getQuerystring('EP'),'live');
   if (!getQuerystring('id')){
     showEssay(dTable,'The necessity of community');
-    mButton(dLogin,)
+    mButton('login',onclickLogin,dLogin)
   }
 
   mStyle('dMain',{xover:'hidden'});
@@ -46,7 +46,7 @@ function rowLayout(dParent,s){
   dParent.style.gridTemplateRows = s; //'repeat(' + rows + ',1fr)';
   let res = [];
   for(const i of range(numRows)){
-    let d=mDiv(dParent,{bg:rColor(),fg:'contrast'},null,'hallo');
+    let d=mDiv(dParent,{bg:rColor(),fg:'contrast'}); //,null,'hallo');
     res.push(d)
   }
   return res;

@@ -1,4 +1,49 @@
 
+
+function handleResult(result, cmd) {
+	if (result.trim() == "") return;
+	let obj;
+	try { obj = JSON.parse(result); } catch { console.log('ERROR:', result); }
+	DA.result = jsCopy(obj);
+	switch (cmd) {
+		case "login": startLoggedIn(obj); break;
+
+		case "assets": load_assets(obj); start_with_assets(); break;
+		case "users": show_users(); break;
+		case "tables": show_tables(); break;
+		case "delete_table":
+		case "delete_tables": show_tables(); break;
+		case "table1":
+			update_table();
+			console.log('cmd', cmd)
+			console.log('obj', obj)
+			for (const k in obj) { if (isLiteral(obj[k])) { console.log(k, obj[k]); } }
+			clear_timeouts();
+			gamestep();
+			break;
+		case "gameover":
+		case "table":
+		case "startgame":
+			update_table();
+			if (Z.skip_presentation) { Z.func.state_info(mBy('dTitleLeft')); autopoll(); return; }
+			clear_timeouts();
+			gamestep();
+			break;
+	}
+}
+function phpStart(file) {
+  window.location.href = `../comm/php/${file}.php`;
+  // console.log('hallo!')
+  // var xml = new XMLHttpRequest();
+	// xml.open("GET", `php/${file}.php`, true);
+}
+
+//#region combu
+
+
+
+
+//#region coding
 function _assemble_code_sorted(list, di, preserveRegions = false) {
 	//console.log('...',list[0],di[list[0]]);//var list problem!!!!!
 	let text = '';
@@ -73,7 +118,7 @@ function _assemble_code_sorted_orig(list, di, preserveRegions = false) {
 	}
 	return text;
 }
-
+//#endregion
 //#region bundle gen
 async function bundleGenFromProject(projectname) {
 	//assume projectname has to be a top leve folder inside of the dir where coding resides!
@@ -264,7 +309,6 @@ async function bundleGenerateFrom(htmlfile) {
 
 
 }
-
 
 //#region coding start starttest
 onload = start;

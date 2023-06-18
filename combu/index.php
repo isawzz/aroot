@@ -3,8 +3,9 @@ require_once "php/apihelpers.php";
 session_start();
 
 $_SESSION = [];
-$_SESSION["login"] = true;
-$_SESSION["id"] = 'a';
+$_SESSION["EP"] = "php";
+//$_SESSION["login"] = true;
+//$_SESSION["id"] = 'a';
 
 $conn = db_connect(); //mysqli_connect("localhost", "root", "", "reglog");
 
