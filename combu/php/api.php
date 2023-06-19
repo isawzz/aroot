@@ -33,6 +33,31 @@ if ($cmd == 'login'){
     $result->status = "not_registered";
     //exit('login, isset submit, not registered');
   }
+}else if ($cmd == 'login'){ 
+  $_SESSION = [];
+  session_unset();
+  session_destroy();
+  
+}else if ($cmd == 'register'){ 
+  $name = $data->name; //$_POST["name"];
+  $username = $data->username; // $_POST["username"];
+  $email = $data->email; //$_POST["email"];
+  $password = $data->password; //$_POST["password"];
+  $confirmpassword = $data->confirmpassword; //$_POST["confirmpassword"];
+  $conn = db_connect(); 
+  $duplicate = mysqli_query($conn, "SELECT * FROM tb_user WHERE username = '$username' OR email = '$email'");
+  if(mysqli_num_rows($duplicate) > 0){
+    //echo "<script> alert('Username or Email Has Already Taken'); </script>";
+    $result->status = "duplicate";
+  }else if($password == $confirmpassword){
+    $query = "INSERT INTO tb_user VALUES('','$name','$username','$email','$password')";
+    mysqli_query($conn, $query);
+    //echo "<script> alert('Registration Successful'); </script>";
+    $result->status = "registered";
+  }else{
+    //echo "<script> alert('Password Does Not Match'); </script>";
+    $result->status = "pwds_dont_match";
+  }
 }
 echo json_encode($result); 
 

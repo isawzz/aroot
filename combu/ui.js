@@ -7,7 +7,7 @@ function uiColLayout(dParent,s){
   dParent.style.gridTemplateColumns = s; //'repeat(' + rows + ',1fr)';
   let res = [];
   for(const i of range(numRows)){
-    let d=mDiv(dParent,{},null,'COL'); //,{bg:rColor(),fg:'contrast'});
+    let d=mDiv(dParent); //,{},null,'COL'); //,{bg:rColor(),fg:'contrast'});
     res.push(d)
   }
   //console.log('res',res)
@@ -22,7 +22,7 @@ function uiRowLayout(dParent,s){
   dParent.style.gridTemplateRows = s; //'repeat(' + rows + ',1fr)';
   let res = [];
   for(const i of range(numRows)){
-    let d=mDiv(dParent,{},null,'ROW'); //,{bg:rColor(),fg:'contrast'},null,'ROW');
+    let d=mDiv(dParent); //,{},null,'ROW'); //,{bg:rColor(),fg:'contrast'},null,'ROW');
     res.push(d)
   }
   return res;

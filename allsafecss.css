@@ -494,6 +494,45 @@ html {
   margin: 10px;
   object-fit: cover;
 }
+.input {
+  align-items: center;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  box-shadow: none;
+  display: inline-flex;
+  font-size: 1rem;
+  min-height: 2.5em;
+  justify-content: flex-start;
+  line-height: 1.5;
+  padding-bottom: calc(0.5em - 1px);
+  padding-left: calc(0.75em - 1px);
+  padding-right: calc(0.75em - 1px);
+  padding-top: calc(0.5em - 1px);
+  position: relative;
+  vertical-align: top;
+  background-color: white;
+  border-color: #dbdbdb;
+  border-radius: 4px;
+  color: #363636;
+  box-shadow: inset 0 0.0625em 0.125em rgba(10, 10, 10, 0.05);
+  min-width: 70px;
+  max-width: 100%;
+  box-sizing: border-box;
+  font-family: opensans;
+}
+.input:hover {
+  border-color: #b5b5b5;
+}
+.input:focus {
+  outline: none;
+  border-color: silver;
+  box-shadow: 0 0 0 0.125em rgba(72, 95, 199, 0.25);
+}
+.input:active {
+  outline: none;
+  border-color: silver;
+  box-shadow: 0 0 0 0.125em rgba(72, 95, 199, 0.25);
+}
 .invisible {
   display: none;
 }
@@ -670,15 +709,24 @@ html {
   perspective: 300px;
 }
 .plain {
-  border: none;
+  border: 1px silver solid;
   overflow: auto;
   outline: none;
-
   -webkit-box-shadow: none;
   -moz-box-shadow: none;
   box-shadow: none;
-
   resize: none;
+}
+.plain:hover {
+  border-color: grey;
+}
+.plain:focus {
+  outline: none;
+  border-color: grey;
+}
+.plain:active {
+  outline: none;
+  border-color: grey;
 }
 .polka-dot {
   background-image: radial-gradient(#fff 10%, transparent 11%), radial-gradient(#fff 10%, transparent 11%);

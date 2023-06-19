@@ -37027,7 +37027,7 @@ function loginView() {
   removeAllGlobalHandlers();
   addLoginViewHandlers();
 }
-function logout() {
+function handleLogout() {
   closeSocket();
   sendRoute('/logout/' + clientData.name, d => {
     clientData.name = null;
@@ -42761,8 +42761,8 @@ function minimaxCopy(node, depth, alpha, beta, maxDepth, maxim) {
 }
 function minimizeObjects() { let ids = getDefaultObjectIds(); ids.map(x => UIS[x].minimize()); }
 function mInner(html, dParent, styles) { dParent.innerHTML = html; if (isdef(styles)) mStyle(dParent, styles); }
-function mInput(dParent, styles, id, placeholder, classtr = 'input', tabindex = null, value = '') {
-  let html = `<input type="text" id=${id} class="${classtr}" placeholder="${valf(placeholder, '')}" tabindex="${tabindex}" value="${value}">`;
+function mInput(dParent, styles, id, placeholder, classtr = 'input', tabindex = null, value = '', selectOnClick=false, type = "text") {
+  let html = selectOnClick? `<input type="${type}" onclick="this.select();" id=${id} class="${classtr}" placeholder="${valf(placeholder, '')}" tabindex="${tabindex}" value="${value}">`:`<input type="${type}" id=${id} class="${classtr}" placeholder="${valf(placeholder, '')}" tabindex="${tabindex}" value="${value}">`;
   let d = mAppend(dParent, mCreateFrom(html));
   if (isdef(styles)) mStyle(d, styles);
   return d;
@@ -46841,7 +46841,7 @@ function onClickLobby() {
   lobbyView();
   if (!isReallyMultiplayer) openGameConfig();
 }
-function onClickLogout() { logout(); }
+function onClickLogout() { handleLogout(); }
 function onClickMeasure() {
   recMeasureOverride(R.tree.uid, R);
   updateOutput(R);
@@ -52135,7 +52135,7 @@ function processWaitingFor() {
   }
 }
 function PROMOTED(m) { return (((m) >> 20) & 0xF); }
-function prompt() {
+function prompt_() {
   QuestionCounter += 1;
   showStats();
   G.trialNumber = 0;
