@@ -1,0 +1,53 @@
+.metro-calendar {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.metro-calendar th {
+  background-color: #0078D7;
+  color: #FFFFFF;
+  padding: 8px;
+  font-size: 14px;
+}
+
+.metro-calendar td {
+  border: 1px solid #ECECEC;
+  padding: 8px;
+}
+
+.metro-calendar-cell {
+  text-align: center;
+}
+
+.metro-calendar-date {
+  font-weight: bold;
+  margin-bottom: 5px;
+  font-size: 14px;
+}
+
+.metro-calendar-input-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.metro-calendar-input-item {
+  margin-bottom: 5px;
+}
+
+.metro-calendar-hour-column {
+  width: 30px;
+}
+
+.metro-calendar-input {
+  width: calc(100% - 30px);
+  box-sizing: border-box;
+  resize: none;
+  font-family: Arial, sans-serif;
+  font-size: 12px;
+  padding: 5px;
+}
+
+#calendar-container {
+  margin-top: 20px;
+}

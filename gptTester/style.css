@@ -1,0 +1,31 @@
+.metro-calendar {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.metro-calendar th {
+  background-color: #0078D7;
+  color: #FFFFFF;
+  padding: 10px;
+}
+
+.metro-calendar td {
+  border: 1px solid #ECECEC;
+  padding: 10px;
+}
+
+.metro-calendar-cell {
+  text-align: center;
+}
+
+.metro-calendar-input {
+  width: 100%;
+  box-sizing: border-box;
+  resize: none;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+}
+
+#calendar-container {
+  margin-top: 20px;
+}

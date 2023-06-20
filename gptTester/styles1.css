@@ -1,0 +1,79 @@
+.metro-calendar {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.metro-calendar th {
+  background-color: #0078D7;
+  color: #FFFFFF;
+  padding: 10px;
+}
+
+.metro-calendar td {
+  border: 1px solid #ECECEC;
+  padding: 10px;
+}
+
+.metro-calendar-cell {
+  text-align: center;
+}
+
+.metro-calendar-date {
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.metro-calendar-input-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.metro-calendar-input-item1 {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.metro-calendar-hour-column1 {
+  width: 40px;
+  height: 100%;
+  vertical-align:bottom;
+}
+.metro-calendar-hour-column {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 100%;
+}
+.metro-calendar-input1 {
+  border: none;
+  border-top: silver 1px solid;
+  width: 100%;
+  box-sizing: border-box;
+  resize: none;
+  /* resize: vertical; */
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+}
+.metro-calendar-input {
+  border: none;
+  border-top: #eee 1px solid;
+  width: 100%;
+  box-sizing: border-box;
+  resize: vertical;
+  /* resize: none; */
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  padding: 2px 8px;
+}
+#calendar-container {
+  margin-top: 20px;
+}
+.metro-calendar-input-item {
+  display: grid;
+  grid-template-columns: 40px 1fr;
+  grid-gap: 0px;
+  margin-bottom: 0px;
+}
