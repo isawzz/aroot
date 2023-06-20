@@ -346,7 +346,7 @@ async function start_with_assets(){
 
 async function start() {
 	test_ui_extended();
-	await load_Codebase('../basejs/cb1');
+	await load_Codebase('../coding/cb/cb1');
 	await load_assets_fetch('../base/', '../games/')
 	//console.log('CODE', CODE, '\nDB', DB, '\nConfig', Config)
 

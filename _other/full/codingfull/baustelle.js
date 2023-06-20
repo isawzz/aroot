@@ -1047,8 +1047,8 @@ function isLiveInBrowser(s){
 	return false;
 }
 async function load_Codebase(dir, path_allcode) {
-	let path_js = isdef(path_allcode) ? path_allcode : '../basejs/cb2/allcode.js';
-	dir = isdef(dir) ? dir : '../basejs';
+	let path_js = isdef(path_allcode) ? path_allcode : '../coding/cb/cb2/allcode.js';
+	dir = isdef(dir) ? dir : '../coding/cb';
 
 	//#region keysSorted: WOZU BRAUCH ICH keysSorted???????? fuerr die closure!!!!!!!!!!!!!!!
 	let text = CODE.text = await route_path_text(path_js);

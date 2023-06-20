@@ -8,8 +8,8 @@ async function __start() {
   onpagedeactivated(() => { fiddleSave(); dbSave(); });
   await load_syms();
   await load_db();
-  let dicode = CODE.di = await route_path_yaml_dict('../basejs/z_all.yaml');
-  let dijustcode = CODE.justcode = await route_path_yaml_dict('../basejs/z_allcode.yaml');
+  let dicode = CODE.di = await route_path_yaml_dict('../coding/cb/z_all.yaml');
+  let dijustcode = CODE.justcode = await route_path_yaml_dict('../coding/cb/z_allcode.yaml');
   dTable = mSection({ h: window.innerHeight - 68 }, 'dTable');
   computeClosure();
 }
@@ -1884,8 +1884,8 @@ async function _start1() {
   onpagedeactivated(() => { fiddleSave(); dbSave(); });
   await load_syms();
   await load_db();
-  let dicode = CODE.di = await route_path_yaml_dict('../basejs/z_all.yaml');
-  let dijustcode = CODE.justcode = await route_path_yaml_dict('../basejs/z_allcode.yaml');
+  let dicode = CODE.di = await route_path_yaml_dict('../coding/cb/z_all.yaml');
+  let dijustcode = CODE.justcode = await route_path_yaml_dict('../coding/cb/z_allcode.yaml');
   computeClosure(['_start1']);
 }
 function _startHotseat() {
@@ -27019,11 +27019,11 @@ function getDirList() {
     'C:\\D\\a03\\nodemaster\\all\\openlayers\\map',
     'C:\\D\\a03\\nodemaster\\all\\openlayers\\mapTEXT',
     'C:\\xampp\\htdocs\\aroot\\games',
-    'C:\\D\\a03\\nodemaster\\basejs',
+    'C:\\D\\a03\\nodemaster\\coding/cb',
     'C:\\D\\a03\\nodemaster\\cai',
     'C:\\D\\a03\\nodemaster\\noc',
     'C:\\D\\a03\\nodemaster\\socketstarter',
-    'C:\\D\\a04\\basejs',
+    'C:\\D\\a04\\coding/cb',
     'C:\\D\\a04\\game',
   ];
 }
@@ -36194,7 +36194,7 @@ function load_coassets(obj) {
 async function load_codebase(paths, preserveRegionNames = false) {
   if (nundef(paths)) {
     paths = ['basemin', 'board', 'cards', 'gamehelpers', 'select'];
-    paths = paths.map(f => `../basejs/${f}.js`);
+    paths = paths.map(f => `../coding/cb/${f}.js`);
   }
   let superdi = { cla: {}, func: {}, const: {}, var: {} };
   for (const f of paths) {
@@ -53618,20 +53618,20 @@ function recNormalize(n, sp) {
   return n1;
 }
 function recompute_const_var_classes() {
-  let dir = 'C:\\xampp\\htdocs\\aroot\\basejs\\cb1\\';
+  let dir = 'C:\\xampp\\htdocs\\aroot\\coding/cb\\cb1\\';
   let superdi = get_current_superdi(dir);
   let text = quick_consts(superdi);
   text += quick_vars(superdi);
   text += quick_classes(superdi);
-  let dirout = 'C:\\xampp\\htdocs\\aroot\\basejs\\cb2\\';
+  let dirout = 'C:\\xampp\\htdocs\\aroot\\coding/cb\\cb2\\';
   toFile(text, dirout + 'allglobalshuge.js');
 }
 function recompute_func_alpha() {
-  let dir = 'C:\\xampp\\htdocs\\aroot\\basejs\\cb1\\';
+  let dir = 'C:\\xampp\\htdocs\\aroot\\coding/cb\\cb1\\';
   let superdi = get_current_superdi(dir);
   let text = quick_funcs(superdi, null, 'L');
   let text2 = quick_funcs(superdi, 'M');
-  let dirout = 'C:\\xampp\\htdocs\\aroot\\basejs\\cb2\\';
+  let dirout = 'C:\\xampp\\htdocs\\aroot\\coding/cb\\cb2\\';
   toFile(text, dirout + 'allfuncs.js');
   toFile(text2, dirout + 'allfuncs_m.js');
 }
@@ -54422,11 +54422,11 @@ function repair_vars(superdi) {
   }
 }
 function repair_yaml_codebase() {
-  let dir = 'C:\\xampp\\htdocs\\aroot\\basejs\\cb0\\';
+  let dir = 'C:\\xampp\\htdocs\\aroot\\coding/cb\\cb0\\';
   let superdi = get_current_superdi(dir);
   let [text, rejected, dinew] = assemble_consts(superdi);
   repair_vars(dinew);
-  let dirout = 'C:\\xampp\\htdocs\\aroot\\basejs\\cb1\\';
+  let dirout = 'C:\\xampp\\htdocs\\aroot\\coding/cb\\cb1\\';
   let [di2, justcode, history] = assemble_dicts(dinew);
   toYamlFile(di2, `${dirout}z_all${LG ? 'LG' : ''}.yaml`);
   toYamlFile(justcode, `${dirout}z_allcode${LG ? 'LG' : ''}.yaml`);
@@ -64195,9 +64195,9 @@ async function test00() {
   onpagedeactivated(() => { fiddleSave(); dbSave(); });
   await load_syms();
   await load_db();
-  let dicode = CODE.di = await route_path_yaml_dict('../basejs/z_all.yaml');
-  let dijustcode = CODE.justcode = await route_path_yaml_dict('../basejs/z_allcode.yaml');
-  let dihistory = CODE.history = await route_path_yaml_dict('../basejs/z_allhistory.yaml');
+  let dicode = CODE.di = await route_path_yaml_dict('../coding/cb/z_all.yaml');
+  let dijustcode = CODE.justcode = await route_path_yaml_dict('../coding/cb/z_allcode.yaml');
+  let dihistory = CODE.history = await route_path_yaml_dict('../coding/cb/z_allhistory.yaml');
   dTable = mSection({ h: window.innerHeight - 68 }, 'dTable');
   fiddleInit();
   show_sidebar(sortCaseInsensitive(get_keys(dicode.func)), onclickCodeInSidebar);

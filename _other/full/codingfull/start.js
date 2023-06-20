@@ -2,7 +2,7 @@ onload = start;
 
 async function start(){
 	test_ui_extended();
-	await load_Codebase('../basejs/cb1');
+	await load_Codebase('../coding/cb/cb1');
 	await load_assets_fetch('../base/', '../games/')
 
 	// dTable = document.body; mClear(dTable); let x=get_user_pic_and_name()

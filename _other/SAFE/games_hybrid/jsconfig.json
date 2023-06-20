@@ -6,7 +6,7 @@
     "baseUrl": ".",
     // Relative to "baseUrl"
     "paths": {
-      "@/*": ["../basejs/*"],
+      "@/*": ["../coding/cb/*"],
 			"~/*": ["./src/*"]
 		}
   }

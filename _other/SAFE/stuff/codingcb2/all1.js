@@ -9,8 +9,8 @@ async function __start() {
 	onpagedeactivated(() => { fiddleSave(); dbSave(); });
 	await load_syms();
 	await load_db();
-	let dicode = CODE.di = await route_path_yaml_dict('../basejs/z_all.yaml');
-	let dijustcode = CODE.justcode = await route_path_yaml_dict('../basejs/z_allcode.yaml');
+	let dicode = CODE.di = await route_path_yaml_dict('../coding/cb/z_all.yaml');
+	let dijustcode = CODE.justcode = await route_path_yaml_dict('../coding/cb/z_allcode.yaml');
 	dTable = mSection({ h: window.innerHeight - 68 }, 'dTable');
 	computeClosure();
 }
@@ -1833,8 +1833,8 @@ async function _start1() {
 	onpagedeactivated(() => { fiddleSave(); dbSave(); });
 	await load_syms();
 	await load_db();
-	let dicode = CODE.di = await route_path_yaml_dict('../basejs/z_all.yaml');
-	let dijustcode = CODE.justcode = await route_path_yaml_dict('../basejs/z_allcode.yaml');
+	let dicode = CODE.di = await route_path_yaml_dict('../coding/cb/z_all.yaml');
+	let dijustcode = CODE.justcode = await route_path_yaml_dict('../coding/cb/z_allcode.yaml');
 	computeClosure(['_start1']);
 }
 function _startHotseat() {

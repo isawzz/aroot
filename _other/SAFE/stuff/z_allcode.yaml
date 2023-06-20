@@ -94631,7 +94631,7 @@ getDirList: "function getDirList() {\r
 
   \    'C:\\\\xampp\\\\htdocs\\\\aroot\\\\games',\r
 
-  \    'C:\\\\D\\\\a03\\\\nodemaster\\\\basejs',\r
+  \    'C:\\\\D\\\\a03\\\\nodemaster\\\\coding/cb',\r
 
   \    'C:\\\\D\\\\a03\\\\nodemaster\\\\cai',\r
 
@@ -94639,7 +94639,7 @@ getDirList: "function getDirList() {\r
 
   \    'C:\\\\D\\\\a03\\\\nodemaster\\\\socketstarter',\r
 
-  \    'C:\\\\D\\\\a04\\\\basejs',\r
+  \    'C:\\\\D\\\\a04\\\\coding/cb',\r
 
   \    'C:\\\\D\\\\a04\\\\game',\r
 
@@ -112646,7 +112646,7 @@ load_codebase: "async function load_codebase(paths, preserveRegionNames = false)
 
   \    paths = ['basemin', 'board', 'cards', 'gamehelpers', 'select'];\r
 
-  \    paths = paths.map(f => `../basejs/${f}.js`);\r
+  \    paths = paths.map(f => `../coding/cb/${f}.js`);\r
 
   \  }\r
 

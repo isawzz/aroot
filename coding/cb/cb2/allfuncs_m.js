@@ -25692,9 +25692,9 @@ async function test00() {
 	onpagedeactivated(() => { fiddleSave(); dbSave(); });
 	await load_syms();
 	await load_db();
-	let dicode = CODE.di = await route_path_yaml_dict('../basejs/z_all.yaml');
-	let dijustcode = CODE.justcode = await route_path_yaml_dict('../basejs/z_allcode.yaml');
-	let dihistory = CODE.history = await route_path_yaml_dict('../basejs/z_allhistory.yaml');
+	let dicode = CODE.di = await route_path_yaml_dict('../coding/cb/z_all.yaml');
+	let dijustcode = CODE.justcode = await route_path_yaml_dict('../coding/cb/z_allcode.yaml');
+	let dihistory = CODE.history = await route_path_yaml_dict('../coding/cb/z_allhistory.yaml');
 	dTable = mSection({ h: window.innerHeight - 68 }, 'dTable');
 	fiddleInit();
 	show_sidebar(sortCaseInsensitive(get_keys(dicode.func)), onclickCodeInSidebar);

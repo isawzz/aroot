@@ -39563,10 +39563,10 @@ __start: "async function __start() {\r
   \  await load_db();\r
 
   \  let dicode = CODE.di = await
-  route_path_yaml_dict('../basejs/z_all.yaml');\r
+  route_path_yaml_dict('../coding/cb/z_all.yaml');\r
 
   \  let dijustcode = CODE.justcode = await
-  route_path_yaml_dict('../basejs/z_allcode.yaml');\r
+  route_path_yaml_dict('../coding/cb/z_allcode.yaml');\r
 
   \  dTable = mSection({ h: window.innerHeight - 68 }, 'dTable');\r
 
@@ -43252,10 +43252,10 @@ _start1: "async function _start1() {\r
   \  await load_db();\r
 
   \  let dicode = CODE.di = await
-  route_path_yaml_dict('../basejs/z_all.yaml');\r
+  route_path_yaml_dict('../coding/cb/z_all.yaml');\r
 
   \  let dijustcode = CODE.justcode = await
-  route_path_yaml_dict('../basejs/z_allcode.yaml');\r
+  route_path_yaml_dict('../coding/cb/z_allcode.yaml');\r
 
   \  computeClosure(['_start1']);\r
 
@@ -92723,7 +92723,7 @@ getDirList: "function getDirList() {\r
 
   \    'C:\\\\xampp\\\\htdocs\\\\aroot\\\\games',\r
 
-  \    'C:\\\\D\\\\a03\\\\nodemaster\\\\basejs',\r
+  \    'C:\\\\D\\\\a03\\\\nodemaster\\\\coding/cb',\r
 
   \    'C:\\\\D\\\\a03\\\\nodemaster\\\\cai',\r
 
@@ -92731,7 +92731,7 @@ getDirList: "function getDirList() {\r
 
   \    'C:\\\\D\\\\a03\\\\nodemaster\\\\socketstarter',\r
 
-  \    'C:\\\\D\\\\a04\\\\basejs',\r
+  \    'C:\\\\D\\\\a04\\\\coding/cb',\r
 
   \    'C:\\\\D\\\\a04\\\\game',\r
 
@@ -110734,7 +110734,7 @@ load_codebase: "async function load_codebase(paths, preserveRegionNames = false)
 
   \    paths = ['basemin', 'board', 'cards', 'gamehelpers', 'select'];\r
 
-  \    paths = paths.map(f => `../basejs/${f}.js`);\r
+  \    paths = paths.map(f => `../coding/cb/${f}.js`);\r
 
   \  }\r
 
@@ -111187,7 +111187,7 @@ loadCodebase: "async function loadCodebase(dir) {\r
 
   \  let path_js=isdef(dir)?(dir+'/z_all.js'):'../allcode.js';\r
 
-  \  dir = isdef(dir)?dir:'../basejs';\r
+  \  dir = isdef(dir)?dir:'../coding/cb';\r
 
   \  let text = CODE.text = await route_path_text(path_js);\r
 
@@ -166377,13 +166377,13 @@ test00: "async function test00() {\r
   \  await load_db(); \r
 
   \  let dicode = CODE.di = await
-  route_path_yaml_dict('../basejs/z_all.yaml');\r
+  route_path_yaml_dict('../coding/cb/z_all.yaml');\r
 
   \  let dijustcode = CODE.justcode = await
-  route_path_yaml_dict('../basejs/z_allcode.yaml');\r
+  route_path_yaml_dict('../coding/cb/z_allcode.yaml');\r
 
   \  let dihistory = CODE.history = await
-  route_path_yaml_dict('../basejs/z_allhistory.yaml');\r
+  route_path_yaml_dict('../coding/cb/z_allhistory.yaml');\r
 
   \  dTable = mSection({ h: window.innerHeight - 68 }, 'dTable');\r
 

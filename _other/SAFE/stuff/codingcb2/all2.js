@@ -5910,11 +5910,11 @@ function getDirList() {
 		'C:\\D\\a03\\nodemaster\\all\\openlayers\\map',
 		'C:\\D\\a03\\nodemaster\\all\\openlayers\\mapTEXT',
 		'C:\\xampp\\htdocs\\aroot\\games',
-		'C:\\D\\a03\\nodemaster\\basejs',
+		'C:\\D\\a03\\nodemaster\\coding/cb',
 		'C:\\D\\a03\\nodemaster\\cai',
 		'C:\\D\\a03\\nodemaster\\noc',
 		'C:\\D\\a03\\nodemaster\\socketstarter',
-		'C:\\D\\a04\\basejs',
+		'C:\\D\\a04\\coding/cb',
 		'C:\\D\\a04\\game',
 	];
 }
@@ -15019,7 +15019,7 @@ function load_coassets(obj) {
 async function load_codebase(paths, preserveRegionNames = false) {
 	if (nundef(paths)) {
 		paths = ['basemin', 'board', 'cards', 'gamehelpers', 'select'];
-		paths = paths.map(f => `../basejs/${f}.js`);
+		paths = paths.map(f => `../coding/cb/${f}.js`);
 	}
 	let superdi = { cla: {}, func: {}, const: {}, var: {} };
 	for (const f of paths) {
@@ -15243,7 +15243,7 @@ function loadCode0(text, codeToRunWhenScriptLoaded = null, callback = null) {
 }
 async function loadCodebase(dir) {
 	let path_js = isdef(dir) ? (dir + '/z_all.js') : '../allcode.js';
-	dir = isdef(dir) ? dir : '../basejs';
+	dir = isdef(dir) ? dir : '../coding/cb';
 	let text = CODE.text = await route_path_text(path_js);
 	let keysSorted = [];
 	let lines = text.split('\r\n');
@@ -42731,9 +42731,9 @@ async function test00() {
 	onpagedeactivated(() => { fiddleSave(); dbSave(); });
 	await load_syms();
 	await load_db();
-	let dicode = CODE.di = await route_path_yaml_dict('../basejs/z_all.yaml');
-	let dijustcode = CODE.justcode = await route_path_yaml_dict('../basejs/z_allcode.yaml');
-	let dihistory = CODE.history = await route_path_yaml_dict('../basejs/z_allhistory.yaml');
+	let dicode = CODE.di = await route_path_yaml_dict('../coding/cb/z_all.yaml');
+	let dijustcode = CODE.justcode = await route_path_yaml_dict('../coding/cb/z_allcode.yaml');
+	let dihistory = CODE.history = await route_path_yaml_dict('../coding/cb/z_allhistory.yaml');
 	dTable = mSection({ h: window.innerHeight - 68 }, 'dTable');
 	fiddleInit();
 	show_sidebar(sortCaseInsensitive(get_keys(dicode.func)), onclickCodeInSidebar);

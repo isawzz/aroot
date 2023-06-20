@@ -1685,7 +1685,7 @@ function sortCaseInsensitive(list) {
 }
 async function start() {
 	test_ui_extended();
-	await load_Codebase('../basejs/cb1');
+	await load_Codebase('../coding/cb/cb1');
 	await load_assets_fetch('../base/', '../games/')
 	let [bundle, closure, csstext, html] = await bundleGenFromProject('coding', true);
 	AU.ta.value = closure; //stringAfter(bundle, 'function getLineStart');
@@ -2098,8 +2098,8 @@ function isLiveInBrowser(s) {
 	return false;
 }
 async function load_Codebase(dir, path_allcode) {
-	let path_js = isdef(path_allcode) ? path_allcode : '../basejs/cb2/allcode.js';
-	dir = isdef(dir) ? dir : '../basejs';
+	let path_js = isdef(path_allcode) ? path_allcode : '../coding/cb/cb2/allcode.js';
+	dir = isdef(dir) ? dir : '../coding/cb';
 	let text = CODE.text = await route_path_text(path_js);
 	let keysSorted = [];
 	let lines = text.split('\r\n');
