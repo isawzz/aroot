@@ -1,3 +1,28 @@
+function openModal(date,d,ev) {
+	if (ev.target != d) return;
+	clicked = date;
+	console.log('r',d)
+
+	let d1=addEditable(d); d1.innerHTML = 'hallo';return;
+
+	//let d1 = mDom100(d,{bg:'transparent'}); let d2 = mInput(d1,{w100:true});
+	//let d1 = mDom100(d,{tag:'textarea',multiline:true,rows:1})
+	d2.focus();
+	//let d1 = mDiv100(d,{bg:'red'}); //=mDivPosAbs(0,0,d); //('hallo',d,{bg:'red'},'dayPopup');
+	//d1.setAttribute('contentEditable',true)
+	return;
+
+	const eventForDay = events.find(e => e.date === clicked);
+
+	if (eventForDay) {
+		document.getElementById('eventText').innerText = eventForDay.title;
+		deleteEventModal.style.display = 'block';
+	} else {
+		newEventModal.style.display = 'block';
+	}
+
+	backDrop.style.display = 'block';
+}
 
 function remremrem(){
   mStyle('dMain',{xover:'hidden'});

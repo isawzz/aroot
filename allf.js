@@ -3874,8 +3874,9 @@ function addDivU({ id, dParent, w, h, unit, fg, bg, position, x, y, html, classN
   if (isdef(fz)) d1.style.setProperty('fontSize', makeUnitString(fz, 'px'));
   return d1;
 }
-function addDummy() {
-  let b = mButton('', null, dTitleRight, { opacity: 0, h: 0, w: 0, padding: 0, margin: 0, outline: 'none', border: 'none', bg: 'transparent' });
+function addDummy(dParent,place) {
+  let b = mButton('', null, dParent, { opacity: 0, h: 0, w: 0, padding: 0, margin: 0, outline: 'none', border: 'none', bg: 'transparent' });
+  if (isdef(place)) mPlace(b,place);
   b.id = 'dummy';
 }
 function addEdges(board, bid, gName, streets) {

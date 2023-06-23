@@ -1,23 +1,113 @@
-var dada = {};
-async function start(){
-  test1_displayCalendar();//test0_displayNQuestions();
+//var dada = {};
+async function start() {
+  //console.log(coin()?'MITNEHMEN':'NICHT MITNEHMEN'); return;
+  let d2=mDiv('dMain',{w:500,h:300,bg:'blue'})
+  let x=uiTypeCalendar(d2,6,2023);
+
+  let d3=
+  displayCalendar(mDiv('dMain'));//test0_displayNQuestions();
+  //x.setDate(6,2023);
+  //setTimeout(()=>x.setDate(10,2000),2000)
+
+  x.dMonth.contentEditable = true;
+  DA.x=x;
+  // makeContentEditable(x.dMonth,ev=>{
+  //   ev.target.innerHTML = 'hallo'
+  // });
+
+  console.log(x)
 }
-function test1_displayCalendar(){
-  let html = `<div id="calendar-container"></div>`;
-  let d=mBy('dMain');
+function test3_displayCalendar() {
+  let html1 = `
+    <div class="calendar_container">
+      <div class="calendar_header">
+        <div id="dMonth"></div>
+        <div>
+          <button id="bBack">Back</button>
+          <button id="bNext">Next</button>
+        </div>
+      </div>
+      <div id="dWeekdays" class='.weekdays'>
+        <div>Sunday</div>
+        <div>Monday</div>
+        <div>Tuesday</div>
+        <div>Wednesday</div>
+        <div>Thursday</div>
+        <div>Friday</div>
+        <div>Saturday</div>
+      </div>
+      <div id="dCalendar" class='calendar'></div>
+    </div>`;
+  let d = mBy('dMain'); //mDiv('dMain',{h:400,w:400,padding:10,bg:'red'});//mBy('dMain');
   mClear(d);
-  mAppend(d,mCreateFrom(html));
-  displayCalendar(7,2023);
+  [html1].map(html => mAppend(d, mCreateFrom(html)));
+  myCalendar();
+  //setTimeout(myCalendar,12); //();
+  //displayCalendar(7,2023);
 
 }
-function test0_displayNQuestions(){
+function test2_displayCalendar() {
+  let html1 = `
+    <div id="container">
+      <div id="header">
+        <div id="monthDisplay"></div>
+        <div>
+          <button id="backButton">Back</button>
+          <button id="nextButton">Next</button>
+        </div>
+      </div>
+      <div id="weekdays">
+        <div>Sunday</div>
+        <div>Monday</div>
+        <div>Tuesday</div>
+        <div>Wednesday</div>
+        <div>Thursday</div>
+        <div>Friday</div>
+        <div>Saturday</div>
+      </div>
+      <div id="calendar"></div>
+    </div>`;
+  let html2 = `    
+    <div id="newEventModal">
+      <h2>New Event</h2>
+      <input id="eventTitleInput" placeholder="Event Title" />
+      <button id="saveButton">Save</button>
+      <button id="cancelButton">Cancel</button>
+    </div>`;
+  let html3 = `    
+    <div id="deleteEventModal">
+      <h2>Event</h2>
+      <p id="eventText"></p>
+      <button id="deleteButton">Delete</button>
+      <button id="closeButton">Close</button>
+    </div>`;
+  let html4 = `    
+    <div id="modalBackDrop"></div>
+  `;
+  let d = mBy('dMain'); //mDiv('dMain',{h:400,w:400,padding:10,bg:'red'});//mBy('dMain');
+  mClear(d);
+  [html1, html2, html3, html4].map(html => mAppend(d, mCreateFrom(html)));
+  myCalendar();
+  //setTimeout(myCalendar,12); //();
+  //displayCalendar(7,2023);
+
+}
+function test1_displayCalendar() {
+  let html = `<div id="calendar-container"></div>`;
+  let d = mBy('dMain');
+  mClear(d);
+  mAppend(d, mCreateFrom(html));
+  displayCalendar(7, 2023);
+
+}
+function test0_displayNQuestions() {
   let ui = uiTypeQuestions(mBy('dMain')); //console.log(ui)
   let qlist = loadQuestions();//  console.log(qlist)
   //qlist = qlist=qlist.filter(x=>['needs'].includes(x.k));
-  displayQuestions(qlist,20);
+  displayQuestions(qlist, 20);
   //displayQuestionnaire();
 }
-function displayCalendar(month, year) {
+function displayCalendar_ai(month, year) {
   const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
   const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
@@ -86,23 +176,23 @@ function displayCalendar(month, year) {
   calendarContainer.appendChild(monthYearHeader);
   calendarContainer.appendChild(table);
 }
-function displayQuestions(qlist,num,pickRandom=true){
+function displayQuestions(qlist, num, pickRandom = true) {
 
-  if (nundef(num)) num=10;
-  qlist = pickRandom? rChoose(qlist,num): arrTake(qlist,num);
+  if (nundef(num)) num = 10;
+  qlist = pickRandom ? rChoose(qlist, num) : arrTake(qlist, num);
 
-  console.log('qs',qlist)
-  qlist.map(x=>displayQuestion(x));
+  console.log('qs', qlist)
+  qlist.map(x => displayQuestion(x));
 
 }
-function displayQuestion(x){
-  let q = isString(x)?x:x.q;
+function displayQuestion(x) {
+  let q = isString(x) ? x : x.q;
   var questionnaireContainer = document.getElementById("questionnaire");
   let i = questionnaireContainer.children.length;
 
   var question = document.createElement("div");
   question.className = "question";
-  question.innerHTML = "<h3>Question " + (i+1) + ": " + q + "</h3>";
+  question.innerHTML = "<h3>Question " + (i + 1) + ": " + q + "</h3>";
 
   var answer = document.createElement("input");
   answer.className = "answer-input";
@@ -113,7 +203,7 @@ function displayQuestion(x){
   questionnaireContainer.appendChild(question);
 
 }
-function loadQuestions(){
+function loadQuestions() {
   let res = [];
   let i = 0;
   for (const k in DiQuestions) {
@@ -121,11 +211,11 @@ function loadQuestions(){
   }
   return res;
 }
-function loadAnswers(){
+function loadAnswers() {
   let html = `<div class="results-container" id="results"></div>`
 
 }
-function uiTypeQuestions(dParent){
+function uiTypeQuestions(dParent) {
   // let res = mDiv(dParent,{},null,)
   let html = `
     <div class="questionnaire-container">
@@ -133,6 +223,6 @@ function uiTypeQuestions(dParent){
       <button class="submit-button" onclick="submitQuestionnaire()">Submit</button>
     </div>
   `;
-  return mAppend(dParent,mCreateFrom(html));
+  return mAppend(dParent, mCreateFrom(html));
 
 }
