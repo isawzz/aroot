@@ -1,10 +1,10 @@
 //var dada = {};
 async function start() {
   await loadAll();
-  console.log('..loader done!')
+  console.log('..loader done!',Syms['crow']);
 }
 function startWithAssets(){
-  //started in php mode!
+  console.log('session:',DA.sessionType)
   return;
 
   //console.log(coin()?'MITNEHMEN':'NICHT MITNEHMEN'); return;
