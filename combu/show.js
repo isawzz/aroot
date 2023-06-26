@@ -33,14 +33,6 @@ function showQuery(d, verbose = true) {
   let html = '';
   for (const k in di) html += `${k}=${di[k]}<br>`;
   d.innerHTML = html;
-  return;
-
-  //console.log(isdef(undefined));
-  //mButton('Welcome!',phpPost)
-  //phpStart('index')
-  turnOffAutocomplete();
-  //mBy('dMain').innerHTML = 'HELLO!!! ' + location.search;
-  //window.location.href = `../comm/logout.php`;
 }
 function showLogin() {
   mClear(dLogin);

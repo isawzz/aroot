@@ -1,11 +1,5 @@
--- phpMyAdmin SQL Dump
--- version 5.0.4
--- https://www.phpmyadmin.net/
---
--- Host: 127.0.0.1
--- Generation Time: Dec 18, 2021 at 03:19 PM
--- Server version: 10.4.17-MariaDB
--- PHP Version: 8.0.2
+
+drop table `tb_user`;
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -31,6 +25,7 @@ CREATE TABLE `tb_user` (
   `id` int(11) NOT NULL,
   `name` varchar(50) NOT NULL,
   `username` varchar(25) NOT NULL,
+  `fen` text DEFAULT NULL,
   `email` varchar(50) NOT NULL,
   `password` varchar(75) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

@@ -38,7 +38,12 @@ function uiTypeCalendar(dParent, month1, year1) {
     clicked = date;
     console.log('clicked',d,date)
 
-    let d1=addEditable(d,{w:'100%'}); 
+    let d1=addEditable(d,{w:'100%'},{onEnter:x=>{
+      //saveEvent({date,div:d,text:x})
+      let o = {date,div:d,text:x};
+      events.push(o);
+      db_save(events)
+    }}); 
 
     const eventForDay = events.find(e => e.date === clicked);
     console.log('eventForDay',eventForDay);

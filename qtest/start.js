@@ -1,21 +1,34 @@
 //var dada = {};
 async function start() {
-  //console.log(coin()?'MITNEHMEN':'NICHT MITNEHMEN'); return;
-  let d2=mDiv('dMain',{w:500,h:300,bg:'blue'})
-  let x=uiTypeCalendar(d2,6,2023);
+  await loadAll();
+  console.log('..loader done!')
+}
+function startWithAssets(){
+  //started in php mode!
+  return;
 
-  let d3=
-  displayCalendar(mDiv('dMain'));//test0_displayNQuestions();
+  //console.log(coin()?'MITNEHMEN':'NICHT MITNEHMEN'); return;
+  let d2 = mDiv('dMain', { w: 800, h: 700, bg: 'white' })
+  let x = uiTypeCalendar(d2, 6, 2023);
+
+  let d3 =
+    displayCalendar(mDiv('dMain'));//test0_displayNQuestions();
   //x.setDate(6,2023);
   //setTimeout(()=>x.setDate(10,2000),2000)
 
   x.dMonth.contentEditable = true;
-  DA.x=x;
+  DA.x = x;
   // makeContentEditable(x.dMonth,ev=>{
   //   ev.target.innerHTML = 'hallo'
   // });
 
   console.log(x)
+}
+function detectSessionType() {
+
+  console.log('window.location', window.location.href);
+  let loc = window.location.href;
+  DA.sessionType = loc.includes('telecave') ? 'telecave' : loc.includes('8080') ? 'php' : 'live';
 }
 function test3_displayCalendar() {
   let html1 = `
