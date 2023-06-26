@@ -1,7 +1,10 @@
 //var dada = {};
 async function start() {
+
+  //var d = new Date(1382086394000); let x=formatDate3(d);console.log(x);return;
+
   await loadAll();
-  console.log('..loader done!',Syms['crow']);
+  //console.log('..loader done!',Syms['crow']);
 }
 function startWithAssets(){
   console.log('session:',DA.sessionType)

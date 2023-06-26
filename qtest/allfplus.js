@@ -40,7 +40,7 @@ function handleRegister(o){
 
 }
 function handleResult(result, cmd) {
-  //console.log('result',result)
+  console.log('result',result)
   let obj = isEmptyOrWhiteSpace(result)?{a:1}:JSON.parse(result); 
   DA.result = jsCopy(obj);
   switch (cmd) {
@@ -54,16 +54,19 @@ async function loadAll(){
   detectSessionType();
   if (DA.sessionType == 'live'){
     //load assets the live way form localhost
-    await loadAssetsLive();
+    await loadAssetsLive('../qtest/');
+    let events = DB.events = DB.events.map(x=>x.date = new Date(x.date));
+    console.log('users',DB.users)
+    console.log('events',events)
+    console.log('subscribed',DB.subscribed)
     startWithAssets();
   }else{
     phpPost({ }, 'assets');
   }
 }
-async function loadAssetsLive(basepath='../base/') {
+async function loadAssetsLive(projectPath, basepath='../base/') {
   let path = basepath + 'assets/';
-  // Config = await route_path_yaml_dict(baseminpath + 'config.yaml');
-  // DB = await route_path_yaml_dict(basepath + 'DB.yaml');
+  Config = DB = await route_path_yaml_dict(projectPath + 'config.yaml');
   Syms = await route_path_yaml_dict(path + 'allSyms.yaml');
   SymKeys = Object.keys(Syms);
   ByGroupSubgroup = await route_path_yaml_dict(path + 'symGSG.yaml');
@@ -76,7 +79,8 @@ async function loadAssetsLive(basepath='../base/') {
   // return { users: dict2list(DB.users, 'name'), games: dict2list(Config.games, 'name'), tables: [] };
 }
 function loadAssetsPhp(obj) {
-  // Config = jsyaml.load(obj.config);
+  console.log('obj',obj)
+  Config = jsyaml.load(obj.config);
   Syms = jsyaml.load(obj.syms);
   SymKeys = Object.keys(Syms);
   ByGroupSubgroup = jsyaml.load(obj.symGSG);

@@ -68,6 +68,12 @@ function get_tables(){
   $tables = db_read($sql); 
 	return $tables;
 }
+function get_table(tbl){
+  $sql = "SELECT * FROM $tbl";
+  $users = db_read($sql); 
+	return $users;
+}
+
 function pp($obj, $title = "hallo") {
   if (isset($title)) {
     echo "<br>$title:";
