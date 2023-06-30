@@ -2,7 +2,7 @@ async function start(){
   initUI();
   initContent(); //(initContent);
 
-  showPopupRegister();
+  //showPopupRegister();
 }
 function startLoggedIn(obj){
   console.log('logged in:',obj)

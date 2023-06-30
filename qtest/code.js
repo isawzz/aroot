@@ -70,7 +70,7 @@ function addEditable(dParent, styles = {}, opts = {}) {
       // let text=x.value;
       // let d=mDiv(dParent,{},null,x.value);
       // x.remove();
-      if (isdef(opts.onEnter)) opts.onEnter(x.value)
+      if (isdef(opts.onEnter)) opts.onEnter(ev)
     }
   }); //console.log('HALLO'); });
   //mPlace(x,'cc'); //(x,0,20)

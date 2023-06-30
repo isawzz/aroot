@@ -89,7 +89,7 @@ function myCalendar(){
       day: 'numeric',
     });
     const paddingDays = weekdays.indexOf(dateString.split(', ')[0]);
-    console.log('paddingDa 1',day,month,year,paddingDays);
+    //console.log('paddingDa 1',day,month,year,paddingDays);
   
     document.getElementById('monthDisplay').innerText = 
       `${dt.toLocaleDateString('en-us', { month: 'long' })} ${year}`;

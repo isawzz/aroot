@@ -68,7 +68,7 @@ function get_tables(){
   $tables = db_read($sql); 
 	return $tables;
 }
-function get_table(tbl){
+function get_table($tbl){
   $sql = "SELECT * FROM $tbl";
   $users = db_read($sql); 
 	return $users;

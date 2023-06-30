@@ -7,29 +7,16 @@ async function start() {
   //console.log('..loader done!',Syms['crow']);
 }
 function startWithAssets(){
-  console.log('session:',DA.sessionType)
-  return;
+  //console.log('session:', DA.sessionType)
 
   //console.log(coin()?'MITNEHMEN':'NICHT MITNEHMEN'); return;
-  let d2 = mDiv('dMain', { w: 800, h: 700, bg: 'white' })
-  let x = uiTypeCalendar(d2, 6, 2023);
-
-  let d3 =
-    displayCalendar(mDiv('dMain'));//test0_displayNQuestions();
-  //x.setDate(6,2023);
-  //setTimeout(()=>x.setDate(10,2000),2000)
-
-  x.dMonth.contentEditable = true;
-  DA.x = x;
-  // makeContentEditable(x.dMonth,ev=>{
-  //   ev.target.innerHTML = 'hallo'
-  // });
-
-  console.log(x)
+  let d1 = mDiv('dMain', { w: 800, h: 800, bg: 'white' })
+  let x = DA.calendar = uiTypeCalendar(d1, 6, 2023);
+  //x.populate();
 }
 function detectSessionType() {
 
-  console.log('window.location', window.location.href);
+  //console.log('window.location', window.location.href);
   let loc = window.location.href;
   DA.sessionType = loc.includes('telecave') ? 'telecave' : loc.includes('8080') ? 'php' : 'live';
 }

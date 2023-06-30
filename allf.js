@@ -9251,7 +9251,7 @@ function arrlast(arr) {
 }
 function arrLast(arr) { return arr.length > 0 ? arr[arr.length - 1] : null; }
 function arrLastOfLast(arr) { if (arr.length > 0) { let l = arrLast(arr); return isList(l) ? arrLast(l) : null; } else return null; }
-function arrMax(arr, f) { return arr_get_max(arr, f); }
+function arrMax(arr, f) { return arrMinMax(arr, f).max; }
 function arrMin(arr, f) { return arr_get_min(arr, f); }
 function arrMinMax(arr, func) {
   if (nundef(func)) func = x => x;

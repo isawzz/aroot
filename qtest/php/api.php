@@ -1,6 +1,8 @@
 <?php
 require_once "apihelpers.php";
 
+//die(); return;
+
 $raw = file_get_contents("php://input");
 $o = json_decode($raw);
 $data = $o->data;
@@ -58,6 +60,17 @@ if ($cmd == 'login'){
     //echo "<script> alert('Password Does Not Match'); </script>";
     $result->status = "pwds_dont_match";
   }
+}else if ($cmd == 'addEvent'){ 
+  $date = $data->date; 
+  $title = $data->title; 
+  $text = $data->text; 
+  $conn = db_connect(); 
+  $query = "INSERT INTO tb_event VALUES('','$title','$text',null,'$date')";
+  $res = mysqli_query($conn, $query);
+  $id = mysqli_insert_id($conn);
+  $res = mysqli_query($conn, "SELECT * FROM tb_event WHERE id = '$id'");
+  $row = mysqli_fetch_assoc($res);
+  $result->event = $row;
 }else if ($cmd == "assets") {
 	$path = '../../base/assets/';
 	$c52 = file_get_contents($path . 'c52.yaml');
@@ -66,7 +79,9 @@ if ($cmd == 'login'){
 	$cinno = file_get_contents($path . 'fe/inno.yaml');
 	$info = file_get_contents($path . 'lists/info.yaml');
 	$sayings = file_get_contents($path . 'games/wise/sayings.yaml');
-	$config = file_get_contents(__DIR__ . '/config.yaml');
+	$config = file_get_contents(__DIR__ . '/../config.yaml');
+  $users = get_table('tb_user');
+  //pp($users); echo 'hallo'; exit();
 	$result = (object) [
     'sayings' => $sayings, 
     'info' => $info, 
