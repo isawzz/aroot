@@ -1,22 +1,54 @@
 function calendarOpenDay(date, d, ev) {
   if (isdef(ev) && ev.target != d) return;
-  console.log('open event on',typeof date,date)
-  //const timestamp = currentDate. getTime();
+  console.log('open event on', typeof date, date)
   let d1 = addEditable(d, { w: 50 }, {
     onEnter: ev => {
       let inp = ev.target;
-      let o = { date: date.getTime(), div: d, text: inp.value, title: firstWord(inp.value) };
-      saveEvent(o);
+      let o = { date: date.getTime(), text: inp.value, title: firstWord(inp.value) };
+      phpPost(o, 'addEvent');
     }
   });
 
+  return d1;
+  //const eventForDay = events.find(e => e.date === clicked);
+  //console.log('eventForDay', eventForDay);
+}
+function calendarGetDayId(dt) { return `d_${dt.getDate()}`; }
+function calendarGetEventId(o) { return `inp_${o.id}`; }
+function evToEventObject(ev) {
+  let inp = ev.target;
+  let o = Config.events[firstNumber(inp.id)];
+  return o;
+}
+function calendarAddExistingEvent(o, d) {
+  let d1 = addEditable(d, { w: 50 }, {
+    id: calendarGetEventId(o),
+    onEnter: ev => {
+
+      let o = evToEventObject(ev);
+      // let inp = ev.target;
+      // let o = Config.events[firstNumber(inp.id)];
+      o.text = inp.value;
+      o.title = firstWord(inp.value);
+      updateEvent(o);
+    }
+  });
+  mStyle(d1, {
+    fz: 10, cursor: 'pointer',
+    padding: 3, bg: '#58bae4', fg: 'white', rounding: 5, hmax: 55,
+    overflow: 'hidden'
+  });
+  d1.setAttribute('readonly', true);
+  d1.value = o.text;
+  d1.onclick = editEvent;
+  return d1;
   //const eventForDay = events.find(e => e.date === clicked);
   //console.log('eventForDay', eventForDay);
 }
 function saveEvent(o) {
   let inp = o.div.lastChild;
-  delete o.div;
-  console.log('o',o);
+  //delete o.div;
+  console.log('o', o);
   mStyle(inp, {
     fz: 10, cursor: 'pointer',
     padding: 3, bg: '#58bae4', fg: 'white', rounding: 5, hmax: 55,
@@ -25,7 +57,7 @@ function saveEvent(o) {
   inp.setAttribute('readonly', true);
   inp.onclick = ev => editEvent(ev, o)
 
-  phpPost(o, 'addEvent');
+
 
   // if (DA.sessionType != 'live') {
   // }else{
@@ -33,18 +65,18 @@ function saveEvent(o) {
   //   localStorage.setItem('events', JSON.stringify(Config.events));
   // }
 }
-
-function uiTypeCalendar(dParent, month1, year1, events) {
+function uiTypeCalendar(dParent, month1, year1, events1) {
   const [cellWidth, gap] = [100, 10];
   const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
   const weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
   var dParent = toElem(dParent);
+  const events = events1;
   var container = mDiv(dParent, { bg: 'white' }, 'dCalendar');
   var date = new Date();
   let dTitle = mDiv(container, { w: 760, padding: gap, fg: '#d36c6c', fz: 26, family: 'sans-serif', display: 'flex', justify: 'space-between' });
   var dWeekdays = mGrid(1, 7, container, { gap: gap });
   var dDays = [];
-  var info={};
+  var info = {};
   for (const w of weekdays) { mDiv(dWeekdays, { w: cellWidth, fg: '#247BA0' }, null, w) };
   var dGrid = mGrid(6, 7, container, { gap: gap });
   var dDate = mDiv(dTitle, { display: 'flex', gap: gap });
@@ -68,14 +100,14 @@ function uiTypeCalendar(dParent, month1, year1, events) {
   setDate(valf(month1, date.getMonth() + 1), valf(year1, date.getFullYear()));
   populate();
 
-  function getDay(d){
-    let i=d+info.dayOffset;
-    console.log('i',i);
-    if (i<1 || i>info.numDays) return null;
-    let ui=dDays[i]; 
-    console.log('ui',ui)
+  function getDay(d) {
+    let i = d + info.dayOffset;
+    console.log('i', i);
+    if (i < 1 || i > info.numDays) return null;
+    let ui = dDays[i];
+    console.log('ui', ui)
     if (ui.style.opacity === 0) return null;
-    return {div:dDays[i],events:[]};
+    return { div: dDays[i], events: [] };
   }
   function setDate(m, y) {
     date.setMonth(m - 1);
@@ -98,7 +130,7 @@ function uiTypeCalendar(dParent, month1, year1, events) {
       d.innerHTML = val;
     });
 
-    mClear(dGrid); dDays.length=0;
+    mClear(dGrid); dDays.length = 0;
     let outerStyles = {
       patop: 4, weight: 'bold', box: true,
       paleft: gap / 2, w: cellWidth, hmin: cellWidth, fg: 'contrast', bg: rColor()
@@ -110,7 +142,7 @@ function uiTypeCalendar(dParent, month1, year1, events) {
     populate(date);
     return { container, date, dDate, dGrid, dMonth, dYear, setDate, populate };
   }
-  function populate(){
+  function populate() {
     let dt = date;
     const day = info.day = dt.getDate();
     const month = info.month = dt.getMonth();
@@ -126,27 +158,51 @@ function uiTypeCalendar(dParent, month1, year1, events) {
       day: 'numeric',
     });
     const paddingDays = weekdays.indexOf(dateString.split(', ')[0]);
-    info.dayOffset = paddingDays-1;
+    info.dayOffset = paddingDays - 1;
     //console.log('paddingDays', day, month, year, paddingDays);
     //console.log('dDays', dDays);
-    for (const i of range(42)){
-      if (i<paddingDays || i>=paddingDays + daysInMonth){ mStyle(dDays[i], { opacity: 0 }); }
+    for (const i of range(42)) {
+      if (i < paddingDays || i >= paddingDays + daysInMonth) { mStyle(dDays[i], { opacity: 0 }); }
     }
     // for (const i of range(paddingDays)) { mStyle(dDays[i], { opacity: 0 }); }
     // for (const i of range(paddingDays + daysInMonth,34)) { mStyle(dDays[i], { opacity: 0 }); }
 
     //restliche tage bis month ende sind ok
-    for (let i = paddingDays+1; i <= paddingDays + daysInMonth; i++) {
+    for (let i = paddingDays + 1; i <= paddingDays + daysInMonth; i++) {
       const daySquare = dDays[i - 1]; //document.createElement('div');
       //const dayString = `${month + 1}/${i - paddingDays}/${year}`;
       daySquare.innerText = i - paddingDays;
-      let date = new Date(year, month, i-paddingDays);
-      let d = mDiv(daySquare, { box:true, align: 'center', bg: rColor(), w: '95%', hpadding: '2%', hmin: cellWidth - 28}); //,null,null,'padding');
+      let date = new Date(year, month, i - paddingDays);
+      let d = mDiv(daySquare, { box: true, align: 'center', bg: rColor(), w: '95%', hpadding: '2%', hmin: cellWidth - 28 }, calendarGetDayId(date)); //,null,null,'padding');
       d.addEventListener('click', ev => calendarOpenDay(date, daySquare.lastChild, ev));
       // d.addEventListener('click', ev => calendarOpenDay(date, dayString, daySquare.lastChild, ev));
       //dDays[i - 1].appendChild(daySquare);
     }
-
+    updateEvents();
+  }
+  function updateEvents() {
+    //console.log('events',events);
+    //console.log('dDays',dDays);
+    for (const e of events) {
+      let dt = new Date(e.date);
+      if (dt.getMonth() != date.getMonth() || dt.getFullYear() != date.getFullYear()) {
+        //console.log('YES!');
+        continue;
+      }
+      // let iday = date.getDate();
+      // iday = date.getUTCDay();
+      // console.log('date',date)
+      // console.log('iday',date.getDay(),date.getUTCDay(),date.getDate(),info.dayOffset)
+      let dDay = dDays[dt.getDate() + info.dayOffset];
+      //console.log('dDay',dDay)
+      let ch = arrChildren(dDay);
+      //console.log('children',ch)
+      let d = ch[0]; //dDay.firstChild; //arrChildren(dDay)[1];
+      let d1 = calendarAddExistingEvent(e, d);
+      e.div = d;
+      //console.log('d',d)
+      //mDiv(d,{bg:'blue'},null,e.title); break;
+    }
   }
   return { container, date, dDate, dGrid, dMonth, dYear, info, getDay, setDate, populate }
 }

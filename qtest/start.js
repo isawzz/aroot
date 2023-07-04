@@ -11,7 +11,7 @@ function startWithAssets(){
 
   //console.log(coin()?'MITNEHMEN':'NICHT MITNEHMEN'); return;
   let d1 = mDiv('dMain', { w: 800, h: 800, bg: 'white' })
-  let x = DA.calendar = uiTypeCalendar(d1, 6, 2023);
+  let x = DA.calendar = uiTypeCalendar(d1, 6, 2023,Config.events);
   //x.populate();
 }
 function detectSessionType() {

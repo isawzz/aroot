@@ -1,28 +1,15 @@
-function editEvent(ev,o){
+
+function calendarEventToMonth(o){return new Date(o.date).getMonth();}
+function calendarEventToYear(o){return new Date(o.date).getFullYear();}
+function calendarEventToDate(o){return new Date(o.date);}
+function calendarEventToDay(o){return new Date(o.date).getDate();}
+
+
+function editEvent(ev){
+  
+  let o = evToEventObject(ev);
+  console.log('supposedly have to edit',ev.target,o);
 }
-function phpSim(data,cmd){
-  //der macht genau das was normal der phpServer macht und verwendet als
-  //SESSION die global Session var
-  var o = {};
-  o.data = valf(data, {});
-  o.cmd = cmd;
-  //o = JSON.stringify(o);
-
-  let result = {};
-  if (cmd == 'addEvent') {
-    //find max id in existing events, add 1 to it
-    let ev=jsCopy(data);
-
-    let max = isEmpty(Config.events)?0:arrMax(Config.events,x=>x.id);
-    console.log('max',max,typeof max)
-    ev.id = Number(max)+1;
-    result.event = ev;
-    console.log(result)
-  }
-
-  handleResult(JSON.stringify(result), cmd);
-}
-
 function populateDays(cal){
   let dt = date;
   const day = dt.getDate();
