@@ -4,6 +4,7 @@ var SERVER = "http://localhost:8080/aroot/simple"; // oder telecave!
 //var SOCKETSERVER = `https://eximple.herokuapp.com/5000/` geht nicht!!!!!!!
 var Pollmode = 'auto'; 
 var Sayings;
+var Poetry;
 var Info;
 var ColorDi;
 var Items = {};

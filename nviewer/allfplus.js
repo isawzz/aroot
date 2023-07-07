@@ -20,6 +20,37 @@ function detectSessionType() {
   let loc = window.location.href;
   DA.sessionType = loc.includes('telecave') ? 'telecave' : loc.includes('8080') ? 'php' : 'live';
 }
+function get_data(find, type) {
+	var xml = new XMLHttpRequest();
+	var loader_holder = mBy("loader_holder");
+	loader_holder.className = "loader_on";
+	xml.onload = function () {
+		if (xml.readyState == 4 || xml.status == 200) {
+			loader_holder.className = "loader_off";
+			handle_result(xml.responseText, type);
+		}
+	}
+	var data = {};
+	data.find = find;
+	data.data_type = type;
+	data = JSON.stringify(data);
+	xml.open("POST", "test.php", true);
+	xml.send(data);
+}
+function handle_result(result, type) {
+	if (result.trim() == "") return;
+	var obj = JSON.parse(result);
+	console.log('obj', obj);
+	switch (obj.data_type) {
+		case 'assets':
+			ensure_assets(obj);
+			console.log('Syms', Syms);
+			let dParent = mBy('dMain');
+			let items = dict2list(Syms); //all keys
+			dParent.innerHTML = createViewerContent(items, [], true);
+			break;
+	}
+}
 function getCorrectMonth(s,val){
   const months = [
     "January",
@@ -163,7 +194,7 @@ async function loadAll() {
   detectSessionType();
   if (DA.sessionType == 'live') {
     //load assets the live way form localhost
-    await loadAssetsLive('../qtest/');
+    await loadAssetsLive('../nviewer/');
     //let events = DB.events = DB.events.map(x => x.date = new Date(x.date));
     //console.log('users', DB.users)
     //console.log('events', events)
@@ -176,39 +207,22 @@ async function loadAll() {
 async function loadAssetsLive(projectPath, basepath = '../base/') {
   let path = basepath + 'assets/';
   Config = DB = await route_path_yaml_dict(projectPath + 'config.yaml');
-  //console.log('from config',Config.events)
-
-  //localStorage.clear();
-  let events = localStorage.getItem('events');
-  // console.log('___*\nevents in loc:', events);
-  Config.events = isdef(events) ? JSON.parse(events) : [];
-  // console.log('events',Config.events)
-  //console.log('storage:',JSON.parse(localStorage.getItem('events')));
-  // Config.events1 = JSON.parse(localStorage.getItem('events'));
-  // console.log('events',Config.events1)
-  // console.log(typeof Config.events);
-  let users = localStorage.getItem('users');
-  Config.users = users ? JSON.parse(users) : [];
-  let subscribed = localStorage.getItem('subscribed');
-  Config.subscribed = subscribed ? JSON.parse(subscribed) : [];
   Syms = await route_path_yaml_dict(path + 'allSyms.yaml');
   SymKeys = Object.keys(Syms);
   ByGroupSubgroup = await route_path_yaml_dict(path + 'symGSG.yaml');
   C52 = await route_path_yaml_dict(path + 'c52.yaml');
-  Cinno = await route_path_yaml_dict(path + 'fe/inno.yaml');
+  Cinno = await route_path_yaml_dict(path + 'games/inno/inno.yaml');
+  Sayings = await route_path_yaml_dict(path + 'games/wise/sayings.yaml');
+  Poetry = await route_path_yaml_dict(path + 'games/poetry/words.yaml');
   Info = await route_path_yaml_dict(path + 'lists/info.yaml');
   create_card_assets_c52();
   KeySets = getKeySets();
-  // console.assert(isdef(Config), 'NO Config!!!!!!!!!!!!!!!!!!!!!!!!');
-  // return { users: dict2list(DB.users, 'name'), games: dict2list(Config.games, 'name'), tables: [] };
+  console.assert(isdef(Config), 'NO Config!!!!!!!!!!!!!!!!!!!!!!!!');
+  return { users: dict2list(DB.users, 'name'), games: dict2list(Config.games, 'name'), tables: [] };
 }
 function loadAssetsPhp(obj) {
   console.log('obj', obj)
   Config = jsyaml.load(obj.config);
-  Config.events = obj.events;
-  Config.users = obj.users;
-  Config.subscribed = obj.subscribed;
-  console.log('Config',Config)
   Syms = jsyaml.load(obj.syms);
   SymKeys = Object.keys(Syms);
   ByGroupSubgroup = jsyaml.load(obj.symGSG);
@@ -216,10 +230,10 @@ function loadAssetsPhp(obj) {
   Cinno = jsyaml.load(obj.cinno);
   Info = jsyaml.load(obj.info);
   Sayings = jsyaml.load(obj.sayings);
+  Poetry = jsyaml.load(obj.poetry);
   create_card_assets_c52();
   KeySets = getKeySets();
-  //console.log('Sayings',Sayings);
-  // assertion(isdef(Config), 'NO Config!!!!!!!!!!!!!!!!!!!!!!!!');
+  assertion(isdef(Config), 'NO Config!!!!!!!!!!!!!!!!!!!!!!!!');
 }
 function maButton(caption, handler, dParent, styles, classes) {
   let a = mLink("javascript:void(0)", dParent, styles, null, caption, classes);

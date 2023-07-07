@@ -1370,6 +1370,11 @@ function onclick_syms() {
 	let items = dict2list(Syms); //all keys
 	dParent.innerHTML = createViewerContent(items, [], true);
 }
+function onclick_wise() {
+	let dParent = mBy('dMain');
+	let items = dict2list(Syms); //all keys
+	dParent.innerHTML = createViewerContent(items, [], true);
+}
 async function start() {
 	let txt = await route_path_text('../iconViewer/fa_symbols.css');
 	let parts = txt.split(':before');

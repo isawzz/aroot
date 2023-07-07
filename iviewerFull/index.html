@@ -15,7 +15,10 @@
 		<script src="../base/alibs/jsyaml.js"></script>
 		<script src="../base/alibs/html2canvas.js"></script>
 
-  </head>
+		<script src="./js/globals.js"></script>
+		<script src="../coding/cb/old/base.js"></script>
+		<!-- base MUSS als erstes sein!!!!! -->
+	</head>
 	<body>
 		<div id="loader_holder" class="loader_on"><img style="width: 70px" src="../base/assets/images/icons/giphy.gif" /></div>
 		<div id="dToolbar">
@@ -25,5 +28,11 @@
 			<button onclick="onclick_syms()">syms</button>
 		</div>
 		<div id="dMain"></div>
-	</body><script src="../iviewer/closure.js"></script><script>onload = start;</script>
+
+		<!-- #region alle belinda includes -->
+		<script src="./js/features.js"></script>
+		<script src="./js/syms.js"></script>
+
+		<script src="start.js"></script>
+	</body>
 </html>

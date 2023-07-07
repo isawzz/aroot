@@ -70,6 +70,7 @@ function load_assets(obj) {
 	Cinno = jsyaml.load(obj.cinno);
 	Info = jsyaml.load(obj.info);
 	Sayings = jsyaml.load(obj.sayings);
+	Poetry = jsyaml.load(obj.poetry);
 	create_card_assets_c52();
 	KeySets = getKeySets();
 

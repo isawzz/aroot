@@ -14,12 +14,6 @@ function startWithAssets(){
   let x = DA.calendar = uiTypeCalendar(d1, 6, 2023,Config.events);
   //x.populate();
 }
-function detectSessionType() {
-
-  //console.log('window.location', window.location.href);
-  let loc = window.location.href;
-  DA.sessionType = loc.includes('telecave') ? 'telecave' : loc.includes('8080') ? 'php' : 'live';
-}
 function test3_displayCalendar() {
   let html1 = `
     <div class="calendar_container">

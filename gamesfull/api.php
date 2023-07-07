@@ -96,6 +96,7 @@ if ($cmd == 'table'){
 	$cinno = file_get_contents($path . 'fe/inno.yaml');
 	$info = file_get_contents($path . 'lists/info.yaml');
 	$sayings = file_get_contents($path . 'games/wise/sayings.yaml');
+	$poetry = file_get_contents($path . 'games/poetry/poetry.yaml');
 	$config = file_get_contents(__DIR__ . '/config.yaml');
 	$result = (object) ['sayings' => $sayings, 'info' => $info, 'users' => get_users(), 'tables' => get_tables(), 'config' => $config, 'c52' => $c52, 'cinno' => $cinno, 'syms' => $syms, 'symGSG' => $symGSG];
 

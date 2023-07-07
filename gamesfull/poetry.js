@@ -2,7 +2,6 @@ function poetry() {
 	function state_info(dParent) { return; }//dParent.innerHTML = `stage: ${Z.stage}`; }
 	function setup(players, options) {
 		let fen = { players: {}, plorder: jsCopy(players), history: [], num: options.num };
-		//shuffle(fen.plorder);
 		let starter = fen.starter = fen.plorder[0];
 		Sayings = shuffle(Sayings);
 		fen.index = 0;
@@ -28,21 +27,16 @@ function poetry() {
 		return isEmpty(winners)?false:Z.fen.winners;
 	}
 	function post_collect() { agmove_resolve(); } //console.log('YEAH!!!! post_collect',Z); ag_post_collect(); }
-	return { post_collect, state_info, setup, present: wise_present, check_gameover, activate_ui: wise_activate };
+	return { post_collect, state_info, setup, present: poetry_present, check_gameover, activate_ui: poetry_activate };
 }
-function wise_present(dParent) {
-
+function poetry_present(dParent) {
 	let [fen, ui, stage, uplayer] = [Z.fen, UI, Z.stage, Z.uplayer];
 	let [dOben, dOpenTable, dMiddle, dRechts] = tableLayoutMR(dParent, 1, 0); ///tableLayoutOMR(dParent, 5, 1);
-
 	let dt = dTable = dOpenTable; clearElement(dt); mCenterFlex(dt);
-
-	wise_stats(dt);
-
+	poetry_stats(dt);
 	mLinebreak(dt, 10);
-
 }
-function wise_activate() {
+function poetry_activate() {
 	let [pldata, stage, A, fen, phase, uplayer] = [Z.playerdata, Z.stage, Z.A, Z.fen, Z.phase, Z.uplayer];
 
 	//stages: write, select, round
@@ -90,7 +84,7 @@ function wise_activate() {
 		Z.form = d;
 		mLinebreak(d, 10);
 		mInput(d, { wmin: 600 }, 'i_end', 'enter ending');
-		d.onsubmit = wise_submit_text;
+		d.onsubmit = poetry_submit_text;
 	} else if (stage == 'select' && resolvable) {
 		assertion(uplayer == fen.starter, 'NOT THE STARTER WHO COMPLETES THE STAGE!!!')
 		let d = mDiv(dTable, {});
@@ -120,7 +114,7 @@ function wise_activate() {
 		let i = 1;
 		for (const s of fen.sentences) {
 			let d1 = mDiv(d, { fz: 20, hline: 30 }, `dsent_${s.plname}`, '' + (i++) + ') ' + s.text, 'hop1');
-			d1.onclick = wise_select_sentence;
+			d1.onclick = poetry_select_sentence;
 		}
 	} else if (stage == 'round' && resolvable) {
 		assertion(uplayer == fen.starter, 'NOT THE STARTER WHO COMPLETES THE STAGE!!!')
@@ -137,17 +131,17 @@ function wise_activate() {
 			let d1 = mDiv(d, { fz: 20, hline: 30 }, null, `${plname} selected ${o.plname}: ${o.text}`);
 		}
 		mLinebreak(dTable, 12)
-		mButton('WEITER', wise_onclick_weiter, dTable, {}, ['donebutton', 'enabled']);
+		mButton('WEITER', poetry_onclick_weiter, dTable, {}, ['donebutton', 'enabled']);
 	}else{
 		console.log('Z',Z)
 		alert('PROBLEM!!!')
 	}
 }
-function wise_onclick_weiter() {
+function poetry_onclick_weiter() {
 	Z.state = { plname: Z.uplayer };
 	take_turn_multi();
 }
-function wise_select_sentence(ev) {
+function poetry_select_sentence(ev) {
 	if (!uiActivated) return;
 	let text = ev.target.innerHTML;
 	let plname = stringAfter(ev.target.id, 'dsent_')
@@ -157,8 +151,8 @@ function wise_select_sentence(ev) {
 	take_turn_multi();
 
 }
-function wise_submit_text(ev) { ev.preventDefault(); let text = mBy('i_end').value; Z.state = { text: text }; take_turn_multi(); }
-function wise_stats(d) {
+function poetry_submit_text(ev) { ev.preventDefault(); let text = mBy('i_end').value; Z.state = { text: text }; take_turn_multi(); }
+function poetry_stats(d) {
 	let players = Z.fen.players;
 	//console.log('uplayer',Z.uplayer)
 	let d1 = mDiv(d, { display: 'flex', 'justify-content': 'center', 'align-items': 'space-evenly' });
