@@ -1,4 +1,30 @@
 
+
+async function mFetch(url, cmd='text', o=null){
+  let sess = detectSessionType(); 
+  //let cmd = opts.command;
+  //let type = sess == 'php' && nundef(cmd) ? 'text' : url.endsWith('yaml') ? 'yaml' : valf(opts.type, 'json');
+  let type = cmd;
+  let method = o?'post':'get';
+  //mDom(dMain, { fg: ORANGE }, { html: `session: ${sess}` }); 
+
+  console.log('mFetch', sess, type, cmd);
+
+  let result;
+  if (method == 'get') {
+    if (sess == 'live') {
+      result = await fetch(url).then(x => type == 'json' ? x.json() : x.text());
+      if (type == 'yaml') result = jsyaml.load(result);
+    }else if (sess == 'php'){
+      result = await fetch(url).then(x => type == 'json' ? x.json() : x.text());
+      if (type == 'yaml') result = jsyaml.load(result);
+    }
+  }
+
+  return result;
+
+}
+
 function startWithAssets(){
   console.log('session:',DA.sessionType)
   //return;
