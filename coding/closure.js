@@ -2164,10 +2164,9 @@ function ohneRegexMix(s, onlylive = false) {
 }
 function parseSearchString(s, sAllow = '+-_') { return toWordsX(s, sAllow); }
 function stringCount(s, sSub, caseInsensitive = true) {
-	let temp = "Welcome to W3Docs";
-	let m = new RegExp(sSub, 'g' + (caseInsensitive ? 'i' : ''));
-	let count = (s.match(m)).length;
-	return count;
+  let m = new RegExp(sSub, 'g' + (caseInsensitive ? 'i' : ''));
+  let s1=s.match(m);
+  return s1?s1.length:0;
 } 
 function stringMinusLast(s, n = 1) {
 	return s.substring(0, s.length - n);
