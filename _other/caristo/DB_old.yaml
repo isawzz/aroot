@@ -1,0 +1,101 @@
+tables:
+  t0:
+    game: aristocracy
+    players:
+      max:
+        brenn: true
+        hand:
+          - HK
+          - HJ
+          - S2
+          - C4
+          - C6
+          - CT
+          - D3
+        coin: 3
+      felix:
+        brenn: false
+        hand:
+          - SK
+          - SJ
+          - C2
+          - D4
+          - D6
+          - DT
+          - H3
+        coin: 3
+      amanda:
+        brenn: false
+        hand:
+          - CK
+          - CJ
+          - D2
+          - H4
+          - H6
+          - HT
+          - S3
+        coin: 3
+    table:
+      market:
+        - C3
+        - CA
+        - D2
+      deck:
+        - HA
+        - H2
+        - H5
+        - H7
+        - H8
+        - H9
+        - HQ
+        - SA
+        - S4
+        - S5
+        - S6
+        - S7
+        - S8
+        - S9
+        - ST
+        - SQ
+        - DA
+        - D5
+        - D7
+        - D8
+        - D9
+        - DJ
+        - DQ
+        - DK
+        - C3
+        - C5
+        - C7
+        - C8
+        - C9
+        - CQ
+        - CA
+      pile: []
+    phase: king
+    turn: max
+    action: stall
+  t1:
+    game: tictactoe
+    rows: 3
+    cols: 3
+    players:
+      max:
+        color: red
+        symbol: X
+      felix:
+        color: blue
+        symbol: O
+    table:
+      board:
+        - null
+        - null
+        - null
+        - null
+        - null
+        - null
+        - null
+        - null
+        - null
+    turn: max

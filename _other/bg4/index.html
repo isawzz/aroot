@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>le petit chat</title>
+		<!-- <link rel="icon" href="https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/softbank/145/cat-face_1f431.png" /> -->
+		<link rel="icon" href="../base/assets/images/icons/petitchat.png" />
+
+		<link rel="stylesheet" href="../base/assets/fonts/fonts.css" />
+
+		<script src="../base/alibs/jq3.js"></script>
+		<script src="../base/alibs/jsyaml.js"></script>
+		<script src="../base/alibs/html2canvas.js"></script>
+		<script src="../base/alibs/color-thief.umd.js"></script>
+		<script src="../base/alibs/jscolor.js"></script>
+
+		<script src="../bg4/js/globals.js"></script>
+		<script src="../bg4/js/base.js"></script>
+
+		<link rel="stylesheet" href="../bg4/css/chess.css" />
+		<link rel="stylesheet" href="../bg4/css/base.css" />
+		<link rel="stylesheet" href="../bg4/css/shapes.css" />
+		<link rel="stylesheet" href="../bg4/css/cards.css" />
+		<link rel="stylesheet" href="../bg4/css/features.css" />
+	</head>
+	<body>
+		<!-- #region svg symbols -->
+		<svg style="visibility: hidden; position: fixed" width="0" height="0" xmlns="http://www.w3.org/2000/svg" version="1.1">
+			<defs>
+				<filter id="goo8">
+					<feGaussianBlur in="SourceGraphic" stdDeviation="8" result="blur" />
+					<feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 19 -9" result="goo8" />
+					<feComposite in="SourceGraphic" in2="goo8" operator="atop" />
+				</filter>
+				<filter id="goo5">
+					<feGaussianBlur in="SourceGraphic" stdDeviation="5" result="blur" />
+					<feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 19 -9" result="goo5" />
+					<feComposite in="SourceGraphic" in2="goo5" operator="atop" />
+				</filter>
+				<filter id="goo3">
+					<feGaussianBlur in="SourceGraphic" stdDeviation="3" result="blur" />
+					<feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 19 -9" result="goo3" />
+					<feComposite in="SourceGraphic" in2="goo3" operator="atop" />
+				</filter>
+				<filter id="goo1">
+					<feGaussianBlur in="SourceGraphic" stdDeviation="1" result="blur" />
+					<feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 19 -9" result="goo1" />
+					<feComposite in="SourceGraphic" in2="goo1" operator="atop" />
+				</filter>
+			</defs>
+		</svg>
+		<svg style="visibility: hidden; position: fixed" width="0" height="0" xmlns="http://www.w3.org/2000/svg" version="1.1">
+			<symbol id="Treff" viewBox="-600 -600 1200 1200" preserveAspectRatio="xMinYMid">
+				<path
+					d="M30 150C35 385 85 400 130 500L-130 500C-85 400 -35 385 -30 150A10 10 0 0 0 -50 150A210 210 0 1 1 -124 -51A10 10 0 0 0 -110 -65A230 230 0 1 1 110 -65A10 10 0 0 0 124 -51A210 210 0 1 1 50 150A10 10 0 0 0 30 150Z"
+					fill="black"
+				></path>
+			</symbol>
+			<symbol id="Karo" viewBox="-600 -600 1200 1200" preserveAspectRatio="xMinYMid">
+				<path d="M-400 0C-350 0 0 -450 0 -500C0 -450 350 0 400 0C350 0 0 450 0 500C0 450 -350 0 -400 0Z" fill="red"></path>
+			</symbol>
+			<symbol id="Herz" viewBox="-600 -600 1200 1200" preserveAspectRatio="xMinYMid">
+				<path
+					d="M0 -300C0 -400 100 -500 200 -500C300 -500 400 -400 400 -250C400 0 0 400 0 500C0 400 -400 0 -400 -250C-400 -400 -300 -500 -200 -500C-100 -500 0 -400 -0 -300Z"
+					fill="red"
+				></path>
+			</symbol>
+			<symbol id="Pik" viewBox="-600 -600 1200 1200" preserveAspectRatio="xMinYMid">
+				<path
+					d="M0 -500C100 -250 355 -100 355 185A150 150 0 0 1 55 185A10 10 0 0 0 35 185C35 385 85 400 130 500L-130 500C-85 400 -35 385 -35 185A10 10 0 0 0 -55 185A150 150 0 0 1 -355 185C-355 -100 -100 -250 0 -500Z"
+					fill="black"
+				></path>
+			</symbol>
+		</svg>
+		<!-- #endregion svg symbols -->
+
+		<div id="header" onclick="onclick_header(event)">
+			<div id="mini_menu_left">
+				<button id="b_toggle_sidebar" onclick="onclick_toggle_sidebar()" class="mybutton">☰</button>
+				<!-- <button id='bSidebarHer' style='display:none' onclick='onClickSidebarHer()'>&nbsp;>&nbsp;</button> -->
+				<div id="user_info_mini" style="display: none; align-items: center; gap: 10px; margin: 10px">
+					<img id="mini_profile_img" style="height: 40px; width: 40px" />
+					<span id="mini_username">meckele</span>
+				</div>
+			</div>
+			<div id="loader_holder" class="loader_on"><img style="width: 30px" src="../base/assets/images/icons/giphy.gif" /></div>
+			le petit chat
+			<div id="mini_menu_right" style="display: none"></div>
+		</div>
+
+		<div id="wrapper">
+			<div id="left_panel" onclick="onclick_left_panel(event)">
+				<div id="user_info" style="padding: 10px; min-height: 220px; opacity: 0">
+					<img
+						id="profile_image"
+						class="img_person sz100"
+						src="../base/assets/images/unknown_user.jpg"
+						style="height: 100px; width: 100px"
+						ondragover="handle_drag_and_drop(event)"
+						ondrop="handle_drag_and_drop(event)"
+						ondragleave="handle_drag_and_drop(event)"
+					/>
+					<br />
+					<span id="username">nobody</span>
+					<br />
+					<span id="motto" style="font-size: 12px; opacity: 0.5">vaya tortuga</span>
+				</div>
+				<div id="sidebar_menu" style="padding: 10px">
+					<label id="label_games" class="enabled" for="radio_games">
+						Games
+						<img src="../base/assets/images/icons/games.png" />
+					</label>
+					<label id="label_play" class="enabled" for="radio_play">
+						Play
+						<img src="../base/assets/images/icons/play.png" />
+					</label>
+					<label id="label_contacts" class="enabled" for="radio_contacts">
+						Contacts
+						<img src="../base/assets/images/icons/contacts.png" />
+					</label>
+					<label id="label_chat" class="enabled" for="radio_chat">
+						Chat
+						<img src="../base/assets/images/icons/chat.png" />
+					</label>
+					<label id="label_account" class="enabled" for="radio_account">
+						Account
+						<img src="../base/assets/images/icons/account.png" />
+					</label>
+					<label id="label_login" class="enabled" for="radio_login">
+						Login
+						<img src="../base/assets/images/icons/login.png" />
+					</label>
+					<input type="radio" id="radio_contacts" name="myradio" style="display: none" />
+					<input type="radio" id="radio_chat" name="myradio" style="display: none" />
+					<input type="radio" id="radio_games" name="myradio" style="display: none" />
+					<input type="radio" id="radio_play" name="myradio" style="display: none" />
+					<input type="radio" id="radio_account" name="myradio" style="display: none" />
+					<input type="radio" id="radio_login" name="myradio" style="display: none" />
+				</div>
+			</div>
+			<div id="right_panel">
+				<div id="container" style="display: flex">
+					<div id="inner_left_panel"></div>
+					<!-- <div id="inner_right_panel"></div> -->
+				</div>
+			</div>
+		</div>
+
+		<div id="dIntro" style="background:skyblue;position: fixed; top: 0px; left: 0; width: 100vw; height: 100vh">
+
+		</div>
+
+
+		<div id="dStatusLine" style="padding: 10px">
+			<div id="dGamePlayer">
+				<button id='b_reload_state' class="buttonClass donebutton" onclick="onclick_reload_state(event)">RELOAD STATE</button>
+			</div>
+			<div id="dAdminButtons" style='display:none'>
+				<div style="margin-top: 16px">
+					<button class="statusbutton enabled" onclick="onclick_user(event)">mimi</button>
+					<button class="statusbutton enabled" onclick="onclick_user(event)">amanda</button>
+					<button class="statusbutton enabled" onclick="onclick_user(event)">felix</button>
+					<button class="statusbutton enabled" onclick="onclick_user(event)">gul</button>
+					<button class="statusbutton enabled" onclick="onclick_user(event)">meckele</button>
+					<button class="statusbutton enabled" onclick="onclick_user(event)">guest</button>
+					</div>
+				<div style="margin-top: 8px">
+					<button id="b_delete_table" class="statusbutton enabled" onclick="onclick_delete_table()">delete table</button>
+					<button id="b_reset_tables" class="statusbutton enabled" onclick="onclick_reset_tables()">reset tables</button>
+					<button id="b_test_create1" class="statusbutton enabled" onclick="onclick_test_create1()">create 1</button>
+					<button id="b_reset_user" class="statusbutton enabled" onclick="onclick_reset_user()">reset user</button>
+					<button id="b_reset_db" class="statusbutton enabled" onclick="onclick_reset_db()">reset db</button>
+				</div>
+				<div style="margin-top: 8px">
+					<button id="b_internet" class="statusbutton enabled on" onclick="onclick_internet()">online</button>
+					<button id="b_ticker_on" class="statusbutton enabled" onclick="onclick_test_ticker_on()">tick</button>
+					<button id="b_ticker_off" class="statusbutton enabled" onclick="onclick_test_ticker_off()">stop</button>
+					<span>&nbsp;&nbsp;&nbsp;</span>
+					<button id="b_log_session" class="statusbutton enabled" onclick="onclick_log_session()">Session</button>
+				</div>
+			</div>
+
+			<!-- #region unused -->
+			<!-- <button id="b_load_tables" class="statusbutton enabled" onclick="onclick_tables()">tables</button> -->
+			<!-- <button id="b_select_table" class="statusbutton disabled" onclick="onclick_table(this)">table</button> -->
+			<!-- <button id="b_user_tables" class="statusbutton enabled" onclick="onclick_user_tables()">my tables</button> -->
+			<!-- <button id="b_user_game_tables" class="statusbutton enabled" onclick="onclick_user_game_tables()">my spotit</button> -->
+
+			<!-- <button id="b_test_game_in_menu" class="statusbutton enabled" onclick="onclick_test_game_in_menu()">game opt</button> -->
+			<!-- <button id="b_test_create_table" class="statusbutton enabled" onclick="onclick_test_create_table()">create</button> -->
+
+			<!-- <button id="b_test_delete_table" class="statusbutton enabled" onclick="onclick_test_delete_table()">delete</button> -->
+
+			<!-- <button id="b_test_join_table" class="statusbutton enabled" onclick="onclick_test_join_table()">join</button> -->
+			<!-- <button id="b_toggle_join_table" class="statusbutton enabled" onclick="onclick_toggle_join_table()">toggle</button> -->
+			<!-- <button id="b_test_start_game" class="statusbutton enabled" onclick="onclick_test_start_game()">start game</button> -->
+
+			<!-- <button id="b_test_games" class="statusbutton enabled" onclick="onclick_test_games()">games</button> -->
+			<!-- <button id="b_test_play" class="statusbutton enabled" onclick="onclick_test_play()">play</button> -->
+			<!-- <button id="b_test_move" class="statusbutton enabled" onclick="onclick_test_move()">move</button> -->
+
+			<!-- <button id="b_playmode" class="statusbutton enabled" onclick="onclick_playmode()">solo</button> -->
+			<!-- <button id="b_test" class="statusbutton enabled" onclick="onclick_internet()">TEST</button> -->
+			<!-- <button id="b_sound" class="statusbutton enabled sym on" onclick="onclick_sound()">🔊</button> -->
+			<!-- <div id="language_holder">english</div> -->
+			<!-- <select id="sel_language" class='statusselect enabled' onchange='onselect_language()'>
+			  <option value="E">english</option>
+			  <option value="D">german</option>
+			  <option value="S">spanish</option>
+			  <option value="F">french</option>
+			  <option value="C">mandarin</option>
+			</select> -->
+			<!-- #endregion unused -->
+		</div>
+
+		<div id="dMessage" onclick="onclick_status_message(event)" style="display: none"></div>
+
+		<div id="dShield" onclick="onclick_shield(event)" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh"></div>
+		<div id="dPollingShield" style="background: #ff000080; display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh"></div>
+
+		<script>
+				let x=queryStringToJson();
+				//console.log('x',x)
+				if (x.user=='mimi') hide('dIntro');
+		</script>
+
+		<!-- #region alibs includes -->
+		<script src="../base/alibs/numbers.js"></script>
+		<script src="../base/alibs/math.js"></script>
+		<script src="../base/alibs/cyto.js"></script>
+		<script src="../base/alibs/cola.min.js"></script>
+		<script src="../base/alibs/cytoscape-cola.js"></script>
+		<script src="../base/alibs/euler.js"></script>
+		<script src="../base/alibs/fcose/layout-base.js"></script>
+		<script src="../base/alibs/fcose/cose-base.js"></script>
+		<script src="../base/alibs/fcose/fcose.js"></script>
+		<script src="../base/alibs/klay.js"></script>
+		<script src="../base/alibs/cytoscape-klay.js"></script>
+		<script src="../base/alibs/cytonode.js"></script>
+		<!-- #endregion alibs includes -->
+
+		<!-- #region features includes -->
+		<script src="../bg4/features/audio.js"></script>
+		<script src="../bg4/features/badges.js"></script>
+		<script src="../bg4/features/banner.js"></script>
+		<script src="../bg4/features/chess.js"></script>
+		<script src="../bg4/features/markers.js"></script>
+		<script src="../bg4/features/mGraph.js"></script>
+		<script src="../bg4/features/speech.js"></script>
+		<script src="../bg4/features/syms.js"></script>
+		<!-- #endregion features includes -->
+
+		<!-- #region bg includes -->
+		<script src="../bg4/js/board.js"></script>
+		<script src="../bg4/js/legacy.js"></script>
+
+		<script src="../bg4/js/leg_belinda.js"></script>
+		<script src="../bg4/js/game.js"></script>
+
+		<script src="../bg4/js/leg_chatas.js"></script>
+		<script src="../bg4/js/gameplay.js"></script>
+		<script src="../bg4/js/testing.js"></script>
+
+		<script src="../bg4/js/cards.js"></script>
+		<script src="../bg4/js/classes.js"></script>
+		<script src="../bg4/js/controller.js"></script>
+		<script src="../bg4/js/convert.js"></script>
+		<!-- <script src="../bg4/js/depr.js"></script> -->
+		<script src="../bg4/js/done.js"></script>
+		<script src="../bg4/js/features.js"></script>
+		<script src="../bg4/js/guest.js"></script>
+		<script src="../bg4/js/helpers.js"></script>
+		<script src="../bg4/js/onclick.js"></script>
+		<script src="../bg4/js/overrides.js"></script>
+		<script src="../bg4/js/server.js"></script>
+		<script src="../bg4/js/work.js"></script>
+		<script src="../bg4/js/work_game.js"></script>
+		<script src="../bg4/js/work_help.js"></script>
+		<script src="../bg4/js/z.js"></script>
+
+		<!-- #endregion -->
+
+		<script src="../bg4/js/start.js"></script>
+	</body>
+</html>

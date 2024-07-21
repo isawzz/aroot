@@ -1,0 +1,52 @@
+/*------------------------------------------------------------------
+      						RESET STYLES
+-------------------------------------------------------------------*/
+
+ul {
+	list-style: none;
+	padding: 0;
+}
+
+a {
+	display: inline-block;
+	text-decoration: none;
+}
+
+:focus {
+	outline: none !important;
+}
+:focus {
+	outline: 0 !important;
+	box-shadow: 0 0 0 0 rgba(0, 0, 0, 0) !important;
+}
+/*------------------------------------------------------------------
+								SECTION STYLES
+-------------------------------------------------------------------*/
+
+section {
+	margin: 20px 0;
+	/* background: violet; */
+}
+
+section ul {
+	text-align: center;
+}
+
+section a {
+	font-size: 32px;
+	padding: 7px;
+	color: lightgrey;
+}
+
+/* section a:not(:first-child) {
+	margin-left: 20px;
+} */
+
+section i {
+	vertical-align: middle;
+	transition: color 0.3s ease-in-out;
+}
+
+section a:hover i {
+	color: silver;
+}

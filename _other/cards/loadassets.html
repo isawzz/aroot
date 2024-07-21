@@ -1,0 +1,19 @@
+<?php $UseLiveServer = true; if(!$UseLiveServer) include('php/loadassets.php'); ?>
+<script type="text/javascript">
+	var USE_LOCAL_STORAGE = false;
+	USELIVESERVER = true;
+	START_IN_MENU = true; //!USELIVESERVER;
+	DEFAULTUSERNAME = USELIVESERVER ? 'nil' : 'gul';
+	window.onload = loadassets;
+	async function loadassets() {
+		if (USELIVESERVER) {
+			C52 = await localOrRoute('C52', '../base/assets/c52.yaml');
+			symbolDict = Syms = await localOrRoute('syms', '../base/assets/allSyms.yaml');
+			SymKeys = Object.keys(Syms);
+			ByGroupSubgroup = await localOrRoute('gsg', '../base/assets/symGSG.yaml');
+			WordP = await route_path_yaml_dict('../base/assets/math/allWP.yaml');
+			DB = await route_path_yaml_dict('./DB.yaml');
+		}
+		start();
+	}
+</script>

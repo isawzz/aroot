@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>le petit chat</title>
+		<link rel="icon" href="https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/softbank/145/cat-face_1f431.png" />
+		<link rel="stylesheet" href="../base/assets/fonts/fonts.css" />
+		<link rel="stylesheet" href="../chatas/css/base.css" />
+		<link rel="stylesheet" href="../chatas/css/test.css" />
+		<link rel="stylesheet" href="../chatas/css/chess.css" />
+		<!-- ************************************************************************ -->
+		<link rel="stylesheet" href="../chatas/css/mybutton.css" />
+		<link rel="stylesheet" href="../chatas/css/shapes.css" />
+		<link rel="stylesheet" href="../chatas/css/cards.css" />
+
+		<script src="../base/alibs/jq3.js"></script>
+		<script src="../base/alibs/jsyaml.js"></script>
+		<script src="../base/alibs/html2canvas.js"></script>
+		<script src="../base/alibs/color-thief.umd.js"></script>
+		<script src="../base/alibs/jscolor.js"></script>
+
+		<script src="../chatas/js/globals.js"></script>
+		<script src="../chatas/js/base.js"></script>
+		<!-- base MUSS als erstes sein!!!!! -->
+	</head>
+	<body>
+		<!-- #region svg symbols -->
+		<svg style="visibility: hidden; position: fixed" width="0" height="0" xmlns="http://www.w3.org/2000/svg" version="1.1">
+			<defs>
+				<filter id="goo8">
+					<feGaussianBlur in="SourceGraphic" stdDeviation="8" result="blur" />
+					<feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 19 -9" result="goo8" />
+					<feComposite in="SourceGraphic" in2="goo8" operator="atop" />
+				</filter>
+				<filter id="goo5">
+					<feGaussianBlur in="SourceGraphic" stdDeviation="5" result="blur" />
+					<feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 19 -9" result="goo5" />
+					<feComposite in="SourceGraphic" in2="goo5" operator="atop" />
+				</filter>
+				<filter id="goo3">
+					<feGaussianBlur in="SourceGraphic" stdDeviation="3" result="blur" />
+					<feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 19 -9" result="goo3" />
+					<feComposite in="SourceGraphic" in2="goo3" operator="atop" />
+				</filter>
+				<filter id="goo1">
+					<feGaussianBlur in="SourceGraphic" stdDeviation="1" result="blur" />
+					<feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 19 -9" result="goo1" />
+					<feComposite in="SourceGraphic" in2="goo1" operator="atop" />
+				</filter>
+			</defs>
+		</svg>
+		<svg style="visibility: hidden; position: fixed" width="0" height="0" xmlns="http://www.w3.org/2000/svg" version="1.1">
+			<symbol id="Treff" viewBox="-600 -600 1200 1200" preserveAspectRatio="xMinYMid">
+				<path
+					d="M30 150C35 385 85 400 130 500L-130 500C-85 400 -35 385 -30 150A10 10 0 0 0 -50 150A210 210 0 1 1 -124 -51A10 10 0 0 0 -110 -65A230 230 0 1 1 110 -65A10 10 0 0 0 124 -51A210 210 0 1 1 50 150A10 10 0 0 0 30 150Z"
+					fill="black"
+				></path>
+			</symbol>
+			<symbol id="Karo" viewBox="-600 -600 1200 1200" preserveAspectRatio="xMinYMid">
+				<path d="M-400 0C-350 0 0 -450 0 -500C0 -450 350 0 400 0C350 0 0 450 0 500C0 450 -350 0 -400 0Z" fill="red"></path>
+			</symbol>
+			<symbol id="Herz" viewBox="-600 -600 1200 1200" preserveAspectRatio="xMinYMid">
+				<path
+					d="M0 -300C0 -400 100 -500 200 -500C300 -500 400 -400 400 -250C400 0 0 400 0 500C0 400 -400 0 -400 -250C-400 -400 -300 -500 -200 -500C-100 -500 0 -400 -0 -300Z"
+					fill="red"
+				></path>
+			</symbol>
+			<symbol id="Pik" viewBox="-600 -600 1200 1200" preserveAspectRatio="xMinYMid">
+				<path
+					d="M0 -500C100 -250 355 -100 355 185A150 150 0 0 1 55 185A10 10 0 0 0 35 185C35 385 85 400 130 500L-130 500C-85 400 -35 385 -35 185A10 10 0 0 0 -55 185A150 150 0 0 1 -355 185C-355 -100 -100 -250 0 -500Z"
+					fill="black"
+				></path>
+			</symbol>
+		</svg>
+		<!-- #endregion svg symbols -->
+
+		<div id="wrapper">
+			<div id="left_panel" onclick="toggleSidebar(event, 122, 'Escape')">
+				<!-- <button id='bSidebarWeg'  onclick='onClickSidebarWeg()'>&nbsp;<&nbsp;</button> -->
+				<div id="user_info" style="padding: 10px">
+					<img
+						id="profile_image"
+						class="img_person sz100"
+						src="../base/assets/images/unknown_user.jpg"
+						style="height: 100px; width: 100px"
+						ondragover="handle_drag_and_drop(event)"
+						ondrop="handle_drag_and_drop(event)"
+						ondragleave="handle_drag_and_drop(event)"
+					/>
+					<br />
+					<span id="username">Username</span>
+					<br />
+					<span id="email" style="font-size: 12px; opacity: 0.5">email@gmail.com</span>
+					<br />
+					<br />
+					<br />
+					<div>
+						<label id="label_contacts" for="radio_contacts">
+							Contacts
+							<img src="../base/assets/images/icons/contacts.png" />
+						</label>
+						<label id="label_chat" for="radio_chat">
+							Chat
+							<img src="../base/assets/images/icons/chat.png" />
+						</label>
+						<label id="label_games" for="radio_games">
+							Games
+							<img src="../base/assets/images/icons/games.png" />
+						</label>
+						<label id="label_play" for="radio_play">
+							Play
+							<img src="../base/assets/images/icons/play.png" />
+						</label>
+						<label id="label_account" for="radio_account">
+							Account
+							<img src="../base/assets/images/icons/account.png" />
+						</label>
+					</div>
+				</div>
+			</div>
+			<div id="right_panel">
+				<div id="header" onclick="toggleSidebar(event, 122, 'Escape')">
+					<div id="mini_menu_left">
+						<!-- <button id='bSidebarHer' style='display:none' onclick='onClickSidebarHer()'>&nbsp;>&nbsp;</button> -->
+						<img id="mini_profile_img" style="height: 40px; width: 40px; display: none" />
+						<span id="mini_username" style="display: none">meckele</span>
+					</div>
+					<div id="loader_holder" class="loader_on"><img style="width: 30px" src="../base/assets/images/icons/giphy.gif" /></div>
+					le petit chat
+					<div id="mini_menu_right" style="display: none"></div>
+				</div>
+				<div id="container" style="display: flex">
+					<div id="inner_left_panel"></div>
+					<input type="radio" id="radio_contacts" name="myradio" style="display: none" />
+					<input type="radio" id="radio_chat" name="myradio" style="display: none" />
+					<input type="radio" id="radio_games" name="myradio" style="display: none" />
+					<input type="radio" id="radio_play" name="myradio" style="display: none" />
+					<input type="radio" id="radio_account" name="myradio" style="display: none" />
+					<!-- <div id="inner_right_panel"></div> -->
+				</div>
+			</div>
+		</div>
+		<div id="dStatusLine" style="cursor: pointer; padding: 10px">click to reload!</div>
+
+		<div id="dShield" onclick="onClickShield(event)" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh"></div>
+		<script></script>
+
+		<!-- #region alle belinda includes -->
+		<script src="../base/alibs/numbers.js"></script>
+		<script src="../base/alibs/math.js"></script>
+		<script src="../base/alibs/cyto.js"></script>
+		<script src="../base/alibs/cola.min.js"></script>
+		<script src="../base/alibs/cytoscape-cola.js"></script>
+		<script src="../base/alibs/euler.js"></script>
+		<script src="../base/alibs/fcose/layout-base.js"></script>
+		<script src="../base/alibs/fcose/cose-base.js"></script>
+		<script src="../base/alibs/fcose/fcose.js"></script>
+		<script src="../base/alibs/klay.js"></script>
+		<script src="../base/alibs/cytoscape-klay.js"></script>
+		<script src="../base/alibs/cytonode.js"></script>
+
+		<script src="../chatas/js/areas.js"></script>
+		<script src="../chatas/js/audio.js"></script>
+		<script src="../chatas/js/badges.js"></script>
+		<script src="../chatas/js/banner.js"></script>
+		<script src="../chatas/js/board.js"></script>
+		<script src="../chatas/js/chess.js"></script>
+		<script src="../chatas/js/markers.js"></script>
+		<script src="../chatas/js/mGraph.js"></script>
+		<script src="../chatas/js/speech.js"></script>
+		<script src="../chatas/js/settings.js"></script>
+		<script src="../chatas/js/syms.js"></script>
+		<script src="../chatas/js/time.js"></script>
+
+		<!-- classes  must be loaded first leider -->
+		<script src="../chatas/js/maze.js"></script>
+		<script src="../chatas/js/ai.js"></script>
+		<script src="../chatas/js/all.js"></script>
+		<script src="../chatas/js/debug.js"></script>
+		<script src="../chatas/js/controller.js"></script>
+		<script src="../chatas/js/classes3.js"></script>
+		<script src="../chatas/js/controller3.js"></script>
+		<script src="../chatas/js/game.js"></script>
+		<script src="../chatas/js/house.js"></script>
+		<script src="../chatas/js/keys.js"></script>
+		<script src="../chatas/js/legacy.js"></script>
+		<script src="../chatas/js/letter.js"></script>
+		<script src="../chatas/js/math.js"></script>
+		<script src="../chatas/js/onClick.js"></script>
+		<script src="../chatas/js/scoring.js"></script>
+		<script src="../chatas/js/ui.js"></script>
+		<script src="../chatas/js/user.js"></script>
+		<script src="../chatas/js/workUI.js"></script>
+		<!-- #endregion alle belinda includes -->
+
+		<script src="../chatas/js/api.js"></script>
+		<script src="../chatas/js/cfactory.js"></script>
+		<script src="../chatas/js/cardM.js"></script>
+		<script src="../chatas/js/cgame.js"></script>
+		<script src="../chatas/js/classes.js"></script>
+		<script src="../chatas/js/containers.js"></script>
+		<script src="../chatas/js/game_overrides.js"></script>
+		<script src="../chatas/js/gameplay.js"></script>
+		<script src="../chatas/js/test_ui_helpers.js"></script>
+		<script src="../chatas/js/testing.js"></script>
+		<script src="../chatas/js/start.js"></script>
+		<script src="../chatas/js/work.js"></script>
+	</body>
+</html>

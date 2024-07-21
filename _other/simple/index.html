@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>simple</title>
+		<link rel="icon" href="../base/assets/images/icons/firetrans.png" />
+		<link rel="stylesheet" href="../base/assets/fonts/fonts.css" />
+		<link rel="stylesheet" href="../simple/basemin.css" />
+		<script src="../base/alibs/jq3.js"></script>
+		<script src="../base/alibs/jsyaml.js"></script>
+		<script src="../simple/basemin.js"></script>
+		<script src="../simple/apiserver.js"></script>
+		<script src="../simple/arihelpers.js"></script>
+		<script src="../simple/aripre.js"></script>
+		<script src="../simple/baustelle.js"></script>
+		<script src="../simple/bauhelpers.js"></script>
+		<script src="../simple/board.js"></script>
+		<script src="../simple/cards.js"></script>
+		<script src="../simple/cardhelpers.js"></script>
+		<script src="../simple/onclick.js"></script>
+		<script src="../simple/polling.js"></script>
+		<script src="../simple/q.js"></script>
+		<script src="../simple/showtable.js"></script>
+		<script src="../simple/sim.js"></script>
+		<script src="../simple/spotit.js"></script>
+		<script src="../simple/start.js"></script>
+		<script src="../simple/startsimple.js"></script>
+	</head>
+	<body>
+		<div id="dTopMenu" class="topmenu" style="height: 22px; background: silver; padding: 4px 10px">
+			<a id="aLogout" href="javascript:onclick_logout()">logout</a>
+			<span id="dTopAdvanced" style="display: none">
+				<a id="aUsers" href="javascript:onclick_toggle_users()" class="toggle">users</a>
+				<a id="aGames" href="javascript:onclick_toggle_games()" class="toggle">games</a>
+				<a id="aTables" href="javascript:onclick_toggle_tables()" class="toggle">tables</a>
+				<a href="javascript:onclick_reset_all()" style="color: red">resetAll!</a>
+				<a href="javascript:onclick_reset_past()" style="color: red">resetPast!</a>
+			</span>
+			<a href="javascript:onclick_reload()" style="color: limegreen; margin: 0px 6px; display: none">RELOAD</a>
+			<a id="bPauseContinue" href="javascript:onclick_pause_continue()" style="color: red; display: none">PAUSE</a>
+			<!-- <span onclick="onclick_lamp()" style="font-family:emoNoto; position: absolute; top: 0px; right: 0px; cursor: pointer; margin: 0px 6px">🪔</span> -->
+		</div>
+		<div id="dStatus" style="pointer-events: none; position: fixed; top: 3px; right: 40px; height: 28px"></div>
+		<div id="dTest0" style="background: black; display: none">
+			<button onclick="testanim1()">flip</button>
+			<button onclick="testjourney0()">journey?</button>
+			<button onclick="test_skip_to_actions()">=>actions</button>
+			<button onclick="test_skip_to_tax()">=>tax</button>
+			<button onclick="test_add_schwein()">*schwein</button>
+			<button onclick="test_add_building()">*building</button>
+			<button onclick="test_endgame()">*endgame</button>
+			<!-- <button onclick='test_skip_to_next()'>=>next</button> -->
+			<!-- <button onclick='clearElement(mBy("dTable"))'>clear</button> -->
+			<!-- <button onclick='clearElement(mBy("dTable"));mColFlex(mBy("dTable"));'>mColFlex</button> -->
+			<!-- <button onclick='clearElement(mBy("dTable"));mCenterCenterFlex(mBy("dTable"));'>mColFlex</button>  -->
+		</div>
+		<div id="dUsers" style="background: coral; display: none"></div>
+		<div id="dTitle" style="opacity: 0; box-sizing: border-box; position: relative; height: 44px; text-align: center">
+			<h1 id="dTitleCenter">HALLO, it's ok!</h1>
+			<h1 id="dTitleLeft" style="display: inline-block; top: 0; left: 8px; position: absolute"></h1>
+			<h1 id="dTitleRight" style="display: inline; position: absolute; top: 0; right: 8px"></h1>
+		</div>
+		<div id="dMessage"></div>
+		<div id="dInstruction"></div>
+		<div id="dTable" style="min-height: 440px; opacity: 0"></div>
+		<!-- <div id="dTable" style="opacity: 0; min-height: 440px; width: 100%"></div> -->
+		<div id="dHistory"></div>
+		<!-- <div id="dButtonsSimple" style="text-align: center; padding: 10px; background: rgba(60, 180, 75, 0.5)">
+				<button id="bPauseContinue" onclick="onclick_pause_continue()" class="button" style="width: 80%; margin: auto; display: none">PAUSE</button>
+			</div> -->
+		<div id="dGames" style="background: skyblue"></div>
+		<div id="dMenu" style="padding: 10px; background: skyblue; display: none">
+			<form id="fMenuInput" style="text-align: center" action="javascript:void(0);">
+				<div id="dMenuInput">hallo</div>
+				<div style="width: 100%">
+					<input type="submit" class="button" />
+					<input type="button" onclick="onclick_cancelmenu()" class="button" value="cancel" />
+				</div>
+			</form>
+		</div>
+		<div id="dTables" style="background: #afe78f; display: none">no active game tables</div>
+		<div id="dAllTables" style="background: silver"></div>
+		<div id="dButtons" style="text-align: center; display: none">
+			<button onclick="onclick_reload()" class="button">RELOAD</button>
+			<button onclick="onclick_poll()" class="button">poll</button>
+			<button onclick="onclick_startpolling()" class="button">start polling</button>
+			<button onclick="onclick_stoppolling()" class="button">stop polling</button>
+		</div>
+	</body>
+</html>

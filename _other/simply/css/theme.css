@@ -1,0 +1,139 @@
+#dMain {
+	max-width: 900px;
+	min-height: 500px;
+	display: flex;
+	margin: auto;
+	color: white;
+	font-size: 13px;
+}
+#dLeft label {
+	background-color: #404b56;
+	transition: all 1s ease;
+}
+#dLeft label:hover {
+	background-color: rgb(122 140 158);
+}
+#dHeader {
+	background-color: #485b6c;
+	font-size: 40px;
+	text-align: center;
+	font-family: summervibes;
+	width: 100%;
+	color: white;
+}
+#dLoader{
+	position:fixed;
+	top: 250px;
+	left: 50%;
+	width: 50px;
+
+}
+.user_image{
+	border-radius: 50%;
+	border: 2px solid white;
+	object-fit: cover;
+}
+.contact {
+	width: 100px;
+	height: 120px;
+	margin: 10px;
+	display: inline-block;
+	vertical-align: top;
+	cursor:pointer;
+	transition: transform .5s cubic-bezier(0.68, 0, 0.265, 1.55);
+	/* transition: all .5s cubic-bezier(0.68, -2, 0.265, 1.55); */
+
+}
+.contact img {
+	border-radius: 50%;
+	border: 2px solid white;
+	width: 90px;
+	height: 100px;
+	object-fit: cover;
+}
+.contact:hover{
+	transform: scale(1.1);
+}
+@keyframes appear{
+	0%{opacity:0;}
+	100%{opacity:1;}
+ }
+ @keyframes disappear{
+	0%{opacity:1;}
+	100%{opacity:0;}
+ }
+
+ .wrapper {
+	margin: auto;
+	color: grey;
+	font-family: opensans;
+	font-size: 13px;
+}
+
+form {
+	margin: auto;
+	padding: 10px;
+	width: 100%;
+	max-width: 400px;
+}
+
+input[type='text'],
+input[type='password'],
+input[type='submit'],
+input[type='button'] {
+	padding: 10px;
+	margin: 10px;
+	width: 100%;
+	border-radius: 5px;
+	border: solid 1px grey;
+}
+
+input[type='submit'],
+input[type='button'] {
+	cursor: pointer;
+	background-color: #2b5488;
+	color: white;
+}
+
+input[type='radio'] {
+	transform: scale(1.2);
+	cursor: pointer;
+}
+
+#error {
+	text-align: center;
+	padding: 0.5em;
+	background-color: #d14a07;
+	color: white;
+	display: none;
+}
+
+a {
+	color: white;
+	font-size: 12px;
+	cursor: pointer;
+}
+
+#dImage {
+	position: relative;
+	text-align: center;
+}
+#dImage > label {
+	color: white;
+	background-color: grey;
+	font-family: opensans;
+	display: inline-block;
+	padding: 8px;
+
+	border-radius: 5px;
+	cursor: pointer;
+	position: absolute;
+	width: 160px;
+	top: 190px;
+	right: -8px;
+	text-align: center;
+}
+
+.dragging {
+	border: dashed 2px #aaa;
+}

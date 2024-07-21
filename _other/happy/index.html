@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>happy</title>
+		<link rel="icon" href="../base/assets/images/happy/palm1.png" />
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+		<link rel="stylesheet" href="../base/assets/fonts/fonts.css" />
+		<link rel="stylesheet" href="../happy/basemin.css" />
+		<script src="../base/alibs/color-thief.umd.js"></script>
+		<script src="../base/alibs/jscolor.js"></script>
+		<script src="../base/alibs/jq3.js"></script>
+		<script src="../base/alibs/jsyaml.js"></script>
+
+		<script src="../happy/basemin.js"></script>
+		<script src="../happy/legacy.js"></script>
+
+		<script src="../happy/anim.js"></script>
+		<script src="../happy/apiserver.js"></script>
+		<script src="../happy/baustelle.js"></script>
+		<script src="../happy/baustelle2.js"></script>
+		<script src="../happy/baustelle3.js"></script>
+		<script src="../happy/cards.js"></script>
+		<script src="../happy/gamehelpers.js"></script>
+		<script src="../happy/onclick.js"></script>
+		<script src="../happy/polling.js"></script>
+		<script src="../happy/select.js"></script>
+		<script src="../happy/sim.js"></script>
+		<script src="../happy/test.js"></script>
+		<script src="../happy/start.js"></script>
+	</head>
+
+	<body class="cobody">
+		<!-- #region svg symbols -->
+		<svg style="visibility: hidden; position: fixed" width="0" height="0" xmlns="http://www.w3.org/2000/svg" version="1.1">
+			<symbol id="Treff" viewBox="-600 -600 1200 1200" preserveAspectRatio="xMinYMid">
+				<path
+					d="M30 150C35 385 85 400 130 500L-130 500C-85 400 -35 385 -30 150A10 10 0 0 0 -50 150A210 210 0 1 1 -124 -51A10 10 0 0 0 -110 -65A230 230 0 1 1 110 -65A10 10 0 0 0 124 -51A210 210 0 1 1 50 150A10 10 0 0 0 30 150Z"
+					fill="black"
+				></path>
+			</symbol>
+			<symbol id="Karo" viewBox="-600 -600 1200 1200" preserveAspectRatio="xMinYMid">
+				<path d="M-400 0C-350 0 0 -450 0 -500C0 -450 350 0 400 0C350 0 0 450 0 500C0 450 -350 0 -400 0Z" fill="red"></path>
+			</symbol>
+			<symbol id="Herz" viewBox="-600 -600 1200 1200" preserveAspectRatio="xMinYMid">
+				<path
+					d="M0 -300C0 -400 100 -500 200 -500C300 -500 400 -400 400 -250C400 0 0 400 0 500C0 400 -400 0 -400 -250C-400 -400 -300 -500 -200 -500C-100 -500 0 -400 -0 -300Z"
+					fill="red"
+				></path>
+			</symbol>
+			<symbol id="Pik" viewBox="-600 -600 1200 1200" preserveAspectRatio="xMinYMid">
+				<path
+					d="M0 -500C100 -250 355 -100 355 185A150 150 0 0 1 55 185A10 10 0 0 0 35 185C35 385 85 400 130 500L-130 500C-85 400 -35 385 -35 185A10 10 0 0 0 -55 185A150 150 0 0 1 -355 185C-355 -100 -100 -250 0 -500Z"
+					fill="black"
+				></path>
+			</symbol>
+			<symbol id="Times" viewBox="0 0 32 32">
+				<line x1="9" y1="9" x2="23" y2="23" />
+				<line x1="23" y1="9" x2="9" y2="23" />
+			</symbol>
+		</svg>
+		<!-- #endregion svg symbols -->
+		<div id="dAdmin" class="coheader">
+			<div>
+				<img src="../base/assets/images/happy/palm1.png" class="cologo" onclick="onclick_home()" alt="" />
+				<span style="font-size:40px;font-family:summervibes;">Hello, happy space!</span>
+			</div>
+			<!-- <div id='dToolbarButton' onclick='onclick_lamp()' class='toolbarButtonClass'>🪔</div> -->
+		</div>
+
+		<div id="dWrapper" class="cowrapper">
+			<div id="dMotto" class="cowrapper"></div>
+			<!-- <img id="imgY" src=" https://img.youtube.com/vi/FMrtSHAAPhM/mqdefault.jpg" /> -->
+			<!-- <iframe id="dVideao" width="648" height="365" src="https://www.youtube.com/embed/FMrtSHAAPhM" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>		</div> -->
+		<div id="loader_holder" class="loader_on"><img width="30" src="../base/assets/images/icons/giphy.gif" /></div>
+	</body>
+</html>

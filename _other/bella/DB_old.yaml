@@ -1,0 +1,408 @@
+users:
+  felix:
+    name: felix
+    color: BLUE
+    motto: 'yin is my bad side, yang is my good side'
+    image: true
+    lang: E
+    games:
+      gSpotit:
+        startlevel: 4
+      gMaze:
+        startlevel: 5
+      gAnagram:
+        startlevel: 3
+  lauren:
+    name: lauren
+    color: '#903c00'
+    motto: time to play!
+    image: true
+    lang: E
+    games:
+      gSpotit:
+        startlevel: 5
+      gMaze:
+        startlevel: 5
+      gAnagram:
+        startlevel: 6
+    tables: {}
+  amanda:
+    name: amanda
+    color: '#339940FF'
+    motto: let the world spin
+    image: true
+    lang: E
+    games:
+      gSpotit:
+        startlevel: 3
+      gMaze:
+        startlevel: 4
+      gAnagram:
+        startlevel: 4
+  blade:
+    name: blade
+    color: '#c06996'
+    motto: let's play!
+    image: true
+    lang: E
+    games:
+      gSpotit:
+        startlevel: 3
+      gMaze:
+        startlevel: 4
+      gAnagram:
+        startlevel: 4
+    tables: {}
+  mimi:
+    name: mimi
+    color: '#76AEEBFF'
+    motto: spi ma yu
+    image: true
+    lang: D
+    games:
+      gSpotit:
+        startlevel: 9
+      gMaze:
+        startlevel: 2
+      gAnagram:
+        startlevel: 2
+  gul:
+    name: gul
+    color: '#6fccc3'
+    motto: let's play!
+    image: true
+    lang: D
+    games:
+      gSpotit:
+        startlevel: 0
+      gMaze:
+        startlevel: 0
+      gAnagram:
+        startlevel: 0
+    tables: {}
+  nimble:
+    name: nimble
+    color: '#6E52CCFF'
+    motto: one game at a time!
+    image: true
+    lang: F
+    games:
+      gSpotit:
+        startlevel: 4
+      gMaze:
+        startlevel: 4
+      gAnagram:
+        startlevel: 4
+    tables: {}
+  ally:
+    name: ally
+    color: '#6660f3'
+    motto: no place like home
+    image: true
+    lang: E
+    games:
+      gSpotit:
+        startlevel: 4
+      gMaze:
+        startlevel: 4
+      gAnagram:
+        startlevel: 4
+    tables: {}
+  annabel:
+    name: annabel
+    color: '#ADA0EEFF'
+    motto: be a unicorn
+    image: true
+    lang: D
+    games:
+      gSpotit:
+        startlevel: 3
+      gMaze:
+        startlevel: 4
+      gAnagram:
+        startlevel: 4
+    tables: {}
+  bob:
+    name: bob
+    color: '#033993'
+    motto: let's play!
+    image: true
+    lang: E
+    games:
+      gSpotit:
+        startlevel: 4
+      gMaze:
+        startlevel: 4
+      gAnagram:
+        startlevel: 4
+    tables: {}
+  guest:
+    name: guest
+    color: '#93fc0c'
+    motto: cafe landmann
+    image: true
+    lang: E
+    games:
+      gSpotit:
+        startlevel: 4
+      gMaze:
+        startlevel: 4
+      gAnagram:
+        startlevel: 4
+    tables: {}
+  leo:
+    name: leo
+    color: '#C19450FF'
+    motto: no place like home
+    image: true
+    lang: E
+    games:
+      gSpotit:
+        startlevel: 4
+      gMaze:
+        startlevel: 4
+      gAnagram:
+        startlevel: 4
+    tables: {}
+  mac:
+    name: mac
+    color: ORANGE
+    motto: be what you are
+    image: true
+    lang: D
+    games:
+      gSpotit:
+        startlevel: 3
+      gMaze:
+        startlevel: 4
+      gAnagram:
+        startlevel: 4
+    tables: {}
+  meckele:
+    name: meckele
+    color: '#F28DB2'
+    motto: miau! miau!
+    image: true
+    lang: S
+    games:
+      gSpotit:
+        startlevel: 4
+      gMaze:
+        startlevel: 4
+      gAnagram:
+        startlevel: 4
+  nasi:
+    name: nasi
+    color: '#EC4169FF'
+    motto: bridge and golf
+    image: true
+    lang: D
+    games:
+      gSpotit:
+        startlevel: 0
+      gMaze:
+        startlevel: 0
+      gAnagram:
+        startlevel: 0
+    tables: {}
+  sarah:
+    name: sarah
+    color: deeppink
+    motto: wild and sweet
+    image: true
+    lang: D
+    games:
+      gSpotit:
+        startlevel: 3
+      gMaze:
+        startlevel: 4
+      gAnagram:
+        startlevel: 4
+    tables: {}
+  valerie:
+    name: valerie
+    color: '#03cf9c'
+    motto: time to play!
+    image: true
+    lang: D
+    games:
+      gSpotit:
+        startlevel: 3
+      gMaze:
+        startlevel: 4
+      gAnagram:
+        startlevel: 4
+    tables: {}
+  wolfgang:
+    name: wolfgang
+    color: '#93c6f3'
+    motto: listen to my music
+    image: true
+    lang: D
+    games:
+      gSpotit:
+        startlevel: 4
+      gMaze:
+        startlevel: 4
+      gAnagram:
+        startlevel: 4
+    tables: {}
+  afia:
+    name: afia
+    color: '#69c963'
+    motto: the wise owl knows it!
+    image: true
+    lang: E
+    games:
+      gSpotit:
+        startlevel: 6
+      gMaze:
+        startlevel: 4
+      gAnagram:
+        startlevel: 1
+    tables: {}
+games:
+  gSpotit:
+    friendly: Spotit
+    logo: spy
+    color: silver
+    av_modes: 'training,solo,pp,multi,hotseat'
+    options:
+      winning_score: '20,10,5,2,1'
+      vocab: 'animals,lifePlus,objectPlus'
+      handicap: 'player,choose,none'
+    rows: 3
+    cols: 2
+    min_scale: 0.75
+    max_scale: 1.25
+    num_cards: 2
+    def_startlevel: 4
+    levels:
+      '0':
+        cols: 1
+        rows: 2
+      '1':
+        rows: 2
+      '2':
+        cols: 1
+      '3':
+        cols: 1
+        rows: 4
+      '4':
+        min_scale: 0.75
+        max_scale: 1.25
+      '5':
+        cols: 1
+        rows: 5
+      '6':
+        rows: 4
+      '7':
+        cols: 3
+        rows: 5
+      '8':
+        rows: 5
+      '9':
+        rows: 6
+    winnerlist: []
+  gMaze:
+    friendly: Maze
+    logo: maze
+    color: BLUEGREEN
+    av_modes: 'training,solo,pp,multi,hotseat'
+    options:
+      winning_score: '20,10,5,2,1'
+    def_startlevel: 4
+    rows: 14
+    cols: 12
+    sz: 18
+    gap: 1
+    levels:
+      '0':
+        rows: 6
+        cols: 6
+      '1':
+        rows: 8
+        cols: 8
+      '2':
+        rows: 10
+        cols: 10
+      '3':
+        rows: 12
+        cols: 12
+      '4':
+        rows: 12
+        cols: 14
+      '5':
+        rows: 13
+        cols: 16
+      '6':
+        rows: 13
+        cols: 24
+      '7':
+        rows: 14
+        cols: 26
+      '8':
+        rows: 14
+        cols: 30
+      '9':
+        rows: 14
+        cols: 32
+    winnerlist: []
+  gAnagram:
+    stage: testing
+    friendly: Anagram!
+    logo: ram
+    color: 'rgb(0,152,105)'
+    av_modes: 'training,solo,pp,multi,hotseat'
+    options:
+      winning_score: '20,10,5,2,1'
+      vocab: 'all,animal,lifePlus,nemo,objectPlus'
+      lang: 'E,D,F,S'
+    def_startlevel: 4
+    pictureLabels: never
+    showWord: true
+    hidden: false
+    levels:
+      '0':
+        minWordLength: 3
+        maxWordLength: 4
+      '1':
+        minWordLength: 3
+        maxWordLength: 5
+      '2':
+        minWordLength: 4
+        maxWordLength: 6
+      '3':
+        minWordLength: 5
+        maxWordLength: 7
+      '4':
+        minWordLength: 6
+        maxWordLength: 6
+        showWord: false
+        hidden: true
+      '5':
+        minWordLength: 6
+        maxWordLength: 7
+        showWord: false
+        hidden: true
+      '6':
+        minWordLength: 6
+        maxWordLength: 8
+        showWord: false
+        hidden: true
+      '7':
+        minWordLength: 7
+        maxWordLength: 9
+        showWord: false
+        hidden: true
+      '8':
+        minWordLength: 8
+        maxWordLength: 10
+        showWord: false
+        hidden: true
+      '9':
+        minWordLength: 8
+        maxWordLength: 15
+        showWord: false
+        hidden: true
+    winnerlist: []

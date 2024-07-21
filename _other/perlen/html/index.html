@@ -1,0 +1,106 @@
+<div id="dHeader" style="background-color: var(--dark-blue); padding-top: 10px">
+	<div id='dButtonsLeft' style="position: absolute; left:0px; padding:10px; display:flex">
+		<div id='dToolbarButton' onclick='onClickToolbarButton()' class='toolbarButtonClass'>🪔</div>
+		<!-- <input data-jscolor="{}" value="#3399FF"> -->
+		<!-- <div id='dSettingsButton' onclick='onClickSettings()' class='toolbarButtonClass'>⚙️</div> -->
+		<!-- <div id='dBoardSelection' onclick='onClickUploadBoard()' class='toolbarButtonClass'>board</div> -->
+		<!-- 
+		<div id='dPreselectButton'  onclick='onClickPreselect(this)' class='toolbarButtonClass'>select</div>
+		<div id='dBoardSwitchButton'  onclick='onClickBoardSwitch(this)' class='toolbarButtonClass'>hex</div> -->
+		<!-- <button onClick="launchOneDrivePicker()">OneDrive</button> -->
+	</div>
+	<div id='dTempleLobby' style="display: none; position: absolute; margin: 10px; padding: 20px" onclick='onClickTempleLobby()'>🏛️</div>
+	<div id='dButtonsRight' style="position: absolute; right:0px; padding:10px; display:flex">
+		<!-- <div id='dResetButton'  onclick='onClickReset()' class='toolbarButtonClass'>♻️</div>				 -->
+		<!-- <div id='dHelpButton'  onclick='show("dHelpWindow");' class='toolbarButtonClass'>🪔</div>  -->
+		<div id='dColorButton' onclick='onClickPaletteButton();' class='toolbarButtonClass'>🎨</div>
+	</div>
+	<div class="flex-column flex-center">
+		<!-- <h2 id="hTitle" style='color:#ffffff40;text-shadow: 0px 2px 25px rgba(255, 255, 255, .5);'>Welcome to the Game</h2> -->
+		<h2 id="hTitle" style='color:#ffffff60;'>Welcome to the Game</h2>
+		<p id="dSubtitle" style='color:#ffffff40;margin-top:-5px' class="light-text">*** Glasperlenspiel ***</p>
+	</div>
+</div>
+
+<div id="dMainContent" style="background-color: var(--primary-blue)">
+	<div id="dLogin">
+		<h2 class="text-center">Login</h2>
+		<form id="loginForm" class="flex" style="margin-top: 20px">
+			<input type="text" name="username" id="usernameInput" placeholder="username" class="flex-grow-1" />
+			<button id="loginBtn">Go!</button>
+		</form>
+	</div>
+
+	<div id="dMenu" style="display: none"></div>
+
+	<section id="dLobby" style='display:none;color:black' class="flex-grow-1 flex-column">
+		<div id="messagesList" class="flex-grow-1">
+			<!-- #region example message -->
+			<!-- <div class="message message-left">
+					<div class="message-details flex">
+						<p class="flex-grow-1 message-author">James Quick</p>
+						<p class="message-date">April 7th 11:50pm</p>
+					</div>
+					<p class="message-content">Lorem ipsum dolor amet wolf pabst lo-fi beard meditation etsy austin health goth.</p>
+				</div> -->
+			<!-- #endregion -->
+		</div>
+		<form id="messageForm" class="flex" autocomplete="off">
+			<input type="text" name="message" id="messageInput" class="flex-grow-1" autocomplete="false" />
+			<button id="sendBtn">Send</button>
+		</form>
+	</section>
+</div>
+
+<div id="dGameScreen" style="display: none" class="flex-grow-1 flex">
+	<!-- <div id="md" style="height:100%;width:100%;background:green"> -->
+	<div id="sidebar" style='z-index:1001'></div>
+	<div id="rightSide">
+		<div id="table" class="flexWrap"></div>
+	</div>
+</div>
+<div id='dAux' style='display:none;z-index:1002'>
+	<button onclick='closeAux()' class='button' style="position:absolute;left:0;top:0;border:none;background:transparent;outline:none;color:white">&#10005;</button>
+	<h1 id='dAuxTitle' style="margin:20px 50px">Hallo</h1>
+	<div id='dAuxContent' style="margin:20px"></div>
+</div>
+<div id='dAuxRight' style='display:none;z-index:1002'>
+	<button onclick='closeAuxRight()' class='button' style="position:absolute;left:0;top:0;border:none;background:transparent;outline:none;color:white">&#10005;</button>
+	<h1 id='dAuxRightTitle' style="margin:20px 50px">Hallo</h1>
+	<div id='dAuxRightContent' style="margin:20px"></div>
+</div>
+<div id='dButtons'>
+	<div id='dGo' onclick='onClickGo()' style='display:none;'>PLAY!</div>
+	<div id='dComputer' onclick='onClickComputer()' style='display:none;'>🖥️</div>
+	<div id='dCalibrate' onclick='onClickCalibrate()' style='display:none;'>⚖️</div>
+	<div id='dGear' onclick='onClickGear()' style='display:none;'>⚙️</div>
+	<div id='dTemple' onclick='onClickTemple()' style='display:none;'>🏛️</div>
+	<button id='dummy' style='width:0px;padding:0;margin:0;border:none;outline:none;background-color:transparent;color:transparent'>dummy
+</div>
+<div id='dHelpWindow' style="display:none;font-size:16px;background:dimgray;width:320px;position:fixed;right:20px;top:20px;padding:10px;border-radius:10px">
+	<h4>Keyboard Shortcuts:</h4>
+	<p>Shift+Click on table header: insert row/col</p>
+	<p>Ctrl+Click on table header: remove row/col</p>
+	<p>Ctrl+Hover over perle: magnify</p>
+	<br />
+	<h4>Perlen Editor:</h4>
+	<p>Doubleclick left sidebar: open editor</p>
+	<p>Top Area: DragDrop image from eg. image search or click to browse</p>
+	<p>Name Input: Enter description (also used as filename)</p>
+	<p>Click Save to add new Glasperle to collection</p>
+	<p>Click clear to clear Area and Input</p>
+	<p> (known BUG! DD does not work without clear first!)</p>
+	<p>Press close (bottom) to close editor</p>
+	<div style='text-align:center'>
+		<button style="margin-top:10px;padding:4px 14px" class="buttonClass" onclick="hide('dHelpWindow');">close</button>
+	</div>
+</div>
+<div id='dSettingsWindow' style="display:none;font-size:16px;background:dimgray;width:420px;z-index:1003;position:fixed;left:20px;top:20px;padding:10px;border-radius:10px">
+	<h4>Settings:</h4>
+	<div id='dSettingsContent'></div>
+	<div style='text-align:center'>
+		<button style="margin-top:10px;width:90px;padding:4px 14px" class="buttonClass" onclick="onClickSetSettings()">set</button>
+		<button style="margin-top:10px;width:90px;padding:4px 14px" class="buttonClass" onclick="onClickCloseSettings()">close</button>
+	</div>
+</div>
+

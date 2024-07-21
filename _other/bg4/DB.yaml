@@ -1,0 +1,198 @@
+users:
+  felix:
+    name: felix
+    color: BLUE
+    motto: 'yin is my bad side, yang is my good side'
+    image: true
+    games:
+      gSpotit:
+        startlevel: 4
+  lauren:
+    name: lauren
+    color: '#903c00'
+    motto: time to play!
+    image: true
+    games: {}
+    tables: {}
+  amanda:
+    name: amanda
+    color: '#339940FF'
+    motto: let the world spin
+    image: true
+    games: {}
+  blade:
+    name: blade
+    color: '#c06996'
+    motto: let's play!
+    image: true
+    games: {}
+    tables: {}
+  mimi:
+    name: mimi
+    color: skyblue
+    motto: spi ma yu
+    image: true
+    games:
+      gSpotit:
+        startlevel: 0
+        winstreak: 2
+  gul:
+    name: gul
+    color: '#6fccc3'
+    motto: let's play!
+    image: true
+    games:
+      gSpotit:
+        startlevel: 0
+        winstreak: 6
+    tables: {}
+  nimble:
+    name: nimble
+    color: '#6E52CCFF'
+    motto: one game at a time!
+    image: true
+    games: {}
+    tables: {}
+  ally:
+    name: ally
+    color: '#6660f3'
+    motto: no place like home
+    image: true
+    games: {}
+    tables: {}
+  annabel:
+    name: annabel
+    color: violet
+    motto: be a unicorn
+    image: true
+    games: {}
+    tables: {}
+  bob:
+    name: bob
+    color: '#033993'
+    motto: let's play!
+    image: true
+    games: {}
+    tables: {}
+  guest:
+    name: guest
+    color: '#93fc0c'
+    motto: cafe landmann
+    image: true
+    games: {}
+    tables: {}
+  leo:
+    name: leo
+    color: '#3f3f03'
+    motto: no place like home
+    image: true
+    games: {}
+    tables: {}
+  mac:
+    name: mac
+    color: ORANGE
+    motto: be what you are
+    image: true
+    games: {}
+    tables: {}
+  meckele:
+    name: meckele
+    color: '#F28DB2'
+    motto: miau!
+    image: true
+    games: {}
+  nasi:
+    name: nasi
+    color: PURPLE
+    motto: bridge and golf
+    image: true
+    games: {}
+    tables: {}
+  sarah:
+    name: sarah
+    color: deeppink
+    motto: wild and sweet
+    image: true
+    games: {}
+    tables: {}
+  valerie:
+    name: valerie
+    color: '#03cf9c'
+    motto: time to play!
+    image: true
+    games: {}
+    tables: {}
+  wolfgang:
+    name: wolfgang
+    color: '#93c6f3'
+    motto: listen to my music
+    image: true
+    games: {}
+    tables: {}
+  afia:
+    name: afia
+    color: '#69c963'
+    motto: cafe landmann
+    image: true
+    games: {}
+    tables: {}
+games:
+  gSpotit:
+    friendly: Spotit
+    logo: spy
+    color: silver
+    av_modes: 'training,solo,pp,multi,hotseat'
+    options:
+      winning_score: '20,10,5,2'
+      vocab: 'animals,lifePlus,objectPlus'
+      handicap: 'player,choose,none'
+    rows: 3
+    cols: 2
+    min_scale: 0.75
+    max_scale: 1.25
+    num_cards: 2
+    def_startlevel: 4
+    levels:
+      '0':
+        cols: 1
+        rows: 2
+        min_scale: 1
+        max_scale: 1
+      '1':
+        rows: 2
+        min_scale: 0.9
+        max_scale: 1.1
+      '2':
+        cols: 1
+        min_scale: 0.9
+        max_scale: 1.1
+      '3':
+        cols: 1
+        rows: 4
+        min_scale: 0.75
+        max_scale: 1.25
+      '4':
+        min_scale: 1
+        max_scale: 1
+      '5':
+        cols: 1
+        rows: 5
+        min_scale: 0.75
+        max_scale: 1.25
+      '6':
+        rows: 4
+        min_scale: 1
+        max_scale: 1
+      '7':
+        cols: 3
+        rows: 5
+        min_scale: 1
+        max_scale: 1
+      '8':
+        rows: 5
+        min_scale: 1
+        max_scale: 1
+      '9':
+        rows: 6
+        min_scale: 0.75
+        max_scale: 1.25

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<title>feedback</title>
+		<link rel="icon" type="image/svg+xml" href="./favicon.ico" />
+		<link
+			rel="stylesheet"
+			href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+			integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk"
+			crossorigin="anonymous"
+		/>
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+		<link rel="stylesheet" href="./basemin.css" />
+		<script src="./basemin.js"></script>
+		<script src="./index.js"></script>
+	</head>
+	<body>
+		<div id="dTesting" class="d-none p-2">
+			<div class="d-flex">
+				<button onclick="onclick_test()">Test</button>
+				<button onclick="onclick_settings_test()">Settings</button>
+				<button onclick="onclick_test()">Test</button>
+			</div>
+		</div>
+		<div id="dAdmin" style="height: 45px; font-size: 18pt" class="w-100 p-2 d-flex align-items-center justify-content-between">
+			<div id="dAdminLeft">Cosensus</div>
+			<div id="dAdminMiddle"></div>
+			<div id="dAdminRight">
+				<i id='dExitButton' class="fa fa-reply text-muted bi" onclick="show_intro_screen()"></i>
+				<i id='dSettingsButton' style="opacity:0" class="fa fa-cog text-muted bi" onclick="show_settings()"></i>
+			</div>
+		</div>
+		<div id="dHeader" class="h-40 d-none">
+			<div class="d-flex flex-column align-items-center justify-content-center h-100">
+				<h1>Your Role:</h1>
+				<br />
+				<button type="submit" onclick="show_game_screen(true)" class="w-25 btn btn-success" id="bHost">Host</button>
+				<br />
+				<button type="submit" onclick="show_game_screen(false)" class="w-25 btn btn-success" id="bGuest">Guest</button>
+			</div>
+		</div>
+		<div id="dTable" class="w-100 m-0 p-2 d-none"></div>
+		<button id="dummy" class="dummy">dummy</button>
+
+		<!-- <div id="dSettings" class="w-100 m-0 p-2 d-none"></div> -->
+
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+		<script src="./start.js"></script>
+	</body>
+</html>
